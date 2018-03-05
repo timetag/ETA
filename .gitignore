@@ -5,4 +5,7 @@ __pycache__/
 *.exe
 *.tensor
 *.code
+*.sh
 etaserver*
+*.ipynb
+.*
