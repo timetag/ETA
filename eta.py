@@ -1,21 +1,25 @@
-import os
-import subprocess
-import webbrowser
-in_jupyter = os.environ['_'].find("jupyter") > 0
-homedir = os.path.join(os.environ['LocalAppData'], "Programs\\ETA")
-exe_file = os.path.join(homedir, "ETA Client.exe")
+from numba import jit
+from timeit import timeit
+import numpy as np
 
 
-class Analysis:
-    def __init__(self):
-        print(homedir)
-        if in_jupyter:
-            print("Jupyter environment detected.")
+@jit(nopython=True, parallel=True)
+def sum2d(arr):
+    for i in range(0, arr.size):
+        arr[i] += i
+        if arr[i]>100:
+             arr[i] -=100
 
-    def edit(self, use_local_eta=True):
-        print(exe_file)
-        if use_local_eta:
-            subprocess.check_call(exe_file)
-        else:
-            print("Local ETA installation not found.")
-            webbrowser.open("http://timetag.github.io")
+arr = np.ones(2000000000, dtype=np.int8)
+print(sum2d(arr))
+@timeit
+def timed():
+    sum2d(arr)
+timed()
+print(arr)
+with open("llvm.txt", "w") as writeto:
+    codelist = sum2d.inspect_llvm()
+    for each in codelist:
+        writeto.write(str(each))
+        writeto.write("//////////////")
+        writeto.write(codelist[each])
