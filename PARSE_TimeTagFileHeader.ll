@@ -1,9 +1,10 @@
-(bytearray(uint8, 1d, C),)//////////////; ModuleID = 'foo'
-source_filename = "<string>"
-target datalayout = "e-m:e-i64:64-f80:128-n8:16:32:64-S128"
-target triple = "x86_64-pc-windows-msvc"
+; ModuleID = 'TimeTag/PARSE_TimeTagFileHeader.cpp'
+source_filename = "TimeTag/PARSE_TimeTagFileHeader.cpp"
+target datalayout = "e-m:w-i64:64-f80:128-n8:16:32:64-S128"
+target triple = "x86_64-pc-windows-msvc19.11.25547"
 
 %struct.TgHd = type { [32 x i8], i32, i32, i64 }
+%struct._iobuf = type { i8* }
 %struct.__crt_locale_pointers = type { %struct.__crt_locale_data*, %struct.__crt_multibyte_data* }
 %struct.__crt_locale_data = type opaque
 %struct.__crt_multibyte_data = type opaque
@@ -15,19 +16,19 @@ $"\01?PicoQuant_header_parser@@YAHPEAU_iobuf@@@Z" = comdat any
 
 $"\01?quTAU_header_parser@@YAHPEAU_iobuf@@@Z" = comdat any
 
+$_vfprintf_l = comdat any
+
+$__local_stdio_printf_options = comdat any
+
 $sprintf = comdat any
 
 $wprintf = comdat any
-
-$_vfwprintf_l = comdat any
-
-$__local_stdio_printf_options = comdat any
 
 $_vsprintf_l = comdat any
 
 $_vsnprintf_l = comdat any
 
-$_vfprintf_l = comdat any
+$_vfwprintf_l = comdat any
 
 $"\01??_C@_0P@JEAMJNI@File?5name?3?5?$CFs?6?$AA@" = comdat any
 
@@ -37,17 +38,17 @@ $"\01??_C@_07CEGNDBCD@?$FLERROR?$FN?$AA@" = comdat any
 
 $"\01??_C@_0CJ@INBIHOGD@Can?5not?5open?5time?9tagged?5file?0?5a@" = comdat any
 
+$"\01??_C@_01EEMJAFIK@?6?$AA@" = comdat any
+
 $"\01??_C@_0CA@PNEMECFH@Failed?5to?5read?5header?0?5aborted?4?$AA@" = comdat any
 
 $"\01??_C@_06OMFAFKCA@PQTTTR?$AA@" = comdat any
 
-$"\01??_C@_0CE@JHNJNHEL@Error?5when?5reading?5header?0?5abort@" = comdat any
+$"\01??_C@_0BE@PNEHCHO@Parser?3?5PicoQuant?5?6?$AA@" = comdat any
 
-$"\01??_C@_01EEMJAFIK@?6?$AA@" = comdat any
+$"\01??_C@_0BA@NFCPOBHP@Parser?3?5quTAU?5?6?$AA@" = comdat any
 
-$"\01??_C@_0CI@GEFJAHGM@quTAU?5file?5header?5is?5read?0?5but?5i@" = comdat any
-
-$"\01??_C@_0BL@LHHAHHKM@RecordType?3?5quTAU?510?9bytes?$AA@" = comdat any
+$"\01?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA" = comdat any
 
 $"\01??_C@_0CA@LFBPILNL@?6error?5reading?5header?0?5aborted?4?$AA@" = comdat any
 
@@ -117,34 +118,32 @@ $"\01??_C@_0BG@DPKGPDBN@TimeHarp260P?5T3?5data?6?$AA@" = comdat any
 
 $"\01??_C@_0CL@PNCIDDE@Unknown?5time?9tag?5record?5type?3?50x@" = comdat any
 
-$"\01?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA" = comdat any
+$"\01??_C@_0CE@JHNJNHEL@Error?5when?5reading?5header?0?5abort@" = comdat any
 
-@.const.foo = internal constant [4 x i8] c"foo\00"
-@".const.Fatal error: missing _dynfunc.Closure" = internal constant [38 x i8] c"Fatal error: missing _dynfunc.Closure\00"
-@PyExc_RuntimeError = external global i8
-@".const.missing Environment" = internal constant [20 x i8] c"missing Environment\00"
-@"\01?SYNCRate_pspr@@3_KA" = local_unnamed_addr global i64 0, align 8
-@"\01?TTRes_pspr@@3_KA" = local_unnamed_addr global i64 0, align 8
-@"\01?DTRes_pspr@@3_KA" = local_unnamed_addr global i64 0, align 8
-@"\01?NumRecords@@3_JA" = local_unnamed_addr global i64 -1, align 8
-@"\01?IsT2@@3_NA" = local_unnamed_addr global i8 0, align 1
-@"\01?RecordType@@3_JA" = local_unnamed_addr global i64 0, align 8
-@"\01?BytesofRecords@@3_JA" = local_unnamed_addr global i64 0, align 8
-@"\01?TTF_header_offset@@3_JA" = local_unnamed_addr global i64 0, align 8
-@"\01?TTF_filesize@@3_JA" = local_unnamed_addr global i64 0, align 8
+$"\01??_C@_0CI@GEFJAHGM@quTAU?5file?5header?5is?5read?0?5but?5i@" = comdat any
+
+$"\01??_C@_0BL@LHHAHHKM@RecordType?3?5quTAU?510?9bytes?$AA@" = comdat any
+
+@"\01?SYNCRate_pspr@@3_KA" = global i64 0, align 8
+@"\01?TTRes_pspr@@3_KA" = global i64 0, align 8
+@"\01?DTRes_pspr@@3_KA" = global i64 0, align 8
+@"\01?NumRecords@@3_JA" = global i64 -1, align 8
+@"\01?IsT2@@3_NA" = global i8 0, align 1
+@"\01?RecordType@@3_JA" = global i64 0, align 8
+@"\01?BytesofRecords@@3_JA" = global i64 0, align 8
+@"\01?TTF_header_offset@@3_JA" = global i64 0, align 8
+@"\01?TTF_filesize@@3_JA" = global i64 0, align 8
 @"\01?TagHead@@3UTgHd@@A" = global %struct.TgHd zeroinitializer, align 8
 @"\01??_C@_0P@JEAMJNI@File?5name?3?5?$CFs?6?$AA@" = linkonce_odr unnamed_addr constant [15 x i8] c"File name: %s\0A\00", comdat, align 1
 @"\01??_C@_02JDPG@rb?$AA@" = linkonce_odr unnamed_addr constant [3 x i8] c"rb\00", comdat, align 1
 @"\01??_C@_07CEGNDBCD@?$FLERROR?$FN?$AA@" = linkonce_odr unnamed_addr constant [8 x i8] c"[ERROR]\00", comdat, align 1
 @"\01??_C@_0CJ@INBIHOGD@Can?5not?5open?5time?9tagged?5file?0?5a@" = linkonce_odr unnamed_addr constant [41 x i8] c"Can not open time-tagged file, aborting.\00", comdat, align 1
+@"\01??_C@_01EEMJAFIK@?6?$AA@" = linkonce_odr unnamed_addr constant [2 x i8] c"\0A\00", comdat, align 1
 @"\01??_C@_0CA@PNEMECFH@Failed?5to?5read?5header?0?5aborted?4?$AA@" = linkonce_odr unnamed_addr constant [32 x i8] c"Failed to read header, aborted.\00", comdat, align 1
 @"\01??_C@_06OMFAFKCA@PQTTTR?$AA@" = linkonce_odr unnamed_addr constant [7 x i8] c"PQTTTR\00", comdat, align 1
-@str.1 = private unnamed_addr constant [19 x i8] c"Parser: PicoQuant \00"
-@str = private unnamed_addr constant [15 x i8] c"Parser: quTAU \00"
-@"\01??_C@_0CE@JHNJNHEL@Error?5when?5reading?5header?0?5abort@" = linkonce_odr unnamed_addr constant [36 x i8] c"Error when reading header, aborted.\00", comdat, align 1
-@"\01??_C@_01EEMJAFIK@?6?$AA@" = linkonce_odr unnamed_addr constant [2 x i8] c"\0A\00", comdat, align 1
-@"\01??_C@_0CI@GEFJAHGM@quTAU?5file?5header?5is?5read?0?5but?5i@" = linkonce_odr unnamed_addr constant [40 x i8] c"quTAU file header is read, but ignored.\00", comdat, align 1
-@"\01??_C@_0BL@LHHAHHKM@RecordType?3?5quTAU?510?9bytes?$AA@" = linkonce_odr unnamed_addr constant [27 x i8] c"RecordType: quTAU 10-bytes\00", comdat, align 1
+@"\01??_C@_0BE@PNEHCHO@Parser?3?5PicoQuant?5?6?$AA@" = linkonce_odr unnamed_addr constant [20 x i8] c"Parser: PicoQuant \0A\00", comdat, align 1
+@"\01??_C@_0BA@NFCPOBHP@Parser?3?5quTAU?5?6?$AA@" = linkonce_odr unnamed_addr constant [16 x i8] c"Parser: quTAU \0A\00", comdat, align 1
+@"\01?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA" = linkonce_odr global i64 0, comdat, align 8
 @"\01??_C@_0CA@LFBPILNL@?6error?5reading?5header?0?5aborted?4?$AA@" = linkonce_odr unnamed_addr constant [32 x i8] c"\0Aerror reading header, aborted.\00", comdat, align 1
 @"\01??_C@_0BH@OLMGMJEP@PTU?5file?5Version?3?5?$CFs?5?6?$AA@" = linkonce_odr unnamed_addr constant [23 x i8] c"PTU file Version: %s \0A\00", comdat, align 1
 @"\01??_C@_0BC@KFPMDKOJ@?6Incomplete?5File?4?$AA@" = linkonce_odr unnamed_addr constant [18 x i8] c"\0AIncomplete File.\00", comdat, align 1
@@ -179,167 +178,99 @@ $"\01?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA" = comdat any
 @"\01??_C@_0BG@MDCGBMNA@TimeHarp260N?5T3?5data?6?$AA@" = linkonce_odr unnamed_addr constant [22 x i8] c"TimeHarp260N T3 data\0A\00", comdat, align 1
 @"\01??_C@_0BG@DPKGPDBN@TimeHarp260P?5T3?5data?6?$AA@" = linkonce_odr unnamed_addr constant [22 x i8] c"TimeHarp260P T3 data\0A\00", comdat, align 1
 @"\01??_C@_0CL@PNCIDDE@Unknown?5time?9tag?5record?5type?3?50x@" = linkonce_odr unnamed_addr constant [43 x i8] c"Unknown time-tag record type: 0x%X\0A 0x%X\0A \00", comdat, align 1
-@"\01?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA" = linkonce_odr global i64 0, comdat, align 8
+@"\01??_C@_0CE@JHNJNHEL@Error?5when?5reading?5header?0?5abort@" = linkonce_odr unnamed_addr constant [36 x i8] c"Error when reading header, aborted.\00", comdat, align 1
+@"\01??_C@_0CI@GEFJAHGM@quTAU?5file?5header?5is?5read?0?5but?5i@" = linkonce_odr unnamed_addr constant [40 x i8] c"quTAU file header is read, but ignored.\00", comdat, align 1
+@"\01??_C@_0BL@LHHAHHKM@RecordType?3?5quTAU?510?9bytes?$AA@" = linkonce_odr unnamed_addr constant [27 x i8] c"RecordType: quTAU 10-bytes\00", comdat, align 1
 
-define i32 @"_ZN8__main__7foo$241E35bytearray$28uint8$2c$201d$2c$20C$29"(i32* noalias nocapture %retptr, { i8*, i32 }** noalias nocapture readnone %excinfo, i8* noalias nocapture readnone %env, i8* nocapture readnone %arg.b.0, i8* nocapture readnone %arg.b.1, i64 %arg.b.2, i64 %arg.b.3, i8* %arg.b.4, i64 %arg.b.5.0, i64 %arg.b.6.0) local_unnamed_addr {
-entry:
-  %0 = alloca [8 x i8], align 1
-  %1 = bitcast [8 x i8]* %0 to i8*
-  call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull %1)
-  %2 = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([15 x i8], [15 x i8]* @"\01??_C@_0P@JEAMJNI@File?5name?3?5?$CFs?6?$AA@", i64 0, i64 0), i8* %arg.b.4)
-  %3 = tail call { i8* }* @fopen(i8* %arg.b.4, i8* getelementptr inbounds ([3 x i8], [3 x i8]* @"\01??_C@_02JDPG@rb?$AA@", i64 0, i64 0))
-  %4 = icmp eq { i8* }* %3, null
-  br i1 %4, label %5, label %8
-
-; <label>:5:                                      ; preds = %entry
-  %6 = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([8 x i8], [8 x i8]* @"\01??_C@_07CEGNDBCD@?$FLERROR?$FN?$AA@", i64 0, i64 0))
-  %7 = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([41 x i8], [41 x i8]* @"\01??_C@_0CJ@INBIHOGD@Can?5not?5open?5time?9tagged?5file?0?5a@", i64 0, i64 0))
-  %putchar4.i = tail call i32 @putchar(i32 10)
-  br label %PARSE_TimeTagFileHeader.exit
-
-; <label>:8:                                      ; preds = %entry
-  %9 = bitcast [8 x i8]* %0 to i8*
-  %10 = call i64 @fread(i8* nonnull %9, i64 1, i64 8, { i8* }* nonnull %3)
-  %11 = icmp eq i64 %10, 8
-  br i1 %11, label %15, label %12
-
-; <label>:12:                                     ; preds = %8
-  %13 = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([8 x i8], [8 x i8]* @"\01??_C@_07CEGNDBCD@?$FLERROR?$FN?$AA@", i64 0, i64 0))
-  %14 = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([32 x i8], [32 x i8]* @"\01??_C@_0CA@PNEMECFH@Failed?5to?5read?5header?0?5aborted?4?$AA@", i64 0, i64 0))
-  %putchar3.i = tail call i32 @putchar(i32 10)
-  br label %PARSE_TimeTagFileHeader.exit
-
-; <label>:15:                                     ; preds = %8
-  %16 = bitcast [8 x i8]* %0 to i8*
-  %17 = call i32 @strncmp(i8* nonnull %16, i8* getelementptr inbounds ([7 x i8], [7 x i8]* @"\01??_C@_06OMFAFKCA@PQTTTR?$AA@", i64 0, i64 0), i64 6)
-  %18 = icmp eq i32 %17, 0
-  br i1 %18, label %19, label %21
-
-; <label>:19:                                     ; preds = %15
-  %puts1.i = tail call i32 @puts(i8* getelementptr inbounds ([19 x i8], [19 x i8]* @str.1, i64 0, i64 0))
-  %putchar2.i = tail call i32 @putchar(i32 10)
-  %20 = tail call i32 @"\01?PicoQuant_header_parser@@YAHPEAU_iobuf@@@Z"({ i8* }* nonnull %3)
-  br label %23
-
-; <label>:21:                                     ; preds = %15
-  %puts.i = tail call i32 @puts(i8* getelementptr inbounds ([15 x i8], [15 x i8]* @str, i64 0, i64 0))
-  %putchar.i = tail call i32 @putchar(i32 10)
-  %22 = tail call i32 @"\01?quTAU_header_parser@@YAHPEAU_iobuf@@@Z"({ i8* }* nonnull %3)
-  br label %23
-
-; <label>:23:                                     ; preds = %21, %19
-  %.0.i = phi i32 [ %20, %19 ], [ %22, %21 ]
-  %24 = tail call i32 @fclose({ i8* }* nonnull %3)
-  br label %PARSE_TimeTagFileHeader.exit
-
-PARSE_TimeTagFileHeader.exit:                     ; preds = %5, %12, %23
-  %.07.i = phi i32 [ -1, %5 ], [ -2, %12 ], [ %.0.i, %23 ]
-  %25 = bitcast [8 x i8]* %0 to i8*
-  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %25)
-  store i32 %.07.i, i32* %retptr, align 4
-  ret i32 0
+; Function Attrs: noinline nounwind optnone uwtable
+define i64 @"\01?TDateTime_TimeT@@YA_JN@Z"(double) #0 {
+  %2 = alloca double, align 8
+  %3 = alloca i64, align 8
+  store double %0, double* %2, align 8
+  %4 = load double, double* %2, align 8
+  %5 = fsub double %4, 2.556900e+04
+  %6 = fmul double %5, 8.640000e+04
+  %7 = fptosi double %6 to i32
+  %8 = sext i32 %7 to i64
+  store i64 %8, i64* %3, align 8
+  %9 = load i64, i64* %3, align 8
+  ret i64 %9
 }
 
-define i8* @"_ZN7cpython8__main__7foo$241E35bytearray$28uint8$2c$201d$2c$20C$29"(i8* %py_closure, i8* %py_args, i8* nocapture readnone %py_kws) local_unnamed_addr {
-entry:
-  %.5 = alloca i8*, align 8
-  %.6 = call i32 (i8*, i8*, i64, i64, ...) @PyArg_UnpackTuple(i8* %py_args, i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.const.foo, i64 0, i64 0), i64 1, i64 1, i8** nonnull %.5)
-  %.7 = icmp eq i32 %.6, 0
-  %.30 = alloca [80 x i8], align 1
-  %.34 = alloca { i8*, i8*, i64, i64, i8*, [1 x i64], [1 x i64] }, align 8
-  %.47 = alloca i32, align 4
-  %0 = bitcast { i8*, i8*, i64, i64, i8*, [1 x i64], [1 x i64] }* %.34 to i8*
-  call void @llvm.memset.p0i8.i64(i8* nonnull %0, i8 0, i64 56, i32 8, i1 false)
-  br i1 %.7, label %entry.if, label %entry.endif, !prof !4
+; Function Attrs: alwaysinline uwtable
+define i32 @PARSE_TimeTagFileHeader(i8*) #1 {
+  %2 = alloca i32, align 4
+  %3 = alloca i8*, align 8
+  %4 = alloca %struct._iobuf*, align 8
+  %5 = alloca [8 x i8], align 1
+  %6 = alloca i32, align 4
+  store i8* %0, i8** %3, align 8
+  %7 = load i8*, i8** %3, align 8
+  %8 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([15 x i8], [15 x i8]* @"\01??_C@_0P@JEAMJNI@File?5name?3?5?$CFs?6?$AA@", i32 0, i32 0), i8* %7)
+  %9 = load i8*, i8** %3, align 8
+  %10 = call %struct._iobuf* @fopen(i8* %9, i8* getelementptr inbounds ([3 x i8], [3 x i8]* @"\01??_C@_02JDPG@rb?$AA@", i32 0, i32 0))
+  store %struct._iobuf* %10, %struct._iobuf** %4, align 8
+  %11 = icmp eq %struct._iobuf* %10, null
+  br i1 %11, label %12, label %16
 
-entry.if:                                         ; preds = %entry.endif.endif.endif, %entry
-  ret i8* null
+; <label>:12:                                     ; preds = %1
+  %13 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([8 x i8], [8 x i8]* @"\01??_C@_07CEGNDBCD@?$FLERROR?$FN?$AA@", i32 0, i32 0))
+  %14 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([41 x i8], [41 x i8]* @"\01??_C@_0CJ@INBIHOGD@Can?5not?5open?5time?9tagged?5file?0?5a@", i32 0, i32 0))
+  %15 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([2 x i8], [2 x i8]* @"\01??_C@_01EEMJAFIK@?6?$AA@", i32 0, i32 0))
+  store i32 -1, i32* %2, align 4
+  br label %43
 
-entry.endif:                                      ; preds = %entry
-  %.11 = icmp eq i8* %py_closure, null
-  br i1 %.11, label %entry.endif.if, label %entry.endif.endif, !prof !4
+; <label>:16:                                     ; preds = %1
+  %17 = load %struct._iobuf*, %struct._iobuf** %4, align 8
+  %18 = bitcast [8 x i8]* %5 to i8*
+  %19 = call i64 @fread(i8* %18, i64 1, i64 8, %struct._iobuf* %17)
+  %20 = icmp ne i64 %19, 8
+  br i1 %20, label %21, label %25
 
-entry.endif.if:                                   ; preds = %entry.endif
-  %.13 = call i32 @puts(i8* getelementptr inbounds ([38 x i8], [38 x i8]* @".const.Fatal error: missing _dynfunc.Closure", i64 0, i64 0))
-  unreachable
+; <label>:21:                                     ; preds = %16
+  %22 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([8 x i8], [8 x i8]* @"\01??_C@_07CEGNDBCD@?$FLERROR?$FN?$AA@", i32 0, i32 0))
+  %23 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([32 x i8], [32 x i8]* @"\01??_C@_0CA@PNEMECFH@Failed?5to?5read?5header?0?5aborted?4?$AA@", i32 0, i32 0))
+  %24 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([2 x i8], [2 x i8]* @"\01??_C@_01EEMJAFIK@?6?$AA@", i32 0, i32 0))
+  store i32 -2, i32* %2, align 4
+  br label %43
 
-entry.endif.endif:                                ; preds = %entry.endif
-  %.15 = ptrtoint i8* %py_closure to i64
-  %.16 = add i64 %.15, 24
-  %.18 = inttoptr i64 %.16 to { i8* }*
-  %.193 = bitcast { i8* }* %.18 to i8**
-  %.20 = load i8*, i8** %.193, align 8
-  %.25 = icmp eq i8* %.20, null
-  br i1 %.25, label %entry.endif.endif.if, label %entry.endif.endif.endif, !prof !4
+; <label>:25:                                     ; preds = %16
+  store i32 -1, i32* %6, align 4
+  %26 = getelementptr inbounds [8 x i8], [8 x i8]* %5, i32 0, i32 0
+  %27 = call i32 @strncmp(i8* %26, i8* getelementptr inbounds ([7 x i8], [7 x i8]* @"\01??_C@_06OMFAFKCA@PQTTTR?$AA@", i32 0, i32 0), i64 6)
+  %28 = icmp eq i32 %27, 0
+  br i1 %28, label %29, label %34
 
-entry.endif.endif.if:                             ; preds = %entry.endif.endif
-  call void @PyErr_SetString(i8* nonnull @PyExc_RuntimeError, i8* getelementptr inbounds ([20 x i8], [20 x i8]* @".const.missing Environment", i64 0, i64 0))
-  ret i8* null
+; <label>:29:                                     ; preds = %25
+  %30 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([20 x i8], [20 x i8]* @"\01??_C@_0BE@PNEHCHO@Parser?3?5PicoQuant?5?6?$AA@", i32 0, i32 0))
+  %31 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([2 x i8], [2 x i8]* @"\01??_C@_01EEMJAFIK@?6?$AA@", i32 0, i32 0))
+  %32 = load %struct._iobuf*, %struct._iobuf** %4, align 8
+  %33 = call i32 @"\01?PicoQuant_header_parser@@YAHPEAU_iobuf@@@Z"(%struct._iobuf* %32)
+  store i32 %33, i32* %6, align 4
+  br label %39
 
-entry.endif.endif.endif:                          ; preds = %entry.endif.endif
-  %.29 = load i8*, i8** %.5, align 8
-  %.fca.0.gep14 = bitcast [80 x i8]* %.30 to i8*
-  call void @llvm.memset.p0i8.i64(i8* nonnull %.fca.0.gep14, i8 0, i64 80, i32 1, i1 false)
-  %.32 = call i32 @numba_get_buffer(i8* %.29, [80 x i8]* nonnull %.30)
-  %.33 = icmp eq i32 %.32, 0
-  br i1 %.33, label %entry.endif.endif.endif.endif.endif, label %entry.if, !prof !5
+; <label>:34:                                     ; preds = %25
+  %35 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([16 x i8], [16 x i8]* @"\01??_C@_0BA@NFCPOBHP@Parser?3?5quTAU?5?6?$AA@", i32 0, i32 0))
+  %36 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([2 x i8], [2 x i8]* @"\01??_C@_01EEMJAFIK@?6?$AA@", i32 0, i32 0))
+  %37 = load %struct._iobuf*, %struct._iobuf** %4, align 8
+  %38 = call i32 @"\01?quTAU_header_parser@@YAHPEAU_iobuf@@@Z"(%struct._iobuf* %37)
+  store i32 %38, i32* %6, align 4
+  br label %39
 
-entry.endif.endif.endif.endif.endif:              ; preds = %entry.endif.endif.endif
-  %1 = bitcast { i8*, i8*, i64, i64, i8*, [1 x i64], [1 x i64] }* %.34 to i8**
-  %.38 = bitcast { i8*, i8*, i64, i64, i8*, [1 x i64], [1 x i64] }* %.34 to i8*
-  call void @NRT_adapt_buffer_from_python([80 x i8]* nonnull %.30, i8* nonnull %.38)
-  %.41.fca.0.load = load i8*, i8** %1, align 8
-  %2 = bitcast { i8*, i8*, i64, i64, i8*, [1 x i64], [1 x i64] }* %.34 to i8*
-  %sunkaddr = getelementptr i8, i8* %2, i64 8
-  %3 = bitcast i8* %sunkaddr to i8**
-  %.41.fca.1.load = load i8*, i8** %3, align 8
-  %4 = bitcast { i8*, i8*, i64, i64, i8*, [1 x i64], [1 x i64] }* %.34 to i8*
-  %sunkaddr5 = getelementptr i8, i8* %4, i64 16
-  %5 = bitcast i8* %sunkaddr5 to i64*
-  %.41.fca.2.load = load i64, i64* %5, align 8
-  %6 = bitcast { i8*, i8*, i64, i64, i8*, [1 x i64], [1 x i64] }* %.34 to i8*
-  %sunkaddr6 = getelementptr i8, i8* %6, i64 24
-  %7 = bitcast i8* %sunkaddr6 to i64*
-  %.41.fca.3.load = load i64, i64* %7, align 8
-  %8 = bitcast { i8*, i8*, i64, i64, i8*, [1 x i64], [1 x i64] }* %.34 to i8*
-  %sunkaddr7 = getelementptr i8, i8* %8, i64 32
-  %9 = bitcast i8* %sunkaddr7 to i8**
-  %.41.fca.4.load = load i8*, i8** %9, align 8
-  %10 = bitcast { i8*, i8*, i64, i64, i8*, [1 x i64], [1 x i64] }* %.34 to i8*
-  %sunkaddr8 = getelementptr i8, i8* %10, i64 40
-  %11 = bitcast i8* %sunkaddr8 to i64*
-  %.41.fca.5.0.load = load i64, i64* %11, align 8
-  %12 = bitcast { i8*, i8*, i64, i64, i8*, [1 x i64], [1 x i64] }* %.34 to i8*
-  %sunkaddr9 = getelementptr i8, i8* %12, i64 48
-  %13 = bitcast i8* %sunkaddr9 to i64*
-  %.41.fca.6.0.load = load i64, i64* %13, align 8
-  store i32 0, i32* %.47, align 4
-  %.51 = call i32 @"_ZN8__main__7foo$241E35bytearray$28uint8$2c$201d$2c$20C$29"(i32* nonnull %.47, { i8*, i32 }** undef, i8* undef, i8* %.41.fca.0.load, i8* %.41.fca.1.load, i64 %.41.fca.2.load, i64 %.41.fca.3.load, i8* %.41.fca.4.load, i64 %.41.fca.5.0.load, i64 %.41.fca.6.0.load)
-  %.61 = load i32, i32* %.47, align 4
-  call void @numba_release_buffer([80 x i8]* nonnull %.30)
-  call void @NRT_decref(i8* %.41.fca.0.load)
-  %.68 = sext i32 %.61 to i64
-  %.70 = call i8* @PyLong_FromLongLong(i64 %.68)
-  ret i8* %.70
+; <label>:39:                                     ; preds = %34, %29
+  %40 = load %struct._iobuf*, %struct._iobuf** %4, align 8
+  %41 = call i32 @fclose(%struct._iobuf* %40)
+  %42 = load i32, i32* %6, align 4
+  store i32 %42, i32* %2, align 4
+  br label %43
+
+; <label>:43:                                     ; preds = %39, %21, %12
+  %44 = load i32, i32* %2, align 4
+  ret i32 %44
 }
-
-declare i32 @PyArg_UnpackTuple(i8*, i8*, i64, i64, ...) local_unnamed_addr
-
-; Function Attrs: nounwind
-declare i32 @puts(i8* nocapture readonly) local_unnamed_addr #0
-
-declare void @PyErr_SetString(i8*, i8*) local_unnamed_addr
-
-declare i32 @numba_get_buffer(i8*, [80 x i8]*) local_unnamed_addr
-
-declare void @NRT_adapt_buffer_from_python([80 x i8]* nocapture, i8* nocapture) local_unnamed_addr
-
-declare void @numba_release_buffer([80 x i8]*) local_unnamed_addr
-
-declare i8* @PyLong_FromLongLong(i64) local_unnamed_addr
 
 ; Function Attrs: noinline optnone uwtable
-define linkonce_odr i32 @printf(i8*, ...) local_unnamed_addr #1 comdat {
+define linkonce_odr i32 @printf(i8*, ...) #2 comdat {
   %2 = alloca i8*, align 8
   %3 = alloca i32, align 4
   %4 = alloca i8*, align 8
@@ -348,8 +279,8 @@ define linkonce_odr i32 @printf(i8*, ...) local_unnamed_addr #1 comdat {
   call void @llvm.va_start(i8* %5)
   %6 = load i8*, i8** %4, align 8
   %7 = load i8*, i8** %2, align 8
-  %8 = call { i8* }* @__acrt_iob_func(i32 1)
-  %9 = call i32 @_vfprintf_l({ i8* }* %8, i8* %7, %struct.__crt_locale_pointers* null, i8* %6)
+  %8 = call %struct._iobuf* @__acrt_iob_func(i32 1)
+  %9 = call i32 @_vfprintf_l(%struct._iobuf* %8, i8* %7, %struct.__crt_locale_pointers* null, i8* %6)
   store i32 %9, i32* %3, align 4
   %10 = bitcast i8** %4 to i8*
   call void @llvm.va_end(i8* %10)
@@ -357,22 +288,16 @@ define linkonce_odr i32 @printf(i8*, ...) local_unnamed_addr #1 comdat {
   ret i32 %11
 }
 
-; Function Attrs: nounwind
-declare noalias { i8* }* @fopen(i8* nocapture readonly, i8* nocapture readonly) local_unnamed_addr #2
+declare %struct._iobuf* @fopen(i8*, i8*) #3
 
-; Function Attrs: nounwind
-declare i32 @putchar(i32) local_unnamed_addr #0
+declare i64 @fread(i8*, i64, i64, %struct._iobuf*) #3
 
-; Function Attrs: nounwind
-declare i64 @fread(i8* nocapture, i64, i64, { i8* }* nocapture) local_unnamed_addr #2
-
-; Function Attrs: nounwind readonly
-declare i32 @strncmp(i8* nocapture, i8* nocapture, i64) local_unnamed_addr #3
+declare i32 @strncmp(i8*, i8*, i64) #3
 
 ; Function Attrs: noinline optnone uwtable
-define linkonce_odr i32 @"\01?PicoQuant_header_parser@@YAHPEAU_iobuf@@@Z"({ i8* }*) local_unnamed_addr #1 comdat {
+define linkonce_odr i32 @"\01?PicoQuant_header_parser@@YAHPEAU_iobuf@@@Z"(%struct._iobuf*) #2 comdat {
   %2 = alloca i32, align 4
-  %3 = alloca { i8* }*, align 8
+  %3 = alloca %struct._iobuf*, align 8
   %4 = alloca i32, align 4
   %5 = alloca i8*, align 8
   %6 = alloca i16*, align 8
@@ -381,10 +306,10 @@ define linkonce_odr i32 @"\01?PicoQuant_header_parser@@YAHPEAU_iobuf@@@Z"({ i8* 
   %9 = alloca double, align 8
   %10 = alloca double, align 8
   %11 = alloca i64, align 8
-  store { i8* }* %0, { i8* }** %3, align 8
-  %12 = load { i8* }*, { i8* }** %3, align 8
+  store %struct._iobuf* %0, %struct._iobuf** %3, align 8
+  %12 = load %struct._iobuf*, %struct._iobuf** %3, align 8
   %13 = bitcast [8 x i8]* %7 to i8*
-  %14 = call i64 @fread(i8* %13, i64 1, i64 8, { i8* }* %12)
+  %14 = call i64 @fread(i8* %13, i64 1, i64 8, %struct._iobuf* %12)
   %15 = trunc i64 %14 to i32
   store i32 %15, i32* %4, align 4
   %16 = load i32, i32* %4, align 4
@@ -405,8 +330,8 @@ define linkonce_odr i32 @"\01?PicoQuant_header_parser@@YAHPEAU_iobuf@@@Z"({ i8* 
   br label %27
 
 ; <label>:27:                                     ; preds = %162, %23
-  %28 = load { i8* }*, { i8* }** %3, align 8
-  %29 = call i64 @fread(i8* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i32 0, i32 0, i32 0), i64 1, i64 48, { i8* }* %28)
+  %28 = load %struct._iobuf*, %struct._iobuf** %3, align 8
+  %29 = call i64 @fread(i8* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i32 0, i32 0, i32 0), i64 1, i64 48, %struct._iobuf* %28)
   %30 = trunc i64 %29 to i32
   store i32 %30, i32* %4, align 4
   %31 = load i32, i32* %4, align 4
@@ -536,15 +461,15 @@ define linkonce_odr i32 @"\01?PicoQuant_header_parser@@YAHPEAU_iobuf@@@Z"({ i8* 
   %99 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([30 x i8], [30 x i8]* @"\01??_C@_0BO@ENEJMDLG@?$DMFloat?5Array?5with?5?$CFd?5Entries?$DO?$AA@", i32 0, i32 0), i64 %98)
   %100 = load i64, i64* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i32 0, i32 3), align 8
   %101 = trunc i64 %100 to i32
-  %102 = load { i8* }*, { i8* }** %3, align 8
-  %103 = call i32 @fseek({ i8* }* %102, i32 %101, i32 1)
+  %102 = load %struct._iobuf*, %struct._iobuf** %3, align 8
+  %103 = call i32 @fseek(%struct._iobuf* %102, i32 %101, i32 1)
   br label %161
 
 ; <label>:104:                                    ; preds = %46
   %105 = load double, double* bitcast (i64* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i32 0, i32 3) to double*), align 8
   %106 = call i64 @"\01?TDateTime_TimeT@@YA_JN@Z"(double %105)
   store i64 %106, i64* %11, align 8
-  %107 = call fastcc %struct.tm* @"\01?gmtime@@YAPEAUtm@@QEB_J@Z"(i64* %11)
+  %107 = call %struct.tm* @"\01?gmtime@@YAPEAUtm@@QEB_J@Z"(i64* %11)
   %108 = call i8* @asctime(%struct.tm* %107)
   %109 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @"\01??_C@_02DKCKIIND@?$CFs?$AA@", i32 0, i32 0), i8* %108, i8* getelementptr inbounds ([2 x i8], [2 x i8]* @"\01??_C@_01LOCGONAA@?$AA?$AA@", i32 0, i32 0))
   br label %161
@@ -553,10 +478,10 @@ define linkonce_odr i32 @"\01?PicoQuant_header_parser@@YAHPEAU_iobuf@@@Z"({ i8* 
   %111 = load i64, i64* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i32 0, i32 3), align 8
   %112 = call noalias i8* @calloc(i64 %111, i64 1)
   store i8* %112, i8** %5, align 8
-  %113 = load { i8* }*, { i8* }** %3, align 8
+  %113 = load %struct._iobuf*, %struct._iobuf** %3, align 8
   %114 = load i64, i64* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i32 0, i32 3), align 8
   %115 = load i8*, i8** %5, align 8
-  %116 = call i64 @fread(i8* %115, i64 1, i64 %114, { i8* }* %113)
+  %116 = call i64 @fread(i8* %115, i64 1, i64 %114, %struct._iobuf* %113)
   %117 = trunc i64 %116 to i32
   store i32 %117, i32* %4, align 4
   %118 = load i32, i32* %4, align 4
@@ -583,11 +508,11 @@ define linkonce_odr i32 @"\01?PicoQuant_header_parser@@YAHPEAU_iobuf@@@Z"({ i8* 
   %131 = call noalias i8* @calloc(i64 %130, i64 1)
   %132 = bitcast i8* %131 to i16*
   store i16* %132, i16** %6, align 8
-  %133 = load { i8* }*, { i8* }** %3, align 8
+  %133 = load %struct._iobuf*, %struct._iobuf** %3, align 8
   %134 = load i64, i64* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i32 0, i32 3), align 8
   %135 = load i16*, i16** %6, align 8
   %136 = bitcast i16* %135 to i8*
-  %137 = call i64 @fread(i8* %136, i64 1, i64 %134, { i8* }* %133)
+  %137 = call i64 @fread(i8* %136, i64 1, i64 %134, %struct._iobuf* %133)
   %138 = trunc i64 %137 to i32
   store i32 %138, i32* %4, align 4
   %139 = load i32, i32* %4, align 4
@@ -616,8 +541,8 @@ define linkonce_odr i32 @"\01?PicoQuant_header_parser@@YAHPEAU_iobuf@@@Z"({ i8* 
   %154 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([32 x i8], [32 x i8]* @"\01??_C@_0CA@FNNAPBCN@?$DMBinary?5Blob?5contains?5?$CFd?5Bytes?$DO?$AA@", i32 0, i32 0), i64 %153)
   %155 = load i64, i64* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i32 0, i32 3), align 8
   %156 = trunc i64 %155 to i32
-  %157 = load { i8* }*, { i8* }** %3, align 8
-  %158 = call i32 @fseek({ i8* }* %157, i32 %156, i32 1)
+  %157 = load %struct._iobuf*, %struct._iobuf** %3, align 8
+  %158 = call i32 @fseek(%struct._iobuf* %157, i32 %156, i32 1)
   br label %161
 
 ; <label>:159:                                    ; preds = %46
@@ -731,40 +656,43 @@ define linkonce_odr i32 @"\01?PicoQuant_header_parser@@YAHPEAU_iobuf@@@Z"({ i8* 
 
 ; <label>:209:                                    ; preds = %207, %206
   store i64 4, i64* @"\01?BytesofRecords@@3_JA", align 8
-  %210 = load { i8* }*, { i8* }** %3, align 8
-  %211 = call i32 @ftell({ i8* }* %210)
+  %210 = load %struct._iobuf*, %struct._iobuf** %3, align 8
+  %211 = call i32 @ftell(%struct._iobuf* %210)
   %212 = sext i32 %211 to i64
   store i64 %212, i64* @"\01?TTF_header_offset@@3_JA", align 8
-  %213 = load { i8* }*, { i8* }** %3, align 8
-  %214 = call i32 @_fseeki64_nolock({ i8* }* %213, i64 0, i32 2)
-  %215 = load { i8* }*, { i8* }** %3, align 8
-  %216 = call i32 @ftell({ i8* }* %215)
+  %213 = load %struct._iobuf*, %struct._iobuf** %3, align 8
+  %214 = call i32 @_fseeki64_nolock(%struct._iobuf* %213, i64 0, i32 2)
+  %215 = load %struct._iobuf*, %struct._iobuf** %3, align 8
+  %216 = call i32 @ftell(%struct._iobuf* %215)
   %217 = sext i32 %216 to i64
   store i64 %217, i64* @"\01?TTF_filesize@@3_JA", align 8
   %218 = load i64, i64* @"\01?TTF_filesize@@3_JA", align 8
   %219 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([5 x i8], [5 x i8]* @"\01??_C@_04BFAHMMK@?$CFlld?$AA@", i32 0, i32 0), i64 %218)
   %220 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([2 x i8], [2 x i8]* @"\01??_C@_01EEMJAFIK@?6?$AA@", i32 0, i32 0))
   store i32 0, i32* %2, align 4
-  br label %222
+  br label %223
 
 ; <label>:221:                                    ; preds = %199, %159, %143, %122, %34, %19
   store i32 -1, i32* %2, align 4
-  br label %222
+  br label %223
+                                                  ; No predecessors!
+  store i32 -2, i32* %2, align 4
+  br label %223
 
-; <label>:222:                                    ; preds = %221, %209
-  %223 = load i32, i32* %2, align 4
-  ret i32 %223
+; <label>:223:                                    ; preds = %222, %221, %209
+  %224 = load i32, i32* %2, align 4
+  ret i32 %224
 }
 
 ; Function Attrs: noinline optnone uwtable
-define linkonce_odr i32 @"\01?quTAU_header_parser@@YAHPEAU_iobuf@@@Z"({ i8* }*) local_unnamed_addr #1 comdat {
+define linkonce_odr i32 @"\01?quTAU_header_parser@@YAHPEAU_iobuf@@@Z"(%struct._iobuf*) #2 comdat {
   %2 = alloca i32, align 4
-  %3 = alloca { i8* }*, align 8
+  %3 = alloca %struct._iobuf*, align 8
   %4 = alloca [32 x i8], align 16
-  store { i8* }* %0, { i8* }** %3, align 8
-  %5 = load { i8* }*, { i8* }** %3, align 8
+  store %struct._iobuf* %0, %struct._iobuf** %3, align 8
+  %5 = load %struct._iobuf*, %struct._iobuf** %3, align 8
   %6 = bitcast [32 x i8]* %4 to i8*
-  %7 = call i64 @fread(i8* %6, i64 1, i64 32, { i8* }* %5)
+  %7 = call i64 @fread(i8* %6, i64 1, i64 32, %struct._iobuf* %5)
   %8 = icmp ne i64 %7, 32
   br i1 %8, label %9, label %13
 
@@ -787,13 +715,13 @@ define linkonce_odr i32 @"\01?quTAU_header_parser@@YAHPEAU_iobuf@@@Z"({ i8* }*) 
   %18 = load i64, i64* @"\01?TTRes_pspr@@3_KA", align 8
   store i64 %18, i64* @"\01?DTRes_pspr@@3_KA", align 8
   store i64 1249, i64* @"\01?SYNCRate_pspr@@3_KA", align 8
-  %19 = load { i8* }*, { i8* }** %3, align 8
-  %20 = call i64 @_ftelli64_nolock({ i8* }* %19)
+  %19 = load %struct._iobuf*, %struct._iobuf** %3, align 8
+  %20 = call i64 @_ftelli64_nolock(%struct._iobuf* %19)
   store i64 %20, i64* @"\01?TTF_header_offset@@3_JA", align 8
-  %21 = load { i8* }*, { i8* }** %3, align 8
-  %22 = call i32 @_fseeki64_nolock({ i8* }* %21, i64 0, i32 2)
-  %23 = load { i8* }*, { i8* }** %3, align 8
-  %24 = call i64 @_ftelli64_nolock({ i8* }* %23)
+  %21 = load %struct._iobuf*, %struct._iobuf** %3, align 8
+  %22 = call i32 @_fseeki64_nolock(%struct._iobuf* %21, i64 0, i32 2)
+  %23 = load %struct._iobuf*, %struct._iobuf** %3, align 8
+  %24 = call i64 @_ftelli64_nolock(%struct._iobuf* %23)
   store i64 %24, i64* @"\01?TTF_filesize@@3_JA", align 8
   %25 = load i64, i64* @"\01?TTF_filesize@@3_JA", align 8
   %26 = load i64, i64* @"\01?TTF_header_offset@@3_JA", align 8
@@ -809,18 +737,47 @@ define linkonce_odr i32 @"\01?quTAU_header_parser@@YAHPEAU_iobuf@@@Z"({ i8* }*) 
   ret i32 %31
 }
 
-; Function Attrs: nounwind
-declare i32 @fclose({ i8* }* nocapture) local_unnamed_addr #2
-
-declare i64 @_ftelli64_nolock({ i8* }*) local_unnamed_addr #4
-
-declare i32 @_fseeki64_nolock({ i8* }*, i64, i32) local_unnamed_addr #4
+declare i32 @fclose(%struct._iobuf*) #3
 
 ; Function Attrs: nounwind
-declare i8* @strcpy(i8*, i8* nocapture readonly) local_unnamed_addr #2
+declare void @llvm.va_start(i8*) #4
 
 ; Function Attrs: noinline optnone uwtable
-define linkonce_odr i32 @sprintf(i8*, i8*, ...) local_unnamed_addr #1 comdat {
+define linkonce_odr i32 @_vfprintf_l(%struct._iobuf*, i8*, %struct.__crt_locale_pointers*, i8*) #2 comdat {
+  %5 = alloca i8*, align 8
+  %6 = alloca %struct.__crt_locale_pointers*, align 8
+  %7 = alloca i8*, align 8
+  %8 = alloca %struct._iobuf*, align 8
+  store i8* %3, i8** %5, align 8
+  store %struct.__crt_locale_pointers* %2, %struct.__crt_locale_pointers** %6, align 8
+  store i8* %1, i8** %7, align 8
+  store %struct._iobuf* %0, %struct._iobuf** %8, align 8
+  %9 = load i8*, i8** %5, align 8
+  %10 = load %struct.__crt_locale_pointers*, %struct.__crt_locale_pointers** %6, align 8
+  %11 = load i8*, i8** %7, align 8
+  %12 = load %struct._iobuf*, %struct._iobuf** %8, align 8
+  %13 = call i64* @__local_stdio_printf_options()
+  %14 = load i64, i64* %13, align 8
+  %15 = call i32 @__stdio_common_vfprintf(i64 %14, %struct._iobuf* %12, i8* %11, %struct.__crt_locale_pointers* %10, i8* %9)
+  ret i32 %15
+}
+
+declare %struct._iobuf* @__acrt_iob_func(i32) #3
+
+; Function Attrs: nounwind
+declare void @llvm.va_end(i8*) #4
+
+declare i32 @__stdio_common_vfprintf(i64, %struct._iobuf*, i8*, %struct.__crt_locale_pointers*, i8*) #3
+
+; Function Attrs: noinline nounwind optnone uwtable
+define linkonce_odr i64* @__local_stdio_printf_options() #0 comdat {
+  ret i64* @"\01?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA"
+}
+
+declare i8* @strcpy(i8*, i8*) #3
+
+; Function Attrs: noinline optnone uwtable
+define linkonce_odr i32 @sprintf(i8*, i8*, ...) #2 comdat {
   %3 = alloca i8*, align 8
   %4 = alloca i8*, align 8
   %5 = alloca i32, align 4
@@ -840,29 +797,14 @@ define linkonce_odr i32 @sprintf(i8*, i8*, ...) local_unnamed_addr #1 comdat {
   ret i32 %13
 }
 
-; Function Attrs: nounwind readonly
-declare i32 @strcmp(i8* nocapture, i8* nocapture) local_unnamed_addr #3
+declare i32 @strcmp(i8*, i8*) #3
 
-; Function Attrs: nounwind
-declare i32 @fseek({ i8* }* nocapture, i32, i32) local_unnamed_addr #2
+declare i32 @fseek(%struct._iobuf*, i32, i32) #3
 
-; Function Attrs: noinline nounwind optnone uwtable
-define linkonce_odr i64 @"\01?TDateTime_TimeT@@YA_JN@Z"(double) local_unnamed_addr #5 {
-  %2 = alloca double, align 8
-  %3 = alloca i64, align 8
-  store double %0, double* %2, align 8
-  %4 = load double, double* %2, align 8
-  %5 = fsub double %4, 2.556900e+04
-  %6 = fmul double %5, 8.640000e+04
-  %7 = fptosi double %6 to i32
-  %8 = sext i32 %7 to i64
-  store i64 %8, i64* %3, align 8
-  %9 = load i64, i64* %3, align 8
-  ret i64 %9
-}
+declare i8* @asctime(%struct.tm*) #3
 
 ; Function Attrs: noinline optnone uwtable
-define internal fastcc %struct.tm* @"\01?gmtime@@YAPEAUtm@@QEB_J@Z"(i64*) unnamed_addr #1 {
+define internal %struct.tm* @"\01?gmtime@@YAPEAUtm@@QEB_J@Z"(i64*) #2 {
   %2 = alloca i64*, align 8
   store i64* %0, i64** %2, align 8
   %3 = load i64*, i64** %2, align 8
@@ -870,16 +812,12 @@ define internal fastcc %struct.tm* @"\01?gmtime@@YAPEAUtm@@QEB_J@Z"(i64*) unname
   ret %struct.tm* %4
 }
 
-declare i8* @asctime(%struct.tm*) local_unnamed_addr #4
+declare noalias i8* @calloc(i64, i64) #3
 
-; Function Attrs: nounwind
-declare noalias i8* @calloc(i64, i64) local_unnamed_addr #2
-
-; Function Attrs: nounwind
-declare void @free(i8* nocapture) local_unnamed_addr #2
+declare void @free(i8*) #3
 
 ; Function Attrs: noinline optnone uwtable
-define linkonce_odr i32 @wprintf(i16*, ...) local_unnamed_addr #1 comdat {
+define linkonce_odr i32 @wprintf(i16*, ...) #2 comdat {
   %2 = alloca i16*, align 8
   %3 = alloca i32, align 4
   %4 = alloca i8*, align 8
@@ -888,8 +826,8 @@ define linkonce_odr i32 @wprintf(i16*, ...) local_unnamed_addr #1 comdat {
   call void @llvm.va_start(i8* %5)
   %6 = load i8*, i8** %4, align 8
   %7 = load i16*, i16** %2, align 8
-  %8 = call { i8* }* @__acrt_iob_func(i32 1)
-  %9 = call i32 @_vfwprintf_l({ i8* }* %8, i16* %7, %struct.__crt_locale_pointers* null, i8* %6)
+  %8 = call %struct._iobuf* @__acrt_iob_func(i32 1)
+  %9 = call i32 @_vfwprintf_l(%struct._iobuf* %8, i16* %7, %struct.__crt_locale_pointers* null, i8* %6)
   store i32 %9, i32* %3, align 4
   %10 = bitcast i8** %4 to i8*
   call void @llvm.va_end(i8* %10)
@@ -897,48 +835,12 @@ define linkonce_odr i32 @wprintf(i16*, ...) local_unnamed_addr #1 comdat {
   ret i32 %11
 }
 
-; Function Attrs: nounwind
-declare i32 @ftell({ i8* }* nocapture) local_unnamed_addr #2
+declare i32 @ftell(%struct._iobuf*) #3
 
-; Function Attrs: nounwind
-declare void @llvm.va_start(i8*) #0
-
-declare { i8* }* @__acrt_iob_func(i32) local_unnamed_addr #4
+declare i32 @_fseeki64_nolock(%struct._iobuf*, i64, i32) #3
 
 ; Function Attrs: noinline optnone uwtable
-define linkonce_odr i32 @_vfwprintf_l({ i8* }*, i16*, %struct.__crt_locale_pointers*, i8*) local_unnamed_addr #1 comdat {
-  %5 = alloca i8*, align 8
-  %6 = alloca %struct.__crt_locale_pointers*, align 8
-  %7 = alloca i16*, align 8
-  %8 = alloca { i8* }*, align 8
-  store i8* %3, i8** %5, align 8
-  store %struct.__crt_locale_pointers* %2, %struct.__crt_locale_pointers** %6, align 8
-  store i16* %1, i16** %7, align 8
-  store { i8* }* %0, { i8* }** %8, align 8
-  %9 = load i8*, i8** %5, align 8
-  %10 = load %struct.__crt_locale_pointers*, %struct.__crt_locale_pointers** %6, align 8
-  %11 = load i16*, i16** %7, align 8
-  %12 = load { i8* }*, { i8* }** %8, align 8
-  %13 = call i64* @__local_stdio_printf_options()
-  %14 = load i64, i64* %13, align 8
-  %15 = call i32 @__stdio_common_vfwprintf(i64 %14, { i8* }* %12, i16* %11, %struct.__crt_locale_pointers* %10, i8* %9)
-  ret i32 %15
-}
-
-; Function Attrs: nounwind
-declare void @llvm.va_end(i8*) #0
-
-; Function Attrs: noinline nounwind optnone uwtable
-define linkonce_odr i64* @__local_stdio_printf_options() local_unnamed_addr #5 comdat {
-  ret i64* @"\01?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA"
-}
-
-declare i32 @__stdio_common_vfwprintf(i64, { i8* }*, i16*, %struct.__crt_locale_pointers*, i8*) local_unnamed_addr #4
-
-declare %struct.tm* @_gmtime64(i64*) local_unnamed_addr #4
-
-; Function Attrs: noinline optnone uwtable
-define linkonce_odr i32 @_vsprintf_l(i8*, i8*, %struct.__crt_locale_pointers*, i8*) local_unnamed_addr #1 comdat {
+define linkonce_odr i32 @_vsprintf_l(i8*, i8*, %struct.__crt_locale_pointers*, i8*) #2 comdat {
   %5 = alloca i8*, align 8
   %6 = alloca %struct.__crt_locale_pointers*, align 8
   %7 = alloca i8*, align 8
@@ -956,7 +858,7 @@ define linkonce_odr i32 @_vsprintf_l(i8*, i8*, %struct.__crt_locale_pointers*, i
 }
 
 ; Function Attrs: noinline optnone uwtable
-define linkonce_odr i32 @_vsnprintf_l(i8*, i64, i8*, %struct.__crt_locale_pointers*, i8*) local_unnamed_addr #1 comdat {
+define linkonce_odr i32 @_vsnprintf_l(i8*, i64, i8*, %struct.__crt_locale_pointers*, i8*) #2 comdat {
   %6 = alloca i8*, align 8
   %7 = alloca %struct.__crt_locale_pointers*, align 8
   %8 = alloca i8*, align 8
@@ -994,80 +896,45 @@ define linkonce_odr i32 @_vsnprintf_l(i8*, i64, i8*, %struct.__crt_locale_pointe
   ret i32 %27
 }
 
-declare i32 @__stdio_common_vsprintf(i64, i8*, i64, i8*, %struct.__crt_locale_pointers*, i8*) local_unnamed_addr #4
+declare i32 @__stdio_common_vsprintf(i64, i8*, i64, i8*, %struct.__crt_locale_pointers*, i8*) #3
+
+declare %struct.tm* @_gmtime64(i64*) #3
 
 ; Function Attrs: noinline optnone uwtable
-define linkonce_odr i32 @_vfprintf_l({ i8* }*, i8*, %struct.__crt_locale_pointers*, i8*) local_unnamed_addr #1 comdat {
+define linkonce_odr i32 @_vfwprintf_l(%struct._iobuf*, i16*, %struct.__crt_locale_pointers*, i8*) #2 comdat {
   %5 = alloca i8*, align 8
   %6 = alloca %struct.__crt_locale_pointers*, align 8
-  %7 = alloca i8*, align 8
-  %8 = alloca { i8* }*, align 8
+  %7 = alloca i16*, align 8
+  %8 = alloca %struct._iobuf*, align 8
   store i8* %3, i8** %5, align 8
   store %struct.__crt_locale_pointers* %2, %struct.__crt_locale_pointers** %6, align 8
-  store i8* %1, i8** %7, align 8
-  store { i8* }* %0, { i8* }** %8, align 8
+  store i16* %1, i16** %7, align 8
+  store %struct._iobuf* %0, %struct._iobuf** %8, align 8
   %9 = load i8*, i8** %5, align 8
   %10 = load %struct.__crt_locale_pointers*, %struct.__crt_locale_pointers** %6, align 8
-  %11 = load i8*, i8** %7, align 8
-  %12 = load { i8* }*, { i8* }** %8, align 8
+  %11 = load i16*, i16** %7, align 8
+  %12 = load %struct._iobuf*, %struct._iobuf** %8, align 8
   %13 = call i64* @__local_stdio_printf_options()
   %14 = load i64, i64* %13, align 8
-  %15 = call i32 @__stdio_common_vfprintf(i64 %14, { i8* }* %12, i8* %11, %struct.__crt_locale_pointers* %10, i8* %9)
+  %15 = call i32 @__stdio_common_vfwprintf(i64 %14, %struct._iobuf* %12, i16* %11, %struct.__crt_locale_pointers* %10, i8* %9)
   ret i32 %15
 }
 
-declare i32 @__stdio_common_vfprintf(i64, { i8* }*, i8*, %struct.__crt_locale_pointers*, i8*) local_unnamed_addr #4
+declare i32 @__stdio_common_vfwprintf(i64, %struct._iobuf*, i16*, %struct.__crt_locale_pointers*, i8*) #3
 
-; Function Attrs: noinline
-define linkonce_odr void @NRT_decref(i8* %.1) local_unnamed_addr #6 {
-.3:
-  %.4 = icmp eq i8* %.1, null
-  br i1 %.4, label %.3.if, label %.3.endif, !prof !4
+declare i64 @_ftelli64_nolock(%struct._iobuf*) #3
 
-.3.if:                                            ; preds = %.3.endif, %.3
-  ret void
-
-.3.endif:                                         ; preds = %.3
-  %.7 = bitcast i8* %.1 to i64*
-  %.4.i = atomicrmw sub i64* %.7, i64 1 monotonic
-  %.9 = icmp eq i64 %.4.i, 1
-  br i1 %.9, label %.3.endif.if, label %.3.if, !prof !4
-
-.3.endif.if:                                      ; preds = %.3.endif
-  tail call void @NRT_MemInfo_call_dtor(i8* nonnull %.1)
-  ret void
-}
-
-declare void @NRT_MemInfo_call_dtor(i8*) local_unnamed_addr
-
-; Function Attrs: argmemonly nounwind
-declare void @llvm.lifetime.start.p0i8(i64, i8* nocapture) #7
-
-; Function Attrs: argmemonly nounwind
-declare void @llvm.lifetime.end.p0i8(i64, i8* nocapture) #7
-
-; Function Attrs: argmemonly nounwind
-declare void @llvm.memset.p0i8.i64(i8* nocapture writeonly, i8, i64, i32, i1) #7
-
-; Function Attrs: nounwind
-declare void @llvm.stackprotector(i8*, i8**) #0
-
-attributes #0 = { nounwind }
-attributes #1 = { noinline optnone uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
-attributes #2 = { nounwind "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
-attributes #3 = { nounwind readonly "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
-attributes #4 = { "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
-attributes #5 = { noinline nounwind optnone uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
-attributes #6 = { noinline }
-attributes #7 = { argmemonly nounwind }
+attributes #0 = { noinline nounwind optnone uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #1 = { alwaysinline uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #2 = { noinline optnone uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #3 = { "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #4 = { nounwind }
 
 !llvm.linker.options = !{!0}
-!llvm.ident = !{!1}
-!llvm.module.flags = !{!2, !3}
+!llvm.module.flags = !{!1, !2}
+!llvm.ident = !{!3}
 
 !0 = !{!"/FAILIFMISMATCH:\22_CRT_STDIO_ISO_WIDE_SPECIFIERS=0\22"}
-!1 = !{!"clang version 6.0.0 (tags/RELEASE_600/final)"}
-!2 = !{i32 1, !"wchar_size", i32 2}
-!3 = !{i32 7, !"PIC Level", i32 2}
-!4 = !{!"branch_weights", i32 1, i32 99}
-!5 = !{!"branch_weights", i32 99, i32 1}
+!1 = !{i32 1, !"wchar_size", i32 2}
+!2 = !{i32 7, !"PIC Level", i32 2}
+!3 = !{!"clang version 6.0.0 (tags/RELEASE_600/final)"}
