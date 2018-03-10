@@ -48,6 +48,8 @@ $"\01??_C@_0BE@PNEHCHO@Parser?3?5PicoQuant?5?6?$AA@" = comdat any
 
 $"\01??_C@_0BA@NFCPOBHP@Parser?3?5quTAU?5?6?$AA@" = comdat any
 
+$"\01??_C@_0P@ECJICMJN@Filesize?3?5?$CFlld?$AA@" = comdat any
+
 $"\01?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA" = comdat any
 
 $"\01??_C@_0CA@LFBPILNL@?6error?5reading?5header?0?5aborted?4?$AA@" = comdat any
@@ -143,6 +145,7 @@ $"\01??_C@_0BL@LHHAHHKM@RecordType?3?5quTAU?510?9bytes?$AA@" = comdat any
 @"\01??_C@_06OMFAFKCA@PQTTTR?$AA@" = linkonce_odr unnamed_addr constant [7 x i8] c"PQTTTR\00", comdat, align 1
 @"\01??_C@_0BE@PNEHCHO@Parser?3?5PicoQuant?5?6?$AA@" = linkonce_odr unnamed_addr constant [20 x i8] c"Parser: PicoQuant \0A\00", comdat, align 1
 @"\01??_C@_0BA@NFCPOBHP@Parser?3?5quTAU?5?6?$AA@" = linkonce_odr unnamed_addr constant [16 x i8] c"Parser: quTAU \0A\00", comdat, align 1
+@"\01??_C@_0P@ECJICMJN@Filesize?3?5?$CFlld?$AA@" = linkonce_odr unnamed_addr constant [15 x i8] c"Filesize: %lld\00", comdat, align 1
 @"\01?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA" = linkonce_odr global i64 0, comdat, align 8
 @"\01??_C@_0CA@LFBPILNL@?6error?5reading?5header?0?5aborted?4?$AA@" = linkonce_odr unnamed_addr constant [32 x i8] c"\0Aerror reading header, aborted.\00", comdat, align 1
 @"\01??_C@_0BH@OLMGMJEP@PTU?5file?5Version?3?5?$CFs?5?6?$AA@" = linkonce_odr unnamed_addr constant [23 x i8] c"PTU file Version: %s \0A\00", comdat, align 1
@@ -197,80 +200,108 @@ define i64 @"\01?TDateTime_TimeT@@YA_JN@Z"(double) #0 {
   ret i64 %9
 }
 
-; Function Attrs: alwaysinline uwtable
+; Function Attrs: noinline optnone uwtable
 define i32 @PARSE_TimeTagFileHeader(i8*) #1 {
   %2 = alloca i32, align 4
   %3 = alloca i8*, align 8
   %4 = alloca %struct._iobuf*, align 8
   %5 = alloca [8 x i8], align 1
-  %6 = alloca i32, align 4
+  %6 = alloca i8, align 1
+  %7 = alloca i32, align 4
+  %8 = alloca i32, align 4
   store i8* %0, i8** %3, align 8
-  %7 = load i8*, i8** %3, align 8
-  %8 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([15 x i8], [15 x i8]* @"\01??_C@_0P@JEAMJNI@File?5name?3?5?$CFs?6?$AA@", i32 0, i32 0), i8* %7)
   %9 = load i8*, i8** %3, align 8
-  %10 = call %struct._iobuf* @fopen(i8* %9, i8* getelementptr inbounds ([3 x i8], [3 x i8]* @"\01??_C@_02JDPG@rb?$AA@", i32 0, i32 0))
-  store %struct._iobuf* %10, %struct._iobuf** %4, align 8
-  %11 = icmp eq %struct._iobuf* %10, null
-  br i1 %11, label %12, label %16
+  %10 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([15 x i8], [15 x i8]* @"\01??_C@_0P@JEAMJNI@File?5name?3?5?$CFs?6?$AA@", i32 0, i32 0), i8* %9)
+  %11 = load i8*, i8** %3, align 8
+  %12 = call %struct._iobuf* @fopen(i8* %11, i8* getelementptr inbounds ([3 x i8], [3 x i8]* @"\01??_C@_02JDPG@rb?$AA@", i32 0, i32 0))
+  store %struct._iobuf* %12, %struct._iobuf** %4, align 8
+  %13 = icmp eq %struct._iobuf* %12, null
+  br i1 %13, label %14, label %18
 
-; <label>:12:                                     ; preds = %1
-  %13 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([8 x i8], [8 x i8]* @"\01??_C@_07CEGNDBCD@?$FLERROR?$FN?$AA@", i32 0, i32 0))
-  %14 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([41 x i8], [41 x i8]* @"\01??_C@_0CJ@INBIHOGD@Can?5not?5open?5time?9tagged?5file?0?5a@", i32 0, i32 0))
-  %15 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([2 x i8], [2 x i8]* @"\01??_C@_01EEMJAFIK@?6?$AA@", i32 0, i32 0))
+; <label>:14:                                     ; preds = %1
+  %15 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([8 x i8], [8 x i8]* @"\01??_C@_07CEGNDBCD@?$FLERROR?$FN?$AA@", i32 0, i32 0))
+  %16 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([41 x i8], [41 x i8]* @"\01??_C@_0CJ@INBIHOGD@Can?5not?5open?5time?9tagged?5file?0?5a@", i32 0, i32 0))
+  %17 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([2 x i8], [2 x i8]* @"\01??_C@_01EEMJAFIK@?6?$AA@", i32 0, i32 0))
   store i32 -1, i32* %2, align 4
-  br label %43
+  br label %63
 
-; <label>:16:                                     ; preds = %1
-  %17 = load %struct._iobuf*, %struct._iobuf** %4, align 8
-  %18 = bitcast [8 x i8]* %5 to i8*
-  %19 = call i64 @fread(i8* %18, i64 1, i64 8, %struct._iobuf* %17)
-  %20 = icmp ne i64 %19, 8
-  br i1 %20, label %21, label %25
+; <label>:18:                                     ; preds = %1
+  %19 = load %struct._iobuf*, %struct._iobuf** %4, align 8
+  %20 = bitcast [8 x i8]* %5 to i8*
+  %21 = call i64 @fread(i8* %20, i64 1, i64 8, %struct._iobuf* %19)
+  %22 = icmp ne i64 %21, 8
+  br i1 %22, label %23, label %27
 
-; <label>:21:                                     ; preds = %16
-  %22 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([8 x i8], [8 x i8]* @"\01??_C@_07CEGNDBCD@?$FLERROR?$FN?$AA@", i32 0, i32 0))
-  %23 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([32 x i8], [32 x i8]* @"\01??_C@_0CA@PNEMECFH@Failed?5to?5read?5header?0?5aborted?4?$AA@", i32 0, i32 0))
-  %24 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([2 x i8], [2 x i8]* @"\01??_C@_01EEMJAFIK@?6?$AA@", i32 0, i32 0))
+; <label>:23:                                     ; preds = %18
+  %24 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([8 x i8], [8 x i8]* @"\01??_C@_07CEGNDBCD@?$FLERROR?$FN?$AA@", i32 0, i32 0))
+  %25 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([32 x i8], [32 x i8]* @"\01??_C@_0CA@PNEMECFH@Failed?5to?5read?5header?0?5aborted?4?$AA@", i32 0, i32 0))
+  %26 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([2 x i8], [2 x i8]* @"\01??_C@_01EEMJAFIK@?6?$AA@", i32 0, i32 0))
   store i32 -2, i32* %2, align 4
-  br label %43
+  br label %63
 
-; <label>:25:                                     ; preds = %16
-  store i32 -1, i32* %6, align 4
-  %26 = getelementptr inbounds [8 x i8], [8 x i8]* %5, i32 0, i32 0
-  %27 = call i32 @strncmp(i8* %26, i8* getelementptr inbounds ([7 x i8], [7 x i8]* @"\01??_C@_06OMFAFKCA@PQTTTR?$AA@", i32 0, i32 0), i64 6)
-  %28 = icmp eq i32 %27, 0
-  br i1 %28, label %29, label %34
+; <label>:27:                                     ; preds = %18
+  store i8 0, i8* %6, align 1
+  store i32 -1, i32* %7, align 4
+  %28 = getelementptr inbounds [8 x i8], [8 x i8]* %5, i32 0, i32 0
+  %29 = call i32 @strncmp(i8* %28, i8* getelementptr inbounds ([7 x i8], [7 x i8]* @"\01??_C@_06OMFAFKCA@PQTTTR?$AA@", i32 0, i32 0), i64 6)
+  %30 = icmp eq i32 %29, 0
+  br i1 %30, label %31, label %36
 
-; <label>:29:                                     ; preds = %25
-  %30 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([20 x i8], [20 x i8]* @"\01??_C@_0BE@PNEHCHO@Parser?3?5PicoQuant?5?6?$AA@", i32 0, i32 0))
-  %31 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([2 x i8], [2 x i8]* @"\01??_C@_01EEMJAFIK@?6?$AA@", i32 0, i32 0))
-  %32 = load %struct._iobuf*, %struct._iobuf** %4, align 8
-  %33 = call i32 @"\01?PicoQuant_header_parser@@YAHPEAU_iobuf@@@Z"(%struct._iobuf* %32)
-  store i32 %33, i32* %6, align 4
-  br label %39
+; <label>:31:                                     ; preds = %27
+  %32 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([20 x i8], [20 x i8]* @"\01??_C@_0BE@PNEHCHO@Parser?3?5PicoQuant?5?6?$AA@", i32 0, i32 0))
+  %33 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([2 x i8], [2 x i8]* @"\01??_C@_01EEMJAFIK@?6?$AA@", i32 0, i32 0))
+  %34 = load %struct._iobuf*, %struct._iobuf** %4, align 8
+  %35 = call i32 @"\01?PicoQuant_header_parser@@YAHPEAU_iobuf@@@Z"(%struct._iobuf* %34)
+  store i32 %35, i32* %7, align 4
+  br label %41
 
-; <label>:34:                                     ; preds = %25
-  %35 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([16 x i8], [16 x i8]* @"\01??_C@_0BA@NFCPOBHP@Parser?3?5quTAU?5?6?$AA@", i32 0, i32 0))
-  %36 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([2 x i8], [2 x i8]* @"\01??_C@_01EEMJAFIK@?6?$AA@", i32 0, i32 0))
-  %37 = load %struct._iobuf*, %struct._iobuf** %4, align 8
-  %38 = call i32 @"\01?quTAU_header_parser@@YAHPEAU_iobuf@@@Z"(%struct._iobuf* %37)
-  store i32 %38, i32* %6, align 4
-  br label %39
+; <label>:36:                                     ; preds = %27
+  store i8 1, i8* %6, align 1
+  %37 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([16 x i8], [16 x i8]* @"\01??_C@_0BA@NFCPOBHP@Parser?3?5quTAU?5?6?$AA@", i32 0, i32 0))
+  %38 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([2 x i8], [2 x i8]* @"\01??_C@_01EEMJAFIK@?6?$AA@", i32 0, i32 0))
+  %39 = load %struct._iobuf*, %struct._iobuf** %4, align 8
+  %40 = call i32 @"\01?quTAU_header_parser@@YAHPEAU_iobuf@@@Z"(%struct._iobuf* %39)
+  store i32 %40, i32* %7, align 4
+  br label %41
 
-; <label>:39:                                     ; preds = %34, %29
-  %40 = load %struct._iobuf*, %struct._iobuf** %4, align 8
-  %41 = call i32 @fclose(%struct._iobuf* %40)
-  %42 = load i32, i32* %6, align 4
-  store i32 %42, i32* %2, align 4
-  br label %43
+; <label>:41:                                     ; preds = %36, %31
+  %42 = load %struct._iobuf*, %struct._iobuf** %4, align 8
+  %43 = call i32 @fclose(%struct._iobuf* %42)
+  %44 = load i8*, i8** %3, align 8
+  %45 = call i32 @_sopen_s(i32* %8, i8* %44, i32 0, i32 64, i32 0)
+  %46 = load i32, i32* %8, align 4
+  %47 = call i64 @_lseeki64(i32 %46, i64 0, i32 2)
+  store i64 %47, i64* @"\01?TTF_filesize@@3_JA", align 8
+  %48 = load i32, i32* %8, align 4
+  %49 = call i32 @_close(i32 %48)
+  %50 = load i64, i64* @"\01?TTF_filesize@@3_JA", align 8
+  %51 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([15 x i8], [15 x i8]* @"\01??_C@_0P@ECJICMJN@Filesize?3?5?$CFlld?$AA@", i32 0, i32 0), i64 %50)
+  %52 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([2 x i8], [2 x i8]* @"\01??_C@_01EEMJAFIK@?6?$AA@", i32 0, i32 0))
+  %53 = load i8, i8* %6, align 1
+  %54 = trunc i8 %53 to i1
+  br i1 %54, label %55, label %61
 
-; <label>:43:                                     ; preds = %39, %21, %12
-  %44 = load i32, i32* %2, align 4
-  ret i32 %44
+; <label>:55:                                     ; preds = %41
+  %56 = load i64, i64* @"\01?TTF_filesize@@3_JA", align 8
+  %57 = load i64, i64* @"\01?TTF_header_offset@@3_JA", align 8
+  %58 = sub nsw i64 %56, %57
+  %59 = load i64, i64* @"\01?BytesofRecords@@3_JA", align 8
+  %60 = sdiv i64 %58, %59
+  store i64 %60, i64* @"\01?NumRecords@@3_JA", align 8
+  br label %61
+
+; <label>:61:                                     ; preds = %55, %41
+  %62 = load i32, i32* %7, align 4
+  store i32 %62, i32* %2, align 4
+  br label %63
+
+; <label>:63:                                     ; preds = %61, %23, %14
+  %64 = load i32, i32* %2, align 4
+  ret i32 %64
 }
 
 ; Function Attrs: noinline optnone uwtable
-define linkonce_odr i32 @printf(i8*, ...) #2 comdat {
+define linkonce_odr i32 @printf(i8*, ...) #1 comdat {
   %2 = alloca i8*, align 8
   %3 = alloca i32, align 4
   %4 = alloca i8*, align 8
@@ -288,14 +319,14 @@ define linkonce_odr i32 @printf(i8*, ...) #2 comdat {
   ret i32 %11
 }
 
-declare %struct._iobuf* @fopen(i8*, i8*) #3
+declare %struct._iobuf* @fopen(i8*, i8*) #2
 
-declare i64 @fread(i8*, i64, i64, %struct._iobuf*) #3
+declare i64 @fread(i8*, i64, i64, %struct._iobuf*) #2
 
-declare i32 @strncmp(i8*, i8*, i64) #3
+declare i32 @strncmp(i8*, i8*, i64) #2
 
 ; Function Attrs: noinline optnone uwtable
-define linkonce_odr i32 @"\01?PicoQuant_header_parser@@YAHPEAU_iobuf@@@Z"(%struct._iobuf*) #2 comdat {
+define linkonce_odr i32 @"\01?PicoQuant_header_parser@@YAHPEAU_iobuf@@@Z"(%struct._iobuf*) #1 comdat {
   %2 = alloca i32, align 4
   %3 = alloca %struct._iobuf*, align 8
   %4 = alloca i32, align 4
@@ -321,7 +352,7 @@ define linkonce_odr i32 @"\01?PicoQuant_header_parser@@YAHPEAU_iobuf@@@Z"(%struc
   %20 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([8 x i8], [8 x i8]* @"\01??_C@_07CEGNDBCD@?$FLERROR?$FN?$AA@", i32 0, i32 0))
   %21 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([32 x i8], [32 x i8]* @"\01??_C@_0CA@LFBPILNL@?6error?5reading?5header?0?5aborted?4?$AA@", i32 0, i32 0))
   %22 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([2 x i8], [2 x i8]* @"\01??_C@_01EEMJAFIK@?6?$AA@", i32 0, i32 0))
-  br label %221
+  br label %213
 
 ; <label>:23:                                     ; preds = %1
   %24 = getelementptr inbounds [8 x i8], [8 x i8]* %7, i32 0, i32 0
@@ -342,7 +373,7 @@ define linkonce_odr i32 @"\01?PicoQuant_header_parser@@YAHPEAU_iobuf@@@Z"(%struc
 ; <label>:34:                                     ; preds = %27
   %35 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([18 x i8], [18 x i8]* @"\01??_C@_0BC@KFPMDKOJ@?6Incomplete?5File?4?$AA@", i32 0, i32 0))
   %36 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([2 x i8], [2 x i8]* @"\01??_C@_01EEMJAFIK@?6?$AA@", i32 0, i32 0))
-  br label %221
+  br label %213
 
 ; <label>:37:                                     ; preds = %27
   %38 = getelementptr inbounds [40 x i8], [40 x i8]* %8, i32 0, i32 0
@@ -494,7 +525,7 @@ define linkonce_odr i32 @"\01?PicoQuant_header_parser@@YAHPEAU_iobuf@@@Z"(%struc
   %123 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([18 x i8], [18 x i8]* @"\01??_C@_0BC@KFPMDKOJ@?6Incomplete?5File?4?$AA@", i32 0, i32 0))
   %124 = load i8*, i8** %5, align 8
   call void @free(i8* %124)
-  br label %221
+  br label %213
 
 ; <label>:125:                                    ; preds = %110
   %126 = load i8*, i8** %5, align 8
@@ -526,7 +557,7 @@ define linkonce_odr i32 @"\01?PicoQuant_header_parser@@YAHPEAU_iobuf@@@Z"(%struc
   %145 = load i16*, i16** %6, align 8
   %146 = bitcast i16* %145 to i8*
   call void @free(i8* %146)
-  br label %221
+  br label %213
 
 ; <label>:147:                                    ; preds = %129
   %148 = load i16*, i16** %6, align 8
@@ -547,7 +578,7 @@ define linkonce_odr i32 @"\01?PicoQuant_header_parser@@YAHPEAU_iobuf@@@Z"(%struc
 
 ; <label>:159:                                    ; preds = %46
   %160 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([44 x i8], [44 x i8]* @"\01??_C@_0CM@NLBAOIPI@Illegal?5Type?5identifier?5found?$CB?5B@", i32 0, i32 0))
-  br label %221
+  br label %213
 
 ; <label>:161:                                    ; preds = %152, %147, %125, %104, %96, %95, %74, %71, %70, %52, %50
   br label %162
@@ -638,7 +669,7 @@ define linkonce_odr i32 @"\01?PicoQuant_header_parser@@YAHPEAU_iobuf@@@Z"(%struc
   %200 = load i64, i64* @"\01?RecordType@@3_JA", align 8
   %201 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([43 x i8], [43 x i8]* @"\01??_C@_0CL@PNCIDDE@Unknown?5time?9tag?5record?5type?3?50x@", i32 0, i32 0), i64 %200)
   %202 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([2 x i8], [2 x i8]* @"\01??_C@_01EEMJAFIK@?6?$AA@", i32 0, i32 0))
-  br label %221
+  br label %213
 
 ; <label>:203:                                    ; preds = %196, %193, %190, %187, %184, %181, %178, %175, %172, %169
   %204 = load i8, i8* @"\01?IsT2@@3_NA", align 1
@@ -660,32 +691,23 @@ define linkonce_odr i32 @"\01?PicoQuant_header_parser@@YAHPEAU_iobuf@@@Z"(%struc
   %211 = call i32 @ftell(%struct._iobuf* %210)
   %212 = sext i32 %211 to i64
   store i64 %212, i64* @"\01?TTF_header_offset@@3_JA", align 8
-  %213 = load %struct._iobuf*, %struct._iobuf** %3, align 8
-  %214 = call i32 @_fseeki64_nolock(%struct._iobuf* %213, i64 0, i32 2)
-  %215 = load %struct._iobuf*, %struct._iobuf** %3, align 8
-  %216 = call i32 @ftell(%struct._iobuf* %215)
-  %217 = sext i32 %216 to i64
-  store i64 %217, i64* @"\01?TTF_filesize@@3_JA", align 8
-  %218 = load i64, i64* @"\01?TTF_filesize@@3_JA", align 8
-  %219 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([5 x i8], [5 x i8]* @"\01??_C@_04BFAHMMK@?$CFlld?$AA@", i32 0, i32 0), i64 %218)
-  %220 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([2 x i8], [2 x i8]* @"\01??_C@_01EEMJAFIK@?6?$AA@", i32 0, i32 0))
   store i32 0, i32* %2, align 4
-  br label %223
+  br label %215
 
-; <label>:221:                                    ; preds = %199, %159, %143, %122, %34, %19
+; <label>:213:                                    ; preds = %199, %159, %143, %122, %34, %19
   store i32 -1, i32* %2, align 4
-  br label %223
+  br label %215
                                                   ; No predecessors!
   store i32 -2, i32* %2, align 4
-  br label %223
+  br label %215
 
-; <label>:223:                                    ; preds = %222, %221, %209
-  %224 = load i32, i32* %2, align 4
-  ret i32 %224
+; <label>:215:                                    ; preds = %214, %213, %209
+  %216 = load i32, i32* %2, align 4
+  ret i32 %216
 }
 
 ; Function Attrs: noinline optnone uwtable
-define linkonce_odr i32 @"\01?quTAU_header_parser@@YAHPEAU_iobuf@@@Z"(%struct._iobuf*) #2 comdat {
+define linkonce_odr i32 @"\01?quTAU_header_parser@@YAHPEAU_iobuf@@@Z"(%struct._iobuf*) #1 comdat {
   %2 = alloca i32, align 4
   %3 = alloca %struct._iobuf*, align 8
   %4 = alloca [32 x i8], align 16
@@ -701,7 +723,7 @@ define linkonce_odr i32 @"\01?quTAU_header_parser@@YAHPEAU_iobuf@@@Z"(%struct._i
   %11 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([36 x i8], [36 x i8]* @"\01??_C@_0CE@JHNJNHEL@Error?5when?5reading?5header?0?5abort@", i32 0, i32 0))
   %12 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([2 x i8], [2 x i8]* @"\01??_C@_01EEMJAFIK@?6?$AA@", i32 0, i32 0))
   store i32 -1, i32* %2, align 4
-  br label %30
+  br label %22
 
 ; <label>:13:                                     ; preds = %1
   %14 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([40 x i8], [40 x i8]* @"\01??_C@_0CI@GEFJAHGM@quTAU?5file?5header?5is?5read?0?5but?5i@", i32 0, i32 0))
@@ -716,34 +738,30 @@ define linkonce_odr i32 @"\01?quTAU_header_parser@@YAHPEAU_iobuf@@@Z"(%struct._i
   store i64 %18, i64* @"\01?DTRes_pspr@@3_KA", align 8
   store i64 1249, i64* @"\01?SYNCRate_pspr@@3_KA", align 8
   %19 = load %struct._iobuf*, %struct._iobuf** %3, align 8
-  %20 = call i64 @_ftelli64_nolock(%struct._iobuf* %19)
-  store i64 %20, i64* @"\01?TTF_header_offset@@3_JA", align 8
-  %21 = load %struct._iobuf*, %struct._iobuf** %3, align 8
-  %22 = call i32 @_fseeki64_nolock(%struct._iobuf* %21, i64 0, i32 2)
-  %23 = load %struct._iobuf*, %struct._iobuf** %3, align 8
-  %24 = call i64 @_ftelli64_nolock(%struct._iobuf* %23)
-  store i64 %24, i64* @"\01?TTF_filesize@@3_JA", align 8
-  %25 = load i64, i64* @"\01?TTF_filesize@@3_JA", align 8
-  %26 = load i64, i64* @"\01?TTF_header_offset@@3_JA", align 8
-  %27 = sub nsw i64 %25, %26
-  %28 = load i64, i64* @"\01?BytesofRecords@@3_JA", align 8
-  %29 = sdiv i64 %27, %28
-  store i64 %29, i64* @"\01?NumRecords@@3_JA", align 8
+  %20 = call i32 @ftell(%struct._iobuf* %19)
+  %21 = sext i32 %20 to i64
+  store i64 %21, i64* @"\01?TTF_header_offset@@3_JA", align 8
   store i32 0, i32* %2, align 4
-  br label %30
+  br label %22
 
-; <label>:30:                                     ; preds = %13, %9
-  %31 = load i32, i32* %2, align 4
-  ret i32 %31
+; <label>:22:                                     ; preds = %13, %9
+  %23 = load i32, i32* %2, align 4
+  ret i32 %23
 }
 
-declare i32 @fclose(%struct._iobuf*) #3
+declare i32 @fclose(%struct._iobuf*) #2
+
+declare i32 @_sopen_s(i32*, i8*, i32, i32, i32) #2
+
+declare i64 @_lseeki64(i32, i64, i32) #2
+
+declare i32 @_close(i32) #2
 
 ; Function Attrs: nounwind
-declare void @llvm.va_start(i8*) #4
+declare void @llvm.va_start(i8*) #3
 
 ; Function Attrs: noinline optnone uwtable
-define linkonce_odr i32 @_vfprintf_l(%struct._iobuf*, i8*, %struct.__crt_locale_pointers*, i8*) #2 comdat {
+define linkonce_odr i32 @_vfprintf_l(%struct._iobuf*, i8*, %struct.__crt_locale_pointers*, i8*) #1 comdat {
   %5 = alloca i8*, align 8
   %6 = alloca %struct.__crt_locale_pointers*, align 8
   %7 = alloca i8*, align 8
@@ -762,22 +780,22 @@ define linkonce_odr i32 @_vfprintf_l(%struct._iobuf*, i8*, %struct.__crt_locale_
   ret i32 %15
 }
 
-declare %struct._iobuf* @__acrt_iob_func(i32) #3
+declare %struct._iobuf* @__acrt_iob_func(i32) #2
 
 ; Function Attrs: nounwind
-declare void @llvm.va_end(i8*) #4
+declare void @llvm.va_end(i8*) #3
 
-declare i32 @__stdio_common_vfprintf(i64, %struct._iobuf*, i8*, %struct.__crt_locale_pointers*, i8*) #3
+declare i32 @__stdio_common_vfprintf(i64, %struct._iobuf*, i8*, %struct.__crt_locale_pointers*, i8*) #2
 
 ; Function Attrs: noinline nounwind optnone uwtable
 define linkonce_odr i64* @__local_stdio_printf_options() #0 comdat {
   ret i64* @"\01?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA"
 }
 
-declare i8* @strcpy(i8*, i8*) #3
+declare i8* @strcpy(i8*, i8*) #2
 
 ; Function Attrs: noinline optnone uwtable
-define linkonce_odr i32 @sprintf(i8*, i8*, ...) #2 comdat {
+define linkonce_odr i32 @sprintf(i8*, i8*, ...) #1 comdat {
   %3 = alloca i8*, align 8
   %4 = alloca i8*, align 8
   %5 = alloca i32, align 4
@@ -797,14 +815,14 @@ define linkonce_odr i32 @sprintf(i8*, i8*, ...) #2 comdat {
   ret i32 %13
 }
 
-declare i32 @strcmp(i8*, i8*) #3
+declare i32 @strcmp(i8*, i8*) #2
 
-declare i32 @fseek(%struct._iobuf*, i32, i32) #3
+declare i32 @fseek(%struct._iobuf*, i32, i32) #2
 
-declare i8* @asctime(%struct.tm*) #3
+declare i8* @asctime(%struct.tm*) #2
 
 ; Function Attrs: noinline optnone uwtable
-define internal %struct.tm* @"\01?gmtime@@YAPEAUtm@@QEB_J@Z"(i64*) #2 {
+define internal %struct.tm* @"\01?gmtime@@YAPEAUtm@@QEB_J@Z"(i64*) #1 {
   %2 = alloca i64*, align 8
   store i64* %0, i64** %2, align 8
   %3 = load i64*, i64** %2, align 8
@@ -812,12 +830,12 @@ define internal %struct.tm* @"\01?gmtime@@YAPEAUtm@@QEB_J@Z"(i64*) #2 {
   ret %struct.tm* %4
 }
 
-declare noalias i8* @calloc(i64, i64) #3
+declare noalias i8* @calloc(i64, i64) #2
 
-declare void @free(i8*) #3
+declare void @free(i8*) #2
 
 ; Function Attrs: noinline optnone uwtable
-define linkonce_odr i32 @wprintf(i16*, ...) #2 comdat {
+define linkonce_odr i32 @wprintf(i16*, ...) #1 comdat {
   %2 = alloca i16*, align 8
   %3 = alloca i32, align 4
   %4 = alloca i8*, align 8
@@ -835,12 +853,10 @@ define linkonce_odr i32 @wprintf(i16*, ...) #2 comdat {
   ret i32 %11
 }
 
-declare i32 @ftell(%struct._iobuf*) #3
-
-declare i32 @_fseeki64_nolock(%struct._iobuf*, i64, i32) #3
+declare i32 @ftell(%struct._iobuf*) #2
 
 ; Function Attrs: noinline optnone uwtable
-define linkonce_odr i32 @_vsprintf_l(i8*, i8*, %struct.__crt_locale_pointers*, i8*) #2 comdat {
+define linkonce_odr i32 @_vsprintf_l(i8*, i8*, %struct.__crt_locale_pointers*, i8*) #1 comdat {
   %5 = alloca i8*, align 8
   %6 = alloca %struct.__crt_locale_pointers*, align 8
   %7 = alloca i8*, align 8
@@ -858,7 +874,7 @@ define linkonce_odr i32 @_vsprintf_l(i8*, i8*, %struct.__crt_locale_pointers*, i
 }
 
 ; Function Attrs: noinline optnone uwtable
-define linkonce_odr i32 @_vsnprintf_l(i8*, i64, i8*, %struct.__crt_locale_pointers*, i8*) #2 comdat {
+define linkonce_odr i32 @_vsnprintf_l(i8*, i64, i8*, %struct.__crt_locale_pointers*, i8*) #1 comdat {
   %6 = alloca i8*, align 8
   %7 = alloca %struct.__crt_locale_pointers*, align 8
   %8 = alloca i8*, align 8
@@ -896,12 +912,12 @@ define linkonce_odr i32 @_vsnprintf_l(i8*, i64, i8*, %struct.__crt_locale_pointe
   ret i32 %27
 }
 
-declare i32 @__stdio_common_vsprintf(i64, i8*, i64, i8*, %struct.__crt_locale_pointers*, i8*) #3
+declare i32 @__stdio_common_vsprintf(i64, i8*, i64, i8*, %struct.__crt_locale_pointers*, i8*) #2
 
-declare %struct.tm* @_gmtime64(i64*) #3
+declare %struct.tm* @_gmtime64(i64*) #2
 
 ; Function Attrs: noinline optnone uwtable
-define linkonce_odr i32 @_vfwprintf_l(%struct._iobuf*, i16*, %struct.__crt_locale_pointers*, i8*) #2 comdat {
+define linkonce_odr i32 @_vfwprintf_l(%struct._iobuf*, i16*, %struct.__crt_locale_pointers*, i8*) #1 comdat {
   %5 = alloca i8*, align 8
   %6 = alloca %struct.__crt_locale_pointers*, align 8
   %7 = alloca i16*, align 8
@@ -920,15 +936,12 @@ define linkonce_odr i32 @_vfwprintf_l(%struct._iobuf*, i16*, %struct.__crt_local
   ret i32 %15
 }
 
-declare i32 @__stdio_common_vfwprintf(i64, %struct._iobuf*, i16*, %struct.__crt_locale_pointers*, i8*) #3
-
-declare i64 @_ftelli64_nolock(%struct._iobuf*) #3
+declare i32 @__stdio_common_vfwprintf(i64, %struct._iobuf*, i16*, %struct.__crt_locale_pointers*, i8*) #2
 
 attributes #0 = { noinline nounwind optnone uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
-attributes #1 = { alwaysinline uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
-attributes #2 = { noinline optnone uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
-attributes #3 = { "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
-attributes #4 = { nounwind }
+attributes #1 = { noinline optnone uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #2 = { "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #3 = { nounwind }
 
 !llvm.linker.options = !{!0}
 !llvm.module.flags = !{!1, !2}
