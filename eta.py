@@ -4,14 +4,19 @@ import numpy as np
 
 
 @jit(nopython=True, parallel=True)
+def test(aaa):
+   	aaa=aaa+777
+   	return aaa
+
+@jit(nopython=True, parallel=True)
 def sum2d(arr):
     for i in range(0, arr.size):
-        arr[i] += i
+        arr[i] += test(i)
         if arr[i]>100:
              arr[i] -=100
 
 arr = np.ones(2000000000, dtype=np.int8)
-print(sum2d(arr))
+
 @timeit
 def timed():
     sum2d(arr)
