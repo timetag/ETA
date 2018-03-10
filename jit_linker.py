@@ -1,11 +1,16 @@
 from llvmlite import ir, binding as ll
 import numba as nb
+from numba import jit
 from os import listdir
 from os.path import isfile, join
-from numba import jit
 import cffi
+import sys
 ffi = cffi.FFI()
-ll_path = ".\\ll\\"
+if getattr(sys, 'frozen', False):
+    ll_path = join(sys._MEIPASS, ".\\ll\\")
+else:
+    ll_path = ".\\ll\\"
+
 
 @nb.extending.intrinsic
 def link_libs(typingctx):
