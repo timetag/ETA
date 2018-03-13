@@ -26,13 +26,13 @@ build_script:
     
     7z a ETA.zip %APPVEYOR_BUILD_FOLDER%\dist
     
-    rm %APPVEYOR_BUILD_FOLDER%\dist
+    RMDIR /S /Q %APPVEYOR_BUILD_FOLDER%\dist
     
-    rm %APPVEYOR_BUILD_FOLDER%\build
+    RMDIR /S /Q %APPVEYOR_BUILD_FOLDER%\build
     
     pyinstaller --clean --onefile --add-data "favicon.ico;."  --add-data "ll/*;ll" -i favicon.ico  ETA.py
     
-    mv %APPVEYOR_BUILD_FOLDER%\dist\ETA.exe %APPVEYOR_BUILD_FOLDER%\ETA.exe
+    move %APPVEYOR_BUILD_FOLDER%\dist\ETA.exe %APPVEYOR_BUILD_FOLDER%\ETA.exe
   
 test_script:
 - cmd: >-
