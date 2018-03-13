@@ -1,0 +1,26 @@
+version: build.{build}
+image: Visual Studio 2017
+init:
+- cmd: >-
+    SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%
+
+    pip install --disable-pip-version-check --user --upgrade pip
+
+    python --version
+environment:
+  PYTHON: C:\Python36-x64
+  PYTHON_VERSION: 3.6
+  PYTHON_ARCH: 64
+install:
+- ps: "mkdir c:/whls \nif(!(Test-Path -Path \"c:/whls/llvmlite-0.22.0-cp36-cp36m-win_amd64.whl\" )){\n appveyor DownloadFile https://bitbucket.org/linzuzeng/pyeta/downloads/llvmlite-0.22.0-cp36-cp36m-win_amd64.whl -FileName c:/whls/llvmlite-0.22.0-cp36-cp36m-win_amd64.whl\n}\nif(!(Test-Path -Path \"c:/whls/numba-0.37.0-cp36-cp36m-win_amd64.whl\" )){\n appveyor DownloadFile https://bitbucket.org/linzuzeng/pyeta/downloads/numba-0.37.0-cp36-cp36m-win_amd64.whl -FileName c:/whls/numba-0.37.0-cp36-cp36m-win_amd64.whl\n}\nif(!(Test-Path -Path \"c:/whls/numpy-1.14.1+mkl-cp36-cp36m-win_amd64.whl\" )){\n appveyor DownloadFile https://bitbucket.org/linzuzeng/pyeta/downloads/numpy-1.14.1+mkl-cp36-cp36m-win_amd64.whl -FileName c:/whls/numpy-1.14.1+mkl-cp36-cp36m-win_amd64.whl\n}\npip install pypiwin32\npip install pyinstaller\npip install cffi\npip install c:/whls/numpy-1.14.1+mkl-cp36-cp36m-win_amd64.whl\npip install c:/whls/llvmlite-0.22.0-cp36-cp36m-win_amd64.whl\npip install c:/whls/numba-0.37.0-cp36-cp36m-win_amd64.whl"
+cache:
+- c:/whls
+- '%LOCALAPPDATA%\pip\Cache'
+build_script:
+- cmd: build.bat
+test: off
+artifacts:
+- path: ETA.zip
+  name: installer_zip
+- path: /dist/ETA/ETA.exe
+  name: coreapp
