@@ -4,9 +4,9 @@ block_cipher = None
 
 
 a = Analysis(['ETA.py'],
-             pathex=['C:\\Users\\zuzeng\\Desktop\\numba'],
+             pathex=['C:\\Users\\zuzeng\\source\\repos\\pyETA'],
              binaries=[],
-             datas=[],
+             datas=[('favicon.ico', '.'), ('ll/*', 'll')],
              hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],
@@ -23,7 +23,7 @@ exe = EXE(pyz,
           debug=False,
           strip=False,
           upx=True,
-          console=True )
+          console=True , icon='favicon.ico')
 coll = COLLECT(exe,
                a.binaries,
                a.zipfiles,
