@@ -3,8 +3,8 @@ source_filename = "<string>"
 target datalayout = "e-m:e-i64:64-f80:128-n8:16:32:64-S128"
 target triple = "x86_64-pc-windows-msvc"
 
-%struct.TgHd.4 = type { [32 x i8], i32, i32, i64 }
-%struct.circular_buf_t.5 = type { i64*, i64, i64, i64 }
+%struct.circular_buf_t.4 = type { i64*, i64, i64, i64 }
+%struct.TgHd.5 = type { [32 x i8], i32, i32, i64 }
 %struct.__crt_locale_pointers.1.6 = type { %struct.__crt_locale_data.2.7*, %struct.__crt_multibyte_data.3.8* }
 %struct.__crt_locale_data.2.7 = type opaque
 %struct.__crt_multibyte_data.3.8 = type opaque
@@ -41,17 +41,6 @@ $"\01??_C@_0DE@PLFGPKJO@?6?5?$FLERROR?$FNTime?9tag?5file?5cannot?5be@" = comdat 
 @".const.Fatal error: missing _dynfunc.Closure" = internal constant [38 x i8] c"Fatal error: missing _dynfunc.Closure\00"
 @PyExc_RuntimeError = external global i8
 @".const.missing Environment" = internal constant [20 x i8] c"missing Environment\00"
-@"\01?order_gurantee@@3_JA" = local_unnamed_addr global i64 0, align 8
-@SYNCRate_pspr = local_unnamed_addr global i64 0, align 8
-@TTRes_pspr = local_unnamed_addr global i64 0, align 8
-@DTRes_pspr = local_unnamed_addr global i64 0, align 8
-@NumRecords = local_unnamed_addr global i64 -1, align 8
-@RecordType = local_unnamed_addr global i64 0, align 8
-@BytesofRecords = local_unnamed_addr global i64 0, align 8
-@TTF_header_offset = local_unnamed_addr global i64 0, align 8
-@TTF_filesize = local_unnamed_addr global i64 0, align 8
-@IsT2 = local_unnamed_addr global i8 0, align 1
-@"\01?TagHead@@3UTgHd@@A" = local_unnamed_addr global %struct.TgHd.4 zeroinitializer, align 8
 @"\01?READER_fpin@@3PEAU_iobuf@@EA" = local_unnamed_addr global { i8* }* null, align 8
 @order_gurantee2 = local_unnamed_addr global i64 0, align 8
 @READER_batchend_pos_in_file = local_unnamed_addr global i64 0, align 8
@@ -70,7 +59,7 @@ $"\01??_C@_0DE@PLFGPKJO@?6?5?$FLERROR?$FNTime?9tag?5file?5cannot?5be@" = comdat 
 @POOL_total_slots = local_unnamed_addr global i8 0, align 1
 @POOL_timetag = local_unnamed_addr global i64* null, align 8
 @POOL_slot = local_unnamed_addr global i8* null, align 8
-@VSLOT_timetag = local_unnamed_addr global %struct.circular_buf_t.5* null, align 8
+@VSLOT_timetag = local_unnamed_addr global %struct.circular_buf_t.4* null, align 8
 @"\01??_C@_0BB@NIGCBLED@?6TOTAL?5SLOTS?3?5?$CFd?$AA@" = linkonce_odr unnamed_addr constant [17 x i8] c"\0ATOTAL SLOTS: %d\00", comdat, align 1
 @"\01??_C@_0BG@NJEFHGP@?6Init?5ring?5buffer?5?$CFd?4?$AA@" = linkonce_odr unnamed_addr constant [22 x i8] c"\0AInit ring buffer %d.\00", comdat, align 1
 @"\01??_C@_0CF@BDINJJIB@?6?5?$FLERROR?$FNMemalloc?5failed?0?5aborti@" = linkonce_odr unnamed_addr constant [37 x i8] c"\0A [ERROR]Memalloc failed, aborting.\0A\00", comdat, align 1
@@ -83,6 +72,17 @@ $"\01??_C@_0DE@PLFGPKJO@?6?5?$FLERROR?$FNTime?9tag?5file?5cannot?5be@" = comdat 
 @"\01??_C@_02JDPG@rb?$AA@" = linkonce_odr unnamed_addr constant [3 x i8] c"rb\00", comdat, align 1
 @"\01??_C@_0EP@PGBLNION@?6?5?$FLERROR?$FNReading?5buffer?5for?5Time@" = linkonce_odr unnamed_addr constant [79 x i8] c"\0A [ERROR]Reading buffer for Time-tag file is not assgined properly, aborting.\0A\00", comdat, align 1
 @"\01??_C@_0DE@PLFGPKJO@?6?5?$FLERROR?$FNTime?9tag?5file?5cannot?5be@" = linkonce_odr unnamed_addr constant [52 x i8] c"\0A [ERROR]Time-tag file cannot be opened, aborting.\0A\00", comdat, align 1
+@"\01?order_gurantee@@3_JA" = local_unnamed_addr global i64 0, align 8
+@SYNCRate_pspr = local_unnamed_addr global i64 0, align 8
+@TTRes_pspr = local_unnamed_addr global i64 0, align 8
+@DTRes_pspr = local_unnamed_addr global i64 0, align 8
+@NumRecords = local_unnamed_addr global i64 -1, align 8
+@RecordType = local_unnamed_addr global i64 0, align 8
+@BytesofRecords = local_unnamed_addr global i64 0, align 8
+@TTF_header_offset = local_unnamed_addr global i64 0, align 8
+@TTF_filesize = local_unnamed_addr global i64 0, align 8
+@IsT2 = local_unnamed_addr global i8 0, align 1
+@"\01?TagHead@@3UTgHd@@A" = local_unnamed_addr global %struct.TgHd.5 zeroinitializer, align 8
 
 define i32 @"_ZN8mainloop12mainloop$241E5ArrayIaLi1E1C7mutable7alignedE5ArrayIxLi1E1C7mutable7alignedE35bytearray$28uint8$2c$201d$2c$20C$29xxxxxx"(i64* noalias nocapture %retptr, { i8*, i32 }** noalias nocapture readnone %excinfo, i8* noalias nocapture readnone %env, i8* %arg.chn.0, i8* nocapture readnone %arg.chn.1, i64 %arg.chn.2, i64 %arg.chn.3, i8* nocapture %arg.chn.4, i64 %arg.chn.5.0, i64 %arg.chn.6.0, i8* %arg.histogram.0, i8* nocapture readnone %arg.histogram.1, i64 %arg.histogram.2, i64 %arg.histogram.3, i64* nocapture %arg.histogram.4, i64 %arg.histogram.5.0, i64 %arg.histogram.6.0, i8* nocapture readnone %arg.filename1.0, i8* nocapture readnone %arg.filename1.1, i64 %arg.filename1.2, i64 %arg.filename1.3, i8* nocapture readonly %arg.filename1.4, i64 %arg.filename1.5.0, i64 %arg.filename1.6.0, i64 %arg.fseekpoint, i64 %arg.fendpoint, i64 %arg.BytesofRecords, i64 %arg.TTRes_pspr, i64 %arg.SYNCRate_pspr, i64 %arg.DTRes_pspr) local_unnamed_addr {
 entry:
@@ -221,11 +221,11 @@ FileReader_init.exit:                             ; preds = %.sink.split.i, %5
 
 ._crit_edge.i:                                    ; preds = %45, %._crit_edge8.i, %27
   %55 = tail call noalias i8* @malloc(i64 64)
-  store i8* %55, i8** bitcast (%struct.circular_buf_t.5** @VSLOT_timetag to i8**), align 8
+  store i8* %55, i8** bitcast (%struct.circular_buf_t.4** @VSLOT_timetag to i8**), align 8
   %56 = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([22 x i8], [22 x i8]* @"\01??_C@_0BG@NJEFHGP@?6Init?5ring?5buffer?5?$CFd?4?$AA@", i64 0, i64 0), i32 0)
   %57 = sext i32 %56 to i64
   store i64 %57, i64* @order_gurantee2, align 8
-  %58 = load i8*, i8** bitcast (%struct.circular_buf_t.5** @VSLOT_timetag to i8**), align 8
+  %58 = load i8*, i8** bitcast (%struct.circular_buf_t.4** @VSLOT_timetag to i8**), align 8
   %scevgep19.i = getelementptr i8, i8* %58, i64 24
   %59 = bitcast i8* %scevgep19.i to i64*
   store i64 1000000, i64* %59, align 8
@@ -244,7 +244,7 @@ FileReader_init.exit:                             ; preds = %.sink.split.i, %5
   %64 = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([22 x i8], [22 x i8]* @"\01??_C@_0BG@NJEFHGP@?6Init?5ring?5buffer?5?$CFd?4?$AA@", i64 0, i64 0), i32 1)
   %65 = sext i32 %64 to i64
   store i64 %65, i64* @order_gurantee2, align 8
-  %66 = load i8*, i8** bitcast (%struct.circular_buf_t.5** @VSLOT_timetag to i8**), align 8
+  %66 = load i8*, i8** bitcast (%struct.circular_buf_t.4** @VSLOT_timetag to i8**), align 8
   %uglygep17.i.1 = getelementptr i8, i8* %66, i64 32
   %scevgep19.i.1 = getelementptr i8, i8* %66, i64 56
   %67 = bitcast i8* %scevgep19.i.1 to i64*
@@ -455,10 +455,10 @@ B80:                                              ; preds = %B88, %B116.endif, %
   br i1 %178, label %.lr.ph19.i, label %POOL_next.exit
 
 ; <label>:179:                                    ; preds = %86
-  %180 = load %struct.circular_buf_t.5*, %struct.circular_buf_t.5** @VSLOT_timetag, align 8
-  %.sroa.140.0..sroa_idx41.i = getelementptr inbounds %struct.circular_buf_t.5, %struct.circular_buf_t.5* %180, i64 %78, i32 1
+  %180 = load %struct.circular_buf_t.4*, %struct.circular_buf_t.4** @VSLOT_timetag, align 8
+  %.sroa.140.0..sroa_idx41.i = getelementptr inbounds %struct.circular_buf_t.4, %struct.circular_buf_t.4* %180, i64 %78, i32 1
   %.sroa.140.0.copyload.i = load i64, i64* %.sroa.140.0..sroa_idx41.i, align 8
-  %.sroa.242.0..sroa_idx43.i = getelementptr inbounds %struct.circular_buf_t.5, %struct.circular_buf_t.5* %180, i64 %78, i32 2
+  %.sroa.242.0..sroa_idx43.i = getelementptr inbounds %struct.circular_buf_t.4, %struct.circular_buf_t.4* %180, i64 %78, i32 2
   %.sroa.242.0.copyload.i = load i64, i64* %.sroa.242.0..sroa_idx43.i, align 8
   %181 = icmp eq i64 %.sroa.140.0.copyload.i, %.sroa.242.0.copyload.i
   br i1 %181, label %182, label %185
@@ -467,30 +467,30 @@ B80:                                              ; preds = %B88, %B116.endif, %
   %183 = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([28 x i8], [28 x i8]* @"\01??_C@_0BM@PJHDCAIH@?6?5?$FLERROR?$FNCorrupted?5slot?$CB?$CB?$CB?$CB?$AA@", i64 0, i64 0))
   %184 = sext i32 %183 to i64
   store i64 %184, i64* @order_gurantee2, align 8
-  %.pre.i2 = load %struct.circular_buf_t.5*, %struct.circular_buf_t.5** @VSLOT_timetag, align 8
+  %.pre.i2 = load %struct.circular_buf_t.4*, %struct.circular_buf_t.4** @VSLOT_timetag, align 8
   br label %185
 
 ; <label>:185:                                    ; preds = %182, %179
-  %186 = phi %struct.circular_buf_t.5* [ %.pre.i2, %182 ], [ %180, %179 ]
-  %187 = getelementptr inbounds %struct.circular_buf_t.5, %struct.circular_buf_t.5* %186, i64 %78
-  %188 = icmp eq %struct.circular_buf_t.5* %187, null
+  %186 = phi %struct.circular_buf_t.4* [ %.pre.i2, %182 ], [ %180, %179 ]
+  %187 = getelementptr inbounds %struct.circular_buf_t.4, %struct.circular_buf_t.4* %186, i64 %78
+  %188 = icmp eq %struct.circular_buf_t.4* %187, null
   br i1 %188, label %211, label %189
 
 ; <label>:189:                                    ; preds = %185
-  %.sroa.1168.0..sroa_idx169.i = getelementptr inbounds %struct.circular_buf_t.5, %struct.circular_buf_t.5* %186, i64 %78, i32 1
+  %.sroa.1168.0..sroa_idx169.i = getelementptr inbounds %struct.circular_buf_t.4, %struct.circular_buf_t.4* %186, i64 %78, i32 1
   %.sroa.1168.0.copyload.i = load i64, i64* %.sroa.1168.0..sroa_idx169.i, align 8
-  %.sroa.2170.0..sroa_idx171.i = getelementptr inbounds %struct.circular_buf_t.5, %struct.circular_buf_t.5* %186, i64 %78, i32 2
+  %.sroa.2170.0..sroa_idx171.i = getelementptr inbounds %struct.circular_buf_t.4, %struct.circular_buf_t.4* %186, i64 %78, i32 2
   %.sroa.2170.0.copyload.i = load i64, i64* %.sroa.2170.0..sroa_idx171.i, align 8
   %190 = icmp eq i64 %.sroa.1168.0.copyload.i, %.sroa.2170.0.copyload.i
   br i1 %190, label %211, label %191
 
 ; <label>:191:                                    ; preds = %189
-  %192 = bitcast %struct.circular_buf_t.5* %187 to i64**
+  %192 = bitcast %struct.circular_buf_t.4* %187 to i64**
   %193 = load i64*, i64** %192, align 8
   %194 = getelementptr inbounds i64, i64* %193, i64 %.sroa.2170.0.copyload.i
   %195 = load i64, i64* %194, align 8
   %196 = add i64 %.sroa.2170.0.copyload.i, 1
-  %197 = getelementptr inbounds %struct.circular_buf_t.5, %struct.circular_buf_t.5* %186, i64 %78, i32 3
+  %197 = getelementptr inbounds %struct.circular_buf_t.4, %struct.circular_buf_t.4* %186, i64 %78, i32 3
   %198 = load i64, i64* %197, align 8
   %199 = or i64 %196, %198
   %200 = and i64 %199, -4294967296
@@ -576,10 +576,10 @@ B80:                                              ; preds = %B88, %B116.endif, %
   br i1 %243, label %.lr.ph25.i, label %._crit_edge26.i
 
 ._crit_edge26.i:                                  ; preds = %241, %211
-  %244 = load %struct.circular_buf_t.5*, %struct.circular_buf_t.5** @VSLOT_timetag, align 8
-  %.sroa.1.0..sroa_idx36.i = getelementptr inbounds %struct.circular_buf_t.5, %struct.circular_buf_t.5* %244, i64 %78, i32 1
+  %244 = load %struct.circular_buf_t.4*, %struct.circular_buf_t.4** @VSLOT_timetag, align 8
+  %.sroa.1.0..sroa_idx36.i = getelementptr inbounds %struct.circular_buf_t.4, %struct.circular_buf_t.4* %244, i64 %78, i32 1
   %.sroa.1.0.copyload.i = load i64, i64* %.sroa.1.0..sroa_idx36.i, align 8
-  %.sroa.2.0..sroa_idx37.i = getelementptr inbounds %struct.circular_buf_t.5, %struct.circular_buf_t.5* %244, i64 %78, i32 2
+  %.sroa.2.0..sroa_idx37.i = getelementptr inbounds %struct.circular_buf_t.4, %struct.circular_buf_t.4* %244, i64 %78, i32 2
   %.sroa.2.0.copyload.i = load i64, i64* %.sroa.2.0..sroa_idx37.i, align 8
   %245 = icmp eq i64 %.sroa.1.0.copyload.i, %.sroa.2.0.copyload.i
   br i1 %245, label %246, label %POOL_next.exit
@@ -1183,45 +1183,8 @@ declare void @PyEval_RestoreThread(i8*) local_unnamed_addr
 
 declare i8* @PyLong_FromLongLong(i64) local_unnamed_addr
 
-; Function Attrs: noinline norecurse nounwind
-define linkonce_odr void @NRT_incref(i8* %.1) local_unnamed_addr #1 {
-.3:
-  %.4 = icmp eq i8* %.1, null
-  br i1 %.4, label %.3.if, label %.3.endif, !prof !4
-
-.3.if:                                            ; preds = %.3
-  ret void
-
-.3.endif:                                         ; preds = %.3
-  %.7 = bitcast i8* %.1 to i64*
-  %.4.i = atomicrmw add i64* %.7, i64 1 monotonic
-  ret void
-}
-
-; Function Attrs: noinline
-define linkonce_odr void @NRT_decref(i8* %.1) local_unnamed_addr #2 {
-.3:
-  %.4 = icmp eq i8* %.1, null
-  br i1 %.4, label %.3.if, label %.3.endif, !prof !4
-
-.3.if:                                            ; preds = %.3.endif, %.3
-  ret void
-
-.3.endif:                                         ; preds = %.3
-  %.7 = bitcast i8* %.1 to i64*
-  %.4.i = atomicrmw sub i64* %.7, i64 1 monotonic
-  %.9 = icmp eq i64 %.4.i, 1
-  br i1 %.9, label %.3.endif.if, label %.3.if, !prof !4
-
-.3.endif.if:                                      ; preds = %.3.endif
-  tail call void @NRT_MemInfo_call_dtor(i8* nonnull %.1)
-  ret void
-}
-
-declare void @NRT_MemInfo_call_dtor(i8*) local_unnamed_addr
-
 ; Function Attrs: noinline optnone uwtable
-define linkonce_odr i32 @printf(i8*, ...) local_unnamed_addr #3 comdat {
+define linkonce_odr i32 @printf(i8*, ...) local_unnamed_addr #1 comdat {
   %2 = alloca i8*, align 8
   %3 = alloca i32, align 4
   %4 = alloca i8*, align 8
@@ -1240,18 +1203,18 @@ define linkonce_odr i32 @printf(i8*, ...) local_unnamed_addr #3 comdat {
 }
 
 ; Function Attrs: nounwind
-declare noalias i8* @malloc(i64) local_unnamed_addr #4
+declare noalias i8* @malloc(i64) local_unnamed_addr #2
 
 ; Function Attrs: argmemonly nounwind
-declare void @llvm.memset.p0i8.i64(i8* nocapture writeonly, i8, i64, i32, i1) #5
+declare void @llvm.memset.p0i8.i64(i8* nocapture writeonly, i8, i64, i32, i1) #3
 
 ; Function Attrs: nounwind
 declare void @llvm.va_start(i8*) #0
 
-declare { i8* }* @__acrt_iob_func(i32) local_unnamed_addr #6
+declare { i8* }* @__acrt_iob_func(i32) local_unnamed_addr #4
 
 ; Function Attrs: noinline optnone uwtable
-define linkonce_odr i32 @_vfprintf_l({ i8* }*, i8*, %struct.__crt_locale_pointers.1.6*, i8*) local_unnamed_addr #3 comdat {
+define linkonce_odr i32 @_vfprintf_l({ i8* }*, i8*, %struct.__crt_locale_pointers.1.6*, i8*) local_unnamed_addr #1 comdat {
   %5 = alloca i8*, align 8
   %6 = alloca %struct.__crt_locale_pointers.1.6*, align 8
   %7 = alloca i8*, align 8
@@ -1274,31 +1237,68 @@ define linkonce_odr i32 @_vfprintf_l({ i8* }*, i8*, %struct.__crt_locale_pointer
 declare void @llvm.va_end(i8*) #0
 
 ; Function Attrs: noinline nounwind optnone uwtable
-define linkonce_odr i64* @__local_stdio_printf_options() local_unnamed_addr #7 comdat {
+define linkonce_odr i64* @__local_stdio_printf_options() local_unnamed_addr #5 comdat {
   ret i64* @"\01?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA"
 }
 
-declare i32 @__stdio_common_vfprintf(i64, { i8* }*, i8*, %struct.__crt_locale_pointers.1.6*, i8*) local_unnamed_addr #6
+declare i32 @__stdio_common_vfprintf(i64, { i8* }*, i8*, %struct.__crt_locale_pointers.1.6*, i8*) local_unnamed_addr #4
 
 ; Function Attrs: nounwind
-declare i64 @fread(i8* nocapture, i64, i64, { i8* }* nocapture) local_unnamed_addr #4
+declare i64 @fread(i8* nocapture, i64, i64, { i8* }* nocapture) local_unnamed_addr #2
 
 ; Function Attrs: nounwind
-declare noalias { i8* }* @fopen(i8* nocapture readonly, i8* nocapture readonly) local_unnamed_addr #4
+declare noalias { i8* }* @fopen(i8* nocapture readonly, i8* nocapture readonly) local_unnamed_addr #2
 
-declare i32 @_fseeki64({ i8* }*, i64, i32) local_unnamed_addr #6
+declare i32 @_fseeki64({ i8* }*, i64, i32) local_unnamed_addr #4
+
+; Function Attrs: noinline norecurse nounwind
+define linkonce_odr void @NRT_incref(i8* %.1) local_unnamed_addr #6 {
+.3:
+  %.4 = icmp eq i8* %.1, null
+  br i1 %.4, label %.3.if, label %.3.endif, !prof !4
+
+.3.if:                                            ; preds = %.3
+  ret void
+
+.3.endif:                                         ; preds = %.3
+  %.7 = bitcast i8* %.1 to i64*
+  %.4.i = atomicrmw add i64* %.7, i64 1 monotonic
+  ret void
+}
+
+; Function Attrs: noinline
+define linkonce_odr void @NRT_decref(i8* %.1) local_unnamed_addr #7 {
+.3:
+  %.4 = icmp eq i8* %.1, null
+  br i1 %.4, label %.3.if, label %.3.endif, !prof !4
+
+.3.if:                                            ; preds = %.3.endif, %.3
+  ret void
+
+.3.endif:                                         ; preds = %.3
+  %.7 = bitcast i8* %.1 to i64*
+  %.4.i = atomicrmw sub i64* %.7, i64 1 monotonic
+  %.9 = icmp eq i64 %.4.i, 1
+  br i1 %.9, label %.3.endif.if, label %.3.if, !prof !4
+
+.3.endif.if:                                      ; preds = %.3.endif
+  tail call void @NRT_MemInfo_call_dtor(i8* nonnull %.1)
+  ret void
+}
+
+declare void @NRT_MemInfo_call_dtor(i8*) local_unnamed_addr
 
 ; Function Attrs: nounwind
 declare void @llvm.stackprotector(i8*, i8**) #0
 
 attributes #0 = { nounwind }
-attributes #1 = { noinline norecurse nounwind }
-attributes #2 = { noinline }
-attributes #3 = { noinline optnone uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
-attributes #4 = { nounwind "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
-attributes #5 = { argmemonly nounwind }
-attributes #6 = { "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
-attributes #7 = { noinline nounwind optnone uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #1 = { noinline optnone uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #2 = { nounwind "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #3 = { argmemonly nounwind }
+attributes #4 = { "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #5 = { noinline nounwind optnone uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #6 = { noinline norecurse nounwind }
+attributes #7 = { noinline }
 
 !llvm.linker.options = !{!0, !0}
 !llvm.ident = !{!1, !1}

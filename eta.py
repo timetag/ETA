@@ -28,6 +28,7 @@ def mp_core(caller_parms):
 
 
 if __name__ == '__main__':
+    multiprocessing.freeze_support()
     out = parse_header(bytearray("HHT2.ptu", "ascii"))
     THREAD_MAX = 2
     TTF_header_offset = out[0]
