@@ -1,139 +1,77 @@
-(bytearray(uint8, 1d, C), bytearray(uint8, 1d, C))//////////////; ModuleID = 'foo'
+(array(int8, 1d, C), array(int64, 1d, C), bytearray(uint8, 1d, C), int64, int64, int64, int64, int64, int64)//////////////; ModuleID = '<string>'
 source_filename = "<string>"
 target datalayout = "e-m:e-i64:64-f80:128-n8:16:32:64-S128"
 target triple = "x86_64-pc-windows-msvc"
 
-%struct.TgHd = type { [32 x i8], i32, i32, i64 }
-%struct.tm = type { i32, i32, i32, i32, i32, i32, i32, i32, i32 }
-%struct.__crt_locale_pointers = type { %struct.__crt_locale_data*, %struct.__crt_multibyte_data* }
-%struct.__crt_locale_data = type opaque
-%struct.__crt_multibyte_data = type opaque
+%struct.circular_buf_t.4 = type { i64*, i64, i64, i64 }
+%struct.TgHd.5 = type { [32 x i8], i32, i32, i64 }
+%struct.__crt_locale_pointers.1.6 = type { %struct.__crt_locale_data.2.7*, %struct.__crt_multibyte_data.3.8* }
+%struct.__crt_locale_data.2.7 = type opaque
+%struct.__crt_multibyte_data.3.8 = type opaque
 
 $printf = comdat any
 
-$sprintf = comdat any
-
-$wprintf = comdat any
-
-$_vfwprintf_l = comdat any
+$_vfprintf_l = comdat any
 
 $__local_stdio_printf_options = comdat any
 
-$_vsprintf_l = comdat any
+$"\01??_C@_0BB@NIGCBLED@?6TOTAL?5SLOTS?3?5?$CFd?$AA@" = comdat any
 
-$_vsnprintf_l = comdat any
+$"\01??_C@_0BG@NJEFHGP@?6Init?5ring?5buffer?5?$CFd?4?$AA@" = comdat any
 
-$_vfprintf_l = comdat any
+$"\01??_C@_0BM@KDJELMIO@?6Buffer?5created?0?5empty?3?5?$CFd?6?$AA@" = comdat any
 
-$"\01??_C@_0P@HHDHBNCE@?6File?5name?3?5?$CFs?$AA@" = comdat any
-
-$"\01??_C@_02JDPG@rb?$AA@" = comdat any
-
-$"\01??_C@_0DC@PALJOGBL@?6?5?$FLERROR?$FNCan?5not?5open?5time?9tagge@" = comdat any
-
-$"\01??_C@_0CJ@FCCDKPDO@?6?5?$FLERROR?$FNFailed?5to?5read?5header?0?5@" = comdat any
-
-$"\01??_C@_06OMFAFKCA@PQTTTR?$AA@" = comdat any
-
-$"\01??_C@_0BF@IADDCEHD@?6Parser?3?5PicoQuant?5?6?$AA@" = comdat any
-
-$"\01??_C@_0CJ@BKHAGGLC@?6?5?$FLERROR?$FN?6error?5reading?5header?0?5@" = comdat any
-
-$"\01??_C@_0BI@DBJBNHJK@?6PTU?5file?5Version?3?5?$CFs?5?6?$AA@" = comdat any
-
-$"\01??_C@_0BD@GFPKCHLP@?6?6Incomplete?5File?4?$AA@" = comdat any
-
-$"\01??_C@_06BPGFIOAL@?$CFs?$CI?$CFd?$CJ?$AA@" = comdat any
-
-$"\01??_C@_06PHODKAKM@?6?$CF?940s?$AA@" = comdat any
-
-$"\01??_C@_0M@HECCAEGL@?$DMempty?5Tag?$DO?$AA@" = comdat any
-
-$"\01??_C@_05MKDOIIA@False?$AA@" = comdat any
-
-$"\01??_C@_04HPMIDMKH@True?$AA@" = comdat any
-
-$"\01??_C@_02DKCKIIND@?$CFs?$AA@" = comdat any
-
-$"\01??_C@_04BFAHMMK@?$CFlld?$AA@" = comdat any
-
-$"\01??_C@_0BJ@EFFGOIKF@TTResult_NumberOfRecords?$AA@" = comdat any
-
-$"\01??_C@_0BL@NBAMDLKF@TTResultFormat_TTTRRecType?$AA@" = comdat any
-
-$"\01??_C@_09DGLOBCMH@0x?$CF16?416X?$AA@" = comdat any
-
-$"\01??_C@_02LDDGBJKG@?$CFE?$AA@" = comdat any
-
-$"\01??_C@_0BE@MLJFPCOI@MeasDesc_Resolution?$AA@" = comdat any
-
-$"\01??_C@_0BK@JGMIOCJJ@MeasDesc_GlobalResolution?$AA@" = comdat any
-
-$"\01??_C@_0BO@ENEJMDLG@?$DMFloat?5Array?5with?5?$CFd?5Entries?$DO?$AA@" = comdat any
-
-$"\01??_C@_01LOCGONAA@?$AA?$AA@" = comdat any
-
-$"\01??_C@_0BC@KFPMDKOJ@?6Incomplete?5File?4?$AA@" = comdat any
-
-$"\01??_C@_15GANGMFKL@?$AA?$CF?$AAs?$AA?$AA@" = comdat any
-
-$"\01??_C@_0CA@FNNAPBCN@?$DMBinary?5Blob?5contains?5?$CFd?5Bytes?$DO?$AA@" = comdat any
-
-$"\01??_C@_0CM@NLBAOIPI@Illegal?5Type?5identifier?5found?$CB?5B@" = comdat any
-
-$"\01??_C@_0L@BKLBDFDP@Header_End?$AA@" = comdat any
-
-$"\01??_C@_0BL@HPPLJEMK@?6?6?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?6?$AA@" = comdat any
-
-$"\01??_C@_0CM@KKBPPLIM@?6Unknown?5time?9tag?5record?5type?3?50@" = comdat any
-
-$"\01??_C@_0BH@IAAPGHG@?6TimeHarp260P?5T3?5data?6?$AA@" = comdat any
-
-$"\01??_C@_0BH@PEIABJLL@?6TimeHarp260N?5T3?5data?6?$AA@" = comdat any
-
-$"\01??_C@_0BH@FIOKMHCD@?6HydraHarp?5V2?5T3?5data?6?$AA@" = comdat any
-
-$"\01??_C@_0BH@MBAIKBCC@?6HydraHarp?5V1?5T3?5data?6?$AA@" = comdat any
-
-$"\01??_C@_0BD@ILPKNJIP@?6PicoHarp?5T3?5data?6?$AA@" = comdat any
-
-$"\01??_C@_0BH@MEKKPGOI@?6TimeHarp260P?5T2?5data?6?$AA@" = comdat any
-
-$"\01??_C@_0BH@DICKBJCF@?6TimeHarp260N?5T2?5data?6?$AA@" = comdat any
-
-$"\01??_C@_0BH@JEEAMHLN@?6HydraHarp?5V2?5T2?5data?6?$AA@" = comdat any
-
-$"\01??_C@_0BD@EHFANJBB@?6PicoHarp?5T2?5data?6?$AA@" = comdat any
-
-$"\01??_C@_0BH@NKCKBLM@?6HydraHarp?5V1?5T2?5data?6?$AA@" = comdat any
-
-$"\01??_C@_0BB@MCFHIEMO@?6Parser?3?5quTAU?5?6?$AA@" = comdat any
-
-$"\01??_C@_0CN@NEMBOFCA@?6?5?$FLERROR?$FNError?5when?5reading?5head@" = comdat any
-
-$"\01??_C@_0CJ@MFBOABHI@?6quTAU?5file?5header?5is?5read?0?5but?5@" = comdat any
-
-$"\01??_C@_0BM@CDLOEACE@?6RecordType?3?5quTAU?510?9bytes?$AA@" = comdat any
-
-$"\01??_C@_0BA@INEDNOAD@?6Filesize?3?5?$CFlld?$AA@" = comdat any
+$"\01??_C@_0CF@BDINJJIB@?6?5?$FLERROR?$FNMemalloc?5failed?0?5aborti@" = comdat any
 
 $"\01?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA" = comdat any
 
-@.const.picklebuf.2452830461000 = internal constant { i8*, i32 } { i8* getelementptr inbounds ([66 x i8], [66 x i8]* @.const.pickledata.2452830461000, i32 0, i32 0), i32 66 }
-@".const.%s" = internal constant [3 x i8] c"%s\00"
-@".const.the print() function" = internal constant [21 x i8] c"the print() function\00"
-@".const.\0A" = internal constant [2 x i8] c"\0A\00"
-@.const.pickledata.2452795384192 = internal constant [20 x i8] c"\80\04\95\09\00\00\00\00\00\00\00\8C\05haha:\94."
-@".const. " = internal constant [2 x i8] c" \00"
-@.const.pickledata.2452830461000 = internal constant [66 x i8] c"\80\04\957\00\00\00\00\00\00\00\8C\08builtins\94\8C\0CRuntimeError\94\93\94\8C\13missing Environment\94\85\94\86\94."
-@.const.foo = internal constant [4 x i8] c"foo\00"
+$"\01??_C@_0BM@PJHDCAIH@?6?5?$FLERROR?$FNCorrupted?5slot?$CB?$CB?$CB?$CB?$AA@" = comdat any
+
+$"\01??_C@_0CE@MNMCEKMH@?6POOL?5is?5empty?0?5read?5form?5file?50@" = comdat any
+
+$"\01??_C@_0CM@LHOLBNIE@?6?6Thread?5assigned?5to?5file?5part?5?$FL@" = comdat any
+
+$"\01??_C@_02JDPG@rb?$AA@" = comdat any
+
+$"\01??_C@_0EP@PGBLNION@?6?5?$FLERROR?$FNReading?5buffer?5for?5Time@" = comdat any
+
+$"\01??_C@_0DE@PLFGPKJO@?6?5?$FLERROR?$FNTime?9tag?5file?5cannot?5be@" = comdat any
+
+@.const.mainloop = internal constant [9 x i8] c"mainloop\00"
 @".const.Fatal error: missing _dynfunc.Closure" = internal constant [38 x i8] c"Fatal error: missing _dynfunc.Closure\00"
 @PyExc_RuntimeError = external global i8
 @".const.missing Environment" = internal constant [20 x i8] c"missing Environment\00"
-@_Py_NoneStruct = external global i8
-@PyExc_StopIteration = external global i8
-@PyExc_SystemError = external global i8
-@".const.unknown error when calling native function" = internal constant [43 x i8] c"unknown error when calling native function\00"
+@"\01?READER_fpin@@3PEAU_iobuf@@EA" = local_unnamed_addr global { i8* }* null, align 8
+@order_gurantee2 = local_unnamed_addr global i64 0, align 8
+@READER_batchend_pos_in_file = local_unnamed_addr global i64 0, align 8
+@READER_batch_actualread_length = local_unnamed_addr global i64 0, align 8
+@READER_buffer = local_unnamed_addr global i8* null, align 8
+@READER_fseekpoint = local_unnamed_addr global i64 0, align 8
+@READER_fendpoint = local_unnamed_addr global i64 0, align 8
+@READER_next_RecID_relativeinbatch = local_unnamed_addr global i64 0, align 8
+@READER_BytesofRecords = local_unnamed_addr global i32 0, align 4
+@READER_TTRes_pspr = local_unnamed_addr global i64 0, align 8
+@READER_SYNCRate_pspr = local_unnamed_addr global i64 0, align 8
+@READER_DTRes_pspr = local_unnamed_addr global i64 0, align 8
+@POOL_slot0_last_chns = local_unnamed_addr global i8 0, align 1
+@POOL_real_slots = local_unnamed_addr global i8 0, align 1
+@POOL_real_chns = local_unnamed_addr global i8 0, align 1
+@POOL_total_slots = local_unnamed_addr global i8 0, align 1
+@POOL_timetag = local_unnamed_addr global i64* null, align 8
+@POOL_slot = local_unnamed_addr global i8* null, align 8
+@VSLOT_timetag = local_unnamed_addr global %struct.circular_buf_t.4* null, align 8
+@"\01??_C@_0BB@NIGCBLED@?6TOTAL?5SLOTS?3?5?$CFd?$AA@" = linkonce_odr unnamed_addr constant [17 x i8] c"\0ATOTAL SLOTS: %d\00", comdat, align 1
+@"\01??_C@_0BG@NJEFHGP@?6Init?5ring?5buffer?5?$CFd?4?$AA@" = linkonce_odr unnamed_addr constant [22 x i8] c"\0AInit ring buffer %d.\00", comdat, align 1
+@"\01??_C@_0BM@KDJELMIO@?6Buffer?5created?0?5empty?3?5?$CFd?6?$AA@" = linkonce_odr unnamed_addr constant [28 x i8] c"\0ABuffer created, empty: %d\0A\00", comdat, align 1
+@"\01??_C@_0CF@BDINJJIB@?6?5?$FLERROR?$FNMemalloc?5failed?0?5aborti@" = linkonce_odr unnamed_addr constant [37 x i8] c"\0A [ERROR]Memalloc failed, aborting.\0A\00", comdat, align 1
+@"\01?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA" = linkonce_odr global i64 0, comdat, align 8
+@"\01?overflowcorrection@?1??pop_signal_from_file@@9@4_JA" = internal unnamed_addr global i64 0, align 8
+@"\01??_C@_0BM@PJHDCAIH@?6?5?$FLERROR?$FNCorrupted?5slot?$CB?$CB?$CB?$CB?$AA@" = linkonce_odr unnamed_addr constant [28 x i8] c"\0A [ERROR]Corrupted slot!!!!\00", comdat, align 1
+@"\01??_C@_0CE@MNMCEKMH@?6POOL?5is?5empty?0?5read?5form?5file?50@" = linkonce_odr unnamed_addr constant [36 x i8] c"\0APOOL is empty, read form file 0. \0A\00", comdat, align 1
+@"\01??_C@_0CM@LHOLBNIE@?6?6Thread?5assigned?5to?5file?5part?5?$FL@" = linkonce_odr unnamed_addr constant [44 x i8] c"\0A\0AThread assigned to file part [%lld,%lld]\0A\00", comdat, align 1
+@"\01??_C@_02JDPG@rb?$AA@" = linkonce_odr unnamed_addr constant [3 x i8] c"rb\00", comdat, align 1
+@"\01??_C@_0EP@PGBLNION@?6?5?$FLERROR?$FNReading?5buffer?5for?5Time@" = linkonce_odr unnamed_addr constant [79 x i8] c"\0A [ERROR]Reading buffer for Time-tag file is not assgined properly, aborting.\0A\00", comdat, align 1
+@"\01??_C@_0DE@PLFGPKJO@?6?5?$FLERROR?$FNTime?9tag?5file?5cannot?5be@" = linkonce_odr unnamed_addr constant [52 x i8] c"\0A [ERROR]Time-tag file cannot be opened, aborting.\0A\00", comdat, align 1
 @"\01?order_gurantee@@3_JA" = local_unnamed_addr global i64 0, align 8
 @SYNCRate_pspr = local_unnamed_addr global i64 0, align 8
 @TTRes_pspr = local_unnamed_addr global i64 0, align 8
@@ -144,1240 +82,1066 @@ $"\01?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA" = comdat any
 @TTF_header_offset = local_unnamed_addr global i64 0, align 8
 @TTF_filesize = local_unnamed_addr global i64 0, align 8
 @IsT2 = local_unnamed_addr global i8 0, align 1
-@"\01?TagHead@@3UTgHd@@A" = global %struct.TgHd zeroinitializer, align 8
-@"\01??_C@_0P@HHDHBNCE@?6File?5name?3?5?$CFs?$AA@" = linkonce_odr unnamed_addr constant [15 x i8] c"\0AFile name: %s\00", comdat, align 1
-@"\01??_C@_02JDPG@rb?$AA@" = linkonce_odr unnamed_addr constant [3 x i8] c"rb\00", comdat, align 1
-@"\01??_C@_0DC@PALJOGBL@?6?5?$FLERROR?$FNCan?5not?5open?5time?9tagge@" = linkonce_odr unnamed_addr constant [50 x i8] c"\0A [ERROR]Can not open time-tagged file, aborting.\00", comdat, align 1
-@"\01??_C@_0CJ@FCCDKPDO@?6?5?$FLERROR?$FNFailed?5to?5read?5header?0?5@" = linkonce_odr unnamed_addr constant [41 x i8] c"\0A [ERROR]Failed to read header, aborted.\00", comdat, align 1
-@"\01??_C@_06OMFAFKCA@PQTTTR?$AA@" = linkonce_odr unnamed_addr constant [7 x i8] c"PQTTTR\00", comdat, align 1
-@"\01??_C@_0BF@IADDCEHD@?6Parser?3?5PicoQuant?5?6?$AA@" = linkonce_odr unnamed_addr constant [21 x i8] c"\0AParser: PicoQuant \0A\00", comdat, align 1
-@"\01??_C@_0CJ@BKHAGGLC@?6?5?$FLERROR?$FN?6error?5reading?5header?0?5@" = linkonce_odr unnamed_addr constant [41 x i8] c"\0A [ERROR]\0Aerror reading header, aborted.\00", comdat, align 1
-@"\01??_C@_0BI@DBJBNHJK@?6PTU?5file?5Version?3?5?$CFs?5?6?$AA@" = linkonce_odr unnamed_addr constant [24 x i8] c"\0APTU file Version: %s \0A\00", comdat, align 1
-@"\01??_C@_0BD@GFPKCHLP@?6?6Incomplete?5File?4?$AA@" = linkonce_odr unnamed_addr constant [19 x i8] c"\0A\0AIncomplete File.\00", comdat, align 1
-@"\01??_C@_06BPGFIOAL@?$CFs?$CI?$CFd?$CJ?$AA@" = linkonce_odr unnamed_addr constant [7 x i8] c"%s(%d)\00", comdat, align 1
-@"\01??_C@_06PHODKAKM@?6?$CF?940s?$AA@" = linkonce_odr unnamed_addr constant [7 x i8] c"\0A%-40s\00", comdat, align 1
-@"\01??_C@_0M@HECCAEGL@?$DMempty?5Tag?$DO?$AA@" = linkonce_odr unnamed_addr constant [12 x i8] c"<empty Tag>\00", comdat, align 1
-@"\01??_C@_05MKDOIIA@False?$AA@" = linkonce_odr unnamed_addr constant [6 x i8] c"False\00", comdat, align 1
-@"\01??_C@_04HPMIDMKH@True?$AA@" = linkonce_odr unnamed_addr constant [5 x i8] c"True\00", comdat, align 1
-@"\01??_C@_02DKCKIIND@?$CFs?$AA@" = linkonce_odr unnamed_addr constant [3 x i8] c"%s\00", comdat, align 1
-@"\01??_C@_04BFAHMMK@?$CFlld?$AA@" = linkonce_odr unnamed_addr constant [5 x i8] c"%lld\00", comdat, align 1
-@"\01??_C@_0BJ@EFFGOIKF@TTResult_NumberOfRecords?$AA@" = linkonce_odr unnamed_addr constant [25 x i8] c"TTResult_NumberOfRecords\00", comdat, align 1
-@"\01??_C@_0BL@NBAMDLKF@TTResultFormat_TTTRRecType?$AA@" = linkonce_odr unnamed_addr constant [27 x i8] c"TTResultFormat_TTTRRecType\00", comdat, align 1
-@"\01??_C@_09DGLOBCMH@0x?$CF16?416X?$AA@" = linkonce_odr unnamed_addr constant [10 x i8] c"0x%16.16X\00", comdat, align 1
-@"\01??_C@_02LDDGBJKG@?$CFE?$AA@" = linkonce_odr unnamed_addr constant [3 x i8] c"%E\00", comdat, align 1
-@"\01??_C@_0BE@MLJFPCOI@MeasDesc_Resolution?$AA@" = linkonce_odr unnamed_addr constant [20 x i8] c"MeasDesc_Resolution\00", comdat, align 1
-@"\01??_C@_0BK@JGMIOCJJ@MeasDesc_GlobalResolution?$AA@" = linkonce_odr unnamed_addr constant [26 x i8] c"MeasDesc_GlobalResolution\00", comdat, align 1
-@"\01??_C@_0BO@ENEJMDLG@?$DMFloat?5Array?5with?5?$CFd?5Entries?$DO?$AA@" = linkonce_odr unnamed_addr constant [30 x i8] c"<Float Array with %d Entries>\00", comdat, align 1
-@"\01??_C@_01LOCGONAA@?$AA?$AA@" = linkonce_odr unnamed_addr constant [2 x i8] zeroinitializer, comdat, align 1
-@"\01??_C@_0BC@KFPMDKOJ@?6Incomplete?5File?4?$AA@" = linkonce_odr unnamed_addr constant [18 x i8] c"\0AIncomplete File.\00", comdat, align 1
-@"\01??_C@_15GANGMFKL@?$AA?$CF?$AAs?$AA?$AA@" = linkonce_odr unnamed_addr constant [3 x i16] [i16 37, i16 115, i16 0], comdat, align 2
-@"\01??_C@_0CA@FNNAPBCN@?$DMBinary?5Blob?5contains?5?$CFd?5Bytes?$DO?$AA@" = linkonce_odr unnamed_addr constant [32 x i8] c"<Binary Blob contains %d Bytes>\00", comdat, align 1
-@"\01??_C@_0CM@NLBAOIPI@Illegal?5Type?5identifier?5found?$CB?5B@" = linkonce_odr unnamed_addr constant [44 x i8] c"Illegal Type identifier found! Broken file?\00", comdat, align 1
-@"\01??_C@_0L@BKLBDFDP@Header_End?$AA@" = linkonce_odr unnamed_addr constant [11 x i8] c"Header_End\00", comdat, align 1
-@"\01??_C@_0BL@HPPLJEMK@?6?6?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?6?$AA@" = linkonce_odr unnamed_addr constant [27 x i8] c"\0A\0A-----------------------\0A\00", comdat, align 1
-@"\01??_C@_0CM@KKBPPLIM@?6Unknown?5time?9tag?5record?5type?3?50@" = linkonce_odr unnamed_addr constant [44 x i8] c"\0AUnknown time-tag record type: 0x%X\0A 0x%X\0A \00", comdat, align 1
-@"\01??_C@_0BH@IAAPGHG@?6TimeHarp260P?5T3?5data?6?$AA@" = linkonce_odr unnamed_addr constant [23 x i8] c"\0ATimeHarp260P T3 data\0A\00", comdat, align 1
-@"\01??_C@_0BH@PEIABJLL@?6TimeHarp260N?5T3?5data?6?$AA@" = linkonce_odr unnamed_addr constant [23 x i8] c"\0ATimeHarp260N T3 data\0A\00", comdat, align 1
-@"\01??_C@_0BH@FIOKMHCD@?6HydraHarp?5V2?5T3?5data?6?$AA@" = linkonce_odr unnamed_addr constant [23 x i8] c"\0AHydraHarp V2 T3 data\0A\00", comdat, align 1
-@"\01??_C@_0BH@MBAIKBCC@?6HydraHarp?5V1?5T3?5data?6?$AA@" = linkonce_odr unnamed_addr constant [23 x i8] c"\0AHydraHarp V1 T3 data\0A\00", comdat, align 1
-@"\01??_C@_0BD@ILPKNJIP@?6PicoHarp?5T3?5data?6?$AA@" = linkonce_odr unnamed_addr constant [19 x i8] c"\0APicoHarp T3 data\0A\00", comdat, align 1
-@"\01??_C@_0BH@MEKKPGOI@?6TimeHarp260P?5T2?5data?6?$AA@" = linkonce_odr unnamed_addr constant [23 x i8] c"\0ATimeHarp260P T2 data\0A\00", comdat, align 1
-@"\01??_C@_0BH@DICKBJCF@?6TimeHarp260N?5T2?5data?6?$AA@" = linkonce_odr unnamed_addr constant [23 x i8] c"\0ATimeHarp260N T2 data\0A\00", comdat, align 1
-@"\01??_C@_0BH@JEEAMHLN@?6HydraHarp?5V2?5T2?5data?6?$AA@" = linkonce_odr unnamed_addr constant [23 x i8] c"\0AHydraHarp V2 T2 data\0A\00", comdat, align 1
-@"\01??_C@_0BD@EHFANJBB@?6PicoHarp?5T2?5data?6?$AA@" = linkonce_odr unnamed_addr constant [19 x i8] c"\0APicoHarp T2 data\0A\00", comdat, align 1
-@"\01??_C@_0BH@NKCKBLM@?6HydraHarp?5V1?5T2?5data?6?$AA@" = linkonce_odr unnamed_addr constant [23 x i8] c"\0AHydraHarp V1 T2 data\0A\00", comdat, align 1
-@"\01??_C@_0BB@MCFHIEMO@?6Parser?3?5quTAU?5?6?$AA@" = linkonce_odr unnamed_addr constant [17 x i8] c"\0AParser: quTAU \0A\00", comdat, align 1
-@"\01??_C@_0CN@NEMBOFCA@?6?5?$FLERROR?$FNError?5when?5reading?5head@" = linkonce_odr unnamed_addr constant [45 x i8] c"\0A [ERROR]Error when reading header, aborted.\00", comdat, align 1
-@"\01??_C@_0CJ@MFBOABHI@?6quTAU?5file?5header?5is?5read?0?5but?5@" = linkonce_odr unnamed_addr constant [41 x i8] c"\0AquTAU file header is read, but ignored.\00", comdat, align 1
-@"\01??_C@_0BM@CDLOEACE@?6RecordType?3?5quTAU?510?9bytes?$AA@" = linkonce_odr unnamed_addr constant [28 x i8] c"\0ARecordType: quTAU 10-bytes\00", comdat, align 1
-@"\01??_C@_0BA@INEDNOAD@?6Filesize?3?5?$CFlld?$AA@" = linkonce_odr unnamed_addr constant [16 x i8] c"\0AFilesize: %lld\00", comdat, align 1
-@"\01?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA" = linkonce_odr global i64 0, comdat, align 8
+@"\01?TagHead@@3UTgHd@@A" = local_unnamed_addr global %struct.TgHd.5 zeroinitializer, align 8
 
-define i32 @"_ZN8__main__7foo$241E35bytearray$28uint8$2c$201d$2c$20C$2935bytearray$28uint8$2c$201d$2c$20C$29"(i64* noalias nocapture %retptr, { i8*, i32 }** noalias nocapture %excinfo, i8* noalias nocapture readnone %env, i8* nocapture readnone %arg.a.0, i8* nocapture readnone %arg.a.1, i64 %arg.a.2, i64 %arg.a.3, i8* %arg.a.4, i64 %arg.a.5.0, i64 %arg.a.6.0, i8* nocapture readnone %arg.b.0, i8* nocapture readnone %arg.b.1, i64 %arg.b.2, i64 %arg.b.3, i8* %arg.b.4, i64 %arg.b.5.0, i64 %arg.b.6.0) local_unnamed_addr {
+define i32 @"_ZN8mainloop12mainloop$241E5ArrayIaLi1E1C7mutable7alignedE5ArrayIxLi1E1C7mutable7alignedE35bytearray$28uint8$2c$201d$2c$20C$29xxxxxx"(i64* noalias nocapture %retptr, { i8*, i32 }** noalias nocapture readnone %excinfo, i8* noalias nocapture readnone %env, i8* %arg.chn.0, i8* nocapture readnone %arg.chn.1, i64 %arg.chn.2, i64 %arg.chn.3, i8* nocapture %arg.chn.4, i64 %arg.chn.5.0, i64 %arg.chn.6.0, i8* %arg.histogram.0, i8* nocapture readnone %arg.histogram.1, i64 %arg.histogram.2, i64 %arg.histogram.3, i64* nocapture %arg.histogram.4, i64 %arg.histogram.5.0, i64 %arg.histogram.6.0, i8* nocapture readnone %arg.filename1.0, i8* nocapture readnone %arg.filename1.1, i64 %arg.filename1.2, i64 %arg.filename1.3, i8* nocapture readonly %arg.filename1.4, i64 %arg.filename1.5.0, i64 %arg.filename1.6.0, i64 %arg.fseekpoint, i64 %arg.fendpoint, i64 %arg.BytesofRecords, i64 %arg.TTRes_pspr, i64 %arg.SYNCRate_pspr, i64 %arg.DTRes_pspr) local_unnamed_addr {
 entry:
-  %0 = alloca i64, align 8
-  %1 = alloca i32, align 4
-  %2 = alloca [32 x i8], align 16
-  %3 = alloca [8 x i8], align 1
-  %4 = alloca [40 x i8], align 16
-  %5 = alloca i64, align 8
-  %6 = alloca [8 x i8], align 1
-  %7 = alloca i32, align 4
-  %.102 = alloca i32, align 4
-  %.147 = alloca i32, align 4
-  %.203 = alloca i32, align 4
-  %.248 = alloca i32, align 4
-  %8 = bitcast [32 x i8]* %2 to i8*
-  call void @llvm.lifetime.start.p0i8(i64 32, i8* nonnull %8)
-  %9 = bitcast [8 x i8]* %3 to i8*
-  call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull %9)
-  %10 = bitcast [40 x i8]* %4 to i8*
-  call void @llvm.lifetime.start.p0i8(i64 40, i8* nonnull %10)
-  %11 = bitcast i64* %0 to i8*
-  call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull %11)
-  %12 = bitcast [8 x i8]* %6 to i8*
-  call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull %12)
-  %13 = bitcast i32* %1 to i8*
-  call void @llvm.lifetime.start.p0i8(i64 4, i8* nonnull %13)
-  %14 = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([15 x i8], [15 x i8]* @"\01??_C@_0P@HHDHBNCE@?6File?5name?3?5?$CFs?$AA@", i64 0, i64 0), i8* %arg.a.4)
-  %15 = sext i32 %14 to i64
-  store i64 %15, i64* @"\01?order_gurantee@@3_JA", align 8
-  %16 = tail call { i8* }* @fopen(i8* %arg.a.4, i8* getelementptr inbounds ([3 x i8], [3 x i8]* @"\01??_C@_02JDPG@rb?$AA@", i64 0, i64 0))
-  %17 = icmp eq { i8* }* %16, null
-  br i1 %17, label %18, label %21
+  tail call void @NRT_incref(i8* %arg.chn.0)
+  tail call void @NRT_incref(i8* %arg.histogram.0)
+  %0 = trunc i64 %arg.BytesofRecords to i32
+  store i32 %0, i32* @READER_BytesofRecords, align 4
+  store i64 %arg.fseekpoint, i64* @READER_fseekpoint, align 8
+  store i64 %arg.fendpoint, i64* @READER_fendpoint, align 8
+  store i64 %arg.TTRes_pspr, i64* @READER_TTRes_pspr, align 8
+  store i64 %arg.DTRes_pspr, i64* @READER_DTRes_pspr, align 8
+  store i64 %arg.SYNCRate_pspr, i64* @READER_SYNCRate_pspr, align 8
+  %1 = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([44 x i8], [44 x i8]* @"\01??_C@_0CM@LHOLBNIE@?6?6Thread?5assigned?5to?5file?5part?5?$FL@", i64 0, i64 0), i64 %arg.fseekpoint, i64 %arg.fendpoint)
+  %2 = sext i32 %1 to i64
+  store i64 %2, i64* @order_gurantee2, align 8
+  %3 = tail call { i8* }* @fopen(i8* %arg.filename1.4, i8* getelementptr inbounds ([3 x i8], [3 x i8]* @"\01??_C@_02JDPG@rb?$AA@", i64 0, i64 0))
+  store { i8* }* %3, { i8* }** @"\01?READER_fpin@@3PEAU_iobuf@@EA", align 8
+  %4 = icmp eq { i8* }* %3, null
+  br i1 %4, label %.sink.split.i, label %5
 
-; <label>:18:                                     ; preds = %entry
-  %19 = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([50 x i8], [50 x i8]* @"\01??_C@_0DC@PALJOGBL@?6?5?$FLERROR?$FNCan?5not?5open?5time?9tagge@", i64 0, i64 0))
-  %20 = sext i32 %19 to i64
-  store i64 %20, i64* @"\01?order_gurantee@@3_JA", align 8
-  br label %PARSE_TimeTagFileHeader.exit
+; <label>:5:                                      ; preds = %entry
+  %6 = load i64, i64* @READER_fseekpoint, align 8
+  %7 = tail call i32 @_fseeki64({ i8* }* nonnull %3, i64 %6, i32 0)
+  %8 = load i32, i32* @READER_BytesofRecords, align 4
+  %9 = sext i32 %8 to i64
+  %10 = mul nsw i64 %9, 1000
+  %11 = tail call noalias i8* @malloc(i64 %10)
+  store i8* %11, i8** @READER_buffer, align 8
+  %12 = icmp eq i8* %11, null
+  br i1 %12, label %.sink.split.i, label %FileReader_init.exit
 
-; <label>:21:                                     ; preds = %entry
-  %22 = bitcast [8 x i8]* %6 to i8*
-  %23 = call i64 @fread(i8* nonnull %22, i64 1, i64 8, { i8* }* nonnull %16)
-  %24 = icmp eq i64 %23, 8
-  br i1 %24, label %28, label %25
+.sink.split.i:                                    ; preds = %5, %entry
+  %.sink.i = phi i8* [ getelementptr inbounds ([79 x i8], [79 x i8]* @"\01??_C@_0EP@PGBLNION@?6?5?$FLERROR?$FNReading?5buffer?5for?5Time@", i64 0, i64 0), %5 ], [ getelementptr inbounds ([52 x i8], [52 x i8]* @"\01??_C@_0DE@PLFGPKJO@?6?5?$FLERROR?$FNTime?9tag?5file?5cannot?5be@", i64 0, i64 0), %entry ]
+  %13 = tail call i32 (i8*, ...) @printf(i8* nonnull %.sink.i)
+  %14 = sext i32 %13 to i64
+  store i64 %14, i64* @order_gurantee2, align 8
+  br label %FileReader_init.exit
 
-; <label>:25:                                     ; preds = %21
-  %26 = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([41 x i8], [41 x i8]* @"\01??_C@_0CJ@FCCDKPDO@?6?5?$FLERROR?$FNFailed?5to?5read?5header?0?5@", i64 0, i64 0))
-  %27 = sext i32 %26 to i64
-  store i64 %27, i64* @"\01?order_gurantee@@3_JA", align 8
-  br label %PARSE_TimeTagFileHeader.exit
+FileReader_init.exit:                             ; preds = %.sink.split.i, %5
+  %.0.i = phi i64 [ 0, %5 ], [ -1, %.sink.split.i ]
+  %const = bitcast i64 9223372036854775807 to i64
+  store i8 3, i8* @POOL_total_slots, align 1
+  %15 = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([17 x i8], [17 x i8]* @"\01??_C@_0BB@NIGCBLED@?6TOTAL?5SLOTS?3?5?$CFd?$AA@", i64 0, i64 0), i32 3)
+  %16 = sext i32 %15 to i64
+  store i64 %16, i64* @order_gurantee2, align 8
+  store i8 1, i8* @POOL_real_slots, align 1
+  store i8 2, i8* @POOL_real_chns, align 1
+  %17 = load i8, i8* @POOL_total_slots, align 1
+  %18 = zext i8 %17 to i64
+  %19 = shl nuw nsw i64 %18, 4
+  %20 = tail call noalias i8* @malloc(i64 %19)
+  store i8* %20, i8** bitcast (i64** @POOL_timetag to i8**), align 8
+  %21 = icmp eq i8* %20, null
+  br i1 %21, label %.sink.split.i1, label %22
 
-; <label>:28:                                     ; preds = %21
-  %29 = bitcast [8 x i8]* %6 to i8*
-  %30 = call i32 @strncmp(i8* nonnull %29, i8* getelementptr inbounds ([7 x i8], [7 x i8]* @"\01??_C@_06OMFAFKCA@PQTTTR?$AA@", i64 0, i64 0), i64 6)
-  %31 = icmp eq i32 %30, 0
-  br i1 %31, label %32, label %173
+; <label>:22:                                     ; preds = %FileReader_init.exit
+  %23 = shl nuw nsw i64 %18, 1
+  %24 = tail call noalias i8* @malloc(i64 %23)
+  store i8* %24, i8** @POOL_slot, align 8
+  %25 = icmp eq i8* %24, null
+  br i1 %25, label %.sink.split.i1, label %26
 
-; <label>:32:                                     ; preds = %28
-  %33 = bitcast [8 x i8]* %3 to i8*
-  %34 = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([21 x i8], [21 x i8]* @"\01??_C@_0BF@IADDCEHD@?6Parser?3?5PicoQuant?5?6?$AA@", i64 0, i64 0))
-  %35 = sext i32 %34 to i64
-  store i64 %35, i64* @"\01?order_gurantee@@3_JA", align 8
-  %36 = call i64 @fread(i8* nonnull %33, i64 1, i64 8, { i8* }* nonnull %16)
-  %sext.mask.i = and i64 %36, 4294967295
-  %37 = icmp eq i64 %sext.mask.i, 8
-  br i1 %37, label %41, label %38
+; <label>:26:                                     ; preds = %22
+  %27 = trunc i64 %18 to i8
+  %28 = icmp eq i8 %27, 0
+  br i1 %28, label %._crit_edge.i, label %._crit_edge11.preheader.i
 
-; <label>:38:                                     ; preds = %32
-  %39 = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([41 x i8], [41 x i8]* @"\01??_C@_0CJ@BKHAGGLC@?6?5?$FLERROR?$FN?6error?5reading?5header?0?5@", i64 0, i64 0))
-  %40 = sext i32 %39 to i64
-  store i64 %40, i64* @"\01?order_gurantee@@3_JA", align 8
-  br label %189
+._crit_edge11.preheader.i:                        ; preds = %26
+  %29 = bitcast i8* %20 to i64*
+  %30 = trunc i64 %18 to i8
+  store i64 %const, i64* %29, align 8
+  store i8 0, i8* %24, align 1
+  %scevgep33.i8 = getelementptr i8, i8* %20, i64 8
+  %31 = bitcast i8* %scevgep33.i8 to i64*
+  store i64 %const, i64* %31, align 8
+  %scevgep32.i9 = getelementptr i8, i8* %24, i64 1
+  store i8 0, i8* %scevgep32.i9, align 1
+  %32 = icmp eq i8 %30, 1
+  br i1 %32, label %.lr.ph4.i, label %._crit_edge11.._crit_edge11_crit_edge.i.lr.ph
 
-; <label>:41:                                     ; preds = %32
-  %42 = bitcast [8 x i8]* %3 to i8*
-  %43 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([24 x i8], [24 x i8]* @"\01??_C@_0BI@DBJBNHJK@?6PTU?5file?5Version?3?5?$CFs?5?6?$AA@", i64 0, i64 0), i8* nonnull %42)
-  %44 = sext i32 %43 to i64
-  store i64 %44, i64* @"\01?order_gurantee@@3_JA", align 8
-  br label %45
+._crit_edge11.._crit_edge11_crit_edge.i.lr.ph:    ; preds = %._crit_edge11.preheader.i
+  %scevgep33.i22 = getelementptr i8, i8* %20, i64 16
+  %33 = bitcast i8* %scevgep33.i22 to i64*
+  store i64 %const, i64* %33, align 8
+  %34 = load i8*, i8** @POOL_slot, align 8
+  %scevgep32.i23 = getelementptr i8, i8* %34, i64 2
+  store i8 0, i8* %scevgep32.i23, align 1
+  %35 = load i8, i8* @POOL_total_slots, align 1
+  %36 = icmp ugt i8 %35, 1
+  br i1 %36, label %._crit_edge11.._crit_edge11_crit_edge.i.._crit_edge11.._crit_edge11_crit_edge.i_crit_edge.preheader, label %._crit_edge8.i
 
-; <label>:45:                                     ; preds = %147, %41
-  %46 = call i64 @fread(i8* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 0, i64 0), i64 1, i64 48, { i8* }* nonnull %16)
-  %sext.mask1.i = and i64 %46, 4294967295
-  %47 = icmp eq i64 %sext.mask1.i, 48
-  br i1 %47, label %51, label %48
+._crit_edge11.._crit_edge11_crit_edge.i.._crit_edge11.._crit_edge11_crit_edge.i_crit_edge.preheader: ; preds = %._crit_edge11.._crit_edge11_crit_edge.i.lr.ph
+  br label %._crit_edge11.._crit_edge11_crit_edge.i.._crit_edge11.._crit_edge11_crit_edge.i_crit_edge
 
-; <label>:48:                                     ; preds = %45
-  %49 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([19 x i8], [19 x i8]* @"\01??_C@_0BD@GFPKCHLP@?6?6Incomplete?5File?4?$AA@", i64 0, i64 0))
-  %50 = sext i32 %49 to i64
-  store i64 %50, i64* @"\01?order_gurantee@@3_JA", align 8
-  br label %189
+._crit_edge11.._crit_edge11_crit_edge.i.._crit_edge11.._crit_edge11_crit_edge.i_crit_edge: ; preds = %._crit_edge11.._crit_edge11_crit_edge.i.._crit_edge11.._crit_edge11_crit_edge.i_crit_edge, %._crit_edge11.._crit_edge11_crit_edge.i.._crit_edge11.._crit_edge11_crit_edge.i_crit_edge.preheader
+  %indvars.iv.next10.i24 = phi i64 [ %indvars.iv.next10.i, %._crit_edge11.._crit_edge11_crit_edge.i.._crit_edge11.._crit_edge11_crit_edge.i_crit_edge ], [ 3, %._crit_edge11.._crit_edge11_crit_edge.i.._crit_edge11.._crit_edge11_crit_edge.i_crit_edge.preheader ]
+  %.pre.pre.i.pre = load i64*, i64** @POOL_timetag, align 8
+  %scevgep2 = getelementptr i64, i64* %.pre.pre.i.pre, i64 %indvars.iv.next10.i24
+  store i64 %const, i64* %scevgep2, align 8
+  %37 = load i8*, i8** @POOL_slot, align 8
+  %scevgep = getelementptr i8, i8* %37, i64 %indvars.iv.next10.i24
+  store i8 0, i8* %scevgep, align 1
+  %indvars.iv.next10.i = add nuw nsw i64 %indvars.iv.next10.i24, 1
+  %38 = load i8, i8* @POOL_total_slots, align 1
+  %39 = zext i8 %38 to i64
+  %40 = shl nuw nsw i64 %39, 1
+  %41 = icmp ult i64 %indvars.iv.next10.i, %40
+  br i1 %41, label %._crit_edge11.._crit_edge11_crit_edge.i.._crit_edge11.._crit_edge11_crit_edge.i_crit_edge, label %._crit_edge8.i
 
-; <label>:51:                                     ; preds = %45
-  %52 = bitcast [40 x i8]* %4 to i8*
-  %53 = call i8* @strcpy(i8* nonnull %52, i8* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 0, i64 0))
-  %54 = load i32, i32* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 1), align 8
-  %55 = icmp sgt i32 %54, -1
-  br i1 %55, label %56, label %59
+._crit_edge8.i:                                   ; preds = %._crit_edge11.._crit_edge11_crit_edge.i.._crit_edge11.._crit_edge11_crit_edge.i_crit_edge, %._crit_edge11.._crit_edge11_crit_edge.i.lr.ph
+  %.lcssa = phi i8 [ %35, %._crit_edge11.._crit_edge11_crit_edge.i.lr.ph ], [ %38, %._crit_edge11.._crit_edge11_crit_edge.i.._crit_edge11.._crit_edge11_crit_edge.i_crit_edge ]
+  %42 = icmp eq i8 %.lcssa, 0
+  br i1 %42, label %._crit_edge.i, label %.lr.ph4.i
 
-; <label>:56:                                     ; preds = %51
-  %57 = bitcast [40 x i8]* %4 to i8*
-  %58 = call i32 (i8*, i8*, ...) @sprintf(i8* nonnull %57, i8* getelementptr inbounds ([7 x i8], [7 x i8]* @"\01??_C@_06BPGFIOAL@?$CFs?$CI?$CFd?$CJ?$AA@", i64 0, i64 0), i8* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 0, i64 0), i32 %54)
-  br label %59
+.lr.ph4.i:                                        ; preds = %._crit_edge8.i, %._crit_edge11.preheader.i
+  %.lcssa19 = phi i8 [ %.lcssa, %._crit_edge8.i ], [ 1, %._crit_edge11.preheader.i ]
+  %43 = zext i8 %.lcssa19 to i32
+  br label %44
 
-; <label>:59:                                     ; preds = %56, %51
-  %60 = bitcast [40 x i8]* %4 to i8*
-  %61 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([7 x i8], [7 x i8]* @"\01??_C@_06PHODKAKM@?6?$CF?940s?$AA@", i64 0, i64 0), i8* nonnull %60)
-  %62 = load i32, i32* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 2), align 4
-  switch i32 %62, label %145 [
-    i32 -65528, label %63
-    i32 8, label %65
-    i32 268435464, label %70
-    i32 285212680, label %82
-    i32 301989896, label %85
-    i32 536870920, label %88
-    i32 537001983, label %104
-    i32 553648136, label %111
-    i32 1073872895, label %117
-    i32 1073938431, label %128
-    i32 -1, label %139
+; <label>:44:                                     ; preds = %44, %.lr.ph4.i
+  %45 = phi i32 [ %43, %.lr.ph4.i ], [ %52, %44 ]
+  %.0313.i = phi i32 [ 0, %.lr.ph4.i ], [ %50, %44 ]
+  %46 = load i8*, i8** @POOL_slot, align 8
+  %47 = add i32 %45, %.0313.i
+  %48 = sext i32 %47 to i64
+  %49 = getelementptr inbounds i8, i8* %46, i64 %48
+  %tmp = trunc i32 %.0313.i to i8
+  store i8 %tmp, i8* %49, align 1
+  %50 = add nuw nsw i32 %.0313.i, 1
+  %51 = load i8, i8* @POOL_total_slots, align 1
+  %52 = zext i8 %51 to i32
+  %53 = icmp ult i32 %50, %52
+  br i1 %53, label %44, label %._crit_edge.i
+
+._crit_edge.i:                                    ; preds = %44, %._crit_edge8.i, %26
+  %54 = tail call noalias i8* @malloc(i64 64)
+  store i8* %54, i8** bitcast (%struct.circular_buf_t.4** @VSLOT_timetag to i8**), align 8
+  %55 = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([22 x i8], [22 x i8]* @"\01??_C@_0BG@NJEFHGP@?6Init?5ring?5buffer?5?$CFd?4?$AA@", i64 0, i64 0), i32 0)
+  %56 = sext i32 %55 to i64
+  store i64 %56, i64* @order_gurantee2, align 8
+  %57 = load i8*, i8** bitcast (%struct.circular_buf_t.4** @VSLOT_timetag to i8**), align 8
+  %scevgep28.i = getelementptr i8, i8* %57, i64 24
+  %58 = bitcast i8* %scevgep28.i to i64*
+  store i64 1000000, i64* %58, align 8
+  %59 = icmp eq i8* %57, null
+  br i1 %59, label %.lr.ph.i.113, label %60
+
+; <label>:60:                                     ; preds = %._crit_edge.i
+  %scevgep.i = getelementptr i8, i8* %57, i64 8
+  tail call void @llvm.memset.p0i8.i64(i8* %scevgep.i, i8 0, i64 16, i32 8, i1 false)
+  br label %.lr.ph.i.113
+
+.lr.ph.i.113:                                     ; preds = %60, %._crit_edge.i
+  %61 = tail call noalias i8* @malloc(i64 8000000)
+  %62 = bitcast i8* %57 to i8**
+  store i8* %61, i8** %62, align 8
+  %63 = load %struct.circular_buf_t.4*, %struct.circular_buf_t.4** @VSLOT_timetag, align 8
+  %scevgep19.i = getelementptr %struct.circular_buf_t.4, %struct.circular_buf_t.4* %63, i64 0, i32 2
+  %scevgep23.i16 = getelementptr i64, i64* %scevgep19.i, i64 -1
+  %.sroa.1.0.copyload.i = load i64, i64* %scevgep23.i16, align 8
+  %.sroa.2.0.copyload.i = load i64, i64* %scevgep19.i, align 8
+  %64 = icmp eq i64 %.sroa.1.0.copyload.i, %.sroa.2.0.copyload.i
+  %65 = zext i1 %64 to i32
+  %66 = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([28 x i8], [28 x i8]* @"\01??_C@_0BM@KDJELMIO@?6Buffer?5created?0?5empty?3?5?$CFd?6?$AA@", i64 0, i64 0), i32 %65)
+  %67 = sext i32 %66 to i64
+  store i64 %67, i64* @order_gurantee2, align 8
+  %68 = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([22 x i8], [22 x i8]* @"\01??_C@_0BG@NJEFHGP@?6Init?5ring?5buffer?5?$CFd?4?$AA@", i64 0, i64 0), i32 1)
+  %69 = sext i32 %68 to i64
+  store i64 %69, i64* @order_gurantee2, align 8
+  %70 = load i8*, i8** bitcast (%struct.circular_buf_t.4** @VSLOT_timetag to i8**), align 8
+  %uglygep26.i.1 = getelementptr i8, i8* %70, i64 32
+  %scevgep28.i.1 = getelementptr i8, i8* %70, i64 56
+  %71 = bitcast i8* %scevgep28.i.1 to i64*
+  store i64 1000000, i64* %71, align 8
+  %72 = icmp eq i8* %uglygep26.i.1, null
+  br i1 %72, label %POOL_init.exit.loopexit14, label %364
+
+.sink.split.i1:                                   ; preds = %22, %FileReader_init.exit
+  %73 = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([37 x i8], [37 x i8]* @"\01??_C@_0CF@BDINJJIB@?6?5?$FLERROR?$FNMemalloc?5failed?0?5aborti@", i64 0, i64 0))
+  br label %POOL_init.exit
+
+POOL_init.exit:                                   ; preds = %POOL_init.exit.loopexit14, %.sink.split.i1
+  %storemerge.in = phi i32 [ %370, %POOL_init.exit.loopexit14 ], [ %73, %.sink.split.i1 ]
+  %.029.i = phi i64 [ 0, %POOL_init.exit.loopexit14 ], [ -1, %.sink.split.i1 ]
+  %storemerge = sext i32 %storemerge.in to i64
+  store i64 %storemerge, i64* @order_gurantee2, align 8
+  br label %B80
+
+B80:                                              ; preds = %B88, %B116.endif, %POOL_init.exit
+  %start.0 = phi i64 [ 0, %POOL_init.exit ], [ %.581.start.0, %B116.endif ], [ %.581.start.0, %B88 ]
+  %74 = load i64*, i64** @POOL_timetag, align 8
+  %75 = getelementptr inbounds i64, i64* %74, i64 1
+  %76 = load i64, i64* %75, align 8
+  %77 = load i8*, i8** @POOL_slot, align 8
+  %78 = getelementptr inbounds i8, i8* %77, i64 1
+  %79 = load i8, i8* %78, align 1
+  %80 = load i8, i8* @POOL_real_slots, align 1
+  %promoted40.i = zext i8 %80 to i64
+  %promoted39.i = zext i8 %79 to i64
+  %81 = sub nsw i64 %promoted39.i, %promoted40.i
+  %promoted.i = trunc i64 %81 to i32
+  %82 = icmp slt i32 %promoted.i, 0
+  %83 = load i8, i8* @POOL_slot0_last_chns, align 1
+  %84 = load i8, i8* @POOL_real_chns, align 1
+  %85 = zext i8 %84 to i32
+  %86 = add nsw i32 %promoted.i, %85
+  %87 = trunc i32 %86 to i8
+  %.0230.i = select i1 %82, i8 %83, i8 %87
+  store i8 %.0230.i, i8* %arg.chn.4, align 1
+  %88 = icmp eq i64 %76, %const
+  br i1 %88, label %274, label %89
+
+; <label>:89:                                     ; preds = %B80
+  %90 = icmp slt i32 %promoted.i, 0
+  br i1 %90, label %91, label %174
+
+; <label>:91:                                     ; preds = %89
+  %92 = load i64, i64* @READER_next_RecID_relativeinbatch, align 8
+  %93 = load i32, i32* @READER_BytesofRecords, align 4
+  %94 = sext i32 %93 to i64
+  %95 = mul nsw i64 %92, %94
+  %96 = load i64, i64* @READER_batch_actualread_length, align 8
+  %97 = icmp slt i64 %95, %96
+  br i1 %97, label %106, label %98
+
+; <label>:98:                                     ; preds = %91
+  %99 = mul nsw i64 %94, 1000
+  %100 = load { i8* }*, { i8* }** @"\01?READER_fpin@@3PEAU_iobuf@@EA", align 8
+  %101 = load i8*, i8** @READER_buffer, align 8
+  %102 = tail call i64 @fread(i8* %101, i64 1, i64 %99, { i8* }* %100)
+  store i64 %102, i64* @READER_batch_actualread_length, align 8
+  %103 = load i64, i64* @READER_batchend_pos_in_file, align 8
+  %104 = add nsw i64 %103, %102
+  store i64 %104, i64* @READER_batchend_pos_in_file, align 8
+  store i64 0, i64* @READER_next_RecID_relativeinbatch, align 8
+  %105 = icmp slt i64 %102, %99
+  br i1 %105, label %141, label %106
+
+; <label>:106:                                    ; preds = %98, %91
+  %107 = phi i64 [ %92, %91 ], [ 0, %98 ]
+  %.pre27.i = load i32*, i32** bitcast (i8** @READER_buffer to i32**), align 8
+  br label %.backedge11.i
+
+.backedge11.i:                                    ; preds = %.thread.i, %137, %106
+  %108 = phi i64 [ %107, %106 ], [ %136, %.thread.i ], [ %138, %137 ]
+  %109 = getelementptr inbounds i32, i32* %.pre27.i, i64 %108
+  %110 = load i32, i32* %109, align 4
+  %111 = icmp slt i32 %110, 0
+  br i1 %111, label %112, label %125
+
+; <label>:112:                                    ; preds = %.backedge11.i
+  %113 = lshr i32 %110, 25
+  %trunc7.i = trunc i32 %113 to i6
+  %114 = zext i6 %trunc7.i to i8
+  switch i8 %114, label %.thread.i [
+    i8 63, label %115
+    i8 0, label %118
   ]
 
-; <label>:63:                                     ; preds = %59
-  %64 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([12 x i8], [12 x i8]* @"\01??_C@_0M@HECCAEGL@?$DMempty?5Tag?$DO?$AA@", i64 0, i64 0))
-  br label %147
+; <label>:115:                                    ; preds = %112
+  %116 = load i64, i64* @"\01?overflowcorrection@?1??pop_signal_from_file@@9@4_JA", align 8
+  %117 = add i64 %116, 33552000
+  store i64 %117, i64* @"\01?overflowcorrection@?1??pop_signal_from_file@@9@4_JA", align 8
+  br label %.thread.i
 
-; <label>:65:                                     ; preds = %59
-  %66 = load i64, i64* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 3), align 8
-  %67 = icmp eq i64 %66, 0
-  %68 = select i1 %67, i8* getelementptr inbounds ([6 x i8], [6 x i8]* @"\01??_C@_05MKDOIIA@False?$AA@", i64 0, i64 0), i8* getelementptr inbounds ([5 x i8], [5 x i8]* @"\01??_C@_04HPMIDMKH@True?$AA@", i64 0, i64 0)
-  %69 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @"\01??_C@_02DKCKIIND@?$CFs?$AA@", i64 0, i64 0), i8* %68)
-  br label %147
+; <label>:118:                                    ; preds = %112
+  %119 = load i64, i64* @"\01?overflowcorrection@?1??pop_signal_from_file@@9@4_JA", align 8
+  %120 = and i32 %110, 33554431
+  %121 = zext i32 %120 to i64
+  %122 = add nsw i64 %119, %121
+  %123 = load i64, i64* @READER_TTRes_pspr, align 8
+  %124 = mul nsw i64 %122, %123
+  br label %137
 
-; <label>:70:                                     ; preds = %59
-  %71 = load i64, i64* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 3), align 8
-  %72 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([5 x i8], [5 x i8]* @"\01??_C@_04BFAHMMK@?$CFlld?$AA@", i64 0, i64 0), i64 %71)
-  %73 = call i32 @strcmp(i8* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 0, i64 0), i8* getelementptr inbounds ([25 x i8], [25 x i8]* @"\01??_C@_0BJ@EFFGOIKF@TTResult_NumberOfRecords?$AA@", i64 0, i64 0))
-  %74 = icmp eq i32 %73, 0
-  br i1 %74, label %75, label %77
+; <label>:125:                                    ; preds = %.backedge11.i
+  %126 = load i64, i64* @"\01?overflowcorrection@?1??pop_signal_from_file@@9@4_JA", align 8
+  %127 = and i32 %110, 33554431
+  %128 = zext i32 %127 to i64
+  %129 = add nsw i64 %126, %128
+  %130 = load i64, i64* @READER_TTRes_pspr, align 8
+  %131 = mul nsw i64 %129, %130
+  %132 = lshr i32 %110, 25
+  %133 = and i32 %132, 63
+  %134 = add nuw nsw i32 %133, 1
+  %135 = trunc i32 %134 to i8
+  br label %137
 
-; <label>:75:                                     ; preds = %70
-  %76 = load i64, i64* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 3), align 8
-  store i64 %76, i64* @NumRecords, align 8
-  br label %77
+.thread.i:                                        ; preds = %115, %112
+  %136 = add nsw i64 %108, 1
+  store i64 %136, i64* @READER_next_RecID_relativeinbatch, align 8
+  br label %.backedge11.i
 
-; <label>:77:                                     ; preds = %75, %70
-  %78 = call i32 @strcmp(i8* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 0, i64 0), i8* getelementptr inbounds ([27 x i8], [27 x i8]* @"\01??_C@_0BL@NBAMDLKF@TTResultFormat_TTTRRecType?$AA@", i64 0, i64 0))
-  %79 = icmp eq i32 %78, 0
-  br i1 %79, label %80, label %147
+; <label>:137:                                    ; preds = %125, %118
+  %.0240.i = phi i64 [ %124, %118 ], [ %131, %125 ]
+  %.0239.i = phi i8 [ 0, %118 ], [ %135, %125 ]
+  %138 = add nsw i64 %108, 1
+  store i64 %138, i64* @READER_next_RecID_relativeinbatch, align 8
+  %139 = icmp eq i64 %.0240.i, %const
+  br i1 %139, label %.backedge11.i, label %140
 
-; <label>:80:                                     ; preds = %77
-  %81 = load i64, i64* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 3), align 8
-  store i64 %81, i64* @RecordType, align 8
-  br label %147
+; <label>:140:                                    ; preds = %137
+  store i8 %.0239.i, i8* @POOL_slot0_last_chns, align 1
+  br label %141
 
-; <label>:82:                                     ; preds = %59
-  %83 = load i64, i64* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 3), align 8
-  %84 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([10 x i8], [10 x i8]* @"\01??_C@_09DGLOBCMH@0x?$CF16?416X?$AA@", i64 0, i64 0), i64 %83)
-  br label %147
+; <label>:141:                                    ; preds = %140, %98
+  %.0229.i = phi i64 [ %.0240.i, %140 ], [ %const, %98 ]
+  %142 = load i8, i8* @POOL_total_slots, align 1
+  %143 = add i8 %142, %79
+  %144 = load i64*, i64** @POOL_timetag, align 8
+  %145 = zext i8 %143 to i64
+  %146 = getelementptr inbounds i64, i64* %144, i64 %145
+  store i64 %.0229.i, i64* %146, align 8
+  %147 = load i8*, i8** @POOL_slot, align 8
+  %148 = getelementptr inbounds i8, i8* %147, i64 %145
+  store i8 %79, i8* %148, align 1
+  %149 = icmp ugt i8 %143, 1
+  br i1 %149, label %.lr.ph18.i.preheader, label %POOL_next.exit
 
-; <label>:85:                                     ; preds = %59
-  %86 = load i64, i64* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 3), align 8
-  %87 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([10 x i8], [10 x i8]* @"\01??_C@_09DGLOBCMH@0x?$CF16?416X?$AA@", i64 0, i64 0), i64 %86)
-  br label %147
+.lr.ph18.i.preheader:                             ; preds = %141
+  br label %.lr.ph18.i
 
-; <label>:88:                                     ; preds = %59
-  %89 = load double, double* bitcast (i64* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 3) to double*), align 8
-  %90 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @"\01??_C@_02LDDGBJKG@?$CFE?$AA@", i64 0, i64 0), double %89)
-  %91 = call i32 @strcmp(i8* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 0, i64 0), i8* getelementptr inbounds ([20 x i8], [20 x i8]* @"\01??_C@_0BE@MLJFPCOI@MeasDesc_Resolution?$AA@", i64 0, i64 0))
-  %92 = icmp eq i32 %91, 0
-  br i1 %92, label %93, label %97
+.lr.ph18.i:                                       ; preds = %171, %.lr.ph18.i.preheader
+  %.022716.i = phi i8 [ %div4.i, %171 ], [ %143, %.lr.ph18.i.preheader ]
+  %div4.i = lshr i8 %.022716.i, 1
+  %150 = and i8 %.022716.i, -2
+  %151 = or i8 %.022716.i, 1
+  %152 = load i64*, i64** @POOL_timetag, align 8
+  %153 = zext i8 %150 to i64
+  %154 = getelementptr inbounds i64, i64* %152, i64 %153
+  %155 = load i64, i64* %154, align 8
+  %156 = zext i8 %151 to i64
+  %157 = getelementptr inbounds i64, i64* %152, i64 %156
+  %158 = load i64, i64* %157, align 8
+  %159 = icmp slt i64 %155, %158
+  %160 = zext i8 %div4.i to i64
+  br i1 %159, label %161, label %166
 
-; <label>:93:                                     ; preds = %88
-  %94 = load double, double* bitcast (i64* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 3) to double*), align 8
-  %95 = fmul double %94, 1.000000e+12
-  %96 = fptosi double %95 to i64
-  store i64 %96, i64* @DTRes_pspr, align 8
-  br label %97
+; <label>:161:                                    ; preds = %.lr.ph18.i
+  %sunkaddr = mul i64 %160, 8
+  %162 = bitcast i64* %152 to i8*
+  %sunkaddr3 = getelementptr i8, i8* %162, i64 %sunkaddr
+  %163 = bitcast i8* %sunkaddr3 to i64*
+  store i64 %155, i64* %163, align 8
+  %164 = load i8*, i8** @POOL_slot, align 8
+  %165 = getelementptr inbounds i8, i8* %164, i64 %153
+  br label %171
 
-; <label>:97:                                     ; preds = %93, %88
-  %98 = call i32 @strcmp(i8* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 0, i64 0), i8* getelementptr inbounds ([26 x i8], [26 x i8]* @"\01??_C@_0BK@JGMIOCJJ@MeasDesc_GlobalResolution?$AA@", i64 0, i64 0))
-  %99 = icmp eq i32 %98, 0
-  br i1 %99, label %100, label %147
+; <label>:166:                                    ; preds = %.lr.ph18.i
+  %sunkaddr4 = mul i64 %160, 8
+  %167 = bitcast i64* %152 to i8*
+  %sunkaddr5 = getelementptr i8, i8* %167, i64 %sunkaddr4
+  %168 = bitcast i8* %sunkaddr5 to i64*
+  store i64 %158, i64* %168, align 8
+  %169 = load i8*, i8** @POOL_slot, align 8
+  %170 = getelementptr inbounds i8, i8* %169, i64 %156
+  br label %171
 
-; <label>:100:                                    ; preds = %97
-  %101 = load double, double* bitcast (i64* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 3) to double*), align 8
-  %102 = fmul double %101, 1.000000e+12
-  %103 = fptosi double %102 to i64
-  store i64 %103, i64* @TTRes_pspr, align 8
-  br label %147
+; <label>:171:                                    ; preds = %166, %161
+  %.sink9.i = phi i8* [ %169, %166 ], [ %164, %161 ]
+  %.sink7.in.i = phi i8* [ %170, %166 ], [ %165, %161 ]
+  %.sink7.i = load i8, i8* %.sink7.in.i, align 1
+  %172 = getelementptr inbounds i8, i8* %.sink9.i, i64 %160
+  store i8 %.sink7.i, i8* %172, align 1
+  %173 = icmp ugt i8 %.022716.i, 3
+  br i1 %173, label %.lr.ph18.i, label %POOL_next.exit
 
-; <label>:104:                                    ; preds = %59
-  %105 = load i64, i64* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 3), align 8
-  %106 = lshr i64 %105, 3
-  %107 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([30 x i8], [30 x i8]* @"\01??_C@_0BO@ENEJMDLG@?$DMFloat?5Array?5with?5?$CFd?5Entries?$DO?$AA@", i64 0, i64 0), i64 %106)
-  %108 = load i64, i64* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 3), align 8
-  %109 = trunc i64 %108 to i32
-  %110 = call i32 @fseek({ i8* }* nonnull %16, i32 %109, i32 1)
-  br label %147
+; <label>:174:                                    ; preds = %89
+  %175 = load %struct.circular_buf_t.4*, %struct.circular_buf_t.4** @VSLOT_timetag, align 8
+  %.sroa.140.0..sroa_idx41.i = getelementptr inbounds %struct.circular_buf_t.4, %struct.circular_buf_t.4* %175, i64 %81, i32 1
+  %.sroa.140.0.copyload.i = load i64, i64* %.sroa.140.0..sroa_idx41.i, align 8
+  %.sroa.242.0..sroa_idx43.i = getelementptr inbounds %struct.circular_buf_t.4, %struct.circular_buf_t.4* %175, i64 %81, i32 2
+  %.sroa.242.0.copyload.i = load i64, i64* %.sroa.242.0..sroa_idx43.i, align 8
+  %176 = icmp eq i64 %.sroa.140.0.copyload.i, %.sroa.242.0.copyload.i
+  br i1 %176, label %177, label %180
 
-; <label>:111:                                    ; preds = %59
-  %112 = load double, double* bitcast (i64* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 3) to double*), align 8
-  %113 = call i64 @"\01?TDateTime_TimeT@@YA_JN@Z"(double %112)
-  store i64 %113, i64* %0, align 8
-  %114 = call fastcc %struct.tm* @"\01?gmtime@@YAPEAUtm@@QEB_J@Z"(i64* nonnull %0)
-  %115 = call i8* @asctime(%struct.tm* %114)
-  %116 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @"\01??_C@_02DKCKIIND@?$CFs?$AA@", i64 0, i64 0), i8* %115, i8* getelementptr inbounds ([2 x i8], [2 x i8]* @"\01??_C@_01LOCGONAA@?$AA?$AA@", i64 0, i64 0))
-  br label %147
+; <label>:177:                                    ; preds = %174
+  %178 = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([28 x i8], [28 x i8]* @"\01??_C@_0BM@PJHDCAIH@?6?5?$FLERROR?$FNCorrupted?5slot?$CB?$CB?$CB?$CB?$AA@", i64 0, i64 0))
+  %179 = sext i32 %178 to i64
+  store i64 %179, i64* @order_gurantee2, align 8
+  %.pre.i2 = load %struct.circular_buf_t.4*, %struct.circular_buf_t.4** @VSLOT_timetag, align 8
+  br label %180
 
-; <label>:117:                                    ; preds = %59
-  %118 = load i64, i64* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 3), align 8
-  %119 = call noalias i8* @calloc(i64 %118, i64 1)
-  %120 = call i64 @fread(i8* %119, i64 1, i64 %118, { i8* }* nonnull %16)
-  %sext2.i = shl i64 %120, 32
-  %121 = ashr exact i64 %sext2.i, 32
-  %122 = load i64, i64* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 3), align 8
-  %123 = icmp eq i64 %121, %122
-  br i1 %123, label %126, label %124
+; <label>:180:                                    ; preds = %177, %174
+  %181 = phi %struct.circular_buf_t.4* [ %.pre.i2, %177 ], [ %175, %174 ]
+  %182 = getelementptr inbounds %struct.circular_buf_t.4, %struct.circular_buf_t.4* %181, i64 %81
+  %183 = icmp eq %struct.circular_buf_t.4* %182, null
+  br i1 %183, label %206, label %184
 
-; <label>:124:                                    ; preds = %117
-  %125 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([18 x i8], [18 x i8]* @"\01??_C@_0BC@KFPMDKOJ@?6Incomplete?5File?4?$AA@", i64 0, i64 0))
-  call void @free(i8* %119)
-  br label %189
+; <label>:184:                                    ; preds = %180
+  %.sroa.1166.0..sroa_idx167.i = getelementptr inbounds %struct.circular_buf_t.4, %struct.circular_buf_t.4* %181, i64 %81, i32 1
+  %.sroa.1166.0.copyload.i = load i64, i64* %.sroa.1166.0..sroa_idx167.i, align 8
+  %.sroa.2168.0..sroa_idx169.i = getelementptr inbounds %struct.circular_buf_t.4, %struct.circular_buf_t.4* %181, i64 %81, i32 2
+  %.sroa.2168.0.copyload.i = load i64, i64* %.sroa.2168.0..sroa_idx169.i, align 8
+  %185 = icmp eq i64 %.sroa.1166.0.copyload.i, %.sroa.2168.0.copyload.i
+  br i1 %185, label %206, label %186
 
-; <label>:126:                                    ; preds = %117
-  %127 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @"\01??_C@_02DKCKIIND@?$CFs?$AA@", i64 0, i64 0), i8* %119)
-  call void @free(i8* %119)
-  br label %147
+; <label>:186:                                    ; preds = %184
+  %187 = bitcast %struct.circular_buf_t.4* %182 to i64**
+  %188 = load i64*, i64** %187, align 8
+  %189 = getelementptr inbounds i64, i64* %188, i64 %.sroa.2168.0.copyload.i
+  %190 = load i64, i64* %189, align 8
+  %191 = add i64 %.sroa.2168.0.copyload.i, 1
+  %192 = getelementptr inbounds %struct.circular_buf_t.4, %struct.circular_buf_t.4* %181, i64 %81, i32 3
+  %193 = load i64, i64* %192, align 8
+  %194 = or i64 %191, %193
+  %195 = and i64 %194, -4294967296
+  %196 = icmp eq i64 %195, 0
+  br i1 %196, label %197, label %202
 
-; <label>:128:                                    ; preds = %59
-  %129 = load i64, i64* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 3), align 8
-  %130 = call noalias i8* @calloc(i64 %129, i64 1)
-  %131 = call i64 @fread(i8* %130, i64 1, i64 %129, { i8* }* nonnull %16)
-  %sext.i = shl i64 %131, 32
-  %132 = ashr exact i64 %sext.i, 32
-  %133 = load i64, i64* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 3), align 8
-  %134 = icmp eq i64 %132, %133
-  br i1 %134, label %137, label %135
+; <label>:197:                                    ; preds = %186
+  %198 = trunc i64 %193 to i32
+  %199 = trunc i64 %191 to i32
+  %200 = urem i32 %199, %198
+  %201 = zext i32 %200 to i64
+  br label %204
 
-; <label>:135:                                    ; preds = %128
-  %136 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([18 x i8], [18 x i8]* @"\01??_C@_0BC@KFPMDKOJ@?6Incomplete?5File?4?$AA@", i64 0, i64 0))
-  call void @free(i8* %130)
-  br label %189
+; <label>:202:                                    ; preds = %186
+  %203 = urem i64 %191, %193
+  br label %204
 
-; <label>:137:                                    ; preds = %128
-  %138 = call i32 (i16*, ...) @wprintf(i16* getelementptr inbounds ([3 x i16], [3 x i16]* @"\01??_C@_15GANGMFKL@?$AA?$CF?$AAs?$AA?$AA@", i64 0, i64 0), i8* %130)
-  call void @free(i8* %130)
-  br label %147
+; <label>:204:                                    ; preds = %202, %197
+  %205 = phi i64 [ %201, %197 ], [ %203, %202 ]
+  store i64 %205, i64* %.sroa.2168.0..sroa_idx169.i, align 8
+  br label %206
 
-; <label>:139:                                    ; preds = %59
-  %140 = load i64, i64* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 3), align 8
-  %141 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([32 x i8], [32 x i8]* @"\01??_C@_0CA@FNNAPBCN@?$DMBinary?5Blob?5contains?5?$CFd?5Bytes?$DO?$AA@", i64 0, i64 0), i64 %140)
-  %142 = load i64, i64* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 3), align 8
-  %143 = trunc i64 %142 to i32
-  %144 = call i32 @fseek({ i8* }* nonnull %16, i32 %143, i32 1)
-  br label %147
+; <label>:206:                                    ; preds = %204, %184, %180
+  %.01.i = phi i64 [ undef, %184 ], [ %190, %204 ], [ undef, %180 ]
+  %207 = load i8, i8* @POOL_total_slots, align 1
+  %208 = add i8 %207, %79
+  %209 = load i64*, i64** @POOL_timetag, align 8
+  %210 = zext i8 %208 to i64
+  %211 = getelementptr inbounds i64, i64* %209, i64 %210
+  store i64 %.01.i, i64* %211, align 8
+  %212 = load i8*, i8** @POOL_slot, align 8
+  %213 = getelementptr inbounds i8, i8* %212, i64 %210
+  store i8 %79, i8* %213, align 1
+  %214 = icmp ugt i8 %208, 1
+  br i1 %214, label %.lr.ph24.i.preheader, label %._crit_edge25.i
 
-; <label>:145:                                    ; preds = %59
-  %146 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([44 x i8], [44 x i8]* @"\01??_C@_0CM@NLBAOIPI@Illegal?5Type?5identifier?5found?$CB?5B@", i64 0, i64 0))
-  br label %189
+.lr.ph24.i.preheader:                             ; preds = %206
+  br label %.lr.ph24.i
 
-; <label>:147:                                    ; preds = %139, %137, %126, %111, %104, %100, %97, %85, %82, %80, %77, %65, %63
-  %148 = call i32 @strncmp(i8* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 0, i64 0), i8* getelementptr inbounds ([11 x i8], [11 x i8]* @"\01??_C@_0L@BKLBDFDP@Header_End?$AA@", i64 0, i64 0), i64 11)
-  %149 = icmp eq i32 %148, 0
-  br i1 %149, label %150, label %45
+.lr.ph24.i:                                       ; preds = %236, %.lr.ph24.i.preheader
+  %.022.i = phi i8 [ %div3.i, %236 ], [ %208, %.lr.ph24.i.preheader ]
+  %div3.i = lshr i8 %.022.i, 1
+  %215 = and i8 %.022.i, -2
+  %216 = or i8 %.022.i, 1
+  %217 = load i64*, i64** @POOL_timetag, align 8
+  %218 = zext i8 %215 to i64
+  %219 = getelementptr inbounds i64, i64* %217, i64 %218
+  %220 = load i64, i64* %219, align 8
+  %221 = zext i8 %216 to i64
+  %222 = getelementptr inbounds i64, i64* %217, i64 %221
+  %223 = load i64, i64* %222, align 8
+  %224 = icmp slt i64 %220, %223
+  %225 = zext i8 %div3.i to i64
+  br i1 %224, label %226, label %231
 
-; <label>:150:                                    ; preds = %147
-  %151 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([27 x i8], [27 x i8]* @"\01??_C@_0BL@HPPLJEMK@?6?6?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?6?$AA@", i64 0, i64 0))
-  %152 = sext i32 %151 to i64
-  store i64 %152, i64* @"\01?order_gurantee@@3_JA", align 8
-  %153 = load i64, i64* @RecordType, align 8
-  switch i64 %153, label %163 [
-    i64 66051, label %154
-    i64 66052, label %166
-    i64 16843268, label %155
-    i64 66053, label %156
-    i64 66054, label %157
-    i64 66307, label %158
-    i64 66308, label %159
-    i64 16843524, label %160
-    i64 66309, label %161
-    i64 66310, label %162
+; <label>:226:                                    ; preds = %.lr.ph24.i
+  %sunkaddr6 = mul i64 %225, 8
+  %227 = bitcast i64* %217 to i8*
+  %sunkaddr7 = getelementptr i8, i8* %227, i64 %sunkaddr6
+  %228 = bitcast i8* %sunkaddr7 to i64*
+  store i64 %220, i64* %228, align 8
+  %229 = load i8*, i8** @POOL_slot, align 8
+  %230 = getelementptr inbounds i8, i8* %229, i64 %218
+  br label %236
+
+; <label>:231:                                    ; preds = %.lr.ph24.i
+  %sunkaddr8 = mul i64 %225, 8
+  %232 = bitcast i64* %217 to i8*
+  %sunkaddr9 = getelementptr i8, i8* %232, i64 %sunkaddr8
+  %233 = bitcast i8* %sunkaddr9 to i64*
+  store i64 %223, i64* %233, align 8
+  %234 = load i8*, i8** @POOL_slot, align 8
+  %235 = getelementptr inbounds i8, i8* %234, i64 %221
+  br label %236
+
+; <label>:236:                                    ; preds = %231, %226
+  %.sink15.i = phi i8* [ %234, %231 ], [ %229, %226 ]
+  %.sink13.in.i = phi i8* [ %235, %231 ], [ %230, %226 ]
+  %.sink13.i = load i8, i8* %.sink13.in.i, align 1
+  %237 = getelementptr inbounds i8, i8* %.sink15.i, i64 %225
+  store i8 %.sink13.i, i8* %237, align 1
+  %238 = icmp ugt i8 %.022.i, 3
+  br i1 %238, label %.lr.ph24.i, label %._crit_edge25.i
+
+._crit_edge25.i:                                  ; preds = %236, %206
+  %239 = load %struct.circular_buf_t.4*, %struct.circular_buf_t.4** @VSLOT_timetag, align 8
+  %.sroa.1.0..sroa_idx36.i = getelementptr inbounds %struct.circular_buf_t.4, %struct.circular_buf_t.4* %239, i64 %81, i32 1
+  %.sroa.1.0.copyload.i3 = load i64, i64* %.sroa.1.0..sroa_idx36.i, align 8
+  %.sroa.2.0..sroa_idx37.i = getelementptr inbounds %struct.circular_buf_t.4, %struct.circular_buf_t.4* %239, i64 %81, i32 2
+  %.sroa.2.0.copyload.i4 = load i64, i64* %.sroa.2.0..sroa_idx37.i, align 8
+  %240 = icmp eq i64 %.sroa.1.0.copyload.i3, %.sroa.2.0.copyload.i4
+  br i1 %240, label %241, label %POOL_next.exit
+
+; <label>:241:                                    ; preds = %._crit_edge25.i
+  %242 = load i8, i8* @POOL_total_slots, align 1
+  %243 = add i8 %242, %79
+  %244 = load i64*, i64** @POOL_timetag, align 8
+  %245 = zext i8 %243 to i64
+  %246 = getelementptr inbounds i64, i64* %244, i64 %245
+  store i64 %const, i64* %246, align 8
+  %247 = load i8*, i8** @POOL_slot, align 8
+  %248 = getelementptr inbounds i8, i8* %247, i64 %245
+  store i8 %79, i8* %248, align 1
+  %249 = icmp ugt i8 %243, 1
+  br i1 %249, label %.lr.ph21.i.preheader, label %POOL_next.exit
+
+.lr.ph21.i.preheader:                             ; preds = %241
+  br label %.lr.ph21.i
+
+.lr.ph21.i:                                       ; preds = %271, %.lr.ph21.i.preheader
+  %.022219.i = phi i8 [ %div2.i, %271 ], [ %243, %.lr.ph21.i.preheader ]
+  %div2.i = lshr i8 %.022219.i, 1
+  %250 = and i8 %.022219.i, -2
+  %251 = or i8 %.022219.i, 1
+  %252 = load i64*, i64** @POOL_timetag, align 8
+  %253 = zext i8 %250 to i64
+  %254 = getelementptr inbounds i64, i64* %252, i64 %253
+  %255 = load i64, i64* %254, align 8
+  %256 = zext i8 %251 to i64
+  %257 = getelementptr inbounds i64, i64* %252, i64 %256
+  %258 = load i64, i64* %257, align 8
+  %259 = icmp slt i64 %255, %258
+  %260 = zext i8 %div2.i to i64
+  br i1 %259, label %261, label %266
+
+; <label>:261:                                    ; preds = %.lr.ph21.i
+  %sunkaddr10 = mul i64 %260, 8
+  %262 = bitcast i64* %252 to i8*
+  %sunkaddr11 = getelementptr i8, i8* %262, i64 %sunkaddr10
+  %263 = bitcast i8* %sunkaddr11 to i64*
+  store i64 %255, i64* %263, align 8
+  %264 = load i8*, i8** @POOL_slot, align 8
+  %265 = getelementptr inbounds i8, i8* %264, i64 %253
+  br label %271
+
+; <label>:266:                                    ; preds = %.lr.ph21.i
+  %sunkaddr12 = mul i64 %260, 8
+  %267 = bitcast i64* %252 to i8*
+  %sunkaddr13 = getelementptr i8, i8* %267, i64 %sunkaddr12
+  %268 = bitcast i8* %sunkaddr13 to i64*
+  store i64 %258, i64* %268, align 8
+  %269 = load i8*, i8** @POOL_slot, align 8
+  %270 = getelementptr inbounds i8, i8* %269, i64 %256
+  br label %271
+
+; <label>:271:                                    ; preds = %266, %261
+  %.sink20.i = phi i8* [ %269, %266 ], [ %264, %261 ]
+  %.sink18.in.i = phi i8* [ %270, %266 ], [ %265, %261 ]
+  %.sink18.i = load i8, i8* %.sink18.in.i, align 1
+  %272 = getelementptr inbounds i8, i8* %.sink20.i, i64 %260
+  store i8 %.sink18.i, i8* %272, align 1
+  %273 = icmp ugt i8 %.022219.i, 3
+  br i1 %273, label %.lr.ph21.i, label %POOL_next.exit
+
+; <label>:274:                                    ; preds = %B80
+  %275 = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([36 x i8], [36 x i8]* @"\01??_C@_0CE@MNMCEKMH@?6POOL?5is?5empty?0?5read?5form?5file?50@", i64 0, i64 0))
+  %276 = sext i32 %275 to i64
+  store i64 %276, i64* @order_gurantee2, align 8
+  %277 = load i64, i64* @READER_next_RecID_relativeinbatch, align 8
+  %278 = load i32, i32* @READER_BytesofRecords, align 4
+  %279 = sext i32 %278 to i64
+  %280 = mul nsw i64 %277, %279
+  %281 = load i64, i64* @READER_batch_actualread_length, align 8
+  %282 = icmp slt i64 %280, %281
+  br i1 %282, label %291, label %283
+
+; <label>:283:                                    ; preds = %274
+  %284 = mul nsw i64 %279, 1000
+  %285 = load { i8* }*, { i8* }** @"\01?READER_fpin@@3PEAU_iobuf@@EA", align 8
+  %286 = load i8*, i8** @READER_buffer, align 8
+  %287 = tail call i64 @fread(i8* %286, i64 1, i64 %284, { i8* }* %285)
+  store i64 %287, i64* @READER_batch_actualread_length, align 8
+  %288 = load i64, i64* @READER_batchend_pos_in_file, align 8
+  %289 = add nsw i64 %288, %287
+  store i64 %289, i64* @READER_batchend_pos_in_file, align 8
+  store i64 0, i64* @READER_next_RecID_relativeinbatch, align 8
+  %290 = icmp slt i64 %287, %284
+  br i1 %290, label %326, label %291
+
+; <label>:291:                                    ; preds = %283, %274
+  %292 = phi i64 [ %277, %274 ], [ 0, %283 ]
+  %.pre28.i = load i32*, i32** bitcast (i8** @READER_buffer to i32**), align 8
+  br label %.backedge.i
+
+.backedge.i:                                      ; preds = %.thread12.i, %322, %291
+  %293 = phi i64 [ %292, %291 ], [ %321, %.thread12.i ], [ %323, %322 ]
+  %294 = getelementptr inbounds i32, i32* %.pre28.i, i64 %293
+  %295 = load i32, i32* %294, align 4
+  %296 = icmp slt i32 %295, 0
+  br i1 %296, label %297, label %310
+
+; <label>:297:                                    ; preds = %.backedge.i
+  %298 = lshr i32 %295, 25
+  %trunc10.i = trunc i32 %298 to i6
+  %299 = zext i6 %trunc10.i to i8
+  switch i8 %299, label %.thread12.i [
+    i8 63, label %300
+    i8 0, label %303
   ]
-
-; <label>:154:                                    ; preds = %150
-  br label %166
-
-; <label>:155:                                    ; preds = %150
-  br label %166
-
-; <label>:156:                                    ; preds = %150
-  br label %166
-
-; <label>:157:                                    ; preds = %150
-  br label %166
-
-; <label>:158:                                    ; preds = %150
-  br label %166
-
-; <label>:159:                                    ; preds = %150
-  br label %166
-
-; <label>:160:                                    ; preds = %150
-  br label %166
-
-; <label>:161:                                    ; preds = %150
-  br label %166
-
-; <label>:162:                                    ; preds = %150
-  br label %166
-
-; <label>:163:                                    ; preds = %150
-  %164 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([44 x i8], [44 x i8]* @"\01??_C@_0CM@KKBPPLIM@?6Unknown?5time?9tag?5record?5type?3?50@", i64 0, i64 0), i64 %153)
-  %165 = sext i32 %164 to i64
-  store i64 %165, i64* @"\01?order_gurantee@@3_JA", align 8
-  br label %189
-
-; <label>:166:                                    ; preds = %162, %161, %160, %159, %158, %157, %156, %155, %154, %150
-  %.sink3.i = phi i8* [ getelementptr inbounds ([23 x i8], [23 x i8]* @"\01??_C@_0BH@IAAPGHG@?6TimeHarp260P?5T3?5data?6?$AA@", i64 0, i64 0), %162 ], [ getelementptr inbounds ([23 x i8], [23 x i8]* @"\01??_C@_0BH@PEIABJLL@?6TimeHarp260N?5T3?5data?6?$AA@", i64 0, i64 0), %161 ], [ getelementptr inbounds ([23 x i8], [23 x i8]* @"\01??_C@_0BH@FIOKMHCD@?6HydraHarp?5V2?5T3?5data?6?$AA@", i64 0, i64 0), %160 ], [ getelementptr inbounds ([23 x i8], [23 x i8]* @"\01??_C@_0BH@MBAIKBCC@?6HydraHarp?5V1?5T3?5data?6?$AA@", i64 0, i64 0), %159 ], [ getelementptr inbounds ([19 x i8], [19 x i8]* @"\01??_C@_0BD@ILPKNJIP@?6PicoHarp?5T3?5data?6?$AA@", i64 0, i64 0), %158 ], [ getelementptr inbounds ([23 x i8], [23 x i8]* @"\01??_C@_0BH@MEKKPGOI@?6TimeHarp260P?5T2?5data?6?$AA@", i64 0, i64 0), %157 ], [ getelementptr inbounds ([23 x i8], [23 x i8]* @"\01??_C@_0BH@DICKBJCF@?6TimeHarp260N?5T2?5data?6?$AA@", i64 0, i64 0), %156 ], [ getelementptr inbounds ([23 x i8], [23 x i8]* @"\01??_C@_0BH@JEEAMHLN@?6HydraHarp?5V2?5T2?5data?6?$AA@", i64 0, i64 0), %155 ], [ getelementptr inbounds ([19 x i8], [19 x i8]* @"\01??_C@_0BD@EHFANJBB@?6PicoHarp?5T2?5data?6?$AA@", i64 0, i64 0), %154 ], [ getelementptr inbounds ([23 x i8], [23 x i8]* @"\01??_C@_0BH@NKCKBLM@?6HydraHarp?5V1?5T2?5data?6?$AA@", i64 0, i64 0), %150 ]
-  %.sink.i = phi i8 [ 0, %162 ], [ 0, %161 ], [ 0, %160 ], [ 0, %159 ], [ 0, %158 ], [ 1, %157 ], [ 1, %156 ], [ 1, %155 ], [ 1, %154 ], [ 1, %150 ]
-  %167 = call i32 (i8*, ...) @printf(i8* nonnull %.sink3.i)
-  %168 = sext i32 %167 to i64
-  store i64 %168, i64* @"\01?order_gurantee@@3_JA", align 8
-  store i8 %.sink.i, i8* @IsT2, align 1
-  %169 = icmp eq i8 %.sink.i, 0
-  %170 = load i64, i64* @TTRes_pspr, align 8
-  %. = select i1 %169, i64 %170, i64 12495
-  store i64 %., i64* @SYNCRate_pspr, align 8
-  store i64 4, i64* @BytesofRecords, align 8
-  %171 = call i32 @ftell({ i8* }* nonnull %16)
-  %172 = sext i32 %171 to i64
-  store i64 %172, i64* @TTF_header_offset, align 8
-  br label %189
-
-; <label>:173:                                    ; preds = %28
-  %174 = bitcast [32 x i8]* %2 to i8*
-  %175 = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([17 x i8], [17 x i8]* @"\01??_C@_0BB@MCFHIEMO@?6Parser?3?5quTAU?5?6?$AA@", i64 0, i64 0))
-  %176 = sext i32 %175 to i64
-  store i64 %176, i64* @"\01?order_gurantee@@3_JA", align 8
-  %177 = call i64 @fread(i8* nonnull %174, i64 1, i64 32, { i8* }* nonnull %16)
-  %178 = icmp eq i64 %177, 32
-  br i1 %178, label %181, label %179
-
-; <label>:179:                                    ; preds = %173
-  %180 = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([45 x i8], [45 x i8]* @"\01??_C@_0CN@NEMBOFCA@?6?5?$FLERROR?$FNError?5when?5reading?5head@", i64 0, i64 0))
-  br label %187
-
-; <label>:181:                                    ; preds = %173
-  %182 = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([41 x i8], [41 x i8]* @"\01??_C@_0CJ@MFBOABHI@?6quTAU?5file?5header?5is?5read?0?5but?5@", i64 0, i64 0))
-  %183 = sext i32 %182 to i64
-  store i64 %183, i64* @"\01?order_gurantee@@3_JA", align 8
-  store i8 1, i8* @IsT2, align 1
-  store i64 0, i64* @RecordType, align 8
-  store i64 10, i64* @BytesofRecords, align 8
-  %184 = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([28 x i8], [28 x i8]* @"\01??_C@_0BM@CDLOEACE@?6RecordType?3?5quTAU?510?9bytes?$AA@", i64 0, i64 0))
-  %185 = sext i32 %184 to i64
-  store i64 %185, i64* @"\01?order_gurantee@@3_JA", align 8
-  store i64 1, i64* @TTRes_pspr, align 8
-  store i64 1, i64* @DTRes_pspr, align 8
-  store i64 1249, i64* @SYNCRate_pspr, align 8
-  %186 = tail call i32 @ftell({ i8* }* nonnull %16)
-  br label %187
-
-; <label>:187:                                    ; preds = %181, %179
-  %.sink6.i = phi i32 [ %186, %181 ], [ %180, %179 ]
-  %TTF_header_offset.sink.i = phi i64* [ @TTF_header_offset, %181 ], [ @"\01?order_gurantee@@3_JA", %179 ]
-  %.038.i = phi i32 [ 0, %181 ], [ -1, %179 ]
-  %188 = sext i32 %.sink6.i to i64
-  store i64 %188, i64* %TTF_header_offset.sink.i, align 8
-  br label %189
-
-; <label>:189:                                    ; preds = %187, %166, %163, %145, %135, %124, %48, %38
-  %.039.i = phi i32 [ %.038.i, %187 ], [ 0, %166 ], [ -1, %163 ], [ -1, %145 ], [ -1, %135 ], [ -1, %124 ], [ -1, %48 ], [ -1, %38 ]
-  %.0.i = phi i1 [ true, %187 ], [ false, %166 ], [ false, %163 ], [ false, %145 ], [ false, %135 ], [ false, %124 ], [ false, %48 ], [ false, %38 ]
-  %190 = call i32 @fclose({ i8* }* nonnull %16)
-  %191 = call i32 @_sopen_s(i32* nonnull %1, i8* %arg.a.4, i32 0, i32 64, i32 0)
-  %192 = load i32, i32* %1, align 4
-  %193 = call i64 @_lseeki64(i32 %192, i64 0, i32 2)
-  store i64 %193, i64* @TTF_filesize, align 8
-  %194 = load i32, i32* %1, align 4
-  %195 = call i32 @_close(i32 %194)
-  %196 = load i64, i64* @TTF_filesize, align 8
-  %197 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([16 x i8], [16 x i8]* @"\01??_C@_0BA@INEDNOAD@?6Filesize?3?5?$CFlld?$AA@", i64 0, i64 0), i64 %196)
-  %198 = sext i32 %197 to i64
-  store i64 %198, i64* @"\01?order_gurantee@@3_JA", align 8
-  br i1 %.0.i, label %199, label %PARSE_TimeTagFileHeader.exit
-
-; <label>:199:                                    ; preds = %189
-  %200 = load i64, i64* @TTF_filesize, align 8
-  %201 = load i64, i64* @TTF_header_offset, align 8
-  %202 = sub nsw i64 %200, %201
-  %203 = load i64, i64* @BytesofRecords, align 8
-  %204 = or i64 %202, %203
-  %205 = and i64 %204, -4294967296
-  %206 = icmp eq i64 %205, 0
-  br i1 %206, label %207, label %212
-
-; <label>:207:                                    ; preds = %199
-  %208 = trunc i64 %203 to i32
-  %209 = trunc i64 %202 to i32
-  %210 = udiv i32 %209, %208
-  %211 = zext i32 %210 to i64
-  br label %214
-
-; <label>:212:                                    ; preds = %199
-  %213 = sdiv i64 %202, %203
-  br label %214
-
-; <label>:214:                                    ; preds = %212, %207
-  %215 = phi i64 [ %211, %207 ], [ %213, %212 ]
-  store i64 %215, i64* @NumRecords, align 8
-  br label %PARSE_TimeTagFileHeader.exit
-
-PARSE_TimeTagFileHeader.exit:                     ; preds = %18, %25, %189, %214
-  %.041.i = phi i32 [ -1, %18 ], [ -2, %25 ], [ %.039.i, %214 ], [ %.039.i, %189 ]
-  %216 = bitcast i32* %1 to i8*
-  %217 = bitcast [8 x i8]* %6 to i8*
-  %218 = bitcast i64* %0 to i8*
-  %219 = bitcast [40 x i8]* %4 to i8*
-  %220 = bitcast [8 x i8]* %3 to i8*
-  %221 = bitcast [32 x i8]* %2 to i8*
-  call void @llvm.lifetime.end.p0i8(i64 32, i8* nonnull %221)
-  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %220)
-  call void @llvm.lifetime.end.p0i8(i64 40, i8* nonnull %219)
-  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %218)
-  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %217)
-  call void @llvm.lifetime.end.p0i8(i64 4, i8* nonnull %216)
-  call void @numba_gil_ensure(i32* nonnull %.102)
-  %.104 = icmp eq i8* %env, null
-  br i1 %.104, label %B0.if, label %B0.endif, !prof !4
-
-B100:                                             ; preds = %B100, %B0.endif.endif.endif.endif.endif.endif.endif.endif
-  %lsr.iv = phi i64 [ %lsr.iv.next, %B100 ], [ 3, %B0.endif.endif.endif.endif.endif.endif.endif.endif ]
-  %a.1.025 = phi i64 [ 0, %B0.endif.endif.endif.endif.endif.endif.endif.endif ], [ %.457.0.2, %B100 ]
-  %222 = add i64 %lsr.iv, %a.1.025
-  %223 = add i64 %222, -2
-  %.465 = srem i64 %223, 70
-  %.467 = icmp slt i64 %.465, 0
-  %.476 = add nsw i64 %.465, 70
-  %.457.0 = select i1 %.467, i64 %.476, i64 %.465
-  %224 = add i64 %.457.0, %lsr.iv
-  %225 = add i64 %224, -1
-  %.465.1 = srem i64 %225, 70
-  %.467.1 = icmp slt i64 %.465.1, 0
-  %.476.1 = add nsw i64 %.465.1, 70
-  %.457.0.1 = select i1 %.467.1, i64 %.476.1, i64 %.465.1
-  %226 = add i64 %.457.0.1, %lsr.iv
-  %.465.2 = srem i64 %226, 70
-  %.467.2 = icmp slt i64 %.465.2, 0
-  %.476.2 = add nsw i64 %.465.2, 70
-  %.457.0.2 = select i1 %.467.2, i64 %.476.2, i64 %.465.2
-  %lsr.iv.next = add nuw nsw i64 %lsr.iv, 3
-  %exitcond.2 = icmp eq i64 %lsr.iv.next, 100000002
-  br i1 %exitcond.2, label %B120, label %B100
-
-B120:                                             ; preds = %B100
-  store i64 %.457.0.2, i64* %retptr, align 8
-  ret i32 0
-
-B0.if:                                            ; preds = %PARSE_TimeTagFileHeader.exit
-  store { i8*, i32 }* @.const.picklebuf.2452830461000, { i8*, i32 }** %excinfo, align 8
-  ret i32 1
-
-B0.endif:                                         ; preds = %PARSE_TimeTagFileHeader.exit
-  %.112 = sext i32 %.041.i to i64
-  %.114 = call i8* @PyLong_FromLongLong(i64 %.112)
-  %.117 = icmp eq i8* %.114, null
-  br i1 %.117, label %B0.endif.else, label %B0.endif.if, !prof !4
-
-B0.endif.if:                                      ; preds = %B0.endif
-  %.119 = call i8* @PyObject_Str(i8* nonnull %.114)
-  %.120 = call i8* @PyUnicode_AsUTF8(i8* %.119)
-  call void (i8*, ...) @PySys_WriteStdout(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @".const.%s", i64 0, i64 0), i8* %.120)
-  call void @Py_DecRef(i8* %.119)
-  call void @Py_DecRef(i8* nonnull %.114)
-  br label %B0.endif.endif
-
-B0.endif.else:                                    ; preds = %B0.endif
-  %.125 = call i8* @PyUnicode_FromString(i8* getelementptr inbounds ([21 x i8], [21 x i8]* @".const.the print() function", i64 0, i64 0))
-  call void @PyErr_WriteUnraisable(i8* %.125)
-  call void @Py_DecRef(i8* %.125)
-  br label %B0.endif.endif
-
-B0.endif.endif:                                   ; preds = %B0.endif.else, %B0.endif.if
-  call void (i8*, ...) @PySys_WriteStdout(i8* getelementptr inbounds ([2 x i8], [2 x i8]* @".const.\0A", i64 0, i64 0))
-  call void @numba_gil_release(i32* nonnull %.102)
-  %227 = load i64, i64* @BytesofRecords, align 8
-  call void @numba_gil_ensure(i32* nonnull %.147)
-  %.153 = call i8* @numba_unpickle(i8* getelementptr inbounds ([20 x i8], [20 x i8]* @.const.pickledata.2452795384192, i64 0, i64 0), i32 20)
-  %.154 = call i8* @PyObject_Str(i8* %.153)
-  %.155 = call i8* @PyUnicode_AsUTF8(i8* %.154)
-  call void (i8*, ...) @PySys_WriteStdout(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @".const.%s", i64 0, i64 0), i8* %.155)
-  call void @Py_DecRef(i8* %.154)
-  call void @Py_DecRef(i8* %.153)
-  call void (i8*, ...) @PySys_WriteStdout(i8* getelementptr inbounds ([2 x i8], [2 x i8]* @".const. ", i64 0, i64 0))
-  %.169 = call i8* @PyLong_FromLongLong(i64 %227)
-  %.172 = icmp eq i8* %.169, null
-  br i1 %.172, label %B0.endif.endif.endif.else, label %B0.endif.endif.endif.if, !prof !4
-
-B0.endif.endif.endif.if:                          ; preds = %B0.endif.endif
-  %.174 = call i8* @PyObject_Str(i8* nonnull %.169)
-  %.175 = call i8* @PyUnicode_AsUTF8(i8* %.174)
-  call void (i8*, ...) @PySys_WriteStdout(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @".const.%s", i64 0, i64 0), i8* %.175)
-  call void @Py_DecRef(i8* %.174)
-  call void @Py_DecRef(i8* nonnull %.169)
-  br label %B0.endif.endif.endif.endif
-
-B0.endif.endif.endif.else:                        ; preds = %B0.endif.endif
-  %.180 = call i8* @PyUnicode_FromString(i8* getelementptr inbounds ([21 x i8], [21 x i8]* @".const.the print() function", i64 0, i64 0))
-  call void @PyErr_WriteUnraisable(i8* %.180)
-  call void @Py_DecRef(i8* %.180)
-  br label %B0.endif.endif.endif.endif
-
-B0.endif.endif.endif.endif:                       ; preds = %B0.endif.endif.endif.else, %B0.endif.endif.endif.if
-  %228 = bitcast [8 x i8]* %6 to i8*
-  %229 = bitcast [40 x i8]* %4 to i8*
-  %230 = bitcast [8 x i8]* %3 to i8*
-  %231 = bitcast [32 x i8]* %2 to i8*
-  call void (i8*, ...) @PySys_WriteStdout(i8* getelementptr inbounds ([2 x i8], [2 x i8]* @".const.\0A", i64 0, i64 0))
-  call void @numba_gil_release(i32* nonnull %.147)
-  call void @llvm.lifetime.start.p0i8(i64 32, i8* nonnull %231)
-  call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull %230)
-  call void @llvm.lifetime.start.p0i8(i64 40, i8* nonnull %229)
-  %232 = bitcast i64* %0 to i8*
-  call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull %232)
-  call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull %228)
-  %233 = bitcast i32* %1 to i8*
-  call void @llvm.lifetime.start.p0i8(i64 4, i8* nonnull %233)
-  %234 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([15 x i8], [15 x i8]* @"\01??_C@_0P@HHDHBNCE@?6File?5name?3?5?$CFs?$AA@", i64 0, i64 0), i8* %arg.b.4)
-  %235 = sext i32 %234 to i64
-  store i64 %235, i64* @"\01?order_gurantee@@3_JA", align 8
-  %236 = call { i8* }* @fopen(i8* %arg.b.4, i8* getelementptr inbounds ([3 x i8], [3 x i8]* @"\01??_C@_02JDPG@rb?$AA@", i64 0, i64 0))
-  %237 = icmp eq { i8* }* %236, null
-  br i1 %237, label %238, label %241
-
-; <label>:238:                                    ; preds = %B0.endif.endif.endif.endif
-  %239 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([50 x i8], [50 x i8]* @"\01??_C@_0DC@PALJOGBL@?6?5?$FLERROR?$FNCan?5not?5open?5time?9tagge@", i64 0, i64 0))
-  %240 = sext i32 %239 to i64
-  store i64 %240, i64* @"\01?order_gurantee@@3_JA", align 8
-  br label %PARSE_TimeTagFileHeader.exit15
-
-; <label>:241:                                    ; preds = %B0.endif.endif.endif.endif
-  %242 = bitcast [8 x i8]* %6 to i8*
-  %243 = call i64 @fread(i8* nonnull %242, i64 1, i64 8, { i8* }* nonnull %236)
-  %244 = icmp eq i64 %243, 8
-  br i1 %244, label %248, label %245
-
-; <label>:245:                                    ; preds = %241
-  %246 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([41 x i8], [41 x i8]* @"\01??_C@_0CJ@FCCDKPDO@?6?5?$FLERROR?$FNFailed?5to?5read?5header?0?5@", i64 0, i64 0))
-  %247 = sext i32 %246 to i64
-  store i64 %247, i64* @"\01?order_gurantee@@3_JA", align 8
-  br label %PARSE_TimeTagFileHeader.exit15
-
-; <label>:248:                                    ; preds = %241
-  %249 = bitcast [8 x i8]* %6 to i8*
-  %250 = call i32 @strncmp(i8* nonnull %249, i8* getelementptr inbounds ([7 x i8], [7 x i8]* @"\01??_C@_06OMFAFKCA@PQTTTR?$AA@", i64 0, i64 0), i64 6)
-  %251 = icmp eq i32 %250, 0
-  br i1 %251, label %252, label %393
-
-; <label>:252:                                    ; preds = %248
-  %253 = bitcast [8 x i8]* %3 to i8*
-  %254 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([21 x i8], [21 x i8]* @"\01??_C@_0BF@IADDCEHD@?6Parser?3?5PicoQuant?5?6?$AA@", i64 0, i64 0))
-  %255 = sext i32 %254 to i64
-  store i64 %255, i64* @"\01?order_gurantee@@3_JA", align 8
-  %256 = call i64 @fread(i8* nonnull %253, i64 1, i64 8, { i8* }* nonnull %236)
-  %sext.mask.i2 = and i64 %256, 4294967295
-  %257 = icmp eq i64 %sext.mask.i2, 8
-  br i1 %257, label %261, label %258
-
-; <label>:258:                                    ; preds = %252
-  %259 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([41 x i8], [41 x i8]* @"\01??_C@_0CJ@BKHAGGLC@?6?5?$FLERROR?$FN?6error?5reading?5header?0?5@", i64 0, i64 0))
-  %260 = sext i32 %259 to i64
-  store i64 %260, i64* @"\01?order_gurantee@@3_JA", align 8
-  br label %409
-
-; <label>:261:                                    ; preds = %252
-  %262 = bitcast [8 x i8]* %3 to i8*
-  %263 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([24 x i8], [24 x i8]* @"\01??_C@_0BI@DBJBNHJK@?6PTU?5file?5Version?3?5?$CFs?5?6?$AA@", i64 0, i64 0), i8* nonnull %262)
-  %264 = sext i32 %263 to i64
-  store i64 %264, i64* @"\01?order_gurantee@@3_JA", align 8
-  br label %265
-
-; <label>:265:                                    ; preds = %367, %261
-  %266 = call i64 @fread(i8* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 0, i64 0), i64 1, i64 48, { i8* }* nonnull %236)
-  %sext.mask1.i3 = and i64 %266, 4294967295
-  %267 = icmp eq i64 %sext.mask1.i3, 48
-  br i1 %267, label %271, label %268
-
-; <label>:268:                                    ; preds = %265
-  %269 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([19 x i8], [19 x i8]* @"\01??_C@_0BD@GFPKCHLP@?6?6Incomplete?5File?4?$AA@", i64 0, i64 0))
-  %270 = sext i32 %269 to i64
-  store i64 %270, i64* @"\01?order_gurantee@@3_JA", align 8
-  br label %409
-
-; <label>:271:                                    ; preds = %265
-  %272 = bitcast [40 x i8]* %4 to i8*
-  %273 = call i8* @strcpy(i8* nonnull %272, i8* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 0, i64 0))
-  %274 = load i32, i32* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 1), align 8
-  %275 = icmp sgt i32 %274, -1
-  br i1 %275, label %276, label %279
-
-; <label>:276:                                    ; preds = %271
-  %277 = bitcast [40 x i8]* %4 to i8*
-  %278 = call i32 (i8*, i8*, ...) @sprintf(i8* nonnull %277, i8* getelementptr inbounds ([7 x i8], [7 x i8]* @"\01??_C@_06BPGFIOAL@?$CFs?$CI?$CFd?$CJ?$AA@", i64 0, i64 0), i8* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 0, i64 0), i32 %274)
-  br label %279
-
-; <label>:279:                                    ; preds = %276, %271
-  %280 = bitcast [40 x i8]* %4 to i8*
-  %281 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([7 x i8], [7 x i8]* @"\01??_C@_06PHODKAKM@?6?$CF?940s?$AA@", i64 0, i64 0), i8* nonnull %280)
-  %282 = load i32, i32* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 2), align 4
-  switch i32 %282, label %365 [
-    i32 -65528, label %283
-    i32 8, label %285
-    i32 268435464, label %290
-    i32 285212680, label %302
-    i32 301989896, label %305
-    i32 536870920, label %308
-    i32 537001983, label %324
-    i32 553648136, label %331
-    i32 1073872895, label %337
-    i32 1073938431, label %348
-    i32 -1, label %359
-  ]
-
-; <label>:283:                                    ; preds = %279
-  %284 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([12 x i8], [12 x i8]* @"\01??_C@_0M@HECCAEGL@?$DMempty?5Tag?$DO?$AA@", i64 0, i64 0))
-  br label %367
-
-; <label>:285:                                    ; preds = %279
-  %286 = load i64, i64* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 3), align 8
-  %287 = icmp eq i64 %286, 0
-  %288 = select i1 %287, i8* getelementptr inbounds ([6 x i8], [6 x i8]* @"\01??_C@_05MKDOIIA@False?$AA@", i64 0, i64 0), i8* getelementptr inbounds ([5 x i8], [5 x i8]* @"\01??_C@_04HPMIDMKH@True?$AA@", i64 0, i64 0)
-  %289 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @"\01??_C@_02DKCKIIND@?$CFs?$AA@", i64 0, i64 0), i8* %288)
-  br label %367
-
-; <label>:290:                                    ; preds = %279
-  %291 = load i64, i64* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 3), align 8
-  %292 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([5 x i8], [5 x i8]* @"\01??_C@_04BFAHMMK@?$CFlld?$AA@", i64 0, i64 0), i64 %291)
-  %293 = call i32 @strcmp(i8* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 0, i64 0), i8* getelementptr inbounds ([25 x i8], [25 x i8]* @"\01??_C@_0BJ@EFFGOIKF@TTResult_NumberOfRecords?$AA@", i64 0, i64 0))
-  %294 = icmp eq i32 %293, 0
-  br i1 %294, label %295, label %297
-
-; <label>:295:                                    ; preds = %290
-  %296 = load i64, i64* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 3), align 8
-  store i64 %296, i64* @NumRecords, align 8
-  br label %297
-
-; <label>:297:                                    ; preds = %295, %290
-  %298 = call i32 @strcmp(i8* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 0, i64 0), i8* getelementptr inbounds ([27 x i8], [27 x i8]* @"\01??_C@_0BL@NBAMDLKF@TTResultFormat_TTTRRecType?$AA@", i64 0, i64 0))
-  %299 = icmp eq i32 %298, 0
-  br i1 %299, label %300, label %367
 
 ; <label>:300:                                    ; preds = %297
-  %301 = load i64, i64* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 3), align 8
-  store i64 %301, i64* @RecordType, align 8
-  br label %367
+  %301 = load i64, i64* @"\01?overflowcorrection@?1??pop_signal_from_file@@9@4_JA", align 8
+  %302 = add i64 %301, 33552000
+  store i64 %302, i64* @"\01?overflowcorrection@?1??pop_signal_from_file@@9@4_JA", align 8
+  br label %.thread12.i
 
-; <label>:302:                                    ; preds = %279
-  %303 = load i64, i64* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 3), align 8
-  %304 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([10 x i8], [10 x i8]* @"\01??_C@_09DGLOBCMH@0x?$CF16?416X?$AA@", i64 0, i64 0), i64 %303)
-  br label %367
+; <label>:303:                                    ; preds = %297
+  %304 = load i64, i64* @"\01?overflowcorrection@?1??pop_signal_from_file@@9@4_JA", align 8
+  %305 = and i32 %295, 33554431
+  %306 = zext i32 %305 to i64
+  %307 = add nsw i64 %304, %306
+  %308 = load i64, i64* @READER_TTRes_pspr, align 8
+  %309 = mul nsw i64 %307, %308
+  br label %322
 
-; <label>:305:                                    ; preds = %279
-  %306 = load i64, i64* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 3), align 8
-  %307 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([10 x i8], [10 x i8]* @"\01??_C@_09DGLOBCMH@0x?$CF16?416X?$AA@", i64 0, i64 0), i64 %306)
-  br label %367
+; <label>:310:                                    ; preds = %.backedge.i
+  %311 = load i64, i64* @"\01?overflowcorrection@?1??pop_signal_from_file@@9@4_JA", align 8
+  %312 = and i32 %295, 33554431
+  %313 = zext i32 %312 to i64
+  %314 = add nsw i64 %311, %313
+  %315 = load i64, i64* @READER_TTRes_pspr, align 8
+  %316 = mul nsw i64 %314, %315
+  %317 = lshr i32 %295, 25
+  %318 = and i32 %317, 63
+  %319 = add nuw nsw i32 %318, 1
+  %320 = trunc i32 %319 to i8
+  br label %322
 
-; <label>:308:                                    ; preds = %279
-  %309 = load double, double* bitcast (i64* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 3) to double*), align 8
-  %310 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @"\01??_C@_02LDDGBJKG@?$CFE?$AA@", i64 0, i64 0), double %309)
-  %311 = call i32 @strcmp(i8* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 0, i64 0), i8* getelementptr inbounds ([20 x i8], [20 x i8]* @"\01??_C@_0BE@MLJFPCOI@MeasDesc_Resolution?$AA@", i64 0, i64 0))
-  %312 = icmp eq i32 %311, 0
-  br i1 %312, label %313, label %317
+.thread12.i:                                      ; preds = %300, %297
+  %321 = add nsw i64 %293, 1
+  store i64 %321, i64* @READER_next_RecID_relativeinbatch, align 8
+  br label %.backedge.i
 
-; <label>:313:                                    ; preds = %308
-  %314 = load double, double* bitcast (i64* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 3) to double*), align 8
-  %315 = fmul double %314, 1.000000e+12
-  %316 = fptosi double %315 to i64
-  store i64 %316, i64* @DTRes_pspr, align 8
-  br label %317
+; <label>:322:                                    ; preds = %310, %303
+  %.0238.i = phi i64 [ %309, %303 ], [ %316, %310 ]
+  %.0237.i = phi i8 [ 0, %303 ], [ %320, %310 ]
+  %323 = add nsw i64 %293, 1
+  store i64 %323, i64* @READER_next_RecID_relativeinbatch, align 8
+  %324 = icmp eq i64 %.0238.i, %const
+  br i1 %324, label %.backedge.i, label %325
 
-; <label>:317:                                    ; preds = %313, %308
-  %318 = call i32 @strcmp(i8* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 0, i64 0), i8* getelementptr inbounds ([26 x i8], [26 x i8]* @"\01??_C@_0BK@JGMIOCJJ@MeasDesc_GlobalResolution?$AA@", i64 0, i64 0))
-  %319 = icmp eq i32 %318, 0
-  br i1 %319, label %320, label %367
+; <label>:325:                                    ; preds = %322
+  store i8 %.0237.i, i8* @POOL_slot0_last_chns, align 1
+  br label %326
 
-; <label>:320:                                    ; preds = %317
-  %321 = load double, double* bitcast (i64* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 3) to double*), align 8
-  %322 = fmul double %321, 1.000000e+12
-  %323 = fptosi double %322 to i64
-  store i64 %323, i64* @TTRes_pspr, align 8
-  br label %367
+; <label>:326:                                    ; preds = %325, %283
+  %.0225.i = phi i64 [ %.0238.i, %325 ], [ %const, %283 ]
+  %327 = load i8, i8* @POOL_total_slots, align 1
+  %328 = load i64*, i64** @POOL_timetag, align 8
+  %329 = zext i8 %327 to i64
+  %330 = getelementptr inbounds i64, i64* %328, i64 %329
+  store i64 %.0225.i, i64* %330, align 8
+  %331 = load i8*, i8** @POOL_slot, align 8
+  %332 = getelementptr inbounds i8, i8* %331, i64 %329
+  store i8 0, i8* %332, align 1
+  %333 = icmp ugt i8 %327, 1
+  br i1 %333, label %.lr.ph.i5.preheader, label %._crit_edge.i6
 
-; <label>:324:                                    ; preds = %279
-  %325 = load i64, i64* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 3), align 8
-  %326 = lshr i64 %325, 3
-  %327 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([30 x i8], [30 x i8]* @"\01??_C@_0BO@ENEJMDLG@?$DMFloat?5Array?5with?5?$CFd?5Entries?$DO?$AA@", i64 0, i64 0), i64 %326)
-  %328 = load i64, i64* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 3), align 8
-  %329 = trunc i64 %328 to i32
-  %330 = call i32 @fseek({ i8* }* nonnull %236, i32 %329, i32 1)
-  br label %367
+.lr.ph.i5.preheader:                              ; preds = %326
+  br label %.lr.ph.i5
 
-; <label>:331:                                    ; preds = %279
-  %332 = load double, double* bitcast (i64* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 3) to double*), align 8
-  %333 = call i64 @"\01?TDateTime_TimeT@@YA_JN@Z"(double %332)
-  store i64 %333, i64* %0, align 8
-  %334 = call fastcc %struct.tm* @"\01?gmtime@@YAPEAUtm@@QEB_J@Z"(i64* nonnull %0)
-  %335 = call i8* @asctime(%struct.tm* %334)
-  %336 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @"\01??_C@_02DKCKIIND@?$CFs?$AA@", i64 0, i64 0), i8* %335, i8* getelementptr inbounds ([2 x i8], [2 x i8]* @"\01??_C@_01LOCGONAA@?$AA?$AA@", i64 0, i64 0))
-  br label %367
+.lr.ph.i5:                                        ; preds = %355, %.lr.ph.i5.preheader
+  %.022615.i = phi i8 [ %div.i, %355 ], [ %327, %.lr.ph.i5.preheader ]
+  %div.i = lshr i8 %.022615.i, 1
+  %334 = and i8 %.022615.i, -2
+  %335 = or i8 %.022615.i, 1
+  %336 = load i64*, i64** @POOL_timetag, align 8
+  %337 = zext i8 %334 to i64
+  %338 = getelementptr inbounds i64, i64* %336, i64 %337
+  %339 = load i64, i64* %338, align 8
+  %340 = zext i8 %335 to i64
+  %341 = getelementptr inbounds i64, i64* %336, i64 %340
+  %342 = load i64, i64* %341, align 8
+  %343 = icmp slt i64 %339, %342
+  %344 = zext i8 %div.i to i64
+  br i1 %343, label %345, label %350
 
-; <label>:337:                                    ; preds = %279
-  %338 = load i64, i64* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 3), align 8
-  %339 = call noalias i8* @calloc(i64 %338, i64 1)
-  %340 = call i64 @fread(i8* %339, i64 1, i64 %338, { i8* }* nonnull %236)
-  %sext2.i4 = shl i64 %340, 32
-  %341 = ashr exact i64 %sext2.i4, 32
-  %342 = load i64, i64* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 3), align 8
-  %343 = icmp eq i64 %341, %342
-  br i1 %343, label %346, label %344
+; <label>:345:                                    ; preds = %.lr.ph.i5
+  %sunkaddr14 = mul i64 %344, 8
+  %346 = bitcast i64* %336 to i8*
+  %sunkaddr15 = getelementptr i8, i8* %346, i64 %sunkaddr14
+  %347 = bitcast i8* %sunkaddr15 to i64*
+  store i64 %339, i64* %347, align 8
+  %348 = load i8*, i8** @POOL_slot, align 8
+  %349 = getelementptr inbounds i8, i8* %348, i64 %337
+  br label %355
 
-; <label>:344:                                    ; preds = %337
-  %345 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([18 x i8], [18 x i8]* @"\01??_C@_0BC@KFPMDKOJ@?6Incomplete?5File?4?$AA@", i64 0, i64 0))
-  call void @free(i8* %339)
-  br label %409
+; <label>:350:                                    ; preds = %.lr.ph.i5
+  %sunkaddr16 = mul i64 %344, 8
+  %351 = bitcast i64* %336 to i8*
+  %sunkaddr17 = getelementptr i8, i8* %351, i64 %sunkaddr16
+  %352 = bitcast i8* %sunkaddr17 to i64*
+  store i64 %342, i64* %352, align 8
+  %353 = load i8*, i8** @POOL_slot, align 8
+  %354 = getelementptr inbounds i8, i8* %353, i64 %340
+  br label %355
 
-; <label>:346:                                    ; preds = %337
-  %347 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @"\01??_C@_02DKCKIIND@?$CFs?$AA@", i64 0, i64 0), i8* %339)
-  call void @free(i8* %339)
-  br label %367
+; <label>:355:                                    ; preds = %350, %345
+  %.sink33.i = phi i8* [ %353, %350 ], [ %348, %345 ]
+  %.sink31.in.i = phi i8* [ %354, %350 ], [ %349, %345 ]
+  %.sink31.i = load i8, i8* %.sink31.in.i, align 1
+  %356 = getelementptr inbounds i8, i8* %.sink33.i, i64 %344
+  store i8 %.sink31.i, i8* %356, align 1
+  %357 = icmp ugt i8 %.022615.i, 3
+  br i1 %357, label %.lr.ph.i5, label %._crit_edge.i6
 
-; <label>:348:                                    ; preds = %279
-  %349 = load i64, i64* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 3), align 8
-  %350 = call noalias i8* @calloc(i64 %349, i64 1)
-  %351 = call i64 @fread(i8* %350, i64 1, i64 %349, { i8* }* nonnull %236)
-  %sext.i5 = shl i64 %351, 32
-  %352 = ashr exact i64 %sext.i5, 32
-  %353 = load i64, i64* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 3), align 8
-  %354 = icmp eq i64 %352, %353
-  br i1 %354, label %357, label %355
+._crit_edge.i6:                                   ; preds = %355, %326
+  %358 = load i8, i8* @POOL_slot0_last_chns, align 1
+  store i8 %358, i8* %arg.chn.4, align 1
+  %359 = load i64*, i64** @POOL_timetag, align 8
+  %360 = getelementptr inbounds i64, i64* %359, i64 1
+  %361 = load i64, i64* %360, align 8
+  br label %POOL_next.exit
 
-; <label>:355:                                    ; preds = %348
-  %356 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([18 x i8], [18 x i8]* @"\01??_C@_0BC@KFPMDKOJ@?6Incomplete?5File?4?$AA@", i64 0, i64 0))
-  call void @free(i8* %350)
-  br label %409
+POOL_next.exit:                                   ; preds = %271, %171, %._crit_edge.i6, %241, %._crit_edge25.i, %141
+  %.0231.i = phi i64 [ %361, %._crit_edge.i6 ], [ %76, %._crit_edge25.i ], [ %76, %141 ], [ %76, %241 ], [ %76, %171 ], [ %76, %271 ]
+  %.228 = icmp eq i64 %.0231.i, %const
+  br i1 %.228, label %B212, label %B88
 
-; <label>:357:                                    ; preds = %348
-  %358 = call i32 (i16*, ...) @wprintf(i16* getelementptr inbounds ([3 x i16], [3 x i16]* @"\01??_C@_15GANGMFKL@?$AA?$CF?$AAs?$AA?$AA@", i64 0, i64 0), i8* %350)
-  call void @free(i8* %350)
-  br label %367
+B88:                                              ; preds = %POOL_next.exit
+  %.271 = load i8, i8* %arg.chn.4, align 1
+  %.283 = icmp eq i8 %.271, 0
+  %.581.start.0 = select i1 %.283, i64 %.0231.i, i64 %start.0
+  %.347 = icmp eq i8 %.271, 1
+  br i1 %.347, label %B116.endif, label %B80
 
-; <label>:359:                                    ; preds = %279
-  %360 = load i64, i64* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 3), align 8
-  %361 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([32 x i8], [32 x i8]* @"\01??_C@_0CA@FNNAPBCN@?$DMBinary?5Blob?5contains?5?$CFd?5Bytes?$DO?$AA@", i64 0, i64 0), i64 %360)
-  %362 = load i64, i64* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 3), align 8
-  %363 = trunc i64 %362 to i32
-  %364 = call i32 @fseek({ i8* }* nonnull %236, i32 %363, i32 1)
-  br label %367
+B212:                                             ; preds = %POOL_next.exit
+  %.198 = add nsw i64 %.029.i, %.0.i
+  tail call void @NRT_decref(i8* %arg.histogram.0)
+  tail call void @NRT_decref(i8* %arg.chn.0)
+  store i64 %.198, i64* %retptr, align 8
+  ret i32 0
 
-; <label>:365:                                    ; preds = %279
-  %366 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([44 x i8], [44 x i8]* @"\01??_C@_0CM@NLBAOIPI@Illegal?5Type?5identifier?5found?$CB?5B@", i64 0, i64 0))
-  br label %409
+B116.endif:                                       ; preds = %B88
+  %.370 = add i64 %.0231.i, 16
+  %.397 = sub i64 %.370, %.581.start.0
+  %.405 = sitofp i64 %.397 to double
+  %.411 = fmul double %.405, 6.250000e-02
+  %.420 = fptosi double %.411 to i64
+  %362 = icmp slt i64 %.420, 62501
+  %n_i.1 = select i1 %362, i64 %.420, i64 62501
+  %363 = icmp sgt i64 %.420, 0
+  %.n_i.1 = select i1 %363, i64 %n_i.1, i64 0
+  %.521 = getelementptr i64, i64* %arg.histogram.4, i64 %.n_i.1
+  %.522 = load i64, i64* %.521, align 8
+  %.531 = add nsw i64 %.522, 1
+  store i64 %.531, i64* %.521, align 8
+  br label %B80
 
-; <label>:367:                                    ; preds = %359, %357, %346, %331, %324, %320, %317, %305, %302, %300, %297, %285, %283
-  %368 = call i32 @strncmp(i8* getelementptr inbounds (%struct.TgHd, %struct.TgHd* @"\01?TagHead@@3UTgHd@@A", i64 0, i32 0, i64 0), i8* getelementptr inbounds ([11 x i8], [11 x i8]* @"\01??_C@_0L@BKLBDFDP@Header_End?$AA@", i64 0, i64 0), i64 11)
-  %369 = icmp eq i32 %368, 0
-  br i1 %369, label %370, label %265
+; <label>:364:                                    ; preds = %.lr.ph.i.113
+  %scevgep.i.1 = getelementptr i8, i8* %70, i64 40
+  tail call void @llvm.memset.p0i8.i64(i8* %scevgep.i.1, i8 0, i64 16, i32 8, i1 false)
+  br label %POOL_init.exit.loopexit14
 
-; <label>:370:                                    ; preds = %367
-  %371 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([27 x i8], [27 x i8]* @"\01??_C@_0BL@HPPLJEMK@?6?6?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?6?$AA@", i64 0, i64 0))
-  %372 = sext i32 %371 to i64
-  store i64 %372, i64* @"\01?order_gurantee@@3_JA", align 8
-  %373 = load i64, i64* @RecordType, align 8
-  switch i64 %373, label %383 [
-    i64 66051, label %374
-    i64 66052, label %386
-    i64 16843268, label %375
-    i64 66053, label %376
-    i64 66054, label %377
-    i64 66307, label %378
-    i64 66308, label %379
-    i64 16843524, label %380
-    i64 66309, label %381
-    i64 66310, label %382
-  ]
-
-; <label>:374:                                    ; preds = %370
-  br label %386
-
-; <label>:375:                                    ; preds = %370
-  br label %386
-
-; <label>:376:                                    ; preds = %370
-  br label %386
-
-; <label>:377:                                    ; preds = %370
-  br label %386
-
-; <label>:378:                                    ; preds = %370
-  br label %386
-
-; <label>:379:                                    ; preds = %370
-  br label %386
-
-; <label>:380:                                    ; preds = %370
-  br label %386
-
-; <label>:381:                                    ; preds = %370
-  br label %386
-
-; <label>:382:                                    ; preds = %370
-  br label %386
-
-; <label>:383:                                    ; preds = %370
-  %384 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([44 x i8], [44 x i8]* @"\01??_C@_0CM@KKBPPLIM@?6Unknown?5time?9tag?5record?5type?3?50@", i64 0, i64 0), i64 %373)
-  %385 = sext i32 %384 to i64
-  store i64 %385, i64* @"\01?order_gurantee@@3_JA", align 8
-  br label %409
-
-; <label>:386:                                    ; preds = %382, %381, %380, %379, %378, %377, %376, %375, %374, %370
-  %.sink3.i6 = phi i8* [ getelementptr inbounds ([23 x i8], [23 x i8]* @"\01??_C@_0BH@IAAPGHG@?6TimeHarp260P?5T3?5data?6?$AA@", i64 0, i64 0), %382 ], [ getelementptr inbounds ([23 x i8], [23 x i8]* @"\01??_C@_0BH@PEIABJLL@?6TimeHarp260N?5T3?5data?6?$AA@", i64 0, i64 0), %381 ], [ getelementptr inbounds ([23 x i8], [23 x i8]* @"\01??_C@_0BH@FIOKMHCD@?6HydraHarp?5V2?5T3?5data?6?$AA@", i64 0, i64 0), %380 ], [ getelementptr inbounds ([23 x i8], [23 x i8]* @"\01??_C@_0BH@MBAIKBCC@?6HydraHarp?5V1?5T3?5data?6?$AA@", i64 0, i64 0), %379 ], [ getelementptr inbounds ([19 x i8], [19 x i8]* @"\01??_C@_0BD@ILPKNJIP@?6PicoHarp?5T3?5data?6?$AA@", i64 0, i64 0), %378 ], [ getelementptr inbounds ([23 x i8], [23 x i8]* @"\01??_C@_0BH@MEKKPGOI@?6TimeHarp260P?5T2?5data?6?$AA@", i64 0, i64 0), %377 ], [ getelementptr inbounds ([23 x i8], [23 x i8]* @"\01??_C@_0BH@DICKBJCF@?6TimeHarp260N?5T2?5data?6?$AA@", i64 0, i64 0), %376 ], [ getelementptr inbounds ([23 x i8], [23 x i8]* @"\01??_C@_0BH@JEEAMHLN@?6HydraHarp?5V2?5T2?5data?6?$AA@", i64 0, i64 0), %375 ], [ getelementptr inbounds ([19 x i8], [19 x i8]* @"\01??_C@_0BD@EHFANJBB@?6PicoHarp?5T2?5data?6?$AA@", i64 0, i64 0), %374 ], [ getelementptr inbounds ([23 x i8], [23 x i8]* @"\01??_C@_0BH@NKCKBLM@?6HydraHarp?5V1?5T2?5data?6?$AA@", i64 0, i64 0), %370 ]
-  %.sink.i7 = phi i8 [ 0, %382 ], [ 0, %381 ], [ 0, %380 ], [ 0, %379 ], [ 0, %378 ], [ 1, %377 ], [ 1, %376 ], [ 1, %375 ], [ 1, %374 ], [ 1, %370 ]
-  %387 = call i32 (i8*, ...) @printf(i8* nonnull %.sink3.i6)
-  %388 = sext i32 %387 to i64
-  store i64 %388, i64* @"\01?order_gurantee@@3_JA", align 8
-  store i8 %.sink.i7, i8* @IsT2, align 1
-  %389 = icmp eq i8 %.sink.i7, 0
-  %390 = load i64, i64* @TTRes_pspr, align 8
-  %.32 = select i1 %389, i64 %390, i64 12495
-  store i64 %.32, i64* @SYNCRate_pspr, align 8
-  store i64 4, i64* @BytesofRecords, align 8
-  %391 = call i32 @ftell({ i8* }* nonnull %236)
-  %392 = sext i32 %391 to i64
-  store i64 %392, i64* @TTF_header_offset, align 8
-  br label %409
-
-; <label>:393:                                    ; preds = %248
-  %394 = bitcast [32 x i8]* %2 to i8*
-  %395 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([17 x i8], [17 x i8]* @"\01??_C@_0BB@MCFHIEMO@?6Parser?3?5quTAU?5?6?$AA@", i64 0, i64 0))
-  %396 = sext i32 %395 to i64
-  store i64 %396, i64* @"\01?order_gurantee@@3_JA", align 8
-  %397 = call i64 @fread(i8* nonnull %394, i64 1, i64 32, { i8* }* nonnull %236)
-  %398 = icmp eq i64 %397, 32
-  br i1 %398, label %401, label %399
-
-; <label>:399:                                    ; preds = %393
-  %400 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([45 x i8], [45 x i8]* @"\01??_C@_0CN@NEMBOFCA@?6?5?$FLERROR?$FNError?5when?5reading?5head@", i64 0, i64 0))
-  br label %407
-
-; <label>:401:                                    ; preds = %393
-  %402 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([41 x i8], [41 x i8]* @"\01??_C@_0CJ@MFBOABHI@?6quTAU?5file?5header?5is?5read?0?5but?5@", i64 0, i64 0))
-  %403 = sext i32 %402 to i64
-  store i64 %403, i64* @"\01?order_gurantee@@3_JA", align 8
-  store i8 1, i8* @IsT2, align 1
-  store i64 0, i64* @RecordType, align 8
-  store i64 10, i64* @BytesofRecords, align 8
-  %404 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([28 x i8], [28 x i8]* @"\01??_C@_0BM@CDLOEACE@?6RecordType?3?5quTAU?510?9bytes?$AA@", i64 0, i64 0))
-  %405 = sext i32 %404 to i64
-  store i64 %405, i64* @"\01?order_gurantee@@3_JA", align 8
-  store i64 1, i64* @TTRes_pspr, align 8
-  store i64 1, i64* @DTRes_pspr, align 8
-  store i64 1249, i64* @SYNCRate_pspr, align 8
-  %406 = call i32 @ftell({ i8* }* nonnull %236)
-  br label %407
-
-; <label>:407:                                    ; preds = %401, %399
-  %.sink6.i9 = phi i32 [ %406, %401 ], [ %400, %399 ]
-  %TTF_header_offset.sink.i10 = phi i64* [ @TTF_header_offset, %401 ], [ @"\01?order_gurantee@@3_JA", %399 ]
-  %.038.i11 = phi i32 [ 0, %401 ], [ -1, %399 ]
-  %408 = sext i32 %.sink6.i9 to i64
-  store i64 %408, i64* %TTF_header_offset.sink.i10, align 8
-  br label %409
-
-; <label>:409:                                    ; preds = %407, %386, %383, %365, %355, %344, %268, %258
-  %.039.i12 = phi i32 [ %.038.i11, %407 ], [ 0, %386 ], [ -1, %383 ], [ -1, %365 ], [ -1, %355 ], [ -1, %344 ], [ -1, %268 ], [ -1, %258 ]
-  %.0.i13 = phi i1 [ true, %407 ], [ false, %386 ], [ false, %383 ], [ false, %365 ], [ false, %355 ], [ false, %344 ], [ false, %268 ], [ false, %258 ]
-  %410 = call i32 @fclose({ i8* }* nonnull %236)
-  %411 = call i32 @_sopen_s(i32* nonnull %1, i8* %arg.b.4, i32 0, i32 64, i32 0)
-  %412 = load i32, i32* %1, align 4
-  %413 = call i64 @_lseeki64(i32 %412, i64 0, i32 2)
-  store i64 %413, i64* @TTF_filesize, align 8
-  %414 = load i32, i32* %1, align 4
-  %415 = call i32 @_close(i32 %414)
-  %416 = load i64, i64* @TTF_filesize, align 8
-  %417 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([16 x i8], [16 x i8]* @"\01??_C@_0BA@INEDNOAD@?6Filesize?3?5?$CFlld?$AA@", i64 0, i64 0), i64 %416)
-  %418 = sext i32 %417 to i64
-  store i64 %418, i64* @"\01?order_gurantee@@3_JA", align 8
-  br i1 %.0.i13, label %419, label %PARSE_TimeTagFileHeader.exit15
-
-; <label>:419:                                    ; preds = %409
-  %420 = load i64, i64* @TTF_filesize, align 8
-  %421 = load i64, i64* @TTF_header_offset, align 8
-  %422 = sub nsw i64 %420, %421
-  %423 = load i64, i64* @BytesofRecords, align 8
-  %424 = or i64 %422, %423
-  %425 = and i64 %424, -4294967296
-  %426 = icmp eq i64 %425, 0
-  br i1 %426, label %427, label %432
-
-; <label>:427:                                    ; preds = %419
-  %428 = trunc i64 %423 to i32
-  %429 = trunc i64 %422 to i32
-  %430 = udiv i32 %429, %428
-  %431 = zext i32 %430 to i64
-  br label %434
-
-; <label>:432:                                    ; preds = %419
-  %433 = sdiv i64 %422, %423
-  br label %434
-
-; <label>:434:                                    ; preds = %432, %427
-  %435 = phi i64 [ %431, %427 ], [ %433, %432 ]
-  store i64 %435, i64* @NumRecords, align 8
-  br label %PARSE_TimeTagFileHeader.exit15
-
-PARSE_TimeTagFileHeader.exit15:                   ; preds = %238, %245, %409, %434
-  %.041.i14 = phi i32 [ -1, %238 ], [ -2, %245 ], [ %.039.i12, %434 ], [ %.039.i12, %409 ]
-  %436 = bitcast i32* %1 to i8*
-  %437 = bitcast i64* %0 to i8*
-  %438 = bitcast [8 x i8]* %6 to i8*
-  %439 = bitcast [40 x i8]* %4 to i8*
-  %440 = bitcast [8 x i8]* %3 to i8*
-  %441 = bitcast [32 x i8]* %2 to i8*
-  call void @llvm.lifetime.end.p0i8(i64 32, i8* nonnull %441)
-  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %440)
-  call void @llvm.lifetime.end.p0i8(i64 40, i8* nonnull %439)
-  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %437)
-  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %438)
-  call void @llvm.lifetime.end.p0i8(i64 4, i8* nonnull %436)
-  call void @numba_gil_ensure(i32* nonnull %.203)
-  %.213 = sext i32 %.041.i14 to i64
-  %.215 = call i8* @PyLong_FromLongLong(i64 %.213)
-  %.218 = icmp eq i8* %.215, null
-  br i1 %.218, label %B0.endif.endif.endif.endif.endif.else, label %B0.endif.endif.endif.endif.endif.if, !prof !4
-
-B0.endif.endif.endif.endif.endif.if:              ; preds = %PARSE_TimeTagFileHeader.exit15
-  %.220 = call i8* @PyObject_Str(i8* nonnull %.215)
-  %.221 = call i8* @PyUnicode_AsUTF8(i8* %.220)
-  call void (i8*, ...) @PySys_WriteStdout(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @".const.%s", i64 0, i64 0), i8* %.221)
-  call void @Py_DecRef(i8* %.220)
-  call void @Py_DecRef(i8* nonnull %.215)
-  br label %B0.endif.endif.endif.endif.endif.endif
-
-B0.endif.endif.endif.endif.endif.else:            ; preds = %PARSE_TimeTagFileHeader.exit15
-  %.226 = call i8* @PyUnicode_FromString(i8* getelementptr inbounds ([21 x i8], [21 x i8]* @".const.the print() function", i64 0, i64 0))
-  call void @PyErr_WriteUnraisable(i8* %.226)
-  call void @Py_DecRef(i8* %.226)
-  br label %B0.endif.endif.endif.endif.endif.endif
-
-B0.endif.endif.endif.endif.endif.endif:           ; preds = %B0.endif.endif.endif.endif.endif.else, %B0.endif.endif.endif.endif.endif.if
-  call void (i8*, ...) @PySys_WriteStdout(i8* getelementptr inbounds ([2 x i8], [2 x i8]* @".const.\0A", i64 0, i64 0))
-  call void @numba_gil_release(i32* nonnull %.203)
-  %442 = load i64, i64* @BytesofRecords, align 8
-  call void @numba_gil_ensure(i32* nonnull %.248)
-  %.254 = call i8* @numba_unpickle(i8* getelementptr inbounds ([20 x i8], [20 x i8]* @.const.pickledata.2452795384192, i64 0, i64 0), i32 20)
-  %.255 = call i8* @PyObject_Str(i8* %.254)
-  %.256 = call i8* @PyUnicode_AsUTF8(i8* %.255)
-  call void (i8*, ...) @PySys_WriteStdout(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @".const.%s", i64 0, i64 0), i8* %.256)
-  call void @Py_DecRef(i8* %.255)
-  call void @Py_DecRef(i8* %.254)
-  call void (i8*, ...) @PySys_WriteStdout(i8* getelementptr inbounds ([2 x i8], [2 x i8]* @".const. ", i64 0, i64 0))
-  %.270 = call i8* @PyLong_FromLongLong(i64 %442)
-  %.273 = icmp eq i8* %.270, null
-  br i1 %.273, label %B0.endif.endif.endif.endif.endif.endif.endif.else, label %B0.endif.endif.endif.endif.endif.endif.endif.if, !prof !4
-
-B0.endif.endif.endif.endif.endif.endif.endif.if:  ; preds = %B0.endif.endif.endif.endif.endif.endif
-  %.275 = call i8* @PyObject_Str(i8* nonnull %.270)
-  %.276 = call i8* @PyUnicode_AsUTF8(i8* %.275)
-  call void (i8*, ...) @PySys_WriteStdout(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @".const.%s", i64 0, i64 0), i8* %.276)
-  call void @Py_DecRef(i8* %.275)
-  call void @Py_DecRef(i8* nonnull %.270)
-  br label %B0.endif.endif.endif.endif.endif.endif.endif.endif
-
-B0.endif.endif.endif.endif.endif.endif.endif.else: ; preds = %B0.endif.endif.endif.endif.endif.endif
-  %.281 = call i8* @PyUnicode_FromString(i8* getelementptr inbounds ([21 x i8], [21 x i8]* @".const.the print() function", i64 0, i64 0))
-  call void @PyErr_WriteUnraisable(i8* %.281)
-  call void @Py_DecRef(i8* %.281)
-  br label %B0.endif.endif.endif.endif.endif.endif.endif.endif
-
-B0.endif.endif.endif.endif.endif.endif.endif.endif: ; preds = %B0.endif.endif.endif.endif.endif.endif.endif.else, %B0.endif.endif.endif.endif.endif.endif.endif.if
-  call void (i8*, ...) @PySys_WriteStdout(i8* getelementptr inbounds ([2 x i8], [2 x i8]* @".const.\0A", i64 0, i64 0))
-  call void @numba_gil_release(i32* nonnull %.248)
-  br label %B100
+POOL_init.exit.loopexit14:                        ; preds = %364, %.lr.ph.i.113
+  %365 = tail call noalias i8* @malloc(i64 8000000)
+  %366 = bitcast i8* %uglygep26.i.1 to i8**
+  store i8* %365, i8** %366, align 8
+  %367 = load %struct.circular_buf_t.4*, %struct.circular_buf_t.4** @VSLOT_timetag, align 8
+  %scevgep19.i.1 = getelementptr %struct.circular_buf_t.4, %struct.circular_buf_t.4* %367, i64 0, i32 2
+  %uglygep21.i.117 = getelementptr i64, i64* %scevgep19.i.1, i64 4
+  %scevgep23.i.118 = getelementptr i64, i64* %scevgep19.i.1, i64 3
+  %.sroa.1.0.copyload.i.1 = load i64, i64* %scevgep23.i.118, align 8
+  %.sroa.2.0.copyload.i.1 = load i64, i64* %uglygep21.i.117, align 8
+  %368 = icmp eq i64 %.sroa.1.0.copyload.i.1, %.sroa.2.0.copyload.i.1
+  %369 = zext i1 %368 to i32
+  %370 = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([28 x i8], [28 x i8]* @"\01??_C@_0BM@KDJELMIO@?6Buffer?5created?0?5empty?3?5?$CFd?6?$AA@", i64 0, i64 0), i32 %369)
+  br label %POOL_init.exit
 }
 
-declare void @numba_gil_ensure(i32*) local_unnamed_addr
-
-declare i8* @PyLong_FromLongLong(i64) local_unnamed_addr
-
-declare i8* @PyObject_Str(i8*) local_unnamed_addr
-
-declare i8* @PyUnicode_AsUTF8(i8*) local_unnamed_addr
-
-declare void @PySys_WriteStdout(i8*, ...) local_unnamed_addr
-
-declare void @Py_DecRef(i8*) local_unnamed_addr
-
-declare i8* @PyUnicode_FromString(i8*) local_unnamed_addr
-
-declare void @PyErr_WriteUnraisable(i8*) local_unnamed_addr
-
-declare void @numba_gil_release(i32*) local_unnamed_addr
-
-declare i8* @numba_unpickle(i8*, i32) local_unnamed_addr
-
-define i8* @"_ZN7cpython8__main__7foo$241E35bytearray$28uint8$2c$201d$2c$20C$2935bytearray$28uint8$2c$201d$2c$20C$29"(i8* %py_closure, i8* %py_args, i8* nocapture readnone %py_kws) local_unnamed_addr {
+define i8* @"_ZN7cpython8mainloop12mainloop$241E5ArrayIaLi1E1C7mutable7alignedE5ArrayIxLi1E1C7mutable7alignedE35bytearray$28uint8$2c$201d$2c$20C$29xxxxxx"(i8* %py_closure, i8* %py_args, i8* nocapture readnone %py_kws) local_unnamed_addr {
 entry:
   %.5 = alloca i8*, align 8
   %.6 = alloca i8*, align 8
-  %.7 = call i32 (i8*, i8*, i64, i64, ...) @PyArg_UnpackTuple(i8* %py_args, i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.const.foo, i64 0, i64 0), i64 2, i64 2, i8** nonnull %.5, i8** nonnull %.6)
-  %.8 = icmp eq i32 %.7, 0
-  %.31 = alloca [80 x i8], align 1
-  %.35 = alloca { i8*, i8*, i64, i64, i8*, [1 x i64], [1 x i64] }, align 8
-  %.49 = alloca [80 x i8], align 1
-  %.53 = alloca { i8*, i8*, i64, i64, i8*, [1 x i64], [1 x i64] }, align 8
-  %0 = bitcast { i8*, i8*, i64, i64, i8*, [1 x i64], [1 x i64] }* %.35 to i8*
+  %.7 = alloca i8*, align 8
+  %.8 = alloca i8*, align 8
+  %.9 = alloca i8*, align 8
+  %.10 = alloca i8*, align 8
+  %.11 = alloca i8*, align 8
+  %.12 = alloca i8*, align 8
+  %.13 = alloca i8*, align 8
+  %.14 = call i32 (i8*, i8*, i64, i64, ...) @PyArg_UnpackTuple(i8* %py_args, i8* getelementptr inbounds ([9 x i8], [9 x i8]* @.const.mainloop, i64 0, i64 0), i64 9, i64 9, i8** nonnull %.5, i8** nonnull %.6, i8** nonnull %.7, i8** nonnull %.8, i8** nonnull %.9, i8** nonnull %.10, i8** nonnull %.11, i8** nonnull %.12, i8** nonnull %.13)
+  %.15 = icmp eq i32 %.14, 0
+  %.38 = alloca { i8*, i8*, i64, i64, i8*, [1 x i64], [1 x i64] }, align 8
+  %.49 = alloca { i8*, i8*, i64, i64, i64*, [1 x i64], [1 x i64] }, align 8
+  %0 = bitcast { i8*, i8*, i64, i64, i8*, [1 x i64], [1 x i64] }* %.38 to i8*
   call void @llvm.memset.p0i8.i64(i8* nonnull %0, i8 0, i64 56, i32 8, i1 false)
-  %.67 = alloca i64, align 8
-  %excinfo = alloca { i8*, i32 }*, align 8
-  %1 = bitcast { i8*, i8*, i64, i64, i8*, [1 x i64], [1 x i64] }* %.53 to i8*
+  %.60 = alloca [80 x i8], align 1
+  %.64 = alloca { i8*, i8*, i64, i64, i8*, [1 x i64], [1 x i64] }, align 8
+  %1 = bitcast { i8*, i8*, i64, i64, i64*, [1 x i64], [1 x i64] }* %.49 to i8*
   call void @llvm.memset.p0i8.i64(i8* nonnull %1, i8 0, i64 56, i32 8, i1 false)
-  br i1 %.8, label %entry.if, label %entry.endif, !prof !4
+  %.168 = alloca i64, align 8
+  %2 = bitcast { i8*, i8*, i64, i64, i8*, [1 x i64], [1 x i64] }* %.64 to i8*
+  call void @llvm.memset.p0i8.i64(i8* nonnull %2, i8 0, i64 56, i32 8, i1 false)
+  br i1 %.15, label %entry.if, label %entry.endif, !prof !4
 
-entry.if:                                         ; preds = %entry.endif.endif.endif.endif.endif.endif.endif.endif.if, %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif, %entry.endif.endif.endif.endif.endif.endif.endif.endif.if.if, %entry.endif.endif.endif.endif, %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.if, %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif, %entry.endif.endif.endif.endif.endif.endif.if, %entry
+entry.if:                                         ; preds = %arg0.err, %entry.endif.endif.endif, %entry
   ret i8* null
 
 entry.endif:                                      ; preds = %entry
-  %.12 = icmp eq i8* %py_closure, null
-  br i1 %.12, label %entry.endif.if, label %entry.endif.endif, !prof !4
+  %.19 = icmp eq i8* %py_closure, null
+  br i1 %.19, label %entry.endif.if, label %entry.endif.endif, !prof !4
 
 entry.endif.if:                                   ; preds = %entry.endif
-  %.14 = call i32 @puts(i8* getelementptr inbounds ([38 x i8], [38 x i8]* @".const.Fatal error: missing _dynfunc.Closure", i64 0, i64 0))
+  %.21 = call i32 @puts(i8* getelementptr inbounds ([38 x i8], [38 x i8]* @".const.Fatal error: missing _dynfunc.Closure", i64 0, i64 0))
   unreachable
 
 entry.endif.endif:                                ; preds = %entry.endif
-  %.16 = ptrtoint i8* %py_closure to i64
-  %.17 = add i64 %.16, 24
-  %.19 = inttoptr i64 %.17 to { i8* }*
-  %.204 = bitcast { i8* }* %.19 to i8**
-  %.21 = load i8*, i8** %.204, align 8
-  %.26 = icmp eq i8* %.21, null
-  br i1 %.26, label %entry.endif.endif.if, label %entry.endif.endif.endif, !prof !4
+  %.23 = ptrtoint i8* %py_closure to i64
+  %.24 = add i64 %.23, 24
+  %.26 = inttoptr i64 %.24 to { i8* }*
+  %.274 = bitcast { i8* }* %.26 to i8**
+  %.28 = load i8*, i8** %.274, align 8
+  %.33 = icmp eq i8* %.28, null
+  br i1 %.33, label %entry.endif.endif.if, label %entry.endif.endif.endif, !prof !4
 
 entry.endif.endif.if:                             ; preds = %entry.endif.endif
   call void @PyErr_SetString(i8* nonnull @PyExc_RuntimeError, i8* getelementptr inbounds ([20 x i8], [20 x i8]* @".const.missing Environment", i64 0, i64 0))
   ret i8* null
 
 entry.endif.endif.endif:                          ; preds = %entry.endif.endif
-  %.30 = load i8*, i8** %.5, align 8
-  %.fca.0.gep135 = bitcast [80 x i8]* %.31 to i8*
-  call void @llvm.memset.p0i8.i64(i8* nonnull %.fca.0.gep135, i8 0, i64 80, i32 1, i1 false)
-  %.33 = call i32 @numba_get_buffer(i8* %.30, [80 x i8]* nonnull %.31)
-  %.34 = icmp ne i32 %.33, 0
-  br i1 %.34, label %entry.endif.endif.endif.endif, label %entry.endif.endif.endif.if, !prof !4
-
-entry.endif.endif.endif.if:                       ; preds = %entry.endif.endif.endif
-  %.39 = bitcast { i8*, i8*, i64, i64, i8*, [1 x i64], [1 x i64] }* %.35 to i8*
-  call void @NRT_adapt_buffer_from_python([80 x i8]* nonnull %.31, i8* nonnull %.39)
-  br label %entry.endif.endif.endif.endif
-
-entry.endif.endif.endif.endif:                    ; preds = %entry.endif.endif.endif, %entry.endif.endif.endif.if
-  %2 = icmp ne i32 %.33, 0
-  %3 = bitcast { i8*, i8*, i64, i64, i8*, [1 x i64], [1 x i64] }* %.35 to i8**
-  %.42.fca.0.load = load i8*, i8** %3, align 8
-  %4 = bitcast { i8*, i8*, i64, i64, i8*, [1 x i64], [1 x i64] }* %.35 to i8*
+  %3 = bitcast { i8*, i8*, i64, i64, i8*, [1 x i64], [1 x i64] }* %.38 to i8**
+  %.37 = load i8*, i8** %.5, align 8
+  %.40 = bitcast { i8*, i8*, i64, i64, i8*, [1 x i64], [1 x i64] }* %.38 to i8*
+  %.41 = call i32 @NRT_adapt_ndarray_from_python(i8* %.37, i8* nonnull %.40)
+  %.42 = icmp eq i32 %.41, 0
+  %.43.fca.0.load = load i8*, i8** %3, align 8
+  %4 = bitcast { i8*, i8*, i64, i64, i8*, [1 x i64], [1 x i64] }* %.38 to i8*
   %sunkaddr = getelementptr i8, i8* %4, i64 8
   %5 = bitcast i8* %sunkaddr to i8**
-  %.42.fca.1.load = load i8*, i8** %5, align 8
-  %6 = bitcast { i8*, i8*, i64, i64, i8*, [1 x i64], [1 x i64] }* %.35 to i8*
-  %sunkaddr6 = getelementptr i8, i8* %6, i64 16
-  %7 = bitcast i8* %sunkaddr6 to i64*
-  %.42.fca.2.load = load i64, i64* %7, align 8
-  %8 = bitcast { i8*, i8*, i64, i64, i8*, [1 x i64], [1 x i64] }* %.35 to i8*
-  %sunkaddr7 = getelementptr i8, i8* %8, i64 24
-  %9 = bitcast i8* %sunkaddr7 to i64*
-  %.42.fca.3.load = load i64, i64* %9, align 8
-  %10 = bitcast { i8*, i8*, i64, i64, i8*, [1 x i64], [1 x i64] }* %.35 to i8*
-  %sunkaddr8 = getelementptr i8, i8* %10, i64 32
-  %11 = bitcast i8* %sunkaddr8 to i8**
-  %.42.fca.4.load = load i8*, i8** %11, align 8
-  %12 = bitcast { i8*, i8*, i64, i64, i8*, [1 x i64], [1 x i64] }* %.35 to i8*
-  %sunkaddr9 = getelementptr i8, i8* %12, i64 40
-  %13 = bitcast i8* %sunkaddr9 to i64*
-  %.42.fca.5.0.load = load i64, i64* %13, align 8
-  %14 = bitcast { i8*, i8*, i64, i64, i8*, [1 x i64], [1 x i64] }* %.35 to i8*
-  %sunkaddr10 = getelementptr i8, i8* %14, i64 48
-  %15 = bitcast i8* %sunkaddr10 to i64*
-  %.42.fca.6.0.load = load i64, i64* %15, align 8
-  br i1 %2, label %entry.if, label %entry.endif.endif.endif.endif.endif, !prof !4
+  %.43.fca.1.load = load i8*, i8** %5, align 8
+  %6 = bitcast { i8*, i8*, i64, i64, i8*, [1 x i64], [1 x i64] }* %.38 to i8*
+  %sunkaddr5 = getelementptr i8, i8* %6, i64 16
+  %7 = bitcast i8* %sunkaddr5 to i64*
+  %.43.fca.2.load = load i64, i64* %7, align 8
+  %8 = bitcast { i8*, i8*, i64, i64, i8*, [1 x i64], [1 x i64] }* %.38 to i8*
+  %sunkaddr6 = getelementptr i8, i8* %8, i64 24
+  %9 = bitcast i8* %sunkaddr6 to i64*
+  %.43.fca.3.load = load i64, i64* %9, align 8
+  %10 = bitcast { i8*, i8*, i64, i64, i8*, [1 x i64], [1 x i64] }* %.38 to i8*
+  %sunkaddr7 = getelementptr i8, i8* %10, i64 32
+  %11 = bitcast i8* %sunkaddr7 to i8**
+  %.43.fca.4.load = load i8*, i8** %11, align 8
+  %12 = bitcast { i8*, i8*, i64, i64, i8*, [1 x i64], [1 x i64] }* %.38 to i8*
+  %sunkaddr8 = getelementptr i8, i8* %12, i64 40
+  %13 = bitcast i8* %sunkaddr8 to i64*
+  %.43.fca.5.0.load = load i64, i64* %13, align 8
+  %14 = bitcast { i8*, i8*, i64, i64, i8*, [1 x i64], [1 x i64] }* %.38 to i8*
+  %sunkaddr9 = getelementptr i8, i8* %14, i64 48
+  %15 = bitcast i8* %sunkaddr9 to i64*
+  %.43.fca.6.0.load = load i64, i64* %15, align 8
+  br i1 %.42, label %entry.endif.endif.endif.endif, label %entry.if, !prof !5
+
+entry.endif.endif.endif.endif:                    ; preds = %entry.endif.endif.endif
+  %16 = bitcast { i8*, i8*, i64, i64, i64*, [1 x i64], [1 x i64] }* %.49 to i8**
+  %.48 = load i8*, i8** %.6, align 8
+  %.51 = bitcast { i8*, i8*, i64, i64, i64*, [1 x i64], [1 x i64] }* %.49 to i8*
+  %.52 = call i32 @NRT_adapt_ndarray_from_python(i8* %.48, i8* nonnull %.51)
+  %.53 = icmp eq i32 %.52, 0
+  %.54.fca.0.load = load i8*, i8** %16, align 8
+  %17 = bitcast { i8*, i8*, i64, i64, i64*, [1 x i64], [1 x i64] }* %.49 to i8*
+  %sunkaddr10 = getelementptr i8, i8* %17, i64 8
+  %18 = bitcast i8* %sunkaddr10 to i8**
+  %.54.fca.1.load = load i8*, i8** %18, align 8
+  %19 = bitcast { i8*, i8*, i64, i64, i64*, [1 x i64], [1 x i64] }* %.49 to i8*
+  %sunkaddr11 = getelementptr i8, i8* %19, i64 16
+  %20 = bitcast i8* %sunkaddr11 to i64*
+  %.54.fca.2.load = load i64, i64* %20, align 8
+  %21 = bitcast { i8*, i8*, i64, i64, i64*, [1 x i64], [1 x i64] }* %.49 to i8*
+  %sunkaddr12 = getelementptr i8, i8* %21, i64 24
+  %22 = bitcast i8* %sunkaddr12 to i64*
+  %.54.fca.3.load = load i64, i64* %22, align 8
+  %23 = bitcast { i8*, i8*, i64, i64, i64*, [1 x i64], [1 x i64] }* %.49 to i8*
+  %sunkaddr13 = getelementptr i8, i8* %23, i64 32
+  %24 = bitcast i8* %sunkaddr13 to i64**
+  %.54.fca.4.load = load i64*, i64** %24, align 8
+  %25 = bitcast { i8*, i8*, i64, i64, i64*, [1 x i64], [1 x i64] }* %.49 to i8*
+  %sunkaddr14 = getelementptr i8, i8* %25, i64 40
+  %26 = bitcast i8* %sunkaddr14 to i64*
+  %.54.fca.5.0.load = load i64, i64* %26, align 8
+  %27 = bitcast { i8*, i8*, i64, i64, i64*, [1 x i64], [1 x i64] }* %.49 to i8*
+  %sunkaddr15 = getelementptr i8, i8* %27, i64 48
+  %28 = bitcast i8* %sunkaddr15 to i64*
+  %.54.fca.6.0.load = load i64, i64* %28, align 8
+  br i1 %.53, label %entry.endif.endif.endif.endif.endif, label %arg0.err, !prof !5
+
+arg0.err:                                         ; preds = %arg1.err, %entry.endif.endif.endif.endif
+  call void @NRT_decref(i8* %.43.fca.0.load)
+  br label %entry.if
 
 entry.endif.endif.endif.endif.endif:              ; preds = %entry.endif.endif.endif.endif
-  %.48 = load i8*, i8** %.6, align 8
-  %.fca.0.gep111 = bitcast [80 x i8]* %.49 to i8*
-  call void @llvm.memset.p0i8.i64(i8* nonnull %.fca.0.gep111, i8 0, i64 80, i32 1, i1 false)
-  %.51 = call i32 @numba_get_buffer(i8* %.48, [80 x i8]* nonnull %.49)
-  %.52 = icmp eq i32 %.51, 0
-  br i1 %.52, label %entry.endif.endif.endif.endif.endif.endif.endif, label %entry.endif.endif.endif.endif.endif.endif.if, !prof !5
+  %.59 = load i8*, i8** %.7, align 8
+  %.fca.0.gep116 = bitcast [80 x i8]* %.60 to i8*
+  call void @llvm.memset.p0i8.i64(i8* nonnull %.fca.0.gep116, i8 0, i64 80, i32 1, i1 false)
+  %.62 = call i32 @numba_get_buffer(i8* %.59, [80 x i8]* nonnull %.60)
+  %.63 = icmp ne i32 %.62, 0
+  br i1 %.63, label %entry.endif.endif.endif.endif.endif.endif, label %entry.endif.endif.endif.endif.endif.if, !prof !4
 
-entry.endif.endif.endif.endif.endif.endif.if:     ; preds = %entry.endif.endif.endif.endif.endif
-  call void @numba_release_buffer([80 x i8]* nonnull %.31)
-  call void @NRT_decref(i8* %.42.fca.0.load)
-  br label %entry.if
+arg1.err:                                         ; preds = %arg2.err, %entry.endif.endif.endif.endif.endif.endif
+  call void @NRT_decref(i8* %.54.fca.0.load)
+  br label %arg0.err
 
-entry.endif.endif.endif.endif.endif.endif.endif:  ; preds = %entry.endif.endif.endif.endif.endif
-  %16 = bitcast { i8*, i8*, i64, i64, i8*, [1 x i64], [1 x i64] }* %.53 to i8**
-  %.57 = bitcast { i8*, i8*, i64, i64, i8*, [1 x i64], [1 x i64] }* %.53 to i8*
-  call void @NRT_adapt_buffer_from_python([80 x i8]* nonnull %.49, i8* nonnull %.57)
-  %.60.fca.0.load = load i8*, i8** %16, align 8
-  %17 = bitcast { i8*, i8*, i64, i64, i8*, [1 x i64], [1 x i64] }* %.53 to i8*
-  %sunkaddr12 = getelementptr i8, i8* %17, i64 8
-  %18 = bitcast i8* %sunkaddr12 to i8**
-  %.60.fca.1.load = load i8*, i8** %18, align 8
-  %19 = bitcast { i8*, i8*, i64, i64, i8*, [1 x i64], [1 x i64] }* %.53 to i8*
-  %sunkaddr13 = getelementptr i8, i8* %19, i64 16
-  %20 = bitcast i8* %sunkaddr13 to i64*
-  %.60.fca.2.load = load i64, i64* %20, align 8
-  %21 = bitcast { i8*, i8*, i64, i64, i8*, [1 x i64], [1 x i64] }* %.53 to i8*
-  %sunkaddr14 = getelementptr i8, i8* %21, i64 24
-  %22 = bitcast i8* %sunkaddr14 to i64*
-  %.60.fca.3.load = load i64, i64* %22, align 8
-  %23 = bitcast { i8*, i8*, i64, i64, i8*, [1 x i64], [1 x i64] }* %.53 to i8*
-  %sunkaddr15 = getelementptr i8, i8* %23, i64 32
-  %24 = bitcast i8* %sunkaddr15 to i8**
-  %.60.fca.4.load = load i8*, i8** %24, align 8
-  %25 = bitcast { i8*, i8*, i64, i64, i8*, [1 x i64], [1 x i64] }* %.53 to i8*
-  %sunkaddr16 = getelementptr i8, i8* %25, i64 40
-  %26 = bitcast i8* %sunkaddr16 to i64*
-  %.60.fca.5.0.load = load i64, i64* %26, align 8
-  %27 = bitcast { i8*, i8*, i64, i64, i8*, [1 x i64], [1 x i64] }* %.53 to i8*
-  %sunkaddr17 = getelementptr i8, i8* %27, i64 48
-  %28 = bitcast i8* %sunkaddr17 to i64*
-  %.60.fca.6.0.load = load i64, i64* %28, align 8
-  %.66 = call i8* @PyEval_SaveThread()
-  store i64 0, i64* %.67, align 8
-  %.73 = call i32 @"_ZN8__main__7foo$241E35bytearray$28uint8$2c$201d$2c$20C$2935bytearray$28uint8$2c$201d$2c$20C$29"(i64* nonnull %.67, { i8*, i32 }** nonnull %excinfo, i8* nonnull %.21, i8* %.42.fca.0.load, i8* %.42.fca.1.load, i64 %.42.fca.2.load, i64 %.42.fca.3.load, i8* %.42.fca.4.load, i64 %.42.fca.5.0.load, i64 %.42.fca.6.0.load, i8* %.60.fca.0.load, i8* %.60.fca.1.load, i64 %.60.fca.2.load, i64 %.60.fca.3.load, i8* %.60.fca.4.load, i64 %.60.fca.5.0.load, i64 %.60.fca.6.0.load)
-  %.74 = load { i8*, i32 }*, { i8*, i32 }** %excinfo, align 8
-  %.83 = load i64, i64* %.67, align 8
-  call void @PyEval_RestoreThread(i8* %.66)
-  call void @numba_release_buffer([80 x i8]* nonnull %.31)
-  call void @NRT_decref(i8* %.42.fca.0.load)
-  call void @numba_release_buffer([80 x i8]* nonnull %.49)
-  call void @NRT_decref(i8* %.60.fca.0.load)
-  switch i32 %.73, label %entry.endif.endif.endif.endif.endif.endif.endif.endif [
-    i32 -2, label %entry.endif.endif.endif.endif.endif.endif.endif.if.if
-    i32 0, label %entry.endif.endif.endif.endif.endif.endif.endif.if.endif
-  ]
+entry.endif.endif.endif.endif.endif.if:           ; preds = %entry.endif.endif.endif.endif.endif
+  %.68 = bitcast { i8*, i8*, i64, i64, i8*, [1 x i64], [1 x i64] }* %.64 to i8*
+  call void @NRT_adapt_buffer_from_python([80 x i8]* nonnull %.60, i8* nonnull %.68)
+  br label %entry.endif.endif.endif.endif.endif.endif
 
-entry.endif.endif.endif.endif.endif.endif.endif.endif: ; preds = %entry.endif.endif.endif.endif.endif.endif.endif
-  %.81 = icmp sgt i32 %.73, 0
-  br i1 %.81, label %entry.endif.endif.endif.endif.endif.endif.endif.endif.if, label %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif
+entry.endif.endif.endif.endif.endif.endif:        ; preds = %entry.endif.endif.endif.endif.endif.if, %entry.endif.endif.endif.endif.endif
+  %29 = icmp ne i32 %.62, 0
+  %30 = bitcast { i8*, i8*, i64, i64, i8*, [1 x i64], [1 x i64] }* %.64 to i8**
+  %.71.fca.0.load = load i8*, i8** %30, align 8
+  %31 = bitcast { i8*, i8*, i64, i64, i8*, [1 x i64], [1 x i64] }* %.64 to i8*
+  %sunkaddr17 = getelementptr i8, i8* %31, i64 8
+  %32 = bitcast i8* %sunkaddr17 to i8**
+  %.71.fca.1.load = load i8*, i8** %32, align 8
+  %33 = bitcast { i8*, i8*, i64, i64, i8*, [1 x i64], [1 x i64] }* %.64 to i8*
+  %sunkaddr18 = getelementptr i8, i8* %33, i64 16
+  %34 = bitcast i8* %sunkaddr18 to i64*
+  %.71.fca.2.load = load i64, i64* %34, align 8
+  %35 = bitcast { i8*, i8*, i64, i64, i8*, [1 x i64], [1 x i64] }* %.64 to i8*
+  %sunkaddr19 = getelementptr i8, i8* %35, i64 24
+  %36 = bitcast i8* %sunkaddr19 to i64*
+  %.71.fca.3.load = load i64, i64* %36, align 8
+  %37 = bitcast { i8*, i8*, i64, i64, i8*, [1 x i64], [1 x i64] }* %.64 to i8*
+  %sunkaddr20 = getelementptr i8, i8* %37, i64 32
+  %38 = bitcast i8* %sunkaddr20 to i8**
+  %.71.fca.4.load = load i8*, i8** %38, align 8
+  %39 = bitcast { i8*, i8*, i64, i64, i8*, [1 x i64], [1 x i64] }* %.64 to i8*
+  %sunkaddr21 = getelementptr i8, i8* %39, i64 40
+  %40 = bitcast i8* %sunkaddr21 to i64*
+  %.71.fca.5.0.load = load i64, i64* %40, align 8
+  %41 = bitcast { i8*, i8*, i64, i64, i8*, [1 x i64], [1 x i64] }* %.64 to i8*
+  %sunkaddr22 = getelementptr i8, i8* %41, i64 48
+  %42 = bitcast i8* %sunkaddr22 to i64*
+  %.71.fca.6.0.load = load i64, i64* %42, align 8
+  br i1 %29, label %arg1.err, label %entry.endif.endif.endif.endif.endif.endif.endif, !prof !4
 
-entry.endif.endif.endif.endif.endif.endif.endif.if.if: ; preds = %entry.endif.endif.endif.endif.endif.endif.endif
-  call void @Py_IncRef(i8* nonnull @_Py_NoneStruct)
-  ret i8* @_Py_NoneStruct
+entry.endif.endif.endif.endif.endif.endif.endif:  ; preds = %entry.endif.endif.endif.endif.endif.endif
+  %.77 = load i8*, i8** %.8, align 8
+  %.79 = call i8* @PyNumber_Long(i8* %.77)
+  %.80 = icmp eq i8* %.79, null
+  br i1 %.80, label %entry.endif.endif.endif.endif.endif.endif.endif.endif, label %entry.endif.endif.endif.endif.endif.endif.endif.if, !prof !4
 
-entry.endif.endif.endif.endif.endif.endif.endif.if.endif: ; preds = %entry.endif.endif.endif.endif.endif.endif.endif
-  %.94 = call i8* @PyLong_FromLongLong(i64 %.83)
-  ret i8* %.94
+arg2.err:                                         ; preds = %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif, %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif, %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif, %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif, %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif, %entry.endif.endif.endif.endif.endif.endif.endif.endif
+  call void @numba_release_buffer([80 x i8]* nonnull %.60)
+  call void @NRT_decref(i8* %.71.fca.0.load)
+  br label %arg1.err
 
-entry.endif.endif.endif.endif.endif.endif.endif.endif.if: ; preds = %entry.endif.endif.endif.endif.endif.endif.endif.endif
-  call void @PyErr_Clear()
-  %.101 = load { i8*, i32 }, { i8*, i32 }* %.74, align 8
-  %.102 = extractvalue { i8*, i32 } %.101, 0
-  %.104 = extractvalue { i8*, i32 } %.101, 1
-  %.105 = call i8* @numba_unpickle(i8* %.102, i32 %.104)
-  %.106 = icmp eq i8* %.105, null
-  br i1 %.106, label %entry.if, label %entry.endif.endif.endif.endif.endif.endif.endif.endif.if.if, !prof !4
+entry.endif.endif.endif.endif.endif.endif.endif.if: ; preds = %entry.endif.endif.endif.endif.endif.endif.endif
+  %.82 = call i64 @PyLong_AsLongLong(i8* nonnull %.79)
+  call void @Py_DecRef(i8* nonnull %.79)
+  br label %entry.endif.endif.endif.endif.endif.endif.endif.endif
+
+entry.endif.endif.endif.endif.endif.endif.endif.endif: ; preds = %entry.endif.endif.endif.endif.endif.endif.endif.if, %entry.endif.endif.endif.endif.endif.endif.endif
+  %.78.0 = phi i64 [ %.82, %entry.endif.endif.endif.endif.endif.endif.endif.if ], [ undef, %entry.endif.endif.endif.endif.endif.endif.endif ]
+  %.87 = call i8* @PyErr_Occurred()
+  %.88 = icmp eq i8* %.87, null
+  br i1 %.88, label %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif, label %arg2.err, !prof !5
 
 entry.endif.endif.endif.endif.endif.endif.endif.endif.endif: ; preds = %entry.endif.endif.endif.endif.endif.endif.endif.endif
-  switch i32 %.73, label %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif [
-    i32 -3, label %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.if
-    i32 -1, label %entry.if
-  ]
-
-entry.endif.endif.endif.endif.endif.endif.endif.endif.if.if: ; preds = %entry.endif.endif.endif.endif.endif.endif.endif.endif.if
-  call void @numba_do_raise(i8* nonnull %.105)
-  br label %entry.if
+  %.92 = load i8*, i8** %.9, align 8
+  %.94 = call i8* @PyNumber_Long(i8* %.92)
+  %.95 = icmp eq i8* %.94, null
+  br i1 %.95, label %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif, label %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.if, !prof !4
 
 entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.if: ; preds = %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif
-  call void @PyErr_SetNone(i8* nonnull @PyExc_StopIteration)
-  br label %entry.if
+  %.97 = call i64 @PyLong_AsLongLong(i8* nonnull %.94)
+  call void @Py_DecRef(i8* nonnull %.94)
+  br label %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif
 
-entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif: ; preds = %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif
-  call void @PyErr_SetString(i8* nonnull @PyExc_SystemError, i8* getelementptr inbounds ([43 x i8], [43 x i8]* @".const.unknown error when calling native function", i64 0, i64 0))
-  br label %entry.if
+entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif: ; preds = %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.if, %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif
+  %.93.0 = phi i64 [ %.97, %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.if ], [ undef, %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif ]
+  %.102 = call i8* @PyErr_Occurred()
+  %.103 = icmp eq i8* %.102, null
+  br i1 %.103, label %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif, label %arg2.err, !prof !5
+
+entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif: ; preds = %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif
+  %.107 = load i8*, i8** %.10, align 8
+  %.109 = call i8* @PyNumber_Long(i8* %.107)
+  %.110 = icmp eq i8* %.109, null
+  br i1 %.110, label %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif, label %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.if, !prof !4
+
+entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.if: ; preds = %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif
+  %.112 = call i64 @PyLong_AsLongLong(i8* nonnull %.109)
+  call void @Py_DecRef(i8* nonnull %.109)
+  br label %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif
+
+entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif: ; preds = %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.if, %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif
+  %.108.0 = phi i64 [ %.112, %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.if ], [ undef, %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif ]
+  %.117 = call i8* @PyErr_Occurred()
+  %.118 = icmp eq i8* %.117, null
+  br i1 %.118, label %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif, label %arg2.err, !prof !5
+
+entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif: ; preds = %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif
+  %.122 = load i8*, i8** %.11, align 8
+  %.124 = call i8* @PyNumber_Long(i8* %.122)
+  %.125 = icmp eq i8* %.124, null
+  br i1 %.125, label %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif, label %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.if, !prof !4
+
+entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.if: ; preds = %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif
+  %.127 = call i64 @PyLong_AsLongLong(i8* nonnull %.124)
+  call void @Py_DecRef(i8* nonnull %.124)
+  br label %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif
+
+entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif: ; preds = %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.if, %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif
+  %.123.0 = phi i64 [ %.127, %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.if ], [ undef, %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif ]
+  %.132 = call i8* @PyErr_Occurred()
+  %.133 = icmp eq i8* %.132, null
+  br i1 %.133, label %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif, label %arg2.err, !prof !5
+
+entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif: ; preds = %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif
+  %.137 = load i8*, i8** %.12, align 8
+  %.139 = call i8* @PyNumber_Long(i8* %.137)
+  %.140 = icmp eq i8* %.139, null
+  br i1 %.140, label %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif, label %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.if, !prof !4
+
+entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.if: ; preds = %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif
+  %.142 = call i64 @PyLong_AsLongLong(i8* nonnull %.139)
+  call void @Py_DecRef(i8* nonnull %.139)
+  br label %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif
+
+entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif: ; preds = %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.if, %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif
+  %.138.0 = phi i64 [ %.142, %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.if ], [ undef, %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif ]
+  %.147 = call i8* @PyErr_Occurred()
+  %.148 = icmp eq i8* %.147, null
+  br i1 %.148, label %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif, label %arg2.err, !prof !5
+
+entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif: ; preds = %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif
+  %.152 = load i8*, i8** %.13, align 8
+  %.154 = call i8* @PyNumber_Long(i8* %.152)
+  %.155 = icmp eq i8* %.154, null
+  br i1 %.155, label %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif, label %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.if, !prof !4
+
+entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.if: ; preds = %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif
+  %.157 = call i64 @PyLong_AsLongLong(i8* nonnull %.154)
+  call void @Py_DecRef(i8* nonnull %.154)
+  br label %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif
+
+entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif: ; preds = %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.if, %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif
+  %.153.0 = phi i64 [ %.157, %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.if ], [ undef, %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif ]
+  %.162 = call i8* @PyErr_Occurred()
+  %.163 = icmp eq i8* %.162, null
+  br i1 %.163, label %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif, label %arg2.err, !prof !5
+
+entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif: ; preds = %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif
+  %.167 = call i8* @PyEval_SaveThread()
+  store i64 0, i64* %.168, align 8
+  %.176 = call i32 @"_ZN8mainloop12mainloop$241E5ArrayIaLi1E1C7mutable7alignedE5ArrayIxLi1E1C7mutable7alignedE35bytearray$28uint8$2c$201d$2c$20C$29xxxxxx"(i64* nonnull %.168, { i8*, i32 }** undef, i8* undef, i8* %.43.fca.0.load, i8* %.43.fca.1.load, i64 %.43.fca.2.load, i64 %.43.fca.3.load, i8* %.43.fca.4.load, i64 %.43.fca.5.0.load, i64 %.43.fca.6.0.load, i8* %.54.fca.0.load, i8* %.54.fca.1.load, i64 %.54.fca.2.load, i64 %.54.fca.3.load, i64* %.54.fca.4.load, i64 %.54.fca.5.0.load, i64 %.54.fca.6.0.load, i8* %.71.fca.0.load, i8* %.71.fca.1.load, i64 %.71.fca.2.load, i64 %.71.fca.3.load, i8* %.71.fca.4.load, i64 %.71.fca.5.0.load, i64 %.71.fca.6.0.load, i64 %.78.0, i64 %.93.0, i64 %.108.0, i64 %.123.0, i64 %.138.0, i64 %.153.0)
+  %.186 = load i64, i64* %.168, align 8
+  call void @PyEval_RestoreThread(i8* %.167)
+  call void @numba_release_buffer([80 x i8]* nonnull %.60)
+  call void @NRT_decref(i8* %.43.fca.0.load)
+  call void @NRT_decref(i8* %.54.fca.0.load)
+  call void @NRT_decref(i8* %.71.fca.0.load)
+  %.197 = call i8* @PyLong_FromLongLong(i64 %.186)
+  ret i8* %.197
 }
 
 declare i32 @PyArg_UnpackTuple(i8*, i8*, i64, i64, ...) local_unnamed_addr
@@ -1387,265 +1151,45 @@ declare i32 @puts(i8* nocapture readonly) local_unnamed_addr #0
 
 declare void @PyErr_SetString(i8*, i8*) local_unnamed_addr
 
+declare i32 @NRT_adapt_ndarray_from_python(i8* nocapture, i8* nocapture) local_unnamed_addr
+
 declare i32 @numba_get_buffer(i8*, [80 x i8]*) local_unnamed_addr
 
 declare void @NRT_adapt_buffer_from_python([80 x i8]* nocapture, i8* nocapture) local_unnamed_addr
 
+declare i8* @PyNumber_Long(i8*) local_unnamed_addr
+
 declare void @numba_release_buffer([80 x i8]*) local_unnamed_addr
+
+declare i64 @PyLong_AsLongLong(i8*) local_unnamed_addr
+
+declare void @Py_DecRef(i8*) local_unnamed_addr
+
+declare i8* @PyErr_Occurred() local_unnamed_addr
 
 declare i8* @PyEval_SaveThread() local_unnamed_addr
 
 declare void @PyEval_RestoreThread(i8*) local_unnamed_addr
 
-declare void @Py_IncRef(i8*) local_unnamed_addr
+declare i8* @PyLong_FromLongLong(i64) local_unnamed_addr
 
-declare void @PyErr_Clear() local_unnamed_addr
+; Function Attrs: noinline norecurse nounwind
+define linkonce_odr void @NRT_incref(i8* %.1) local_unnamed_addr #1 {
+.3:
+  %.4 = icmp eq i8* %.1, null
+  br i1 %.4, label %.3.if, label %.3.endif, !prof !4
 
-declare void @numba_do_raise(i8*) local_unnamed_addr
+.3.if:                                            ; preds = %.3
+  ret void
 
-declare void @PyErr_SetNone(i8*) local_unnamed_addr
-
-; Function Attrs: noinline optnone uwtable
-define linkonce_odr i32 @printf(i8*, ...) local_unnamed_addr #1 comdat {
-  %2 = alloca i8*, align 8
-  %3 = alloca i32, align 4
-  %4 = alloca i8*, align 8
-  store i8* %0, i8** %2, align 8
-  %5 = bitcast i8** %4 to i8*
-  call void @llvm.va_start(i8* %5)
-  %6 = load i8*, i8** %4, align 8
-  %7 = load i8*, i8** %2, align 8
-  %8 = call { i8* }* @__acrt_iob_func(i32 1)
-  %9 = call i32 @_vfprintf_l({ i8* }* %8, i8* %7, %struct.__crt_locale_pointers* null, i8* %6)
-  store i32 %9, i32* %3, align 4
-  %10 = bitcast i8** %4 to i8*
-  call void @llvm.va_end(i8* %10)
-  %11 = load i32, i32* %3, align 4
-  ret i32 %11
+.3.endif:                                         ; preds = %.3
+  %.7 = bitcast i8* %.1 to i64*
+  %.4.i = atomicrmw add i64* %.7, i64 1 monotonic
+  ret void
 }
-
-; Function Attrs: nounwind
-declare noalias { i8* }* @fopen(i8* nocapture readonly, i8* nocapture readonly) local_unnamed_addr #2
-
-; Function Attrs: nounwind
-declare i64 @fread(i8* nocapture, i64, i64, { i8* }* nocapture) local_unnamed_addr #2
-
-; Function Attrs: nounwind readonly
-declare i32 @strncmp(i8* nocapture, i8* nocapture, i64) local_unnamed_addr #3
-
-; Function Attrs: nounwind
-declare i8* @strcpy(i8*, i8* nocapture readonly) local_unnamed_addr #2
-
-; Function Attrs: noinline optnone uwtable
-define linkonce_odr i32 @sprintf(i8*, i8*, ...) local_unnamed_addr #1 comdat {
-  %3 = alloca i8*, align 8
-  %4 = alloca i8*, align 8
-  %5 = alloca i32, align 4
-  %6 = alloca i8*, align 8
-  store i8* %1, i8** %3, align 8
-  store i8* %0, i8** %4, align 8
-  %7 = bitcast i8** %6 to i8*
-  call void @llvm.va_start(i8* %7)
-  %8 = load i8*, i8** %6, align 8
-  %9 = load i8*, i8** %3, align 8
-  %10 = load i8*, i8** %4, align 8
-  %11 = call i32 @_vsprintf_l(i8* %10, i8* %9, %struct.__crt_locale_pointers* null, i8* %8)
-  store i32 %11, i32* %5, align 4
-  %12 = bitcast i8** %6 to i8*
-  call void @llvm.va_end(i8* %12)
-  %13 = load i32, i32* %5, align 4
-  ret i32 %13
-}
-
-; Function Attrs: nounwind readonly
-declare i32 @strcmp(i8* nocapture, i8* nocapture) local_unnamed_addr #3
-
-; Function Attrs: nounwind
-declare i32 @fseek({ i8* }* nocapture, i32, i32) local_unnamed_addr #2
-
-; Function Attrs: noinline nounwind optnone uwtable
-define linkonce_odr i64 @"\01?TDateTime_TimeT@@YA_JN@Z"(double) local_unnamed_addr #4 {
-  %2 = alloca double, align 8
-  %3 = alloca i64, align 8
-  store double %0, double* %2, align 8
-  %4 = load double, double* %2, align 8
-  %5 = fsub double %4, 2.556900e+04
-  %6 = fmul double %5, 8.640000e+04
-  %7 = fptosi double %6 to i32
-  %8 = sext i32 %7 to i64
-  store i64 %8, i64* %3, align 8
-  %9 = load i64, i64* %3, align 8
-  ret i64 %9
-}
-
-; Function Attrs: noinline optnone uwtable
-define internal fastcc %struct.tm* @"\01?gmtime@@YAPEAUtm@@QEB_J@Z"(i64*) unnamed_addr #1 {
-  %2 = alloca i64*, align 8
-  store i64* %0, i64** %2, align 8
-  %3 = load i64*, i64** %2, align 8
-  %4 = call %struct.tm* @_gmtime64(i64* %3)
-  ret %struct.tm* %4
-}
-
-declare i8* @asctime(%struct.tm*) local_unnamed_addr #5
-
-; Function Attrs: nounwind
-declare noalias i8* @calloc(i64, i64) local_unnamed_addr #2
-
-; Function Attrs: nounwind
-declare void @free(i8* nocapture) local_unnamed_addr #2
-
-; Function Attrs: noinline optnone uwtable
-define linkonce_odr i32 @wprintf(i16*, ...) local_unnamed_addr #1 comdat {
-  %2 = alloca i16*, align 8
-  %3 = alloca i32, align 4
-  %4 = alloca i8*, align 8
-  store i16* %0, i16** %2, align 8
-  %5 = bitcast i8** %4 to i8*
-  call void @llvm.va_start(i8* %5)
-  %6 = load i8*, i8** %4, align 8
-  %7 = load i16*, i16** %2, align 8
-  %8 = call { i8* }* @__acrt_iob_func(i32 1)
-  %9 = call i32 @_vfwprintf_l({ i8* }* %8, i16* %7, %struct.__crt_locale_pointers* null, i8* %6)
-  store i32 %9, i32* %3, align 4
-  %10 = bitcast i8** %4 to i8*
-  call void @llvm.va_end(i8* %10)
-  %11 = load i32, i32* %3, align 4
-  ret i32 %11
-}
-
-; Function Attrs: nounwind
-declare i32 @ftell({ i8* }* nocapture) local_unnamed_addr #2
-
-; Function Attrs: nounwind
-declare i32 @fclose({ i8* }* nocapture) local_unnamed_addr #2
-
-declare i32 @_sopen_s(i32*, i8*, i32, i32, i32) local_unnamed_addr #5
-
-declare i64 @_lseeki64(i32, i64, i32) local_unnamed_addr #5
-
-declare i32 @_close(i32) local_unnamed_addr #5
-
-; Function Attrs: nounwind
-declare void @llvm.va_start(i8*) #0
-
-declare { i8* }* @__acrt_iob_func(i32) local_unnamed_addr #5
-
-; Function Attrs: noinline optnone uwtable
-define linkonce_odr i32 @_vfwprintf_l({ i8* }*, i16*, %struct.__crt_locale_pointers*, i8*) local_unnamed_addr #1 comdat {
-  %5 = alloca i8*, align 8
-  %6 = alloca %struct.__crt_locale_pointers*, align 8
-  %7 = alloca i16*, align 8
-  %8 = alloca { i8* }*, align 8
-  store i8* %3, i8** %5, align 8
-  store %struct.__crt_locale_pointers* %2, %struct.__crt_locale_pointers** %6, align 8
-  store i16* %1, i16** %7, align 8
-  store { i8* }* %0, { i8* }** %8, align 8
-  %9 = load i8*, i8** %5, align 8
-  %10 = load %struct.__crt_locale_pointers*, %struct.__crt_locale_pointers** %6, align 8
-  %11 = load i16*, i16** %7, align 8
-  %12 = load { i8* }*, { i8* }** %8, align 8
-  %13 = call i64* @__local_stdio_printf_options()
-  %14 = load i64, i64* %13, align 8
-  %15 = call i32 @__stdio_common_vfwprintf(i64 %14, { i8* }* %12, i16* %11, %struct.__crt_locale_pointers* %10, i8* %9)
-  ret i32 %15
-}
-
-; Function Attrs: nounwind
-declare void @llvm.va_end(i8*) #0
-
-; Function Attrs: noinline nounwind optnone uwtable
-define linkonce_odr i64* @__local_stdio_printf_options() local_unnamed_addr #4 comdat {
-  ret i64* @"\01?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA"
-}
-
-declare i32 @__stdio_common_vfwprintf(i64, { i8* }*, i16*, %struct.__crt_locale_pointers*, i8*) local_unnamed_addr #5
-
-declare %struct.tm* @_gmtime64(i64*) local_unnamed_addr #5
-
-; Function Attrs: noinline optnone uwtable
-define linkonce_odr i32 @_vsprintf_l(i8*, i8*, %struct.__crt_locale_pointers*, i8*) local_unnamed_addr #1 comdat {
-  %5 = alloca i8*, align 8
-  %6 = alloca %struct.__crt_locale_pointers*, align 8
-  %7 = alloca i8*, align 8
-  %8 = alloca i8*, align 8
-  store i8* %3, i8** %5, align 8
-  store %struct.__crt_locale_pointers* %2, %struct.__crt_locale_pointers** %6, align 8
-  store i8* %1, i8** %7, align 8
-  store i8* %0, i8** %8, align 8
-  %9 = load i8*, i8** %5, align 8
-  %10 = load %struct.__crt_locale_pointers*, %struct.__crt_locale_pointers** %6, align 8
-  %11 = load i8*, i8** %7, align 8
-  %12 = load i8*, i8** %8, align 8
-  %13 = call i32 @_vsnprintf_l(i8* %12, i64 -1, i8* %11, %struct.__crt_locale_pointers* %10, i8* %9)
-  ret i32 %13
-}
-
-; Function Attrs: noinline optnone uwtable
-define linkonce_odr i32 @_vsnprintf_l(i8*, i64, i8*, %struct.__crt_locale_pointers*, i8*) local_unnamed_addr #1 comdat {
-  %6 = alloca i8*, align 8
-  %7 = alloca %struct.__crt_locale_pointers*, align 8
-  %8 = alloca i8*, align 8
-  %9 = alloca i64, align 8
-  %10 = alloca i8*, align 8
-  %11 = alloca i32, align 4
-  store i8* %4, i8** %6, align 8
-  store %struct.__crt_locale_pointers* %3, %struct.__crt_locale_pointers** %7, align 8
-  store i8* %2, i8** %8, align 8
-  store i64 %1, i64* %9, align 8
-  store i8* %0, i8** %10, align 8
-  %12 = load i8*, i8** %6, align 8
-  %13 = load %struct.__crt_locale_pointers*, %struct.__crt_locale_pointers** %7, align 8
-  %14 = load i8*, i8** %8, align 8
-  %15 = load i64, i64* %9, align 8
-  %16 = load i8*, i8** %10, align 8
-  %17 = call i64* @__local_stdio_printf_options()
-  %18 = load i64, i64* %17, align 8
-  %19 = or i64 %18, 1
-  %20 = call i32 @__stdio_common_vsprintf(i64 %19, i8* %16, i64 %15, i8* %14, %struct.__crt_locale_pointers* %13, i8* %12)
-  store i32 %20, i32* %11, align 4
-  %21 = load i32, i32* %11, align 4
-  %22 = icmp slt i32 %21, 0
-  br i1 %22, label %23, label %24
-
-; <label>:23:                                     ; preds = %5
-  br label %26
-
-; <label>:24:                                     ; preds = %5
-  %25 = load i32, i32* %11, align 4
-  br label %26
-
-; <label>:26:                                     ; preds = %24, %23
-  %27 = phi i32 [ -1, %23 ], [ %25, %24 ]
-  ret i32 %27
-}
-
-declare i32 @__stdio_common_vsprintf(i64, i8*, i64, i8*, %struct.__crt_locale_pointers*, i8*) local_unnamed_addr #5
-
-; Function Attrs: noinline optnone uwtable
-define linkonce_odr i32 @_vfprintf_l({ i8* }*, i8*, %struct.__crt_locale_pointers*, i8*) local_unnamed_addr #1 comdat {
-  %5 = alloca i8*, align 8
-  %6 = alloca %struct.__crt_locale_pointers*, align 8
-  %7 = alloca i8*, align 8
-  %8 = alloca { i8* }*, align 8
-  store i8* %3, i8** %5, align 8
-  store %struct.__crt_locale_pointers* %2, %struct.__crt_locale_pointers** %6, align 8
-  store i8* %1, i8** %7, align 8
-  store { i8* }* %0, { i8* }** %8, align 8
-  %9 = load i8*, i8** %5, align 8
-  %10 = load %struct.__crt_locale_pointers*, %struct.__crt_locale_pointers** %6, align 8
-  %11 = load i8*, i8** %7, align 8
-  %12 = load { i8* }*, { i8* }** %8, align 8
-  %13 = call i64* @__local_stdio_printf_options()
-  %14 = load i64, i64* %13, align 8
-  %15 = call i32 @__stdio_common_vfprintf(i64 %14, { i8* }* %12, i8* %11, %struct.__crt_locale_pointers* %10, i8* %9)
-  ret i32 %15
-}
-
-declare i32 @__stdio_common_vfprintf(i64, { i8* }*, i8*, %struct.__crt_locale_pointers*, i8*) local_unnamed_addr #5
 
 ; Function Attrs: noinline
-define linkonce_odr void @NRT_decref(i8* %.1) local_unnamed_addr #6 {
+define linkonce_odr void @NRT_decref(i8* %.1) local_unnamed_addr #2 {
 .3:
   %.4 = icmp eq i8* %.1, null
   br i1 %.4, label %.3.if, label %.3.endif, !prof !4
@@ -1666,29 +1210,88 @@ define linkonce_odr void @NRT_decref(i8* %.1) local_unnamed_addr #6 {
 
 declare void @NRT_MemInfo_call_dtor(i8*) local_unnamed_addr
 
-; Function Attrs: argmemonly nounwind
-declare void @llvm.lifetime.start.p0i8(i64, i8* nocapture) #7
+; Function Attrs: noinline optnone uwtable
+define linkonce_odr i32 @printf(i8*, ...) local_unnamed_addr #3 comdat {
+  %2 = alloca i8*, align 8
+  %3 = alloca i32, align 4
+  %4 = alloca i8*, align 8
+  store i8* %0, i8** %2, align 8
+  %5 = bitcast i8** %4 to i8*
+  call void @llvm.va_start(i8* %5)
+  %6 = load i8*, i8** %4, align 8
+  %7 = load i8*, i8** %2, align 8
+  %8 = call { i8* }* @__acrt_iob_func(i32 1)
+  %9 = call i32 @_vfprintf_l({ i8* }* %8, i8* %7, %struct.__crt_locale_pointers.1.6* null, i8* %6)
+  store i32 %9, i32* %3, align 4
+  %10 = bitcast i8** %4 to i8*
+  call void @llvm.va_end(i8* %10)
+  %11 = load i32, i32* %3, align 4
+  ret i32 %11
+}
+
+; Function Attrs: nounwind
+declare noalias i8* @malloc(i64) local_unnamed_addr #4
 
 ; Function Attrs: argmemonly nounwind
-declare void @llvm.lifetime.end.p0i8(i64, i8* nocapture) #7
+declare void @llvm.memset.p0i8.i64(i8* nocapture writeonly, i8, i64, i32, i1) #5
 
-; Function Attrs: argmemonly nounwind
-declare void @llvm.memset.p0i8.i64(i8* nocapture writeonly, i8, i64, i32, i1) #7
+; Function Attrs: nounwind
+declare void @llvm.va_start(i8*) #0
+
+declare { i8* }* @__acrt_iob_func(i32) local_unnamed_addr #6
+
+; Function Attrs: noinline optnone uwtable
+define linkonce_odr i32 @_vfprintf_l({ i8* }*, i8*, %struct.__crt_locale_pointers.1.6*, i8*) local_unnamed_addr #3 comdat {
+  %5 = alloca i8*, align 8
+  %6 = alloca %struct.__crt_locale_pointers.1.6*, align 8
+  %7 = alloca i8*, align 8
+  %8 = alloca { i8* }*, align 8
+  store i8* %3, i8** %5, align 8
+  store %struct.__crt_locale_pointers.1.6* %2, %struct.__crt_locale_pointers.1.6** %6, align 8
+  store i8* %1, i8** %7, align 8
+  store { i8* }* %0, { i8* }** %8, align 8
+  %9 = load i8*, i8** %5, align 8
+  %10 = load %struct.__crt_locale_pointers.1.6*, %struct.__crt_locale_pointers.1.6** %6, align 8
+  %11 = load i8*, i8** %7, align 8
+  %12 = load { i8* }*, { i8* }** %8, align 8
+  %13 = call i64* @__local_stdio_printf_options()
+  %14 = load i64, i64* %13, align 8
+  %15 = call i32 @__stdio_common_vfprintf(i64 %14, { i8* }* %12, i8* %11, %struct.__crt_locale_pointers.1.6* %10, i8* %9)
+  ret i32 %15
+}
+
+; Function Attrs: nounwind
+declare void @llvm.va_end(i8*) #0
+
+; Function Attrs: noinline nounwind optnone uwtable
+define linkonce_odr i64* @__local_stdio_printf_options() local_unnamed_addr #7 comdat {
+  ret i64* @"\01?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA"
+}
+
+declare i32 @__stdio_common_vfprintf(i64, { i8* }*, i8*, %struct.__crt_locale_pointers.1.6*, i8*) local_unnamed_addr #6
+
+; Function Attrs: nounwind
+declare i64 @fread(i8* nocapture, i64, i64, { i8* }* nocapture) local_unnamed_addr #4
+
+; Function Attrs: nounwind
+declare noalias { i8* }* @fopen(i8* nocapture readonly, i8* nocapture readonly) local_unnamed_addr #4
+
+declare i32 @_fseeki64({ i8* }*, i64, i32) local_unnamed_addr #6
 
 ; Function Attrs: nounwind
 declare void @llvm.stackprotector(i8*, i8**) #0
 
 attributes #0 = { nounwind }
-attributes #1 = { noinline optnone uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
-attributes #2 = { nounwind "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
-attributes #3 = { nounwind readonly "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
-attributes #4 = { noinline nounwind optnone uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
-attributes #5 = { "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
-attributes #6 = { noinline }
-attributes #7 = { argmemonly nounwind }
+attributes #1 = { noinline norecurse nounwind }
+attributes #2 = { noinline }
+attributes #3 = { noinline optnone uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #4 = { nounwind "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #5 = { argmemonly nounwind }
+attributes #6 = { "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #7 = { noinline nounwind optnone uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
 
-!llvm.linker.options = !{!0}
-!llvm.ident = !{!1}
+!llvm.linker.options = !{!0, !0}
+!llvm.ident = !{!1, !1}
 !llvm.module.flags = !{!2, !3}
 
 !0 = !{!"/FAILIFMISMATCH:\22_CRT_STDIO_ISO_WIDE_SPECIFIERS=0\22"}

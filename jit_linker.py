@@ -20,7 +20,7 @@ def compile_library(context, asm, libname='compiled_module'):
     return library
 
 
-def link_global(name,do_get=True, type=nb.int64):
+def link_global(name, do_get=True, type=nb.int64):
     llvm_global_get = """
     @test = external global i64, align 8
     define i64 @test_get() #0 {
@@ -45,6 +45,7 @@ def link_global(name,do_get=True, type=nb.int64):
     @nb.extending.intrinsic
     def BytesofRecords_get(typingctx):
         sig = nb.typing.signature(nb.int64)
+
         def codegen(context, builder, sig, args):
             library = compile_library(
                 context, llvm_global_get.replace("test", name))
@@ -53,13 +54,16 @@ def link_global(name,do_get=True, type=nb.int64):
             restype = context.get_argument_type(sig.return_type)
             fnty = ir.FunctionType(restype, argtypes)
             fn = nb.cgutils.insert_pure_function(
-                    builder.module, fnty, name=name+"_get")
-            retval = context.call_external_function(builder, fn, sig.args, args)
+                builder.module, fnty, name=name + "_get")
+            retval = context.call_external_function(
+                builder, fn, sig.args, args)
             print(fn)
             return retval
         return sig, codegen
-    def BytesofRecords_set(typingctx,param1):
-        sig = nb.typing.signature(nb.int64,param1)
+
+    def BytesofRecords_set(typingctx, param1):
+        sig = nb.typing.signature(nb.int64, param1)
+
         def codegen(context, builder, sig, args):
             code = llvm_global_set.replace("test", name)
             library = compile_library(
@@ -69,8 +73,9 @@ def link_global(name,do_get=True, type=nb.int64):
             restype = context.get_argument_type(sig.return_type)
             fnty = ir.FunctionType(restype, argtypes)
             fn = nb.cgutils.insert_pure_function(
-                    builder.module, fnty, name=name+"_set")
-            retval = context.call_external_function(builder, fn, sig.args, args)
+                builder.module, fnty, name=name + "_set")
+            retval = context.call_external_function(
+                builder, fn, sig.args, args)
             print(fn)
             return retval
         return sig, codegen
@@ -78,6 +83,7 @@ def link_global(name,do_get=True, type=nb.int64):
         return BytesofRecords_get
     else:
         return BytesofRecords_set
+
 
 @nb.extending.intrinsic
 def link_libs(typingctx):
@@ -100,18 +106,55 @@ def link_libs(typingctx):
 
     return sig, codegen
 
-def link_function(func_name = "PARSE_TimeTagFileHeader"):
+
+def link_function(func_name="", param=1):
+    def codegen(context, builder, sig, args):
+        argtypes = [context.get_argument_type(aty) for aty in sig.args]
+        restype = context.get_argument_type(sig.return_type)
+        fnty = ir.FunctionType(restype, argtypes)
+        fn = nb.cgutils.insert_pure_function(
+            builder.module, fnty, name=func_name)
+        retval = context.call_external_function(builder, fn, sig.args, args)
+        print(fn)
+        return retval
+
     @nb.extending.intrinsic
-    def PARSE_TimeTagFileHeader(typingctx, pram1):
-        sig = nb.typing.signature(nb.int32, pram1)
-        def codegen(context, builder, sig, args):
-            argtypes = [context.get_argument_type(aty) for aty in sig.args]
-            restype = context.get_argument_type(sig.return_type)
-            fnty = ir.FunctionType(restype, argtypes)
-            fn = nb.cgutils.insert_pure_function(
-                builder.module, fnty, name=func_name)
-            retval = context.call_external_function(builder, fn, sig.args, args)
-            print(fn)
-            return retval
+    def EIGHTPARAM(typingctx, a1, a2, a3, a4, a5, a6, a7):
+        sig = nb.typing.signature(nb.int32, a1, a2, a3, a4, a5, a6, a7)
         return sig, codegen
-    return PARSE_TimeTagFileHeader
+
+    @nb.extending.intrinsic
+    def THREEPARAM(typingctx, a1, a2, a3):
+        sig = nb.typing.signature(nb.int32, a1, a2, a3)
+        return sig, codegen
+
+    @nb.extending.intrinsic
+    def ONEPARAM(typingctx, a1):
+        sig = nb.typing.signature(nb.int32, a1)
+        return sig, codegen
+    if (param == 1):
+        return ONEPARAM
+    elif (param == 7):
+        return EIGHTPARAM
+    elif (param == 3):
+        return THREEPARAM
+
+
+def link_i64_function(func_name="", param=1):
+    def codegen(context, builder, sig, args):
+        argtypes = [context.get_argument_type(aty) for aty in sig.args]
+        restype = context.get_argument_type(sig.return_type)
+        fnty = ir.FunctionType(restype, argtypes)
+        fn = nb.cgutils.insert_pure_function(
+            builder.module, fnty, name=func_name)
+        retval = context.call_external_function(builder, fn, sig.args, args)
+        print(fn)
+        return retval
+
+    @nb.extending.intrinsic
+    def ONEPARAM(typingctx, a1):
+        print(a1)
+        sig = nb.typing.signature(nb.int64, a1)
+        return sig, codegen
+    if (param == 1):
+        return ONEPARAM
