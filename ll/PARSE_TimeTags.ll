@@ -30,17 +30,17 @@ $"\01??_C@_0BO@LNBDDACF@?6?5?$FLERROR?$FN?5Illegal?5Chan?3?5?5?$CF1u?6?$AA@" = c
 
 $"\01??_C@_0CI@OJHAHNJJ@?6?5?$FLERROR?$FN?6Illegal?5virtual_channe@" = comdat any
 
+$"\01??_C@_0CA@KHNGPAIJ@?6reading?5to?5?$CFlld?5?0?5?$FL?$CFlld?5?$CFlld?5?$FN?$AA@" = comdat any
+
 $"\01??_C@_0BB@NIGCBLED@?6TOTAL?5SLOTS?3?5?$CFd?$AA@" = comdat any
 
 $"\01??_C@_0CF@BDINJJIB@?6?5?$FLERROR?$FNMemalloc?5failed?0?5aborti@" = comdat any
 
 $"\01??_C@_0BG@NJEFHGP@?6Init?5ring?5buffer?5?$CFd?4?$AA@" = comdat any
 
-$"\01??_C@_0BM@KDJELMIO@?6Buffer?5created?0?5empty?3?5?$CFd?6?$AA@" = comdat any
-
 $"\01??_C@_0BM@PJHDCAIH@?6?5?$FLERROR?$FNCorrupted?5slot?$CB?$CB?$CB?$CB?$AA@" = comdat any
 
-$"\01??_C@_0CE@MNMCEKMH@?6POOL?5is?5empty?0?5read?5form?5file?50@" = comdat any
+$"\01??_C@_0CE@OPKBMAFE@?6POOL?5is?5empty?0?5read?5from?5file?50@" = comdat any
 
 $"\01??_C@_0CM@LHOLBNIE@?6?6Thread?5assigned?5to?5file?5part?5?$FL@" = comdat any
 
@@ -74,14 +74,14 @@ $"\01?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA" = comdat any
 @VSLOT_timetag = global %struct.circular_buf_t* null, align 8
 @"\01??_C@_0BO@LNBDDACF@?6?5?$FLERROR?$FN?5Illegal?5Chan?3?5?5?$CF1u?6?$AA@" = linkonce_odr unnamed_addr constant [30 x i8] c"\0A [ERROR] Illegal Chan:  %1u\0A\00", comdat, align 1
 @"\01??_C@_0CI@OJHAHNJJ@?6?5?$FLERROR?$FN?6Illegal?5virtual_channe@" = linkonce_odr unnamed_addr constant [40 x i8] c"\0A [ERROR]\0AIllegal virtual_channel:  %1u\00", comdat, align 1
+@"\01??_C@_0CA@KHNGPAIJ@?6reading?5to?5?$CFlld?5?0?5?$FL?$CFlld?5?$CFlld?5?$FN?$AA@" = linkonce_odr unnamed_addr constant [32 x i8] c"\0Areading to %lld , [%lld %lld ]\00", comdat, align 1
 @"\01?overflowcorrection@?1??pop_signal_from_file@@9@4_JA" = internal global i64 0, align 8
 @"\01?syncsbeforenow@?1??pop_signal_from_file@@9@4_JA" = internal global i64 0, align 8
 @"\01??_C@_0BB@NIGCBLED@?6TOTAL?5SLOTS?3?5?$CFd?$AA@" = linkonce_odr unnamed_addr constant [17 x i8] c"\0ATOTAL SLOTS: %d\00", comdat, align 1
 @"\01??_C@_0CF@BDINJJIB@?6?5?$FLERROR?$FNMemalloc?5failed?0?5aborti@" = linkonce_odr unnamed_addr constant [37 x i8] c"\0A [ERROR]Memalloc failed, aborting.\0A\00", comdat, align 1
 @"\01??_C@_0BG@NJEFHGP@?6Init?5ring?5buffer?5?$CFd?4?$AA@" = linkonce_odr unnamed_addr constant [22 x i8] c"\0AInit ring buffer %d.\00", comdat, align 1
-@"\01??_C@_0BM@KDJELMIO@?6Buffer?5created?0?5empty?3?5?$CFd?6?$AA@" = linkonce_odr unnamed_addr constant [28 x i8] c"\0ABuffer created, empty: %d\0A\00", comdat, align 1
 @"\01??_C@_0BM@PJHDCAIH@?6?5?$FLERROR?$FNCorrupted?5slot?$CB?$CB?$CB?$CB?$AA@" = linkonce_odr unnamed_addr constant [28 x i8] c"\0A [ERROR]Corrupted slot!!!!\00", comdat, align 1
-@"\01??_C@_0CE@MNMCEKMH@?6POOL?5is?5empty?0?5read?5form?5file?50@" = linkonce_odr unnamed_addr constant [36 x i8] c"\0APOOL is empty, read form file 0. \0A\00", comdat, align 1
+@"\01??_C@_0CE@OPKBMAFE@?6POOL?5is?5empty?0?5read?5from?5file?50@" = linkonce_odr unnamed_addr constant [36 x i8] c"\0APOOL is empty, read from file 0. \0A\00", comdat, align 1
 @"\01??_C@_0CM@LHOLBNIE@?6?6Thread?5assigned?5to?5file?5part?5?$FL@" = linkonce_odr unnamed_addr constant [44 x i8] c"\0A\0AThread assigned to file part [%lld,%lld]\0A\00", comdat, align 1
 @"\01??_C@_02JDPG@rb?$AA@" = linkonce_odr unnamed_addr constant [3 x i8] c"rb\00", comdat, align 1
 @"\01??_C@_0DE@PLFGPKJO@?6?5?$FLERROR?$FNTime?9tag?5file?5cannot?5be@" = linkonce_odr unnamed_addr constant [52 x i8] c"\0A [ERROR]Time-tag file cannot be opened, aborting.\0A\00", comdat, align 1
@@ -862,34 +862,53 @@ define i32 @read_next_minibatch() #1 {
   %3 = load i32, i32* @READER_BytesofRecords, align 4
   %4 = mul nsw i32 1000, %3
   store i32 %4, i32* %2, align 4
-  %5 = load %struct._iobuf*, %struct._iobuf** @"\01?READER_fpin@@3PEAU_iobuf@@EA", align 8
+  %5 = load i64, i64* @READER_batchend_pos_in_file, align 8
   %6 = load i32, i32* %2, align 4
   %7 = sext i32 %6 to i64
-  %8 = load i8*, i8** @READER_buffer, align 8
-  %9 = call i64 @fread(i8* %8, i64 1, i64 %7, %struct._iobuf* %5)
-  store i64 %9, i64* @READER_batch_actualread_length, align 8
-  %10 = load i64, i64* @READER_batch_actualread_length, align 8
-  %11 = load i64, i64* @READER_batchend_pos_in_file, align 8
-  %12 = add nsw i64 %11, %10
-  store i64 %12, i64* @READER_batchend_pos_in_file, align 8
-  store i64 0, i64* @READER_next_RecID_relativeinbatch, align 8
-  %13 = load i64, i64* @READER_batch_actualread_length, align 8
-  %14 = load i32, i32* %2, align 4
-  %15 = sext i32 %14 to i64
-  %16 = icmp slt i64 %13, %15
-  br i1 %16, label %17, label %18
+  %8 = add nsw i64 %5, %7
+  %9 = load i64, i64* @READER_fendpoint, align 8
+  %10 = icmp sge i64 %8, %9
+  br i1 %10, label %11, label %17
+
+; <label>:11:                                     ; preds = %0
+  %12 = load i64, i64* @READER_fendpoint, align 8
+  %13 = load i64, i64* @READER_fseekpoint, align 8
+  %14 = load i64, i64* @READER_batchend_pos_in_file, align 8
+  %15 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([32 x i8], [32 x i8]* @"\01??_C@_0CA@KHNGPAIJ@?6reading?5to?5?$CFlld?5?0?5?$FL?$CFlld?5?$CFlld?5?$FN?$AA@", i32 0, i32 0), i64 %14, i64 %13, i64 %12)
+  %16 = sext i32 %15 to i64
+  store i64 %16, i64* @order_gurantee2, align 8
+  store i32 -1, i32* %1, align 4
+  br label %32
 
 ; <label>:17:                                     ; preds = %0
+  %18 = load %struct._iobuf*, %struct._iobuf** @"\01?READER_fpin@@3PEAU_iobuf@@EA", align 8
+  %19 = load i32, i32* %2, align 4
+  %20 = sext i32 %19 to i64
+  %21 = load i8*, i8** @READER_buffer, align 8
+  %22 = call i64 @fread(i8* %21, i64 1, i64 %20, %struct._iobuf* %18)
+  store i64 %22, i64* @READER_batch_actualread_length, align 8
+  %23 = load i64, i64* @READER_batch_actualread_length, align 8
+  %24 = load i64, i64* @READER_batchend_pos_in_file, align 8
+  %25 = add nsw i64 %24, %23
+  store i64 %25, i64* @READER_batchend_pos_in_file, align 8
+  store i64 0, i64* @READER_next_RecID_relativeinbatch, align 8
+  %26 = load i64, i64* @READER_batch_actualread_length, align 8
+  %27 = load i32, i32* %2, align 4
+  %28 = sext i32 %27 to i64
+  %29 = icmp slt i64 %26, %28
+  br i1 %29, label %30, label %31
+
+; <label>:30:                                     ; preds = %17
   store i32 -1, i32* %1, align 4
-  br label %19
+  br label %32
 
-; <label>:18:                                     ; preds = %0
+; <label>:31:                                     ; preds = %17
   store i32 0, i32* %1, align 4
-  br label %19
+  br label %32
 
-; <label>:19:                                     ; preds = %18, %17
-  %20 = load i32, i32* %1, align 4
-  ret i32 %20
+; <label>:32:                                     ; preds = %31, %30, %11
+  %33 = load i32, i32* %1, align 4
+  ret i32 %33
 }
 
 declare i64 @fread(i8*, i64, i64, %struct._iobuf*) #4
@@ -921,246 +940,265 @@ define i64 @pop_signal_from_file(i8*) #1 {
   %23 = mul nsw i64 %20, %22
   %24 = load i64, i64* @READER_batch_actualread_length, align 8
   %25 = icmp sge i64 %23, %24
-  br i1 %25, label %26, label %49
+  br i1 %25, label %26, label %62
 
 ; <label>:26:                                     ; preds = %1
   %27 = load i32, i32* @READER_BytesofRecords, align 4
   %28 = mul nsw i32 1000, %27
   store i32 %28, i32* %12, align 4
-  %29 = load %struct._iobuf*, %struct._iobuf** @"\01?READER_fpin@@3PEAU_iobuf@@EA", align 8
+  %29 = load i64, i64* @READER_batchend_pos_in_file, align 8
   %30 = load i32, i32* %12, align 4
   %31 = sext i32 %30 to i64
-  %32 = load i8*, i8** @READER_buffer, align 8
-  %33 = call i64 @fread(i8* %32, i64 1, i64 %31, %struct._iobuf* %29)
-  store i64 %33, i64* @READER_batch_actualread_length, align 8
-  %34 = load i64, i64* @READER_batch_actualread_length, align 8
-  %35 = load i64, i64* @READER_batchend_pos_in_file, align 8
-  %36 = add nsw i64 %35, %34
-  store i64 %36, i64* @READER_batchend_pos_in_file, align 8
-  store i64 0, i64* @READER_next_RecID_relativeinbatch, align 8
-  %37 = load i64, i64* @READER_batch_actualread_length, align 8
-  %38 = load i32, i32* %12, align 4
-  %39 = sext i32 %38 to i64
-  %40 = icmp slt i64 %37, %39
-  br i1 %40, label %41, label %42
+  %32 = add nsw i64 %29, %31
+  %33 = load i64, i64* @READER_fendpoint, align 8
+  %34 = icmp sge i64 %32, %33
+  br i1 %34, label %35, label %41
+
+; <label>:35:                                     ; preds = %26
+  %36 = load i64, i64* @READER_fendpoint, align 8
+  %37 = load i64, i64* @READER_fseekpoint, align 8
+  %38 = load i64, i64* @READER_batchend_pos_in_file, align 8
+  %39 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([32 x i8], [32 x i8]* @"\01??_C@_0CA@KHNGPAIJ@?6reading?5to?5?$CFlld?5?0?5?$FL?$CFlld?5?$CFlld?5?$FN?$AA@", i32 0, i32 0), i64 %38, i64 %37, i64 %36)
+  %40 = sext i32 %39 to i64
+  store i64 %40, i64* @order_gurantee2, align 8
+  store i32 -1, i32* %11, align 4
+  br label %56
 
 ; <label>:41:                                     ; preds = %26
+  %42 = load %struct._iobuf*, %struct._iobuf** @"\01?READER_fpin@@3PEAU_iobuf@@EA", align 8
+  %43 = load i32, i32* %12, align 4
+  %44 = sext i32 %43 to i64
+  %45 = load i8*, i8** @READER_buffer, align 8
+  %46 = call i64 @fread(i8* %45, i64 1, i64 %44, %struct._iobuf* %42)
+  store i64 %46, i64* @READER_batch_actualread_length, align 8
+  %47 = load i64, i64* @READER_batch_actualread_length, align 8
+  %48 = load i64, i64* @READER_batchend_pos_in_file, align 8
+  %49 = add nsw i64 %48, %47
+  store i64 %49, i64* @READER_batchend_pos_in_file, align 8
+  store i64 0, i64* @READER_next_RecID_relativeinbatch, align 8
+  %50 = load i64, i64* @READER_batch_actualread_length, align 8
+  %51 = load i32, i32* %12, align 4
+  %52 = sext i32 %51 to i64
+  %53 = icmp slt i64 %50, %52
+  br i1 %53, label %54, label %55
+
+; <label>:54:                                     ; preds = %41
   store i32 -1, i32* %11, align 4
-  br label %43
+  br label %56
 
-; <label>:42:                                     ; preds = %26
+; <label>:55:                                     ; preds = %41
   store i32 0, i32* %11, align 4
-  br label %43
+  br label %56
 
-; <label>:43:                                     ; preds = %41, %42
-  %44 = load i32, i32* %11, align 4
-  store i32 %44, i32* %15, align 4
-  %45 = load i32, i32* %15, align 4
-  %46 = icmp slt i32 %45, 0
-  br i1 %46, label %47, label %48
+; <label>:56:                                     ; preds = %35, %54, %55
+  %57 = load i32, i32* %11, align 4
+  store i32 %57, i32* %15, align 4
+  %58 = load i32, i32* %15, align 4
+  %59 = icmp slt i32 %58, 0
+  br i1 %59, label %60, label %61
 
-; <label>:47:                                     ; preds = %43
+; <label>:60:                                     ; preds = %56
   store i64 9223372036854775807, i64* %13, align 8
-  br label %176
+  br label %189
 
-; <label>:48:                                     ; preds = %43
-  br label %49
+; <label>:61:                                     ; preds = %56
+  br label %62
 
-; <label>:49:                                     ; preds = %48, %1
-  br label %50
+; <label>:62:                                     ; preds = %61, %1
+  br label %63
 
-; <label>:50:                                     ; preds = %49, %171
+; <label>:63:                                     ; preds = %62, %184
   store i64 9223372036854775807, i64* %16, align 8
   store i8 0, i8* %17, align 1
-  %51 = load i8*, i8** @READER_buffer, align 8
-  %52 = bitcast i8* %51 to i32*
-  %53 = load i64, i64* @READER_next_RecID_relativeinbatch, align 8
-  %54 = getelementptr inbounds i32, i32* %52, i64 %53
-  %55 = load i32, i32* %54, align 4
-  store i32 %55, i32* %18, align 4
+  %64 = load i8*, i8** @READER_buffer, align 8
+  %65 = bitcast i8* %64 to i32*
+  %66 = load i64, i64* @READER_next_RecID_relativeinbatch, align 8
+  %67 = getelementptr inbounds i32, i32* %65, i64 %66
+  %68 = load i32, i32* %67, align 4
+  store i32 %68, i32* %18, align 4
   store i32 66052, i32* %19, align 4
-  %56 = load i32, i32* %18, align 4
+  %69 = load i32, i32* %18, align 4
   store i64* @"\01?overflowcorrection@?1??pop_signal_from_file@@9@4_JA", i64** %2, align 8
   store i8* %17, i8** %3, align 8
   store i64* %16, i64** %4, align 8
   store i32 1, i32* %5, align 4
-  store i32 %56, i32* %6, align 4
+  store i32 %69, i32* %6, align 4
   store i32 33552000, i32* %8, align 4
   store i32 33554432, i32* %9, align 4
-  %57 = load i32, i32* %6, align 4
-  %58 = bitcast %union.anon.0* %10 to i32*
-  store i32 %57, i32* %58, align 4
-  %59 = bitcast %union.anon.0* %10 to %struct.anon.1*
-  %60 = bitcast %struct.anon.1* %59 to i32*
-  %61 = load i32, i32* %60, align 4
-  %62 = lshr i32 %61, 31
-  %63 = icmp eq i32 %62, 1
-  br i1 %63, label %64, label %145
+  %70 = load i32, i32* %6, align 4
+  %71 = bitcast %union.anon.0* %10 to i32*
+  store i32 %70, i32* %71, align 4
+  %72 = bitcast %union.anon.0* %10 to %struct.anon.1*
+  %73 = bitcast %struct.anon.1* %72 to i32*
+  %74 = load i32, i32* %73, align 4
+  %75 = lshr i32 %74, 31
+  %76 = icmp eq i32 %75, 1
+  br i1 %76, label %77, label %158
 
-; <label>:64:                                     ; preds = %50
-  %65 = bitcast %union.anon.0* %10 to %struct.anon.1*
-  %66 = bitcast %struct.anon.1* %65 to i32*
-  %67 = load i32, i32* %66, align 4
-  %68 = lshr i32 %67, 25
-  %69 = and i32 %68, 63
-  %70 = icmp eq i32 %69, 63
-  br i1 %70, label %71, label %100
+; <label>:77:                                     ; preds = %63
+  %78 = bitcast %union.anon.0* %10 to %struct.anon.1*
+  %79 = bitcast %struct.anon.1* %78 to i32*
+  %80 = load i32, i32* %79, align 4
+  %81 = lshr i32 %80, 25
+  %82 = and i32 %81, 63
+  %83 = icmp eq i32 %82, 63
+  br i1 %83, label %84, label %113
 
-; <label>:71:                                     ; preds = %64
-  %72 = load i32, i32* %5, align 4
-  %73 = icmp eq i32 %72, 1
-  br i1 %73, label %74, label %78
+; <label>:84:                                     ; preds = %77
+  %85 = load i32, i32* %5, align 4
+  %86 = icmp eq i32 %85, 1
+  br i1 %86, label %87, label %91
 
-; <label>:74:                                     ; preds = %71
-  %75 = load i64*, i64** %2, align 8
-  %76 = load i64, i64* %75, align 8
-  %77 = add i64 %76, 33552000
-  store i64 %77, i64* %75, align 8
-  br label %99
+; <label>:87:                                     ; preds = %84
+  %88 = load i64*, i64** %2, align 8
+  %89 = load i64, i64* %88, align 8
+  %90 = add i64 %89, 33552000
+  store i64 %90, i64* %88, align 8
+  br label %112
 
-; <label>:78:                                     ; preds = %71
-  %79 = bitcast %union.anon.0* %10 to %struct.anon.1*
-  %80 = bitcast %struct.anon.1* %79 to i32*
-  %81 = load i32, i32* %80, align 4
-  %82 = and i32 %81, 33554431
-  %83 = icmp eq i32 %82, 0
-  br i1 %83, label %84, label %88
+; <label>:91:                                     ; preds = %84
+  %92 = bitcast %union.anon.0* %10 to %struct.anon.1*
+  %93 = bitcast %struct.anon.1* %92 to i32*
+  %94 = load i32, i32* %93, align 4
+  %95 = and i32 %94, 33554431
+  %96 = icmp eq i32 %95, 0
+  br i1 %96, label %97, label %101
 
-; <label>:84:                                     ; preds = %78
-  %85 = load i64*, i64** %2, align 8
-  %86 = load i64, i64* %85, align 8
-  %87 = add i64 %86, 33554432
-  store i64 %87, i64* %85, align 8
-  br label %98
+; <label>:97:                                     ; preds = %91
+  %98 = load i64*, i64** %2, align 8
+  %99 = load i64, i64* %98, align 8
+  %100 = add i64 %99, 33554432
+  store i64 %100, i64* %98, align 8
+  br label %111
 
-; <label>:88:                                     ; preds = %78
-  %89 = bitcast %union.anon.0* %10 to %struct.anon.1*
-  %90 = bitcast %struct.anon.1* %89 to i32*
-  %91 = load i32, i32* %90, align 4
-  %92 = and i32 %91, 33554431
-  %93 = zext i32 %92 to i64
-  %94 = mul i64 33554432, %93
-  %95 = load i64*, i64** %2, align 8
-  %96 = load i64, i64* %95, align 8
-  %97 = add i64 %96, %94
-  store i64 %97, i64* %95, align 8
-  br label %98
+; <label>:101:                                    ; preds = %91
+  %102 = bitcast %union.anon.0* %10 to %struct.anon.1*
+  %103 = bitcast %struct.anon.1* %102 to i32*
+  %104 = load i32, i32* %103, align 4
+  %105 = and i32 %104, 33554431
+  %106 = zext i32 %105 to i64
+  %107 = mul i64 33554432, %106
+  %108 = load i64*, i64** %2, align 8
+  %109 = load i64, i64* %108, align 8
+  %110 = add i64 %109, %107
+  store i64 %110, i64* %108, align 8
+  br label %111
 
-; <label>:98:                                     ; preds = %88, %84
-  br label %99
+; <label>:111:                                    ; preds = %101, %97
+  br label %112
 
-; <label>:99:                                     ; preds = %98, %74
-  br label %100
+; <label>:112:                                    ; preds = %111, %87
+  br label %113
 
-; <label>:100:                                    ; preds = %99, %64
-  %101 = bitcast %union.anon.0* %10 to %struct.anon.1*
-  %102 = bitcast %struct.anon.1* %101 to i32*
-  %103 = load i32, i32* %102, align 4
-  %104 = lshr i32 %103, 25
-  %105 = and i32 %104, 63
-  %106 = icmp sge i32 %105, 1
-  br i1 %106, label %107, label %123
+; <label>:113:                                    ; preds = %112, %77
+  %114 = bitcast %union.anon.0* %10 to %struct.anon.1*
+  %115 = bitcast %struct.anon.1* %114 to i32*
+  %116 = load i32, i32* %115, align 4
+  %117 = lshr i32 %116, 25
+  %118 = and i32 %117, 63
+  %119 = icmp sge i32 %118, 1
+  br i1 %119, label %120, label %136
 
-; <label>:107:                                    ; preds = %100
-  %108 = bitcast %union.anon.0* %10 to %struct.anon.1*
-  %109 = bitcast %struct.anon.1* %108 to i32*
-  %110 = load i32, i32* %109, align 4
-  %111 = lshr i32 %110, 25
-  %112 = and i32 %111, 63
-  %113 = icmp sle i32 %112, 15
-  br i1 %113, label %114, label %123
+; <label>:120:                                    ; preds = %113
+  %121 = bitcast %union.anon.0* %10 to %struct.anon.1*
+  %122 = bitcast %struct.anon.1* %121 to i32*
+  %123 = load i32, i32* %122, align 4
+  %124 = lshr i32 %123, 25
+  %125 = and i32 %124, 63
+  %126 = icmp sle i32 %125, 15
+  br i1 %126, label %127, label %136
 
-; <label>:114:                                    ; preds = %107
-  %115 = load i64*, i64** %2, align 8
-  %116 = load i64, i64* %115, align 8
-  %117 = bitcast %union.anon.0* %10 to %struct.anon.1*
-  %118 = bitcast %struct.anon.1* %117 to i32*
-  %119 = load i32, i32* %118, align 4
-  %120 = and i32 %119, 33554431
-  %121 = zext i32 %120 to i64
-  %122 = add nsw i64 %116, %121
-  store i64 %122, i64* %7, align 8
-  br label %123
+; <label>:127:                                    ; preds = %120
+  %128 = load i64*, i64** %2, align 8
+  %129 = load i64, i64* %128, align 8
+  %130 = bitcast %union.anon.0* %10 to %struct.anon.1*
+  %131 = bitcast %struct.anon.1* %130 to i32*
+  %132 = load i32, i32* %131, align 4
+  %133 = and i32 %132, 33554431
+  %134 = zext i32 %133 to i64
+  %135 = add nsw i64 %129, %134
+  store i64 %135, i64* %7, align 8
+  br label %136
 
-; <label>:123:                                    ; preds = %114, %107, %100
-  %124 = bitcast %union.anon.0* %10 to %struct.anon.1*
-  %125 = bitcast %struct.anon.1* %124 to i32*
-  %126 = load i32, i32* %125, align 4
-  %127 = lshr i32 %126, 25
-  %128 = and i32 %127, 63
-  %129 = icmp eq i32 %128, 0
-  br i1 %129, label %130, label %144
+; <label>:136:                                    ; preds = %127, %120, %113
+  %137 = bitcast %union.anon.0* %10 to %struct.anon.1*
+  %138 = bitcast %struct.anon.1* %137 to i32*
+  %139 = load i32, i32* %138, align 4
+  %140 = lshr i32 %139, 25
+  %141 = and i32 %140, 63
+  %142 = icmp eq i32 %141, 0
+  br i1 %142, label %143, label %157
 
-; <label>:130:                                    ; preds = %123
-  %131 = load i64*, i64** %2, align 8
-  %132 = load i64, i64* %131, align 8
-  %133 = bitcast %union.anon.0* %10 to %struct.anon.1*
-  %134 = bitcast %struct.anon.1* %133 to i32*
-  %135 = load i32, i32* %134, align 4
-  %136 = and i32 %135, 33554431
-  %137 = zext i32 %136 to i64
-  %138 = add nsw i64 %132, %137
-  store i64 %138, i64* %7, align 8
-  %139 = load i64, i64* %7, align 8
-  %140 = load i64, i64* @READER_TTRes_pspr, align 8
-  %141 = mul nsw i64 %139, %140
-  %142 = load i64*, i64** %4, align 8
-  store i64 %141, i64* %142, align 8
-  %143 = load i8*, i8** %3, align 8
-  store i8 0, i8* %143, align 1
-  br label %144
+; <label>:143:                                    ; preds = %136
+  %144 = load i64*, i64** %2, align 8
+  %145 = load i64, i64* %144, align 8
+  %146 = bitcast %union.anon.0* %10 to %struct.anon.1*
+  %147 = bitcast %struct.anon.1* %146 to i32*
+  %148 = load i32, i32* %147, align 4
+  %149 = and i32 %148, 33554431
+  %150 = zext i32 %149 to i64
+  %151 = add nsw i64 %145, %150
+  store i64 %151, i64* %7, align 8
+  %152 = load i64, i64* %7, align 8
+  %153 = load i64, i64* @READER_TTRes_pspr, align 8
+  %154 = mul nsw i64 %152, %153
+  %155 = load i64*, i64** %4, align 8
+  store i64 %154, i64* %155, align 8
+  %156 = load i8*, i8** %3, align 8
+  store i8 0, i8* %156, align 1
+  br label %157
 
-; <label>:144:                                    ; preds = %130, %123
-  br label %166
+; <label>:157:                                    ; preds = %143, %136
+  br label %179
 
-; <label>:145:                                    ; preds = %50
-  %146 = load i64*, i64** %2, align 8
-  %147 = load i64, i64* %146, align 8
-  %148 = bitcast %union.anon.0* %10 to %struct.anon.1*
-  %149 = bitcast %struct.anon.1* %148 to i32*
-  %150 = load i32, i32* %149, align 4
-  %151 = and i32 %150, 33554431
-  %152 = zext i32 %151 to i64
-  %153 = add nsw i64 %147, %152
-  store i64 %153, i64* %7, align 8
-  %154 = load i64, i64* %7, align 8
-  %155 = load i64, i64* @READER_TTRes_pspr, align 8
-  %156 = mul nsw i64 %154, %155
-  %157 = load i64*, i64** %4, align 8
-  store i64 %156, i64* %157, align 8
-  %158 = bitcast %union.anon.0* %10 to %struct.anon.1*
-  %159 = bitcast %struct.anon.1* %158 to i32*
-  %160 = load i32, i32* %159, align 4
-  %161 = lshr i32 %160, 25
-  %162 = and i32 %161, 63
-  %163 = add nsw i32 %162, 1
-  %164 = trunc i32 %163 to i8
-  %165 = load i8*, i8** %3, align 8
-  store i8 %164, i8* %165, align 1
-  br label %166
+; <label>:158:                                    ; preds = %63
+  %159 = load i64*, i64** %2, align 8
+  %160 = load i64, i64* %159, align 8
+  %161 = bitcast %union.anon.0* %10 to %struct.anon.1*
+  %162 = bitcast %struct.anon.1* %161 to i32*
+  %163 = load i32, i32* %162, align 4
+  %164 = and i32 %163, 33554431
+  %165 = zext i32 %164 to i64
+  %166 = add nsw i64 %160, %165
+  store i64 %166, i64* %7, align 8
+  %167 = load i64, i64* %7, align 8
+  %168 = load i64, i64* @READER_TTRes_pspr, align 8
+  %169 = mul nsw i64 %167, %168
+  %170 = load i64*, i64** %4, align 8
+  store i64 %169, i64* %170, align 8
+  %171 = bitcast %union.anon.0* %10 to %struct.anon.1*
+  %172 = bitcast %struct.anon.1* %171 to i32*
+  %173 = load i32, i32* %172, align 4
+  %174 = lshr i32 %173, 25
+  %175 = and i32 %174, 63
+  %176 = add nsw i32 %175, 1
+  %177 = trunc i32 %176 to i8
+  %178 = load i8*, i8** %3, align 8
+  store i8 %177, i8* %178, align 1
+  br label %179
 
-; <label>:166:                                    ; preds = %144, %145
-  %167 = load i64, i64* @READER_next_RecID_relativeinbatch, align 8
-  %168 = add nsw i64 %167, 1
-  store i64 %168, i64* @READER_next_RecID_relativeinbatch, align 8
-  %169 = load i64, i64* %16, align 8
-  %170 = icmp eq i64 %169, 9223372036854775807
-  br i1 %170, label %171, label %172
+; <label>:179:                                    ; preds = %157, %158
+  %180 = load i64, i64* @READER_next_RecID_relativeinbatch, align 8
+  %181 = add nsw i64 %180, 1
+  store i64 %181, i64* @READER_next_RecID_relativeinbatch, align 8
+  %182 = load i64, i64* %16, align 8
+  %183 = icmp eq i64 %182, 9223372036854775807
+  br i1 %183, label %184, label %185
 
-; <label>:171:                                    ; preds = %166
-  br label %50
+; <label>:184:                                    ; preds = %179
+  br label %63
 
-; <label>:172:                                    ; preds = %166
-  %173 = load i8, i8* %17, align 1
-  %174 = load i8*, i8** %14, align 8
-  store i8 %173, i8* %174, align 1
-  %175 = load i64, i64* %16, align 8
-  store i64 %175, i64* %13, align 8
-  br label %176
+; <label>:185:                                    ; preds = %179
+  %186 = load i8, i8* %17, align 1
+  %187 = load i8*, i8** %14, align 8
+  store i8 %186, i8* %187, align 1
+  %188 = load i64, i64* %16, align 8
+  store i64 %188, i64* %13, align 8
+  br label %189
 
-; <label>:176:                                    ; preds = %172, %47
-  %177 = load i64, i64* %13, align 8
-  ret i64 %177
+; <label>:189:                                    ; preds = %185, %60
+  %190 = load i64, i64* %13, align 8
+  ret i64 %190
 }
 
 ; Function Attrs: alwaysinline nounwind uwtable
@@ -1299,220 +1337,203 @@ define i32 @POOL_init(i64, i64, i64) #1 {
   %10 = alloca i32, align 4
   %11 = alloca i32, align 4
   %12 = alloca i32, align 4
-  %13 = alloca %struct.circular_buf_t, align 8
   store i64 %2, i64* %7, align 8
   store i64 %1, i64* %8, align 8
   store i64 %0, i64* %9, align 8
-  %14 = load i64, i64* %9, align 8
-  %15 = load i64, i64* %7, align 8
-  %16 = add nsw i64 %14, %15
-  %17 = trunc i64 %16 to i8
-  store i8 %17, i8* @POOL_total_slots, align 1
-  %18 = load i8, i8* @POOL_total_slots, align 1
-  %19 = zext i8 %18 to i32
-  %20 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([17 x i8], [17 x i8]* @"\01??_C@_0BB@NIGCBLED@?6TOTAL?5SLOTS?3?5?$CFd?$AA@", i32 0, i32 0), i32 %19)
-  %21 = sext i32 %20 to i64
-  store i64 %21, i64* @order_gurantee2, align 8
-  %22 = load i64, i64* %9, align 8
-  %23 = trunc i64 %22 to i8
-  store i8 %23, i8* @POOL_real_slots, align 1
-  %24 = load i64, i64* %8, align 8
-  %25 = trunc i64 %24 to i8
-  store i8 %25, i8* @POOL_real_chns, align 1
-  %26 = load i8, i8* @POOL_total_slots, align 1
-  %27 = zext i8 %26 to i32
-  %28 = mul nsw i32 %27, 2
-  %29 = sext i32 %28 to i64
-  %30 = mul i64 %29, 8
-  %31 = call noalias i8* @malloc(i64 %30)
-  %32 = bitcast i8* %31 to i64*
-  store i64* %32, i64** @POOL_timetag, align 8
-  %33 = load i64*, i64** @POOL_timetag, align 8
-  %34 = icmp eq i64* %33, null
-  br i1 %34, label %35, label %38
+  %13 = load i64, i64* %9, align 8
+  %14 = load i64, i64* %7, align 8
+  %15 = add nsw i64 %13, %14
+  %16 = trunc i64 %15 to i8
+  store i8 %16, i8* @POOL_total_slots, align 1
+  %17 = load i8, i8* @POOL_total_slots, align 1
+  %18 = zext i8 %17 to i32
+  %19 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([17 x i8], [17 x i8]* @"\01??_C@_0BB@NIGCBLED@?6TOTAL?5SLOTS?3?5?$CFd?$AA@", i32 0, i32 0), i32 %18)
+  %20 = sext i32 %19 to i64
+  store i64 %20, i64* @order_gurantee2, align 8
+  %21 = load i64, i64* %9, align 8
+  %22 = trunc i64 %21 to i8
+  store i8 %22, i8* @POOL_real_slots, align 1
+  %23 = load i64, i64* %8, align 8
+  %24 = trunc i64 %23 to i8
+  store i8 %24, i8* @POOL_real_chns, align 1
+  %25 = load i8, i8* @POOL_total_slots, align 1
+  %26 = zext i8 %25 to i32
+  %27 = mul nsw i32 %26, 2
+  %28 = sext i32 %27 to i64
+  %29 = mul i64 %28, 8
+  %30 = call noalias i8* @malloc(i64 %29)
+  %31 = bitcast i8* %30 to i64*
+  store i64* %31, i64** @POOL_timetag, align 8
+  %32 = load i64*, i64** @POOL_timetag, align 8
+  %33 = icmp eq i64* %32, null
+  br i1 %33, label %34, label %37
 
-; <label>:35:                                     ; preds = %3
-  %36 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([37 x i8], [37 x i8]* @"\01??_C@_0CF@BDINJJIB@?6?5?$FLERROR?$FNMemalloc?5failed?0?5aborti@", i32 0, i32 0))
-  %37 = sext i32 %36 to i64
-  store i64 %37, i64* @order_gurantee2, align 8
+; <label>:34:                                     ; preds = %3
+  %35 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([37 x i8], [37 x i8]* @"\01??_C@_0CF@BDINJJIB@?6?5?$FLERROR?$FNMemalloc?5failed?0?5aborti@", i32 0, i32 0))
+  %36 = sext i32 %35 to i64
+  store i64 %36, i64* @order_gurantee2, align 8
   store i32 -1, i32* %6, align 4
-  br label %152
+  br label %137
 
-; <label>:38:                                     ; preds = %3
-  %39 = load i8, i8* @POOL_total_slots, align 1
-  %40 = zext i8 %39 to i32
-  %41 = mul nsw i32 %40, 2
-  %42 = sext i32 %41 to i64
-  %43 = mul i64 %42, 1
-  %44 = call noalias i8* @malloc(i64 %43)
-  store i8* %44, i8** @POOL_slot, align 8
-  %45 = load i8*, i8** @POOL_slot, align 8
-  %46 = icmp eq i8* %45, null
-  br i1 %46, label %47, label %50
+; <label>:37:                                     ; preds = %3
+  %38 = load i8, i8* @POOL_total_slots, align 1
+  %39 = zext i8 %38 to i32
+  %40 = mul nsw i32 %39, 2
+  %41 = sext i32 %40 to i64
+  %42 = mul i64 %41, 1
+  %43 = call noalias i8* @malloc(i64 %42)
+  store i8* %43, i8** @POOL_slot, align 8
+  %44 = load i8*, i8** @POOL_slot, align 8
+  %45 = icmp eq i8* %44, null
+  br i1 %45, label %46, label %49
 
-; <label>:47:                                     ; preds = %38
-  %48 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([37 x i8], [37 x i8]* @"\01??_C@_0CF@BDINJJIB@?6?5?$FLERROR?$FNMemalloc?5failed?0?5aborti@", i32 0, i32 0))
-  %49 = sext i32 %48 to i64
-  store i64 %49, i64* @order_gurantee2, align 8
+; <label>:46:                                     ; preds = %37
+  %47 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([37 x i8], [37 x i8]* @"\01??_C@_0CF@BDINJJIB@?6?5?$FLERROR?$FNMemalloc?5failed?0?5aborti@", i32 0, i32 0))
+  %48 = sext i32 %47 to i64
+  store i64 %48, i64* @order_gurantee2, align 8
   store i32 -1, i32* %6, align 4
-  br label %152
+  br label %137
 
-; <label>:50:                                     ; preds = %38
+; <label>:49:                                     ; preds = %37
   store i32 0, i32* %10, align 4
-  br label %51
+  br label %50
 
-; <label>:51:                                     ; preds = %66, %50
-  %52 = load i32, i32* %10, align 4
-  %53 = load i8, i8* @POOL_total_slots, align 1
-  %54 = zext i8 %53 to i32
-  %55 = mul nsw i32 %54, 2
-  %56 = icmp slt i32 %52, %55
-  br i1 %56, label %57, label %69
+; <label>:50:                                     ; preds = %65, %49
+  %51 = load i32, i32* %10, align 4
+  %52 = load i8, i8* @POOL_total_slots, align 1
+  %53 = zext i8 %52 to i32
+  %54 = mul nsw i32 %53, 2
+  %55 = icmp slt i32 %51, %54
+  br i1 %55, label %56, label %68
 
-; <label>:57:                                     ; preds = %51
-  %58 = load i64*, i64** @POOL_timetag, align 8
-  %59 = load i32, i32* %10, align 4
-  %60 = sext i32 %59 to i64
-  %61 = getelementptr inbounds i64, i64* %58, i64 %60
-  store i64 9223372036854775807, i64* %61, align 8
-  %62 = load i8*, i8** @POOL_slot, align 8
-  %63 = load i32, i32* %10, align 4
-  %64 = sext i32 %63 to i64
-  %65 = getelementptr inbounds i8, i8* %62, i64 %64
-  store i8 0, i8* %65, align 1
-  br label %66
+; <label>:56:                                     ; preds = %50
+  %57 = load i64*, i64** @POOL_timetag, align 8
+  %58 = load i32, i32* %10, align 4
+  %59 = sext i32 %58 to i64
+  %60 = getelementptr inbounds i64, i64* %57, i64 %59
+  store i64 9223372036854775807, i64* %60, align 8
+  %61 = load i8*, i8** @POOL_slot, align 8
+  %62 = load i32, i32* %10, align 4
+  %63 = sext i32 %62 to i64
+  %64 = getelementptr inbounds i8, i8* %61, i64 %63
+  store i8 0, i8* %64, align 1
+  br label %65
 
-; <label>:66:                                     ; preds = %57
-  %67 = load i32, i32* %10, align 4
-  %68 = add nsw i32 %67, 1
-  store i32 %68, i32* %10, align 4
-  br label %51
+; <label>:65:                                     ; preds = %56
+  %66 = load i32, i32* %10, align 4
+  %67 = add nsw i32 %66, 1
+  store i32 %67, i32* %10, align 4
+  br label %50
 
-; <label>:69:                                     ; preds = %51
+; <label>:68:                                     ; preds = %50
   store i32 0, i32* %11, align 4
-  br label %70
+  br label %69
 
-; <label>:70:                                     ; preds = %85, %69
-  %71 = load i32, i32* %11, align 4
-  %72 = load i8, i8* @POOL_total_slots, align 1
-  %73 = zext i8 %72 to i32
-  %74 = icmp slt i32 %71, %73
-  br i1 %74, label %75, label %88
+; <label>:69:                                     ; preds = %84, %68
+  %70 = load i32, i32* %11, align 4
+  %71 = load i8, i8* @POOL_total_slots, align 1
+  %72 = zext i8 %71 to i32
+  %73 = icmp slt i32 %70, %72
+  br i1 %73, label %74, label %87
 
-; <label>:75:                                     ; preds = %70
-  %76 = load i32, i32* %11, align 4
-  %77 = trunc i32 %76 to i8
-  %78 = load i8*, i8** @POOL_slot, align 8
-  %79 = load i8, i8* @POOL_total_slots, align 1
-  %80 = zext i8 %79 to i32
-  %81 = load i32, i32* %11, align 4
-  %82 = add nsw i32 %80, %81
-  %83 = sext i32 %82 to i64
-  %84 = getelementptr inbounds i8, i8* %78, i64 %83
-  store i8 %77, i8* %84, align 1
-  br label %85
+; <label>:74:                                     ; preds = %69
+  %75 = load i32, i32* %11, align 4
+  %76 = trunc i32 %75 to i8
+  %77 = load i8*, i8** @POOL_slot, align 8
+  %78 = load i8, i8* @POOL_total_slots, align 1
+  %79 = zext i8 %78 to i32
+  %80 = load i32, i32* %11, align 4
+  %81 = add nsw i32 %79, %80
+  %82 = sext i32 %81 to i64
+  %83 = getelementptr inbounds i8, i8* %77, i64 %82
+  store i8 %76, i8* %83, align 1
+  br label %84
 
-; <label>:85:                                     ; preds = %75
-  %86 = load i32, i32* %11, align 4
-  %87 = add nsw i32 %86, 1
-  store i32 %87, i32* %11, align 4
-  br label %70
+; <label>:84:                                     ; preds = %74
+  %85 = load i32, i32* %11, align 4
+  %86 = add nsw i32 %85, 1
+  store i32 %86, i32* %11, align 4
+  br label %69
 
-; <label>:88:                                     ; preds = %70
-  %89 = load i64, i64* %7, align 8
-  %90 = mul i64 %89, 32
-  %91 = call noalias i8* @malloc(i64 %90)
-  %92 = bitcast i8* %91 to %struct.circular_buf_t*
-  store %struct.circular_buf_t* %92, %struct.circular_buf_t** @VSLOT_timetag, align 8
+; <label>:87:                                     ; preds = %69
+  %88 = load i64, i64* %7, align 8
+  %89 = mul i64 %88, 32
+  %90 = call noalias i8* @malloc(i64 %89)
+  %91 = bitcast i8* %90 to %struct.circular_buf_t*
+  store %struct.circular_buf_t* %91, %struct.circular_buf_t** @VSLOT_timetag, align 8
   store i32 0, i32* %12, align 4
-  br label %93
+  br label %92
 
-; <label>:93:                                     ; preds = %148, %88
-  %94 = load i32, i32* %12, align 4
-  %95 = sext i32 %94 to i64
-  %96 = load i64, i64* %7, align 8
-  %97 = icmp slt i64 %95, %96
-  br i1 %97, label %98, label %151
+; <label>:92:                                     ; preds = %133, %87
+  %93 = load i32, i32* %12, align 4
+  %94 = sext i32 %93 to i64
+  %95 = load i64, i64* %7, align 8
+  %96 = icmp slt i64 %94, %95
+  br i1 %96, label %97, label %136
 
-; <label>:98:                                     ; preds = %93
-  %99 = load i32, i32* %12, align 4
-  %100 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([22 x i8], [22 x i8]* @"\01??_C@_0BG@NJEFHGP@?6Init?5ring?5buffer?5?$CFd?4?$AA@", i32 0, i32 0), i32 %99)
-  %101 = sext i32 %100 to i64
-  store i64 %101, i64* @order_gurantee2, align 8
-  %102 = load %struct.circular_buf_t*, %struct.circular_buf_t** @VSLOT_timetag, align 8
-  %103 = load i32, i32* %12, align 4
-  %104 = sext i32 %103 to i64
-  %105 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %102, i64 %104
-  %106 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %105, i32 0, i32 3
-  store i64 1000000, i64* %106, align 8
-  %107 = load %struct.circular_buf_t*, %struct.circular_buf_t** @VSLOT_timetag, align 8
-  %108 = load i32, i32* %12, align 4
-  %109 = sext i32 %108 to i64
-  %110 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %107, i64 %109
-  store %struct.circular_buf_t* %110, %struct.circular_buf_t** %4, align 8
+; <label>:97:                                     ; preds = %92
+  %98 = load i32, i32* %12, align 4
+  %99 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([22 x i8], [22 x i8]* @"\01??_C@_0BG@NJEFHGP@?6Init?5ring?5buffer?5?$CFd?4?$AA@", i32 0, i32 0), i32 %98)
+  %100 = sext i32 %99 to i64
+  store i64 %100, i64* @order_gurantee2, align 8
+  %101 = load %struct.circular_buf_t*, %struct.circular_buf_t** @VSLOT_timetag, align 8
+  %102 = load i32, i32* %12, align 4
+  %103 = sext i32 %102 to i64
+  %104 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %101, i64 %103
+  %105 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %104, i32 0, i32 3
+  store i64 1000000, i64* %105, align 8
+  %106 = load %struct.circular_buf_t*, %struct.circular_buf_t** @VSLOT_timetag, align 8
+  %107 = load i32, i32* %12, align 4
+  %108 = sext i32 %107 to i64
+  %109 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %106, i64 %108
+  store %struct.circular_buf_t* %109, %struct.circular_buf_t** %4, align 8
   store i32 -1, i32* %5, align 4
-  %111 = load %struct.circular_buf_t*, %struct.circular_buf_t** %4, align 8
-  %112 = icmp ne %struct.circular_buf_t* %111, null
-  br i1 %112, label %113, label %118
+  %110 = load %struct.circular_buf_t*, %struct.circular_buf_t** %4, align 8
+  %111 = icmp ne %struct.circular_buf_t* %110, null
+  br i1 %111, label %112, label %117
 
-; <label>:113:                                    ; preds = %98
-  %114 = load %struct.circular_buf_t*, %struct.circular_buf_t** %4, align 8
-  %115 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %114, i32 0, i32 1
-  store i64 0, i64* %115, align 8
-  %116 = load %struct.circular_buf_t*, %struct.circular_buf_t** %4, align 8
-  %117 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %116, i32 0, i32 2
-  store i64 0, i64* %117, align 8
+; <label>:112:                                    ; preds = %97
+  %113 = load %struct.circular_buf_t*, %struct.circular_buf_t** %4, align 8
+  %114 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %113, i32 0, i32 1
+  store i64 0, i64* %114, align 8
+  %115 = load %struct.circular_buf_t*, %struct.circular_buf_t** %4, align 8
+  %116 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %115, i32 0, i32 2
+  store i64 0, i64* %116, align 8
   store i32 0, i32* %5, align 4
-  br label %118
+  br label %117
 
-; <label>:118:                                    ; preds = %98, %113
-  %119 = load i32, i32* %5, align 4
-  %120 = load %struct.circular_buf_t*, %struct.circular_buf_t** @VSLOT_timetag, align 8
-  %121 = load i32, i32* %12, align 4
-  %122 = sext i32 %121 to i64
-  %123 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %120, i64 %122
-  %124 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %123, i32 0, i32 3
-  %125 = load i64, i64* %124, align 8
-  %126 = mul i64 %125, 8
-  %127 = call noalias i8* @malloc(i64 %126)
-  %128 = bitcast i8* %127 to i64*
-  %129 = load %struct.circular_buf_t*, %struct.circular_buf_t** @VSLOT_timetag, align 8
-  %130 = load i32, i32* %12, align 4
-  %131 = sext i32 %130 to i64
-  %132 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %129, i64 %131
-  %133 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %132, i32 0, i32 0
-  store i64* %128, i64** %133, align 8
-  %134 = load %struct.circular_buf_t*, %struct.circular_buf_t** @VSLOT_timetag, align 8
-  %135 = load i32, i32* %12, align 4
-  %136 = sext i32 %135 to i64
-  %137 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %134, i64 %136
-  %138 = bitcast %struct.circular_buf_t* %13 to i8*
-  %139 = bitcast %struct.circular_buf_t* %137 to i8*
-  call void @llvm.memcpy.p0i8.p0i8.i64(i8* %138, i8* %139, i64 32, i32 8, i1 false)
-  %140 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %13, i32 0, i32 1
-  %141 = load i64, i64* %140, align 8
-  %142 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %13, i32 0, i32 2
-  %143 = load i64, i64* %142, align 8
-  %144 = icmp eq i64 %141, %143
-  %145 = zext i1 %144 to i32
-  %146 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([28 x i8], [28 x i8]* @"\01??_C@_0BM@KDJELMIO@?6Buffer?5created?0?5empty?3?5?$CFd?6?$AA@", i32 0, i32 0), i32 %145)
-  %147 = sext i32 %146 to i64
-  store i64 %147, i64* @order_gurantee2, align 8
-  br label %148
+; <label>:117:                                    ; preds = %97, %112
+  %118 = load i32, i32* %5, align 4
+  %119 = load %struct.circular_buf_t*, %struct.circular_buf_t** @VSLOT_timetag, align 8
+  %120 = load i32, i32* %12, align 4
+  %121 = sext i32 %120 to i64
+  %122 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %119, i64 %121
+  %123 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %122, i32 0, i32 3
+  %124 = load i64, i64* %123, align 8
+  %125 = mul i64 %124, 8
+  %126 = call noalias i8* @malloc(i64 %125)
+  %127 = bitcast i8* %126 to i64*
+  %128 = load %struct.circular_buf_t*, %struct.circular_buf_t** @VSLOT_timetag, align 8
+  %129 = load i32, i32* %12, align 4
+  %130 = sext i32 %129 to i64
+  %131 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %128, i64 %130
+  %132 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %131, i32 0, i32 0
+  store i64* %127, i64** %132, align 8
+  br label %133
 
-; <label>:148:                                    ; preds = %118
-  %149 = load i32, i32* %12, align 4
-  %150 = add nsw i32 %149, 1
-  store i32 %150, i32* %12, align 4
-  br label %93
+; <label>:133:                                    ; preds = %117
+  %134 = load i32, i32* %12, align 4
+  %135 = add nsw i32 %134, 1
+  store i32 %135, i32* %12, align 4
+  br label %92
 
-; <label>:151:                                    ; preds = %93
+; <label>:136:                                    ; preds = %92
   store i32 0, i32* %6, align 4
-  br label %152
+  br label %137
 
-; <label>:152:                                    ; preds = %151, %47, %35
-  %153 = load i32, i32* %6, align 4
-  ret i32 %153
+; <label>:137:                                    ; preds = %136, %46, %34
+  %138 = load i32, i32* %6, align 4
+  ret i32 %138
 }
 
 declare noalias i8* @malloc(i64) #4
@@ -1904,12 +1925,12 @@ define i64 @POOL_next(i8*) #1 {
   store i8 %99, i8* %100, align 1
   %101 = load i64, i64* %68, align 8
   %102 = icmp slt i64 %101, 9223372036854775807
-  br i1 %102, label %103, label %607
+  br i1 %102, label %103, label %620
 
 ; <label>:103:                                    ; preds = %98
   %104 = load i32, i32* %71, align 4
   %105 = icmp slt i32 %104, 0
-  br i1 %105, label %106, label %355
+  br i1 %105, label %106, label %368
 
 ; <label>:106:                                    ; preds = %103
   %107 = load i8, i8* %69, align 1
@@ -1920,1073 +1941,1111 @@ define i64 @POOL_next(i8*) #1 {
   %111 = mul nsw i64 %108, %110
   %112 = load i64, i64* @READER_batch_actualread_length, align 8
   %113 = icmp sge i64 %111, %112
-  br i1 %113, label %114, label %137
+  br i1 %113, label %114, label %150
 
 ; <label>:114:                                    ; preds = %106
   %115 = load i32, i32* @READER_BytesofRecords, align 4
   %116 = mul nsw i32 1000, %115
   store i32 %116, i32* %58, align 4
-  %117 = load %struct._iobuf*, %struct._iobuf** @"\01?READER_fpin@@3PEAU_iobuf@@EA", align 8
+  %117 = load i64, i64* @READER_batchend_pos_in_file, align 8
   %118 = load i32, i32* %58, align 4
   %119 = sext i32 %118 to i64
-  %120 = load i8*, i8** @READER_buffer, align 8
-  %121 = call i64 @fread(i8* %120, i64 1, i64 %119, %struct._iobuf* %117)
-  store i64 %121, i64* @READER_batch_actualread_length, align 8
-  %122 = load i64, i64* @READER_batch_actualread_length, align 8
-  %123 = load i64, i64* @READER_batchend_pos_in_file, align 8
-  %124 = add nsw i64 %123, %122
-  store i64 %124, i64* @READER_batchend_pos_in_file, align 8
-  store i64 0, i64* @READER_next_RecID_relativeinbatch, align 8
-  %125 = load i64, i64* @READER_batch_actualread_length, align 8
-  %126 = load i32, i32* %58, align 4
-  %127 = sext i32 %126 to i64
-  %128 = icmp slt i64 %125, %127
-  br i1 %128, label %129, label %130
+  %120 = add nsw i64 %117, %119
+  %121 = load i64, i64* @READER_fendpoint, align 8
+  %122 = icmp sge i64 %120, %121
+  br i1 %122, label %123, label %129
+
+; <label>:123:                                    ; preds = %114
+  %124 = load i64, i64* @READER_fendpoint, align 8
+  %125 = load i64, i64* @READER_fseekpoint, align 8
+  %126 = load i64, i64* @READER_batchend_pos_in_file, align 8
+  %127 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([32 x i8], [32 x i8]* @"\01??_C@_0CA@KHNGPAIJ@?6reading?5to?5?$CFlld?5?0?5?$FL?$CFlld?5?$CFlld?5?$FN?$AA@", i32 0, i32 0), i64 %126, i64 %125, i64 %124)
+  %128 = sext i32 %127 to i64
+  store i64 %128, i64* @order_gurantee2, align 8
+  store i32 -1, i32* %57, align 4
+  br label %144
 
 ; <label>:129:                                    ; preds = %114
+  %130 = load %struct._iobuf*, %struct._iobuf** @"\01?READER_fpin@@3PEAU_iobuf@@EA", align 8
+  %131 = load i32, i32* %58, align 4
+  %132 = sext i32 %131 to i64
+  %133 = load i8*, i8** @READER_buffer, align 8
+  %134 = call i64 @fread(i8* %133, i64 1, i64 %132, %struct._iobuf* %130)
+  store i64 %134, i64* @READER_batch_actualread_length, align 8
+  %135 = load i64, i64* @READER_batch_actualread_length, align 8
+  %136 = load i64, i64* @READER_batchend_pos_in_file, align 8
+  %137 = add nsw i64 %136, %135
+  store i64 %137, i64* @READER_batchend_pos_in_file, align 8
+  store i64 0, i64* @READER_next_RecID_relativeinbatch, align 8
+  %138 = load i64, i64* @READER_batch_actualread_length, align 8
+  %139 = load i32, i32* %58, align 4
+  %140 = sext i32 %139 to i64
+  %141 = icmp slt i64 %138, %140
+  br i1 %141, label %142, label %143
+
+; <label>:142:                                    ; preds = %129
   store i32 -1, i32* %57, align 4
-  br label %131
+  br label %144
 
-; <label>:130:                                    ; preds = %114
+; <label>:143:                                    ; preds = %129
   store i32 0, i32* %57, align 4
-  br label %131
+  br label %144
 
-; <label>:131:                                    ; preds = %130, %129
-  %132 = load i32, i32* %57, align 4
-  store i32 %132, i32* %61, align 4
-  %133 = load i32, i32* %61, align 4
-  %134 = icmp slt i32 %133, 0
-  br i1 %134, label %135, label %136
+; <label>:144:                                    ; preds = %143, %142, %123
+  %145 = load i32, i32* %57, align 4
+  store i32 %145, i32* %61, align 4
+  %146 = load i32, i32* %61, align 4
+  %147 = icmp slt i32 %146, 0
+  br i1 %147, label %148, label %149
 
-; <label>:135:                                    ; preds = %131
+; <label>:148:                                    ; preds = %144
   store i64 9223372036854775807, i64* %59, align 8
-  br label %264
+  br label %277
 
-; <label>:136:                                    ; preds = %131
-  br label %137
+; <label>:149:                                    ; preds = %144
+  br label %150
 
-; <label>:137:                                    ; preds = %136, %106
-  br label %138
+; <label>:150:                                    ; preds = %149, %106
+  br label %151
 
-; <label>:138:                                    ; preds = %259, %137
+; <label>:151:                                    ; preds = %272, %150
   store i64 9223372036854775807, i64* %62, align 8
   store i8 0, i8* %63, align 1
-  %139 = load i8*, i8** @READER_buffer, align 8
-  %140 = bitcast i8* %139 to i32*
-  %141 = load i64, i64* @READER_next_RecID_relativeinbatch, align 8
-  %142 = getelementptr inbounds i32, i32* %140, i64 %141
-  %143 = load i32, i32* %142, align 4
-  store i32 %143, i32* %64, align 4
+  %152 = load i8*, i8** @READER_buffer, align 8
+  %153 = bitcast i8* %152 to i32*
+  %154 = load i64, i64* @READER_next_RecID_relativeinbatch, align 8
+  %155 = getelementptr inbounds i32, i32* %153, i64 %154
+  %156 = load i32, i32* %155, align 4
+  store i32 %156, i32* %64, align 4
   store i32 66052, i32* %65, align 4
-  %144 = load i32, i32* %64, align 4
+  %157 = load i32, i32* %64, align 4
   store i64* @"\01?overflowcorrection@?1??pop_signal_from_file@@9@4_JA", i64** %48, align 8
   store i8* %63, i8** %49, align 8
   store i64* %62, i64** %50, align 8
   store i32 1, i32* %51, align 4
-  store i32 %144, i32* %52, align 4
+  store i32 %157, i32* %52, align 4
   store i32 33552000, i32* %54, align 4
   store i32 33554432, i32* %55, align 4
-  %145 = load i32, i32* %52, align 4
-  %146 = bitcast %union.anon.0* %56 to i32*
-  store i32 %145, i32* %146, align 4
-  %147 = bitcast %union.anon.0* %56 to %struct.anon.1*
-  %148 = bitcast %struct.anon.1* %147 to i32*
-  %149 = load i32, i32* %148, align 4
-  %150 = lshr i32 %149, 31
-  %151 = icmp eq i32 %150, 1
-  br i1 %151, label %152, label %233
+  %158 = load i32, i32* %52, align 4
+  %159 = bitcast %union.anon.0* %56 to i32*
+  store i32 %158, i32* %159, align 4
+  %160 = bitcast %union.anon.0* %56 to %struct.anon.1*
+  %161 = bitcast %struct.anon.1* %160 to i32*
+  %162 = load i32, i32* %161, align 4
+  %163 = lshr i32 %162, 31
+  %164 = icmp eq i32 %163, 1
+  br i1 %164, label %165, label %246
 
-; <label>:152:                                    ; preds = %138
-  %153 = bitcast %union.anon.0* %56 to %struct.anon.1*
-  %154 = bitcast %struct.anon.1* %153 to i32*
-  %155 = load i32, i32* %154, align 4
-  %156 = lshr i32 %155, 25
-  %157 = and i32 %156, 63
-  %158 = icmp eq i32 %157, 63
-  br i1 %158, label %159, label %188
+; <label>:165:                                    ; preds = %151
+  %166 = bitcast %union.anon.0* %56 to %struct.anon.1*
+  %167 = bitcast %struct.anon.1* %166 to i32*
+  %168 = load i32, i32* %167, align 4
+  %169 = lshr i32 %168, 25
+  %170 = and i32 %169, 63
+  %171 = icmp eq i32 %170, 63
+  br i1 %171, label %172, label %201
 
-; <label>:159:                                    ; preds = %152
-  %160 = load i32, i32* %51, align 4
-  %161 = icmp eq i32 %160, 1
-  br i1 %161, label %162, label %166
+; <label>:172:                                    ; preds = %165
+  %173 = load i32, i32* %51, align 4
+  %174 = icmp eq i32 %173, 1
+  br i1 %174, label %175, label %179
 
-; <label>:162:                                    ; preds = %159
-  %163 = load i64*, i64** %48, align 8
-  %164 = load i64, i64* %163, align 8
-  %165 = add i64 %164, 33552000
-  store i64 %165, i64* %163, align 8
-  br label %187
+; <label>:175:                                    ; preds = %172
+  %176 = load i64*, i64** %48, align 8
+  %177 = load i64, i64* %176, align 8
+  %178 = add i64 %177, 33552000
+  store i64 %178, i64* %176, align 8
+  br label %200
 
-; <label>:166:                                    ; preds = %159
-  %167 = bitcast %union.anon.0* %56 to %struct.anon.1*
-  %168 = bitcast %struct.anon.1* %167 to i32*
-  %169 = load i32, i32* %168, align 4
-  %170 = and i32 %169, 33554431
-  %171 = icmp eq i32 %170, 0
-  br i1 %171, label %172, label %176
+; <label>:179:                                    ; preds = %172
+  %180 = bitcast %union.anon.0* %56 to %struct.anon.1*
+  %181 = bitcast %struct.anon.1* %180 to i32*
+  %182 = load i32, i32* %181, align 4
+  %183 = and i32 %182, 33554431
+  %184 = icmp eq i32 %183, 0
+  br i1 %184, label %185, label %189
 
-; <label>:172:                                    ; preds = %166
-  %173 = load i64*, i64** %48, align 8
-  %174 = load i64, i64* %173, align 8
-  %175 = add i64 %174, 33554432
-  store i64 %175, i64* %173, align 8
-  br label %186
+; <label>:185:                                    ; preds = %179
+  %186 = load i64*, i64** %48, align 8
+  %187 = load i64, i64* %186, align 8
+  %188 = add i64 %187, 33554432
+  store i64 %188, i64* %186, align 8
+  br label %199
 
-; <label>:176:                                    ; preds = %166
-  %177 = bitcast %union.anon.0* %56 to %struct.anon.1*
-  %178 = bitcast %struct.anon.1* %177 to i32*
-  %179 = load i32, i32* %178, align 4
-  %180 = and i32 %179, 33554431
-  %181 = zext i32 %180 to i64
-  %182 = mul i64 33554432, %181
-  %183 = load i64*, i64** %48, align 8
-  %184 = load i64, i64* %183, align 8
-  %185 = add i64 %184, %182
-  store i64 %185, i64* %183, align 8
-  br label %186
+; <label>:189:                                    ; preds = %179
+  %190 = bitcast %union.anon.0* %56 to %struct.anon.1*
+  %191 = bitcast %struct.anon.1* %190 to i32*
+  %192 = load i32, i32* %191, align 4
+  %193 = and i32 %192, 33554431
+  %194 = zext i32 %193 to i64
+  %195 = mul i64 33554432, %194
+  %196 = load i64*, i64** %48, align 8
+  %197 = load i64, i64* %196, align 8
+  %198 = add i64 %197, %195
+  store i64 %198, i64* %196, align 8
+  br label %199
 
-; <label>:186:                                    ; preds = %176, %172
-  br label %187
+; <label>:199:                                    ; preds = %189, %185
+  br label %200
 
-; <label>:187:                                    ; preds = %186, %162
-  br label %188
+; <label>:200:                                    ; preds = %199, %175
+  br label %201
 
-; <label>:188:                                    ; preds = %187, %152
-  %189 = bitcast %union.anon.0* %56 to %struct.anon.1*
-  %190 = bitcast %struct.anon.1* %189 to i32*
-  %191 = load i32, i32* %190, align 4
-  %192 = lshr i32 %191, 25
-  %193 = and i32 %192, 63
-  %194 = icmp sge i32 %193, 1
-  br i1 %194, label %195, label %211
+; <label>:201:                                    ; preds = %200, %165
+  %202 = bitcast %union.anon.0* %56 to %struct.anon.1*
+  %203 = bitcast %struct.anon.1* %202 to i32*
+  %204 = load i32, i32* %203, align 4
+  %205 = lshr i32 %204, 25
+  %206 = and i32 %205, 63
+  %207 = icmp sge i32 %206, 1
+  br i1 %207, label %208, label %224
 
-; <label>:195:                                    ; preds = %188
-  %196 = bitcast %union.anon.0* %56 to %struct.anon.1*
-  %197 = bitcast %struct.anon.1* %196 to i32*
-  %198 = load i32, i32* %197, align 4
-  %199 = lshr i32 %198, 25
-  %200 = and i32 %199, 63
-  %201 = icmp sle i32 %200, 15
-  br i1 %201, label %202, label %211
+; <label>:208:                                    ; preds = %201
+  %209 = bitcast %union.anon.0* %56 to %struct.anon.1*
+  %210 = bitcast %struct.anon.1* %209 to i32*
+  %211 = load i32, i32* %210, align 4
+  %212 = lshr i32 %211, 25
+  %213 = and i32 %212, 63
+  %214 = icmp sle i32 %213, 15
+  br i1 %214, label %215, label %224
 
-; <label>:202:                                    ; preds = %195
-  %203 = load i64*, i64** %48, align 8
-  %204 = load i64, i64* %203, align 8
-  %205 = bitcast %union.anon.0* %56 to %struct.anon.1*
-  %206 = bitcast %struct.anon.1* %205 to i32*
-  %207 = load i32, i32* %206, align 4
-  %208 = and i32 %207, 33554431
-  %209 = zext i32 %208 to i64
-  %210 = add nsw i64 %204, %209
-  store i64 %210, i64* %53, align 8
-  br label %211
+; <label>:215:                                    ; preds = %208
+  %216 = load i64*, i64** %48, align 8
+  %217 = load i64, i64* %216, align 8
+  %218 = bitcast %union.anon.0* %56 to %struct.anon.1*
+  %219 = bitcast %struct.anon.1* %218 to i32*
+  %220 = load i32, i32* %219, align 4
+  %221 = and i32 %220, 33554431
+  %222 = zext i32 %221 to i64
+  %223 = add nsw i64 %217, %222
+  store i64 %223, i64* %53, align 8
+  br label %224
 
-; <label>:211:                                    ; preds = %202, %195, %188
-  %212 = bitcast %union.anon.0* %56 to %struct.anon.1*
-  %213 = bitcast %struct.anon.1* %212 to i32*
-  %214 = load i32, i32* %213, align 4
-  %215 = lshr i32 %214, 25
-  %216 = and i32 %215, 63
-  %217 = icmp eq i32 %216, 0
-  br i1 %217, label %218, label %232
+; <label>:224:                                    ; preds = %215, %208, %201
+  %225 = bitcast %union.anon.0* %56 to %struct.anon.1*
+  %226 = bitcast %struct.anon.1* %225 to i32*
+  %227 = load i32, i32* %226, align 4
+  %228 = lshr i32 %227, 25
+  %229 = and i32 %228, 63
+  %230 = icmp eq i32 %229, 0
+  br i1 %230, label %231, label %245
 
-; <label>:218:                                    ; preds = %211
-  %219 = load i64*, i64** %48, align 8
-  %220 = load i64, i64* %219, align 8
-  %221 = bitcast %union.anon.0* %56 to %struct.anon.1*
-  %222 = bitcast %struct.anon.1* %221 to i32*
-  %223 = load i32, i32* %222, align 4
-  %224 = and i32 %223, 33554431
-  %225 = zext i32 %224 to i64
-  %226 = add nsw i64 %220, %225
-  store i64 %226, i64* %53, align 8
-  %227 = load i64, i64* %53, align 8
-  %228 = load i64, i64* @READER_TTRes_pspr, align 8
-  %229 = mul nsw i64 %227, %228
-  %230 = load i64*, i64** %50, align 8
-  store i64 %229, i64* %230, align 8
-  %231 = load i8*, i8** %49, align 8
-  store i8 0, i8* %231, align 1
-  br label %232
+; <label>:231:                                    ; preds = %224
+  %232 = load i64*, i64** %48, align 8
+  %233 = load i64, i64* %232, align 8
+  %234 = bitcast %union.anon.0* %56 to %struct.anon.1*
+  %235 = bitcast %struct.anon.1* %234 to i32*
+  %236 = load i32, i32* %235, align 4
+  %237 = and i32 %236, 33554431
+  %238 = zext i32 %237 to i64
+  %239 = add nsw i64 %233, %238
+  store i64 %239, i64* %53, align 8
+  %240 = load i64, i64* %53, align 8
+  %241 = load i64, i64* @READER_TTRes_pspr, align 8
+  %242 = mul nsw i64 %240, %241
+  %243 = load i64*, i64** %50, align 8
+  store i64 %242, i64* %243, align 8
+  %244 = load i8*, i8** %49, align 8
+  store i8 0, i8* %244, align 1
+  br label %245
 
-; <label>:232:                                    ; preds = %218, %211
-  br label %254
+; <label>:245:                                    ; preds = %231, %224
+  br label %267
 
-; <label>:233:                                    ; preds = %138
-  %234 = load i64*, i64** %48, align 8
-  %235 = load i64, i64* %234, align 8
-  %236 = bitcast %union.anon.0* %56 to %struct.anon.1*
-  %237 = bitcast %struct.anon.1* %236 to i32*
-  %238 = load i32, i32* %237, align 4
-  %239 = and i32 %238, 33554431
-  %240 = zext i32 %239 to i64
-  %241 = add nsw i64 %235, %240
-  store i64 %241, i64* %53, align 8
-  %242 = load i64, i64* %53, align 8
-  %243 = load i64, i64* @READER_TTRes_pspr, align 8
-  %244 = mul nsw i64 %242, %243
-  %245 = load i64*, i64** %50, align 8
-  store i64 %244, i64* %245, align 8
-  %246 = bitcast %union.anon.0* %56 to %struct.anon.1*
-  %247 = bitcast %struct.anon.1* %246 to i32*
-  %248 = load i32, i32* %247, align 4
-  %249 = lshr i32 %248, 25
-  %250 = and i32 %249, 63
-  %251 = add nsw i32 %250, 1
-  %252 = trunc i32 %251 to i8
-  %253 = load i8*, i8** %49, align 8
-  store i8 %252, i8* %253, align 1
-  br label %254
+; <label>:246:                                    ; preds = %151
+  %247 = load i64*, i64** %48, align 8
+  %248 = load i64, i64* %247, align 8
+  %249 = bitcast %union.anon.0* %56 to %struct.anon.1*
+  %250 = bitcast %struct.anon.1* %249 to i32*
+  %251 = load i32, i32* %250, align 4
+  %252 = and i32 %251, 33554431
+  %253 = zext i32 %252 to i64
+  %254 = add nsw i64 %248, %253
+  store i64 %254, i64* %53, align 8
+  %255 = load i64, i64* %53, align 8
+  %256 = load i64, i64* @READER_TTRes_pspr, align 8
+  %257 = mul nsw i64 %255, %256
+  %258 = load i64*, i64** %50, align 8
+  store i64 %257, i64* %258, align 8
+  %259 = bitcast %union.anon.0* %56 to %struct.anon.1*
+  %260 = bitcast %struct.anon.1* %259 to i32*
+  %261 = load i32, i32* %260, align 4
+  %262 = lshr i32 %261, 25
+  %263 = and i32 %262, 63
+  %264 = add nsw i32 %263, 1
+  %265 = trunc i32 %264 to i8
+  %266 = load i8*, i8** %49, align 8
+  store i8 %265, i8* %266, align 1
+  br label %267
 
-; <label>:254:                                    ; preds = %233, %232
-  %255 = load i64, i64* @READER_next_RecID_relativeinbatch, align 8
-  %256 = add nsw i64 %255, 1
-  store i64 %256, i64* @READER_next_RecID_relativeinbatch, align 8
-  %257 = load i64, i64* %62, align 8
-  %258 = icmp eq i64 %257, 9223372036854775807
-  br i1 %258, label %259, label %260
+; <label>:267:                                    ; preds = %246, %245
+  %268 = load i64, i64* @READER_next_RecID_relativeinbatch, align 8
+  %269 = add nsw i64 %268, 1
+  store i64 %269, i64* @READER_next_RecID_relativeinbatch, align 8
+  %270 = load i64, i64* %62, align 8
+  %271 = icmp eq i64 %270, 9223372036854775807
+  br i1 %271, label %272, label %273
 
-; <label>:259:                                    ; preds = %254
-  br label %138
+; <label>:272:                                    ; preds = %267
+  br label %151
 
-; <label>:260:                                    ; preds = %254
-  %261 = load i8, i8* %63, align 1
-  %262 = load i8*, i8** %60, align 8
-  store i8 %261, i8* %262, align 1
-  %263 = load i64, i64* %62, align 8
-  store i64 %263, i64* %59, align 8
-  br label %264
+; <label>:273:                                    ; preds = %267
+  %274 = load i8, i8* %63, align 1
+  %275 = load i8*, i8** %60, align 8
+  store i8 %274, i8* %275, align 1
+  %276 = load i64, i64* %62, align 8
+  store i64 %276, i64* %59, align 8
+  br label %277
 
-; <label>:264:                                    ; preds = %135, %260
-  %265 = load i64, i64* %59, align 8
+; <label>:277:                                    ; preds = %148, %273
+  %278 = load i64, i64* %59, align 8
   store i8 %107, i8* %42, align 1
-  store i64 %265, i64* %43, align 8
-  %266 = load i8, i8* @POOL_total_slots, align 1
-  %267 = zext i8 %266 to i32
-  %268 = load i8, i8* %42, align 1
-  %269 = zext i8 %268 to i32
-  %270 = add nsw i32 %267, %269
-  %271 = trunc i32 %270 to i8
-  store i8 %271, i8* %44, align 1
-  %272 = load i64, i64* %43, align 8
-  %273 = load i64*, i64** @POOL_timetag, align 8
-  %274 = load i8, i8* %44, align 1
-  %275 = zext i8 %274 to i64
-  %276 = getelementptr inbounds i64, i64* %273, i64 %275
-  store i64 %272, i64* %276, align 8
-  %277 = load i8, i8* %42, align 1
-  %278 = load i8*, i8** @POOL_slot, align 8
-  %279 = load i8, i8* %44, align 1
-  %280 = zext i8 %279 to i64
-  %281 = getelementptr inbounds i8, i8* %278, i64 %280
-  store i8 %277, i8* %281, align 1
-  br label %282
-
-; <label>:282:                                    ; preds = %349, %264
-  %283 = load i8, i8* %44, align 1
-  %284 = zext i8 %283 to i32
-  %285 = icmp sgt i32 %284, 1
-  br i1 %285, label %286, label %354
-
-; <label>:286:                                    ; preds = %282
+  store i64 %278, i64* %43, align 8
+  %279 = load i8, i8* @POOL_total_slots, align 1
+  %280 = zext i8 %279 to i32
+  %281 = load i8, i8* %42, align 1
+  %282 = zext i8 %281 to i32
+  %283 = add nsw i32 %280, %282
+  %284 = trunc i32 %283 to i8
+  store i8 %284, i8* %44, align 1
+  %285 = load i64, i64* %43, align 8
+  %286 = load i64*, i64** @POOL_timetag, align 8
   %287 = load i8, i8* %44, align 1
-  %288 = zext i8 %287 to i32
-  %289 = sdiv i32 %288, 2
-  %290 = trunc i32 %289 to i8
-  store i8 %290, i8* %45, align 1
-  %291 = load i8, i8* %45, align 1
-  %292 = zext i8 %291 to i32
-  %293 = mul nsw i32 %292, 2
-  %294 = trunc i32 %293 to i8
-  store i8 %294, i8* %46, align 1
-  %295 = load i8, i8* %45, align 1
-  %296 = zext i8 %295 to i32
-  %297 = mul nsw i32 %296, 2
-  %298 = add nsw i32 %297, 1
-  %299 = trunc i32 %298 to i8
-  store i8 %299, i8* %47, align 1
-  %300 = load i64*, i64** @POOL_timetag, align 8
-  %301 = load i8, i8* %46, align 1
-  %302 = zext i8 %301 to i64
-  %303 = getelementptr inbounds i64, i64* %300, i64 %302
-  %304 = load i64, i64* %303, align 8
-  %305 = load i64*, i64** @POOL_timetag, align 8
-  %306 = load i8, i8* %47, align 1
-  %307 = zext i8 %306 to i64
-  %308 = getelementptr inbounds i64, i64* %305, i64 %307
-  %309 = load i64, i64* %308, align 8
-  %310 = icmp slt i64 %304, %309
-  br i1 %310, label %311, label %330
+  %288 = zext i8 %287 to i64
+  %289 = getelementptr inbounds i64, i64* %286, i64 %288
+  store i64 %285, i64* %289, align 8
+  %290 = load i8, i8* %42, align 1
+  %291 = load i8*, i8** @POOL_slot, align 8
+  %292 = load i8, i8* %44, align 1
+  %293 = zext i8 %292 to i64
+  %294 = getelementptr inbounds i8, i8* %291, i64 %293
+  store i8 %290, i8* %294, align 1
+  br label %295
 
-; <label>:311:                                    ; preds = %286
-  %312 = load i64*, i64** @POOL_timetag, align 8
-  %313 = load i8, i8* %46, align 1
-  %314 = zext i8 %313 to i64
-  %315 = getelementptr inbounds i64, i64* %312, i64 %314
-  %316 = load i64, i64* %315, align 8
-  %317 = load i64*, i64** @POOL_timetag, align 8
-  %318 = load i8, i8* %45, align 1
-  %319 = zext i8 %318 to i64
-  %320 = getelementptr inbounds i64, i64* %317, i64 %319
-  store i64 %316, i64* %320, align 8
-  %321 = load i8*, i8** @POOL_slot, align 8
-  %322 = load i8, i8* %46, align 1
-  %323 = zext i8 %322 to i64
-  %324 = getelementptr inbounds i8, i8* %321, i64 %323
-  %325 = load i8, i8* %324, align 1
-  %326 = load i8*, i8** @POOL_slot, align 8
-  %327 = load i8, i8* %45, align 1
-  %328 = zext i8 %327 to i64
-  %329 = getelementptr inbounds i8, i8* %326, i64 %328
-  store i8 %325, i8* %329, align 1
-  br label %349
+; <label>:295:                                    ; preds = %362, %277
+  %296 = load i8, i8* %44, align 1
+  %297 = zext i8 %296 to i32
+  %298 = icmp sgt i32 %297, 1
+  br i1 %298, label %299, label %367
 
-; <label>:330:                                    ; preds = %286
-  %331 = load i64*, i64** @POOL_timetag, align 8
-  %332 = load i8, i8* %47, align 1
-  %333 = zext i8 %332 to i64
-  %334 = getelementptr inbounds i64, i64* %331, i64 %333
-  %335 = load i64, i64* %334, align 8
-  %336 = load i64*, i64** @POOL_timetag, align 8
-  %337 = load i8, i8* %45, align 1
-  %338 = zext i8 %337 to i64
-  %339 = getelementptr inbounds i64, i64* %336, i64 %338
-  store i64 %335, i64* %339, align 8
-  %340 = load i8*, i8** @POOL_slot, align 8
-  %341 = load i8, i8* %47, align 1
-  %342 = zext i8 %341 to i64
-  %343 = getelementptr inbounds i8, i8* %340, i64 %342
-  %344 = load i8, i8* %343, align 1
-  %345 = load i8*, i8** @POOL_slot, align 8
-  %346 = load i8, i8* %45, align 1
-  %347 = zext i8 %346 to i64
-  %348 = getelementptr inbounds i8, i8* %345, i64 %347
-  store i8 %344, i8* %348, align 1
-  br label %349
+; <label>:299:                                    ; preds = %295
+  %300 = load i8, i8* %44, align 1
+  %301 = zext i8 %300 to i32
+  %302 = sdiv i32 %301, 2
+  %303 = trunc i32 %302 to i8
+  store i8 %303, i8* %45, align 1
+  %304 = load i8, i8* %45, align 1
+  %305 = zext i8 %304 to i32
+  %306 = mul nsw i32 %305, 2
+  %307 = trunc i32 %306 to i8
+  store i8 %307, i8* %46, align 1
+  %308 = load i8, i8* %45, align 1
+  %309 = zext i8 %308 to i32
+  %310 = mul nsw i32 %309, 2
+  %311 = add nsw i32 %310, 1
+  %312 = trunc i32 %311 to i8
+  store i8 %312, i8* %47, align 1
+  %313 = load i64*, i64** @POOL_timetag, align 8
+  %314 = load i8, i8* %46, align 1
+  %315 = zext i8 %314 to i64
+  %316 = getelementptr inbounds i64, i64* %313, i64 %315
+  %317 = load i64, i64* %316, align 8
+  %318 = load i64*, i64** @POOL_timetag, align 8
+  %319 = load i8, i8* %47, align 1
+  %320 = zext i8 %319 to i64
+  %321 = getelementptr inbounds i64, i64* %318, i64 %320
+  %322 = load i64, i64* %321, align 8
+  %323 = icmp slt i64 %317, %322
+  br i1 %323, label %324, label %343
 
-; <label>:349:                                    ; preds = %330, %311
-  %350 = load i8, i8* %44, align 1
-  %351 = zext i8 %350 to i32
-  %352 = sdiv i32 %351, 2
-  %353 = trunc i32 %352 to i8
-  store i8 %353, i8* %44, align 1
-  br label %282
+; <label>:324:                                    ; preds = %299
+  %325 = load i64*, i64** @POOL_timetag, align 8
+  %326 = load i8, i8* %46, align 1
+  %327 = zext i8 %326 to i64
+  %328 = getelementptr inbounds i64, i64* %325, i64 %327
+  %329 = load i64, i64* %328, align 8
+  %330 = load i64*, i64** @POOL_timetag, align 8
+  %331 = load i8, i8* %45, align 1
+  %332 = zext i8 %331 to i64
+  %333 = getelementptr inbounds i64, i64* %330, i64 %332
+  store i64 %329, i64* %333, align 8
+  %334 = load i8*, i8** @POOL_slot, align 8
+  %335 = load i8, i8* %46, align 1
+  %336 = zext i8 %335 to i64
+  %337 = getelementptr inbounds i8, i8* %334, i64 %336
+  %338 = load i8, i8* %337, align 1
+  %339 = load i8*, i8** @POOL_slot, align 8
+  %340 = load i8, i8* %45, align 1
+  %341 = zext i8 %340 to i64
+  %342 = getelementptr inbounds i8, i8* %339, i64 %341
+  store i8 %338, i8* %342, align 1
+  br label %362
 
-; <label>:354:                                    ; preds = %282
-  br label %605
+; <label>:343:                                    ; preds = %299
+  %344 = load i64*, i64** @POOL_timetag, align 8
+  %345 = load i8, i8* %47, align 1
+  %346 = zext i8 %345 to i64
+  %347 = getelementptr inbounds i64, i64* %344, i64 %346
+  %348 = load i64, i64* %347, align 8
+  %349 = load i64*, i64** @POOL_timetag, align 8
+  %350 = load i8, i8* %45, align 1
+  %351 = zext i8 %350 to i64
+  %352 = getelementptr inbounds i64, i64* %349, i64 %351
+  store i64 %348, i64* %352, align 8
+  %353 = load i8*, i8** @POOL_slot, align 8
+  %354 = load i8, i8* %47, align 1
+  %355 = zext i8 %354 to i64
+  %356 = getelementptr inbounds i8, i8* %353, i64 %355
+  %357 = load i8, i8* %356, align 1
+  %358 = load i8*, i8** @POOL_slot, align 8
+  %359 = load i8, i8* %45, align 1
+  %360 = zext i8 %359 to i64
+  %361 = getelementptr inbounds i8, i8* %358, i64 %360
+  store i8 %357, i8* %361, align 1
+  br label %362
 
-; <label>:355:                                    ; preds = %103
-  %356 = load %struct.circular_buf_t*, %struct.circular_buf_t** @VSLOT_timetag, align 8
-  %357 = load i32, i32* %71, align 4
-  %358 = sext i32 %357 to i64
-  %359 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %356, i64 %358
-  %360 = bitcast %struct.circular_buf_t* %72 to i8*
-  %361 = bitcast %struct.circular_buf_t* %359 to i8*
-  call void @llvm.memcpy.p0i8.p0i8.i64(i8* %360, i8* %361, i64 32, i32 8, i1 false)
-  %362 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %72, i32 0, i32 1
-  %363 = load i64, i64* %362, align 8
-  %364 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %72, i32 0, i32 2
-  %365 = load i64, i64* %364, align 8
-  %366 = icmp eq i64 %363, %365
-  br i1 %366, label %367, label %370
+; <label>:362:                                    ; preds = %343, %324
+  %363 = load i8, i8* %44, align 1
+  %364 = zext i8 %363 to i32
+  %365 = sdiv i32 %364, 2
+  %366 = trunc i32 %365 to i8
+  store i8 %366, i8* %44, align 1
+  br label %295
 
-; <label>:367:                                    ; preds = %355
-  %368 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([28 x i8], [28 x i8]* @"\01??_C@_0BM@PJHDCAIH@?6?5?$FLERROR?$FNCorrupted?5slot?$CB?$CB?$CB?$CB?$AA@", i32 0, i32 0))
-  %369 = sext i32 %368 to i64
-  store i64 %369, i64* @order_gurantee2, align 8
-  br label %370
+; <label>:367:                                    ; preds = %295
+  br label %618
 
-; <label>:370:                                    ; preds = %367, %355
-  %371 = load %struct.circular_buf_t*, %struct.circular_buf_t** @VSLOT_timetag, align 8
-  %372 = load i32, i32* %71, align 4
-  %373 = sext i32 %372 to i64
-  %374 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %371, i64 %373
+; <label>:368:                                    ; preds = %103
+  %369 = load %struct.circular_buf_t*, %struct.circular_buf_t** @VSLOT_timetag, align 8
+  %370 = load i32, i32* %71, align 4
+  %371 = sext i32 %370 to i64
+  %372 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %369, i64 %371
+  %373 = bitcast %struct.circular_buf_t* %72 to i8*
+  %374 = bitcast %struct.circular_buf_t* %372 to i8*
+  call void @llvm.memcpy.p0i8.p0i8.i64(i8* %373, i8* %374, i64 32, i32 8, i1 false)
+  %375 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %72, i32 0, i32 1
+  %376 = load i64, i64* %375, align 8
+  %377 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %72, i32 0, i32 2
+  %378 = load i64, i64* %377, align 8
+  %379 = icmp eq i64 %376, %378
+  br i1 %379, label %380, label %383
+
+; <label>:380:                                    ; preds = %368
+  %381 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([28 x i8], [28 x i8]* @"\01??_C@_0BM@PJHDCAIH@?6?5?$FLERROR?$FNCorrupted?5slot?$CB?$CB?$CB?$CB?$AA@", i32 0, i32 0))
+  %382 = sext i32 %381 to i64
+  store i64 %382, i64* @order_gurantee2, align 8
+  br label %383
+
+; <label>:383:                                    ; preds = %380, %368
+  %384 = load %struct.circular_buf_t*, %struct.circular_buf_t** @VSLOT_timetag, align 8
+  %385 = load i32, i32* %71, align 4
+  %386 = sext i32 %385 to i64
+  %387 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %384, i64 %386
   store i64* %73, i64** %14, align 8
-  store %struct.circular_buf_t* %374, %struct.circular_buf_t** %15, align 8
+  store %struct.circular_buf_t* %387, %struct.circular_buf_t** %15, align 8
   store i32 -1, i32* %16, align 4
-  %375 = load %struct.circular_buf_t*, %struct.circular_buf_t** %15, align 8
-  %376 = icmp ne %struct.circular_buf_t* %375, null
-  br i1 %376, label %377, label %409
+  %388 = load %struct.circular_buf_t*, %struct.circular_buf_t** %15, align 8
+  %389 = icmp ne %struct.circular_buf_t* %388, null
+  br i1 %389, label %390, label %422
 
-; <label>:377:                                    ; preds = %370
-  %378 = load i64*, i64** %14, align 8
-  %379 = icmp ne i64* %378, null
-  br i1 %379, label %380, label %409
+; <label>:390:                                    ; preds = %383
+  %391 = load i64*, i64** %14, align 8
+  %392 = icmp ne i64* %391, null
+  br i1 %392, label %393, label %422
 
-; <label>:380:                                    ; preds = %377
-  %381 = load %struct.circular_buf_t*, %struct.circular_buf_t** %15, align 8
-  %382 = bitcast %struct.circular_buf_t* %17 to i8*
-  %383 = bitcast %struct.circular_buf_t* %381 to i8*
-  call void @llvm.memcpy.p0i8.p0i8.i64(i8* %382, i8* %383, i64 32, i32 8, i1 false)
-  %384 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %17, i32 0, i32 1
-  %385 = load i64, i64* %384, align 8
-  %386 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %17, i32 0, i32 2
-  %387 = load i64, i64* %386, align 8
-  %388 = icmp eq i64 %385, %387
-  br i1 %388, label %409, label %389
+; <label>:393:                                    ; preds = %390
+  %394 = load %struct.circular_buf_t*, %struct.circular_buf_t** %15, align 8
+  %395 = bitcast %struct.circular_buf_t* %17 to i8*
+  %396 = bitcast %struct.circular_buf_t* %394 to i8*
+  call void @llvm.memcpy.p0i8.p0i8.i64(i8* %395, i8* %396, i64 32, i32 8, i1 false)
+  %397 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %17, i32 0, i32 1
+  %398 = load i64, i64* %397, align 8
+  %399 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %17, i32 0, i32 2
+  %400 = load i64, i64* %399, align 8
+  %401 = icmp eq i64 %398, %400
+  br i1 %401, label %422, label %402
 
-; <label>:389:                                    ; preds = %380
-  %390 = load %struct.circular_buf_t*, %struct.circular_buf_t** %15, align 8
-  %391 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %390, i32 0, i32 0
-  %392 = load i64*, i64** %391, align 8
-  %393 = load %struct.circular_buf_t*, %struct.circular_buf_t** %15, align 8
-  %394 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %393, i32 0, i32 2
-  %395 = load i64, i64* %394, align 8
-  %396 = getelementptr inbounds i64, i64* %392, i64 %395
-  %397 = load i64, i64* %396, align 8
-  %398 = load i64*, i64** %14, align 8
-  store i64 %397, i64* %398, align 8
-  %399 = load %struct.circular_buf_t*, %struct.circular_buf_t** %15, align 8
-  %400 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %399, i32 0, i32 2
-  %401 = load i64, i64* %400, align 8
-  %402 = add i64 %401, 1
+; <label>:402:                                    ; preds = %393
   %403 = load %struct.circular_buf_t*, %struct.circular_buf_t** %15, align 8
-  %404 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %403, i32 0, i32 3
-  %405 = load i64, i64* %404, align 8
-  %406 = urem i64 %402, %405
-  %407 = load %struct.circular_buf_t*, %struct.circular_buf_t** %15, align 8
-  %408 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %407, i32 0, i32 2
-  store i64 %406, i64* %408, align 8
+  %404 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %403, i32 0, i32 0
+  %405 = load i64*, i64** %404, align 8
+  %406 = load %struct.circular_buf_t*, %struct.circular_buf_t** %15, align 8
+  %407 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %406, i32 0, i32 2
+  %408 = load i64, i64* %407, align 8
+  %409 = getelementptr inbounds i64, i64* %405, i64 %408
+  %410 = load i64, i64* %409, align 8
+  %411 = load i64*, i64** %14, align 8
+  store i64 %410, i64* %411, align 8
+  %412 = load %struct.circular_buf_t*, %struct.circular_buf_t** %15, align 8
+  %413 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %412, i32 0, i32 2
+  %414 = load i64, i64* %413, align 8
+  %415 = add i64 %414, 1
+  %416 = load %struct.circular_buf_t*, %struct.circular_buf_t** %15, align 8
+  %417 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %416, i32 0, i32 3
+  %418 = load i64, i64* %417, align 8
+  %419 = urem i64 %415, %418
+  %420 = load %struct.circular_buf_t*, %struct.circular_buf_t** %15, align 8
+  %421 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %420, i32 0, i32 2
+  store i64 %419, i64* %421, align 8
   store i32 0, i32* %16, align 4
-  br label %409
+  br label %422
 
-; <label>:409:                                    ; preds = %370, %377, %380, %389
-  %410 = load i32, i32* %16, align 4
-  %411 = load i8, i8* %69, align 1
-  %412 = load i64, i64* %73, align 8
-  store i8 %411, i8* %2, align 1
-  store i64 %412, i64* %3, align 8
-  %413 = load i8, i8* @POOL_total_slots, align 1
-  %414 = zext i8 %413 to i32
-  %415 = load i8, i8* %2, align 1
-  %416 = zext i8 %415 to i32
-  %417 = add nsw i32 %414, %416
-  %418 = trunc i32 %417 to i8
-  store i8 %418, i8* %4, align 1
-  %419 = load i64, i64* %3, align 8
-  %420 = load i64*, i64** @POOL_timetag, align 8
-  %421 = load i8, i8* %4, align 1
-  %422 = zext i8 %421 to i64
-  %423 = getelementptr inbounds i64, i64* %420, i64 %422
-  store i64 %419, i64* %423, align 8
-  %424 = load i8, i8* %2, align 1
-  %425 = load i8*, i8** @POOL_slot, align 8
-  %426 = load i8, i8* %4, align 1
-  %427 = zext i8 %426 to i64
-  %428 = getelementptr inbounds i8, i8* %425, i64 %427
-  store i8 %424, i8* %428, align 1
-  br label %429
+; <label>:422:                                    ; preds = %383, %390, %393, %402
+  %423 = load i32, i32* %16, align 4
+  %424 = load i8, i8* %69, align 1
+  %425 = load i64, i64* %73, align 8
+  store i8 %424, i8* %8, align 1
+  store i64 %425, i64* %9, align 8
+  %426 = load i8, i8* @POOL_total_slots, align 1
+  %427 = zext i8 %426 to i32
+  %428 = load i8, i8* %8, align 1
+  %429 = zext i8 %428 to i32
+  %430 = add nsw i32 %427, %429
+  %431 = trunc i32 %430 to i8
+  store i8 %431, i8* %10, align 1
+  %432 = load i64, i64* %9, align 8
+  %433 = load i64*, i64** @POOL_timetag, align 8
+  %434 = load i8, i8* %10, align 1
+  %435 = zext i8 %434 to i64
+  %436 = getelementptr inbounds i64, i64* %433, i64 %435
+  store i64 %432, i64* %436, align 8
+  %437 = load i8, i8* %8, align 1
+  %438 = load i8*, i8** @POOL_slot, align 8
+  %439 = load i8, i8* %10, align 1
+  %440 = zext i8 %439 to i64
+  %441 = getelementptr inbounds i8, i8* %438, i64 %440
+  store i8 %437, i8* %441, align 1
+  br label %442
 
-; <label>:429:                                    ; preds = %496, %409
-  %430 = load i8, i8* %4, align 1
-  %431 = zext i8 %430 to i32
-  %432 = icmp sgt i32 %431, 1
-  br i1 %432, label %433, label %501
+; <label>:442:                                    ; preds = %509, %422
+  %443 = load i8, i8* %10, align 1
+  %444 = zext i8 %443 to i32
+  %445 = icmp sgt i32 %444, 1
+  br i1 %445, label %446, label %514
 
-; <label>:433:                                    ; preds = %429
-  %434 = load i8, i8* %4, align 1
-  %435 = zext i8 %434 to i32
-  %436 = sdiv i32 %435, 2
-  %437 = trunc i32 %436 to i8
-  store i8 %437, i8* %5, align 1
-  %438 = load i8, i8* %5, align 1
-  %439 = zext i8 %438 to i32
-  %440 = mul nsw i32 %439, 2
-  %441 = trunc i32 %440 to i8
-  store i8 %441, i8* %6, align 1
-  %442 = load i8, i8* %5, align 1
-  %443 = zext i8 %442 to i32
-  %444 = mul nsw i32 %443, 2
-  %445 = add nsw i32 %444, 1
-  %446 = trunc i32 %445 to i8
-  store i8 %446, i8* %7, align 1
-  %447 = load i64*, i64** @POOL_timetag, align 8
-  %448 = load i8, i8* %6, align 1
-  %449 = zext i8 %448 to i64
-  %450 = getelementptr inbounds i64, i64* %447, i64 %449
-  %451 = load i64, i64* %450, align 8
-  %452 = load i64*, i64** @POOL_timetag, align 8
-  %453 = load i8, i8* %7, align 1
-  %454 = zext i8 %453 to i64
-  %455 = getelementptr inbounds i64, i64* %452, i64 %454
-  %456 = load i64, i64* %455, align 8
-  %457 = icmp slt i64 %451, %456
-  br i1 %457, label %458, label %477
+; <label>:446:                                    ; preds = %442
+  %447 = load i8, i8* %10, align 1
+  %448 = zext i8 %447 to i32
+  %449 = sdiv i32 %448, 2
+  %450 = trunc i32 %449 to i8
+  store i8 %450, i8* %11, align 1
+  %451 = load i8, i8* %11, align 1
+  %452 = zext i8 %451 to i32
+  %453 = mul nsw i32 %452, 2
+  %454 = trunc i32 %453 to i8
+  store i8 %454, i8* %12, align 1
+  %455 = load i8, i8* %11, align 1
+  %456 = zext i8 %455 to i32
+  %457 = mul nsw i32 %456, 2
+  %458 = add nsw i32 %457, 1
+  %459 = trunc i32 %458 to i8
+  store i8 %459, i8* %13, align 1
+  %460 = load i64*, i64** @POOL_timetag, align 8
+  %461 = load i8, i8* %12, align 1
+  %462 = zext i8 %461 to i64
+  %463 = getelementptr inbounds i64, i64* %460, i64 %462
+  %464 = load i64, i64* %463, align 8
+  %465 = load i64*, i64** @POOL_timetag, align 8
+  %466 = load i8, i8* %13, align 1
+  %467 = zext i8 %466 to i64
+  %468 = getelementptr inbounds i64, i64* %465, i64 %467
+  %469 = load i64, i64* %468, align 8
+  %470 = icmp slt i64 %464, %469
+  br i1 %470, label %471, label %490
 
-; <label>:458:                                    ; preds = %433
-  %459 = load i64*, i64** @POOL_timetag, align 8
-  %460 = load i8, i8* %6, align 1
-  %461 = zext i8 %460 to i64
-  %462 = getelementptr inbounds i64, i64* %459, i64 %461
-  %463 = load i64, i64* %462, align 8
-  %464 = load i64*, i64** @POOL_timetag, align 8
-  %465 = load i8, i8* %5, align 1
-  %466 = zext i8 %465 to i64
-  %467 = getelementptr inbounds i64, i64* %464, i64 %466
-  store i64 %463, i64* %467, align 8
-  %468 = load i8*, i8** @POOL_slot, align 8
-  %469 = load i8, i8* %6, align 1
-  %470 = zext i8 %469 to i64
-  %471 = getelementptr inbounds i8, i8* %468, i64 %470
-  %472 = load i8, i8* %471, align 1
-  %473 = load i8*, i8** @POOL_slot, align 8
-  %474 = load i8, i8* %5, align 1
-  %475 = zext i8 %474 to i64
-  %476 = getelementptr inbounds i8, i8* %473, i64 %475
-  store i8 %472, i8* %476, align 1
-  br label %496
+; <label>:471:                                    ; preds = %446
+  %472 = load i64*, i64** @POOL_timetag, align 8
+  %473 = load i8, i8* %12, align 1
+  %474 = zext i8 %473 to i64
+  %475 = getelementptr inbounds i64, i64* %472, i64 %474
+  %476 = load i64, i64* %475, align 8
+  %477 = load i64*, i64** @POOL_timetag, align 8
+  %478 = load i8, i8* %11, align 1
+  %479 = zext i8 %478 to i64
+  %480 = getelementptr inbounds i64, i64* %477, i64 %479
+  store i64 %476, i64* %480, align 8
+  %481 = load i8*, i8** @POOL_slot, align 8
+  %482 = load i8, i8* %12, align 1
+  %483 = zext i8 %482 to i64
+  %484 = getelementptr inbounds i8, i8* %481, i64 %483
+  %485 = load i8, i8* %484, align 1
+  %486 = load i8*, i8** @POOL_slot, align 8
+  %487 = load i8, i8* %11, align 1
+  %488 = zext i8 %487 to i64
+  %489 = getelementptr inbounds i8, i8* %486, i64 %488
+  store i8 %485, i8* %489, align 1
+  br label %509
 
-; <label>:477:                                    ; preds = %433
-  %478 = load i64*, i64** @POOL_timetag, align 8
-  %479 = load i8, i8* %7, align 1
-  %480 = zext i8 %479 to i64
-  %481 = getelementptr inbounds i64, i64* %478, i64 %480
-  %482 = load i64, i64* %481, align 8
-  %483 = load i64*, i64** @POOL_timetag, align 8
-  %484 = load i8, i8* %5, align 1
-  %485 = zext i8 %484 to i64
-  %486 = getelementptr inbounds i64, i64* %483, i64 %485
-  store i64 %482, i64* %486, align 8
-  %487 = load i8*, i8** @POOL_slot, align 8
-  %488 = load i8, i8* %7, align 1
-  %489 = zext i8 %488 to i64
-  %490 = getelementptr inbounds i8, i8* %487, i64 %489
-  %491 = load i8, i8* %490, align 1
-  %492 = load i8*, i8** @POOL_slot, align 8
-  %493 = load i8, i8* %5, align 1
-  %494 = zext i8 %493 to i64
-  %495 = getelementptr inbounds i8, i8* %492, i64 %494
-  store i8 %491, i8* %495, align 1
-  br label %496
+; <label>:490:                                    ; preds = %446
+  %491 = load i64*, i64** @POOL_timetag, align 8
+  %492 = load i8, i8* %13, align 1
+  %493 = zext i8 %492 to i64
+  %494 = getelementptr inbounds i64, i64* %491, i64 %493
+  %495 = load i64, i64* %494, align 8
+  %496 = load i64*, i64** @POOL_timetag, align 8
+  %497 = load i8, i8* %11, align 1
+  %498 = zext i8 %497 to i64
+  %499 = getelementptr inbounds i64, i64* %496, i64 %498
+  store i64 %495, i64* %499, align 8
+  %500 = load i8*, i8** @POOL_slot, align 8
+  %501 = load i8, i8* %13, align 1
+  %502 = zext i8 %501 to i64
+  %503 = getelementptr inbounds i8, i8* %500, i64 %502
+  %504 = load i8, i8* %503, align 1
+  %505 = load i8*, i8** @POOL_slot, align 8
+  %506 = load i8, i8* %11, align 1
+  %507 = zext i8 %506 to i64
+  %508 = getelementptr inbounds i8, i8* %505, i64 %507
+  store i8 %504, i8* %508, align 1
+  br label %509
 
-; <label>:496:                                    ; preds = %477, %458
-  %497 = load i8, i8* %4, align 1
-  %498 = zext i8 %497 to i32
-  %499 = sdiv i32 %498, 2
-  %500 = trunc i32 %499 to i8
-  store i8 %500, i8* %4, align 1
-  br label %429
+; <label>:509:                                    ; preds = %490, %471
+  %510 = load i8, i8* %10, align 1
+  %511 = zext i8 %510 to i32
+  %512 = sdiv i32 %511, 2
+  %513 = trunc i32 %512 to i8
+  store i8 %513, i8* %10, align 1
+  br label %442
 
-; <label>:501:                                    ; preds = %429
-  %502 = load %struct.circular_buf_t*, %struct.circular_buf_t** @VSLOT_timetag, align 8
-  %503 = load i32, i32* %71, align 4
-  %504 = sext i32 %503 to i64
-  %505 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %502, i64 %504
-  %506 = bitcast %struct.circular_buf_t* %74 to i8*
-  %507 = bitcast %struct.circular_buf_t* %505 to i8*
-  call void @llvm.memcpy.p0i8.p0i8.i64(i8* %506, i8* %507, i64 32, i32 8, i1 false)
-  %508 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %74, i32 0, i32 1
-  %509 = load i64, i64* %508, align 8
-  %510 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %74, i32 0, i32 2
-  %511 = load i64, i64* %510, align 8
-  %512 = icmp eq i64 %509, %511
-  br i1 %512, label %513, label %604
+; <label>:514:                                    ; preds = %442
+  %515 = load %struct.circular_buf_t*, %struct.circular_buf_t** @VSLOT_timetag, align 8
+  %516 = load i32, i32* %71, align 4
+  %517 = sext i32 %516 to i64
+  %518 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %515, i64 %517
+  %519 = bitcast %struct.circular_buf_t* %74 to i8*
+  %520 = bitcast %struct.circular_buf_t* %518 to i8*
+  call void @llvm.memcpy.p0i8.p0i8.i64(i8* %519, i8* %520, i64 32, i32 8, i1 false)
+  %521 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %74, i32 0, i32 1
+  %522 = load i64, i64* %521, align 8
+  %523 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %74, i32 0, i32 2
+  %524 = load i64, i64* %523, align 8
+  %525 = icmp eq i64 %522, %524
+  br i1 %525, label %526, label %617
 
-; <label>:513:                                    ; preds = %501
-  %514 = load i8, i8* %69, align 1
-  store i8 %514, i8* %8, align 1
-  store i64 9223372036854775807, i64* %9, align 8
-  %515 = load i8, i8* @POOL_total_slots, align 1
-  %516 = zext i8 %515 to i32
-  %517 = load i8, i8* %8, align 1
-  %518 = zext i8 %517 to i32
-  %519 = add nsw i32 %516, %518
-  %520 = trunc i32 %519 to i8
-  store i8 %520, i8* %10, align 1
-  %521 = load i64, i64* %9, align 8
-  %522 = load i64*, i64** @POOL_timetag, align 8
-  %523 = load i8, i8* %10, align 1
-  %524 = zext i8 %523 to i64
-  %525 = getelementptr inbounds i64, i64* %522, i64 %524
-  store i64 %521, i64* %525, align 8
-  %526 = load i8, i8* %8, align 1
-  %527 = load i8*, i8** @POOL_slot, align 8
-  %528 = load i8, i8* %10, align 1
-  %529 = zext i8 %528 to i64
-  %530 = getelementptr inbounds i8, i8* %527, i64 %529
-  store i8 %526, i8* %530, align 1
-  br label %531
+; <label>:526:                                    ; preds = %514
+  %527 = load i8, i8* %69, align 1
+  store i8 %527, i8* %2, align 1
+  store i64 9223372036854775807, i64* %3, align 8
+  %528 = load i8, i8* @POOL_total_slots, align 1
+  %529 = zext i8 %528 to i32
+  %530 = load i8, i8* %2, align 1
+  %531 = zext i8 %530 to i32
+  %532 = add nsw i32 %529, %531
+  %533 = trunc i32 %532 to i8
+  store i8 %533, i8* %4, align 1
+  %534 = load i64, i64* %3, align 8
+  %535 = load i64*, i64** @POOL_timetag, align 8
+  %536 = load i8, i8* %4, align 1
+  %537 = zext i8 %536 to i64
+  %538 = getelementptr inbounds i64, i64* %535, i64 %537
+  store i64 %534, i64* %538, align 8
+  %539 = load i8, i8* %2, align 1
+  %540 = load i8*, i8** @POOL_slot, align 8
+  %541 = load i8, i8* %4, align 1
+  %542 = zext i8 %541 to i64
+  %543 = getelementptr inbounds i8, i8* %540, i64 %542
+  store i8 %539, i8* %543, align 1
+  br label %544
 
-; <label>:531:                                    ; preds = %598, %513
-  %532 = load i8, i8* %10, align 1
-  %533 = zext i8 %532 to i32
-  %534 = icmp sgt i32 %533, 1
-  br i1 %534, label %535, label %603
+; <label>:544:                                    ; preds = %611, %526
+  %545 = load i8, i8* %4, align 1
+  %546 = zext i8 %545 to i32
+  %547 = icmp sgt i32 %546, 1
+  br i1 %547, label %548, label %616
 
-; <label>:535:                                    ; preds = %531
-  %536 = load i8, i8* %10, align 1
-  %537 = zext i8 %536 to i32
-  %538 = sdiv i32 %537, 2
-  %539 = trunc i32 %538 to i8
-  store i8 %539, i8* %11, align 1
-  %540 = load i8, i8* %11, align 1
-  %541 = zext i8 %540 to i32
-  %542 = mul nsw i32 %541, 2
-  %543 = trunc i32 %542 to i8
-  store i8 %543, i8* %12, align 1
-  %544 = load i8, i8* %11, align 1
-  %545 = zext i8 %544 to i32
-  %546 = mul nsw i32 %545, 2
-  %547 = add nsw i32 %546, 1
-  %548 = trunc i32 %547 to i8
-  store i8 %548, i8* %13, align 1
-  %549 = load i64*, i64** @POOL_timetag, align 8
-  %550 = load i8, i8* %12, align 1
-  %551 = zext i8 %550 to i64
-  %552 = getelementptr inbounds i64, i64* %549, i64 %551
-  %553 = load i64, i64* %552, align 8
-  %554 = load i64*, i64** @POOL_timetag, align 8
-  %555 = load i8, i8* %13, align 1
-  %556 = zext i8 %555 to i64
-  %557 = getelementptr inbounds i64, i64* %554, i64 %556
-  %558 = load i64, i64* %557, align 8
-  %559 = icmp slt i64 %553, %558
-  br i1 %559, label %560, label %579
+; <label>:548:                                    ; preds = %544
+  %549 = load i8, i8* %4, align 1
+  %550 = zext i8 %549 to i32
+  %551 = sdiv i32 %550, 2
+  %552 = trunc i32 %551 to i8
+  store i8 %552, i8* %5, align 1
+  %553 = load i8, i8* %5, align 1
+  %554 = zext i8 %553 to i32
+  %555 = mul nsw i32 %554, 2
+  %556 = trunc i32 %555 to i8
+  store i8 %556, i8* %6, align 1
+  %557 = load i8, i8* %5, align 1
+  %558 = zext i8 %557 to i32
+  %559 = mul nsw i32 %558, 2
+  %560 = add nsw i32 %559, 1
+  %561 = trunc i32 %560 to i8
+  store i8 %561, i8* %7, align 1
+  %562 = load i64*, i64** @POOL_timetag, align 8
+  %563 = load i8, i8* %6, align 1
+  %564 = zext i8 %563 to i64
+  %565 = getelementptr inbounds i64, i64* %562, i64 %564
+  %566 = load i64, i64* %565, align 8
+  %567 = load i64*, i64** @POOL_timetag, align 8
+  %568 = load i8, i8* %7, align 1
+  %569 = zext i8 %568 to i64
+  %570 = getelementptr inbounds i64, i64* %567, i64 %569
+  %571 = load i64, i64* %570, align 8
+  %572 = icmp slt i64 %566, %571
+  br i1 %572, label %573, label %592
 
-; <label>:560:                                    ; preds = %535
-  %561 = load i64*, i64** @POOL_timetag, align 8
-  %562 = load i8, i8* %12, align 1
-  %563 = zext i8 %562 to i64
-  %564 = getelementptr inbounds i64, i64* %561, i64 %563
-  %565 = load i64, i64* %564, align 8
-  %566 = load i64*, i64** @POOL_timetag, align 8
-  %567 = load i8, i8* %11, align 1
-  %568 = zext i8 %567 to i64
-  %569 = getelementptr inbounds i64, i64* %566, i64 %568
-  store i64 %565, i64* %569, align 8
-  %570 = load i8*, i8** @POOL_slot, align 8
-  %571 = load i8, i8* %12, align 1
-  %572 = zext i8 %571 to i64
-  %573 = getelementptr inbounds i8, i8* %570, i64 %572
-  %574 = load i8, i8* %573, align 1
-  %575 = load i8*, i8** @POOL_slot, align 8
-  %576 = load i8, i8* %11, align 1
-  %577 = zext i8 %576 to i64
-  %578 = getelementptr inbounds i8, i8* %575, i64 %577
-  store i8 %574, i8* %578, align 1
-  br label %598
+; <label>:573:                                    ; preds = %548
+  %574 = load i64*, i64** @POOL_timetag, align 8
+  %575 = load i8, i8* %6, align 1
+  %576 = zext i8 %575 to i64
+  %577 = getelementptr inbounds i64, i64* %574, i64 %576
+  %578 = load i64, i64* %577, align 8
+  %579 = load i64*, i64** @POOL_timetag, align 8
+  %580 = load i8, i8* %5, align 1
+  %581 = zext i8 %580 to i64
+  %582 = getelementptr inbounds i64, i64* %579, i64 %581
+  store i64 %578, i64* %582, align 8
+  %583 = load i8*, i8** @POOL_slot, align 8
+  %584 = load i8, i8* %6, align 1
+  %585 = zext i8 %584 to i64
+  %586 = getelementptr inbounds i8, i8* %583, i64 %585
+  %587 = load i8, i8* %586, align 1
+  %588 = load i8*, i8** @POOL_slot, align 8
+  %589 = load i8, i8* %5, align 1
+  %590 = zext i8 %589 to i64
+  %591 = getelementptr inbounds i8, i8* %588, i64 %590
+  store i8 %587, i8* %591, align 1
+  br label %611
 
-; <label>:579:                                    ; preds = %535
-  %580 = load i64*, i64** @POOL_timetag, align 8
-  %581 = load i8, i8* %13, align 1
-  %582 = zext i8 %581 to i64
-  %583 = getelementptr inbounds i64, i64* %580, i64 %582
-  %584 = load i64, i64* %583, align 8
-  %585 = load i64*, i64** @POOL_timetag, align 8
-  %586 = load i8, i8* %11, align 1
-  %587 = zext i8 %586 to i64
-  %588 = getelementptr inbounds i64, i64* %585, i64 %587
-  store i64 %584, i64* %588, align 8
-  %589 = load i8*, i8** @POOL_slot, align 8
-  %590 = load i8, i8* %13, align 1
-  %591 = zext i8 %590 to i64
-  %592 = getelementptr inbounds i8, i8* %589, i64 %591
-  %593 = load i8, i8* %592, align 1
-  %594 = load i8*, i8** @POOL_slot, align 8
-  %595 = load i8, i8* %11, align 1
-  %596 = zext i8 %595 to i64
-  %597 = getelementptr inbounds i8, i8* %594, i64 %596
-  store i8 %593, i8* %597, align 1
-  br label %598
+; <label>:592:                                    ; preds = %548
+  %593 = load i64*, i64** @POOL_timetag, align 8
+  %594 = load i8, i8* %7, align 1
+  %595 = zext i8 %594 to i64
+  %596 = getelementptr inbounds i64, i64* %593, i64 %595
+  %597 = load i64, i64* %596, align 8
+  %598 = load i64*, i64** @POOL_timetag, align 8
+  %599 = load i8, i8* %5, align 1
+  %600 = zext i8 %599 to i64
+  %601 = getelementptr inbounds i64, i64* %598, i64 %600
+  store i64 %597, i64* %601, align 8
+  %602 = load i8*, i8** @POOL_slot, align 8
+  %603 = load i8, i8* %7, align 1
+  %604 = zext i8 %603 to i64
+  %605 = getelementptr inbounds i8, i8* %602, i64 %604
+  %606 = load i8, i8* %605, align 1
+  %607 = load i8*, i8** @POOL_slot, align 8
+  %608 = load i8, i8* %5, align 1
+  %609 = zext i8 %608 to i64
+  %610 = getelementptr inbounds i8, i8* %607, i64 %609
+  store i8 %606, i8* %610, align 1
+  br label %611
 
-; <label>:598:                                    ; preds = %579, %560
-  %599 = load i8, i8* %10, align 1
-  %600 = zext i8 %599 to i32
-  %601 = sdiv i32 %600, 2
-  %602 = trunc i32 %601 to i8
-  store i8 %602, i8* %10, align 1
-  br label %531
+; <label>:611:                                    ; preds = %592, %573
+  %612 = load i8, i8* %4, align 1
+  %613 = zext i8 %612 to i32
+  %614 = sdiv i32 %613, 2
+  %615 = trunc i32 %614 to i8
+  store i8 %615, i8* %4, align 1
+  br label %544
 
-; <label>:603:                                    ; preds = %531
-  br label %604
+; <label>:616:                                    ; preds = %544
+  br label %617
 
-; <label>:604:                                    ; preds = %603, %501
-  br label %605
+; <label>:617:                                    ; preds = %616, %514
+  br label %618
 
-; <label>:605:                                    ; preds = %604, %354
-  %606 = load i64, i64* %68, align 8
-  store i64 %606, i64* %66, align 8
-  br label %863
+; <label>:618:                                    ; preds = %617, %367
+  %619 = load i64, i64* %68, align 8
+  store i64 %619, i64* %66, align 8
+  br label %889
 
-; <label>:607:                                    ; preds = %98
-  %608 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([36 x i8], [36 x i8]* @"\01??_C@_0CE@MNMCEKMH@?6POOL?5is?5empty?0?5read?5form?5file?50@", i32 0, i32 0))
-  %609 = sext i32 %608 to i64
-  store i64 %609, i64* @order_gurantee2, align 8
+; <label>:620:                                    ; preds = %98
+  %621 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([36 x i8], [36 x i8]* @"\01??_C@_0CE@OPKBMAFE@?6POOL?5is?5empty?0?5read?5from?5file?50@", i32 0, i32 0))
+  %622 = sext i32 %621 to i64
+  store i64 %622, i64* @order_gurantee2, align 8
   store i32 0, i32* %75, align 4
   store i8* @POOL_slot0_last_chns, i8** %30, align 8
-  %610 = load i64, i64* @READER_next_RecID_relativeinbatch, align 8
-  %611 = load i32, i32* @READER_BytesofRecords, align 4
-  %612 = sext i32 %611 to i64
-  %613 = mul nsw i64 %610, %612
-  %614 = load i64, i64* @READER_batch_actualread_length, align 8
-  %615 = icmp sge i64 %613, %614
-  br i1 %615, label %616, label %639
-
-; <label>:616:                                    ; preds = %607
-  %617 = load i32, i32* @READER_BytesofRecords, align 4
-  %618 = mul nsw i32 1000, %617
-  store i32 %618, i32* %28, align 4
-  %619 = load %struct._iobuf*, %struct._iobuf** @"\01?READER_fpin@@3PEAU_iobuf@@EA", align 8
-  %620 = load i32, i32* %28, align 4
-  %621 = sext i32 %620 to i64
-  %622 = load i8*, i8** @READER_buffer, align 8
-  %623 = call i64 @fread(i8* %622, i64 1, i64 %621, %struct._iobuf* %619)
-  store i64 %623, i64* @READER_batch_actualread_length, align 8
-  %624 = load i64, i64* @READER_batch_actualread_length, align 8
-  %625 = load i64, i64* @READER_batchend_pos_in_file, align 8
-  %626 = add nsw i64 %625, %624
-  store i64 %626, i64* @READER_batchend_pos_in_file, align 8
-  store i64 0, i64* @READER_next_RecID_relativeinbatch, align 8
+  %623 = load i64, i64* @READER_next_RecID_relativeinbatch, align 8
+  %624 = load i32, i32* @READER_BytesofRecords, align 4
+  %625 = sext i32 %624 to i64
+  %626 = mul nsw i64 %623, %625
   %627 = load i64, i64* @READER_batch_actualread_length, align 8
-  %628 = load i32, i32* %28, align 4
-  %629 = sext i32 %628 to i64
-  %630 = icmp slt i64 %627, %629
-  br i1 %630, label %631, label %632
+  %628 = icmp sge i64 %626, %627
+  br i1 %628, label %629, label %665
 
-; <label>:631:                                    ; preds = %616
+; <label>:629:                                    ; preds = %620
+  %630 = load i32, i32* @READER_BytesofRecords, align 4
+  %631 = mul nsw i32 1000, %630
+  store i32 %631, i32* %28, align 4
+  %632 = load i64, i64* @READER_batchend_pos_in_file, align 8
+  %633 = load i32, i32* %28, align 4
+  %634 = sext i32 %633 to i64
+  %635 = add nsw i64 %632, %634
+  %636 = load i64, i64* @READER_fendpoint, align 8
+  %637 = icmp sge i64 %635, %636
+  br i1 %637, label %638, label %644
+
+; <label>:638:                                    ; preds = %629
+  %639 = load i64, i64* @READER_fendpoint, align 8
+  %640 = load i64, i64* @READER_fseekpoint, align 8
+  %641 = load i64, i64* @READER_batchend_pos_in_file, align 8
+  %642 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([32 x i8], [32 x i8]* @"\01??_C@_0CA@KHNGPAIJ@?6reading?5to?5?$CFlld?5?0?5?$FL?$CFlld?5?$CFlld?5?$FN?$AA@", i32 0, i32 0), i64 %641, i64 %640, i64 %639)
+  %643 = sext i32 %642 to i64
+  store i64 %643, i64* @order_gurantee2, align 8
   store i32 -1, i32* %27, align 4
-  br label %633
+  br label %659
 
-; <label>:632:                                    ; preds = %616
+; <label>:644:                                    ; preds = %629
+  %645 = load %struct._iobuf*, %struct._iobuf** @"\01?READER_fpin@@3PEAU_iobuf@@EA", align 8
+  %646 = load i32, i32* %28, align 4
+  %647 = sext i32 %646 to i64
+  %648 = load i8*, i8** @READER_buffer, align 8
+  %649 = call i64 @fread(i8* %648, i64 1, i64 %647, %struct._iobuf* %645)
+  store i64 %649, i64* @READER_batch_actualread_length, align 8
+  %650 = load i64, i64* @READER_batch_actualread_length, align 8
+  %651 = load i64, i64* @READER_batchend_pos_in_file, align 8
+  %652 = add nsw i64 %651, %650
+  store i64 %652, i64* @READER_batchend_pos_in_file, align 8
+  store i64 0, i64* @READER_next_RecID_relativeinbatch, align 8
+  %653 = load i64, i64* @READER_batch_actualread_length, align 8
+  %654 = load i32, i32* %28, align 4
+  %655 = sext i32 %654 to i64
+  %656 = icmp slt i64 %653, %655
+  br i1 %656, label %657, label %658
+
+; <label>:657:                                    ; preds = %644
+  store i32 -1, i32* %27, align 4
+  br label %659
+
+; <label>:658:                                    ; preds = %644
   store i32 0, i32* %27, align 4
-  br label %633
+  br label %659
 
-; <label>:633:                                    ; preds = %632, %631
-  %634 = load i32, i32* %27, align 4
-  store i32 %634, i32* %31, align 4
-  %635 = load i32, i32* %31, align 4
-  %636 = icmp slt i32 %635, 0
-  br i1 %636, label %637, label %638
+; <label>:659:                                    ; preds = %658, %657, %638
+  %660 = load i32, i32* %27, align 4
+  store i32 %660, i32* %31, align 4
+  %661 = load i32, i32* %31, align 4
+  %662 = icmp slt i32 %661, 0
+  br i1 %662, label %663, label %664
 
-; <label>:637:                                    ; preds = %633
+; <label>:663:                                    ; preds = %659
   store i64 9223372036854775807, i64* %29, align 8
-  br label %766
+  br label %792
 
-; <label>:638:                                    ; preds = %633
-  br label %639
+; <label>:664:                                    ; preds = %659
+  br label %665
 
-; <label>:639:                                    ; preds = %638, %607
-  br label %640
+; <label>:665:                                    ; preds = %664, %620
+  br label %666
 
-; <label>:640:                                    ; preds = %761, %639
+; <label>:666:                                    ; preds = %787, %665
   store i64 9223372036854775807, i64* %32, align 8
   store i8 0, i8* %33, align 1
-  %641 = load i8*, i8** @READER_buffer, align 8
-  %642 = bitcast i8* %641 to i32*
-  %643 = load i64, i64* @READER_next_RecID_relativeinbatch, align 8
-  %644 = getelementptr inbounds i32, i32* %642, i64 %643
-  %645 = load i32, i32* %644, align 4
-  store i32 %645, i32* %34, align 4
+  %667 = load i8*, i8** @READER_buffer, align 8
+  %668 = bitcast i8* %667 to i32*
+  %669 = load i64, i64* @READER_next_RecID_relativeinbatch, align 8
+  %670 = getelementptr inbounds i32, i32* %668, i64 %669
+  %671 = load i32, i32* %670, align 4
+  store i32 %671, i32* %34, align 4
   store i32 66052, i32* %35, align 4
-  %646 = load i32, i32* %34, align 4
+  %672 = load i32, i32* %34, align 4
   store i64* @"\01?overflowcorrection@?1??pop_signal_from_file@@9@4_JA", i64** %18, align 8
   store i8* %33, i8** %19, align 8
   store i64* %32, i64** %20, align 8
   store i32 1, i32* %21, align 4
-  store i32 %646, i32* %22, align 4
+  store i32 %672, i32* %22, align 4
   store i32 33552000, i32* %24, align 4
   store i32 33554432, i32* %25, align 4
-  %647 = load i32, i32* %22, align 4
-  %648 = bitcast %union.anon.0* %26 to i32*
-  store i32 %647, i32* %648, align 4
-  %649 = bitcast %union.anon.0* %26 to %struct.anon.1*
-  %650 = bitcast %struct.anon.1* %649 to i32*
-  %651 = load i32, i32* %650, align 4
-  %652 = lshr i32 %651, 31
-  %653 = icmp eq i32 %652, 1
-  br i1 %653, label %654, label %735
+  %673 = load i32, i32* %22, align 4
+  %674 = bitcast %union.anon.0* %26 to i32*
+  store i32 %673, i32* %674, align 4
+  %675 = bitcast %union.anon.0* %26 to %struct.anon.1*
+  %676 = bitcast %struct.anon.1* %675 to i32*
+  %677 = load i32, i32* %676, align 4
+  %678 = lshr i32 %677, 31
+  %679 = icmp eq i32 %678, 1
+  br i1 %679, label %680, label %761
 
-; <label>:654:                                    ; preds = %640
-  %655 = bitcast %union.anon.0* %26 to %struct.anon.1*
-  %656 = bitcast %struct.anon.1* %655 to i32*
-  %657 = load i32, i32* %656, align 4
-  %658 = lshr i32 %657, 25
-  %659 = and i32 %658, 63
-  %660 = icmp eq i32 %659, 63
-  br i1 %660, label %661, label %690
+; <label>:680:                                    ; preds = %666
+  %681 = bitcast %union.anon.0* %26 to %struct.anon.1*
+  %682 = bitcast %struct.anon.1* %681 to i32*
+  %683 = load i32, i32* %682, align 4
+  %684 = lshr i32 %683, 25
+  %685 = and i32 %684, 63
+  %686 = icmp eq i32 %685, 63
+  br i1 %686, label %687, label %716
 
-; <label>:661:                                    ; preds = %654
-  %662 = load i32, i32* %21, align 4
-  %663 = icmp eq i32 %662, 1
-  br i1 %663, label %664, label %668
+; <label>:687:                                    ; preds = %680
+  %688 = load i32, i32* %21, align 4
+  %689 = icmp eq i32 %688, 1
+  br i1 %689, label %690, label %694
 
-; <label>:664:                                    ; preds = %661
-  %665 = load i64*, i64** %18, align 8
-  %666 = load i64, i64* %665, align 8
-  %667 = add i64 %666, 33552000
-  store i64 %667, i64* %665, align 8
-  br label %689
+; <label>:690:                                    ; preds = %687
+  %691 = load i64*, i64** %18, align 8
+  %692 = load i64, i64* %691, align 8
+  %693 = add i64 %692, 33552000
+  store i64 %693, i64* %691, align 8
+  br label %715
 
-; <label>:668:                                    ; preds = %661
-  %669 = bitcast %union.anon.0* %26 to %struct.anon.1*
-  %670 = bitcast %struct.anon.1* %669 to i32*
-  %671 = load i32, i32* %670, align 4
-  %672 = and i32 %671, 33554431
-  %673 = icmp eq i32 %672, 0
-  br i1 %673, label %674, label %678
+; <label>:694:                                    ; preds = %687
+  %695 = bitcast %union.anon.0* %26 to %struct.anon.1*
+  %696 = bitcast %struct.anon.1* %695 to i32*
+  %697 = load i32, i32* %696, align 4
+  %698 = and i32 %697, 33554431
+  %699 = icmp eq i32 %698, 0
+  br i1 %699, label %700, label %704
 
-; <label>:674:                                    ; preds = %668
-  %675 = load i64*, i64** %18, align 8
-  %676 = load i64, i64* %675, align 8
-  %677 = add i64 %676, 33554432
-  store i64 %677, i64* %675, align 8
-  br label %688
+; <label>:700:                                    ; preds = %694
+  %701 = load i64*, i64** %18, align 8
+  %702 = load i64, i64* %701, align 8
+  %703 = add i64 %702, 33554432
+  store i64 %703, i64* %701, align 8
+  br label %714
 
-; <label>:678:                                    ; preds = %668
-  %679 = bitcast %union.anon.0* %26 to %struct.anon.1*
-  %680 = bitcast %struct.anon.1* %679 to i32*
-  %681 = load i32, i32* %680, align 4
-  %682 = and i32 %681, 33554431
-  %683 = zext i32 %682 to i64
-  %684 = mul i64 33554432, %683
-  %685 = load i64*, i64** %18, align 8
-  %686 = load i64, i64* %685, align 8
-  %687 = add i64 %686, %684
-  store i64 %687, i64* %685, align 8
-  br label %688
+; <label>:704:                                    ; preds = %694
+  %705 = bitcast %union.anon.0* %26 to %struct.anon.1*
+  %706 = bitcast %struct.anon.1* %705 to i32*
+  %707 = load i32, i32* %706, align 4
+  %708 = and i32 %707, 33554431
+  %709 = zext i32 %708 to i64
+  %710 = mul i64 33554432, %709
+  %711 = load i64*, i64** %18, align 8
+  %712 = load i64, i64* %711, align 8
+  %713 = add i64 %712, %710
+  store i64 %713, i64* %711, align 8
+  br label %714
 
-; <label>:688:                                    ; preds = %678, %674
-  br label %689
+; <label>:714:                                    ; preds = %704, %700
+  br label %715
 
-; <label>:689:                                    ; preds = %688, %664
-  br label %690
+; <label>:715:                                    ; preds = %714, %690
+  br label %716
 
-; <label>:690:                                    ; preds = %689, %654
-  %691 = bitcast %union.anon.0* %26 to %struct.anon.1*
-  %692 = bitcast %struct.anon.1* %691 to i32*
-  %693 = load i32, i32* %692, align 4
-  %694 = lshr i32 %693, 25
-  %695 = and i32 %694, 63
-  %696 = icmp sge i32 %695, 1
-  br i1 %696, label %697, label %713
+; <label>:716:                                    ; preds = %715, %680
+  %717 = bitcast %union.anon.0* %26 to %struct.anon.1*
+  %718 = bitcast %struct.anon.1* %717 to i32*
+  %719 = load i32, i32* %718, align 4
+  %720 = lshr i32 %719, 25
+  %721 = and i32 %720, 63
+  %722 = icmp sge i32 %721, 1
+  br i1 %722, label %723, label %739
 
-; <label>:697:                                    ; preds = %690
-  %698 = bitcast %union.anon.0* %26 to %struct.anon.1*
-  %699 = bitcast %struct.anon.1* %698 to i32*
-  %700 = load i32, i32* %699, align 4
-  %701 = lshr i32 %700, 25
-  %702 = and i32 %701, 63
-  %703 = icmp sle i32 %702, 15
-  br i1 %703, label %704, label %713
+; <label>:723:                                    ; preds = %716
+  %724 = bitcast %union.anon.0* %26 to %struct.anon.1*
+  %725 = bitcast %struct.anon.1* %724 to i32*
+  %726 = load i32, i32* %725, align 4
+  %727 = lshr i32 %726, 25
+  %728 = and i32 %727, 63
+  %729 = icmp sle i32 %728, 15
+  br i1 %729, label %730, label %739
 
-; <label>:704:                                    ; preds = %697
-  %705 = load i64*, i64** %18, align 8
-  %706 = load i64, i64* %705, align 8
-  %707 = bitcast %union.anon.0* %26 to %struct.anon.1*
-  %708 = bitcast %struct.anon.1* %707 to i32*
-  %709 = load i32, i32* %708, align 4
-  %710 = and i32 %709, 33554431
-  %711 = zext i32 %710 to i64
-  %712 = add nsw i64 %706, %711
-  store i64 %712, i64* %23, align 8
-  br label %713
+; <label>:730:                                    ; preds = %723
+  %731 = load i64*, i64** %18, align 8
+  %732 = load i64, i64* %731, align 8
+  %733 = bitcast %union.anon.0* %26 to %struct.anon.1*
+  %734 = bitcast %struct.anon.1* %733 to i32*
+  %735 = load i32, i32* %734, align 4
+  %736 = and i32 %735, 33554431
+  %737 = zext i32 %736 to i64
+  %738 = add nsw i64 %732, %737
+  store i64 %738, i64* %23, align 8
+  br label %739
 
-; <label>:713:                                    ; preds = %704, %697, %690
-  %714 = bitcast %union.anon.0* %26 to %struct.anon.1*
-  %715 = bitcast %struct.anon.1* %714 to i32*
-  %716 = load i32, i32* %715, align 4
-  %717 = lshr i32 %716, 25
-  %718 = and i32 %717, 63
-  %719 = icmp eq i32 %718, 0
-  br i1 %719, label %720, label %734
+; <label>:739:                                    ; preds = %730, %723, %716
+  %740 = bitcast %union.anon.0* %26 to %struct.anon.1*
+  %741 = bitcast %struct.anon.1* %740 to i32*
+  %742 = load i32, i32* %741, align 4
+  %743 = lshr i32 %742, 25
+  %744 = and i32 %743, 63
+  %745 = icmp eq i32 %744, 0
+  br i1 %745, label %746, label %760
 
-; <label>:720:                                    ; preds = %713
-  %721 = load i64*, i64** %18, align 8
-  %722 = load i64, i64* %721, align 8
-  %723 = bitcast %union.anon.0* %26 to %struct.anon.1*
-  %724 = bitcast %struct.anon.1* %723 to i32*
-  %725 = load i32, i32* %724, align 4
-  %726 = and i32 %725, 33554431
-  %727 = zext i32 %726 to i64
-  %728 = add nsw i64 %722, %727
-  store i64 %728, i64* %23, align 8
-  %729 = load i64, i64* %23, align 8
-  %730 = load i64, i64* @READER_TTRes_pspr, align 8
-  %731 = mul nsw i64 %729, %730
-  %732 = load i64*, i64** %20, align 8
-  store i64 %731, i64* %732, align 8
-  %733 = load i8*, i8** %19, align 8
-  store i8 0, i8* %733, align 1
-  br label %734
+; <label>:746:                                    ; preds = %739
+  %747 = load i64*, i64** %18, align 8
+  %748 = load i64, i64* %747, align 8
+  %749 = bitcast %union.anon.0* %26 to %struct.anon.1*
+  %750 = bitcast %struct.anon.1* %749 to i32*
+  %751 = load i32, i32* %750, align 4
+  %752 = and i32 %751, 33554431
+  %753 = zext i32 %752 to i64
+  %754 = add nsw i64 %748, %753
+  store i64 %754, i64* %23, align 8
+  %755 = load i64, i64* %23, align 8
+  %756 = load i64, i64* @READER_TTRes_pspr, align 8
+  %757 = mul nsw i64 %755, %756
+  %758 = load i64*, i64** %20, align 8
+  store i64 %757, i64* %758, align 8
+  %759 = load i8*, i8** %19, align 8
+  store i8 0, i8* %759, align 1
+  br label %760
 
-; <label>:734:                                    ; preds = %720, %713
-  br label %756
+; <label>:760:                                    ; preds = %746, %739
+  br label %782
 
-; <label>:735:                                    ; preds = %640
-  %736 = load i64*, i64** %18, align 8
-  %737 = load i64, i64* %736, align 8
-  %738 = bitcast %union.anon.0* %26 to %struct.anon.1*
-  %739 = bitcast %struct.anon.1* %738 to i32*
-  %740 = load i32, i32* %739, align 4
-  %741 = and i32 %740, 33554431
-  %742 = zext i32 %741 to i64
-  %743 = add nsw i64 %737, %742
-  store i64 %743, i64* %23, align 8
-  %744 = load i64, i64* %23, align 8
-  %745 = load i64, i64* @READER_TTRes_pspr, align 8
-  %746 = mul nsw i64 %744, %745
-  %747 = load i64*, i64** %20, align 8
-  store i64 %746, i64* %747, align 8
-  %748 = bitcast %union.anon.0* %26 to %struct.anon.1*
-  %749 = bitcast %struct.anon.1* %748 to i32*
-  %750 = load i32, i32* %749, align 4
-  %751 = lshr i32 %750, 25
-  %752 = and i32 %751, 63
-  %753 = add nsw i32 %752, 1
-  %754 = trunc i32 %753 to i8
-  %755 = load i8*, i8** %19, align 8
-  store i8 %754, i8* %755, align 1
-  br label %756
+; <label>:761:                                    ; preds = %666
+  %762 = load i64*, i64** %18, align 8
+  %763 = load i64, i64* %762, align 8
+  %764 = bitcast %union.anon.0* %26 to %struct.anon.1*
+  %765 = bitcast %struct.anon.1* %764 to i32*
+  %766 = load i32, i32* %765, align 4
+  %767 = and i32 %766, 33554431
+  %768 = zext i32 %767 to i64
+  %769 = add nsw i64 %763, %768
+  store i64 %769, i64* %23, align 8
+  %770 = load i64, i64* %23, align 8
+  %771 = load i64, i64* @READER_TTRes_pspr, align 8
+  %772 = mul nsw i64 %770, %771
+  %773 = load i64*, i64** %20, align 8
+  store i64 %772, i64* %773, align 8
+  %774 = bitcast %union.anon.0* %26 to %struct.anon.1*
+  %775 = bitcast %struct.anon.1* %774 to i32*
+  %776 = load i32, i32* %775, align 4
+  %777 = lshr i32 %776, 25
+  %778 = and i32 %777, 63
+  %779 = add nsw i32 %778, 1
+  %780 = trunc i32 %779 to i8
+  %781 = load i8*, i8** %19, align 8
+  store i8 %780, i8* %781, align 1
+  br label %782
 
-; <label>:756:                                    ; preds = %735, %734
-  %757 = load i64, i64* @READER_next_RecID_relativeinbatch, align 8
-  %758 = add nsw i64 %757, 1
-  store i64 %758, i64* @READER_next_RecID_relativeinbatch, align 8
-  %759 = load i64, i64* %32, align 8
-  %760 = icmp eq i64 %759, 9223372036854775807
-  br i1 %760, label %761, label %762
+; <label>:782:                                    ; preds = %761, %760
+  %783 = load i64, i64* @READER_next_RecID_relativeinbatch, align 8
+  %784 = add nsw i64 %783, 1
+  store i64 %784, i64* @READER_next_RecID_relativeinbatch, align 8
+  %785 = load i64, i64* %32, align 8
+  %786 = icmp eq i64 %785, 9223372036854775807
+  br i1 %786, label %787, label %788
 
-; <label>:761:                                    ; preds = %756
-  br label %640
+; <label>:787:                                    ; preds = %782
+  br label %666
 
-; <label>:762:                                    ; preds = %756
-  %763 = load i8, i8* %33, align 1
-  %764 = load i8*, i8** %30, align 8
-  store i8 %763, i8* %764, align 1
-  %765 = load i64, i64* %32, align 8
-  store i64 %765, i64* %29, align 8
-  br label %766
+; <label>:788:                                    ; preds = %782
+  %789 = load i8, i8* %33, align 1
+  %790 = load i8*, i8** %30, align 8
+  store i8 %789, i8* %790, align 1
+  %791 = load i64, i64* %32, align 8
+  store i64 %791, i64* %29, align 8
+  br label %792
 
-; <label>:766:                                    ; preds = %637, %762
-  %767 = load i64, i64* %29, align 8
-  store i64 %767, i64* %76, align 8
-  %768 = load i64, i64* %76, align 8
+; <label>:792:                                    ; preds = %663, %788
+  %793 = load i64, i64* %29, align 8
+  store i64 %793, i64* %76, align 8
+  %794 = load i64, i64* %76, align 8
   store i8 0, i8* %36, align 1
-  store i64 %768, i64* %37, align 8
-  %769 = load i8, i8* @POOL_total_slots, align 1
-  %770 = zext i8 %769 to i32
-  %771 = load i8, i8* %36, align 1
-  %772 = zext i8 %771 to i32
-  %773 = add nsw i32 %770, %772
-  %774 = trunc i32 %773 to i8
-  store i8 %774, i8* %38, align 1
-  %775 = load i64, i64* %37, align 8
-  %776 = load i64*, i64** @POOL_timetag, align 8
-  %777 = load i8, i8* %38, align 1
-  %778 = zext i8 %777 to i64
-  %779 = getelementptr inbounds i64, i64* %776, i64 %778
-  store i64 %775, i64* %779, align 8
-  %780 = load i8, i8* %36, align 1
-  %781 = load i8*, i8** @POOL_slot, align 8
-  %782 = load i8, i8* %38, align 1
-  %783 = zext i8 %782 to i64
-  %784 = getelementptr inbounds i8, i8* %781, i64 %783
-  store i8 %780, i8* %784, align 1
-  br label %785
+  store i64 %794, i64* %37, align 8
+  %795 = load i8, i8* @POOL_total_slots, align 1
+  %796 = zext i8 %795 to i32
+  %797 = load i8, i8* %36, align 1
+  %798 = zext i8 %797 to i32
+  %799 = add nsw i32 %796, %798
+  %800 = trunc i32 %799 to i8
+  store i8 %800, i8* %38, align 1
+  %801 = load i64, i64* %37, align 8
+  %802 = load i64*, i64** @POOL_timetag, align 8
+  %803 = load i8, i8* %38, align 1
+  %804 = zext i8 %803 to i64
+  %805 = getelementptr inbounds i64, i64* %802, i64 %804
+  store i64 %801, i64* %805, align 8
+  %806 = load i8, i8* %36, align 1
+  %807 = load i8*, i8** @POOL_slot, align 8
+  %808 = load i8, i8* %38, align 1
+  %809 = zext i8 %808 to i64
+  %810 = getelementptr inbounds i8, i8* %807, i64 %809
+  store i8 %806, i8* %810, align 1
+  br label %811
 
-; <label>:785:                                    ; preds = %852, %766
-  %786 = load i8, i8* %38, align 1
-  %787 = zext i8 %786 to i32
-  %788 = icmp sgt i32 %787, 1
-  br i1 %788, label %789, label %857
+; <label>:811:                                    ; preds = %878, %792
+  %812 = load i8, i8* %38, align 1
+  %813 = zext i8 %812 to i32
+  %814 = icmp sgt i32 %813, 1
+  br i1 %814, label %815, label %883
 
-; <label>:789:                                    ; preds = %785
-  %790 = load i8, i8* %38, align 1
-  %791 = zext i8 %790 to i32
-  %792 = sdiv i32 %791, 2
-  %793 = trunc i32 %792 to i8
-  store i8 %793, i8* %39, align 1
-  %794 = load i8, i8* %39, align 1
-  %795 = zext i8 %794 to i32
-  %796 = mul nsw i32 %795, 2
-  %797 = trunc i32 %796 to i8
-  store i8 %797, i8* %40, align 1
-  %798 = load i8, i8* %39, align 1
-  %799 = zext i8 %798 to i32
-  %800 = mul nsw i32 %799, 2
-  %801 = add nsw i32 %800, 1
-  %802 = trunc i32 %801 to i8
-  store i8 %802, i8* %41, align 1
-  %803 = load i64*, i64** @POOL_timetag, align 8
-  %804 = load i8, i8* %40, align 1
-  %805 = zext i8 %804 to i64
-  %806 = getelementptr inbounds i64, i64* %803, i64 %805
-  %807 = load i64, i64* %806, align 8
-  %808 = load i64*, i64** @POOL_timetag, align 8
-  %809 = load i8, i8* %41, align 1
-  %810 = zext i8 %809 to i64
-  %811 = getelementptr inbounds i64, i64* %808, i64 %810
-  %812 = load i64, i64* %811, align 8
-  %813 = icmp slt i64 %807, %812
-  br i1 %813, label %814, label %833
-
-; <label>:814:                                    ; preds = %789
-  %815 = load i64*, i64** @POOL_timetag, align 8
-  %816 = load i8, i8* %40, align 1
-  %817 = zext i8 %816 to i64
-  %818 = getelementptr inbounds i64, i64* %815, i64 %817
-  %819 = load i64, i64* %818, align 8
-  %820 = load i64*, i64** @POOL_timetag, align 8
-  %821 = load i8, i8* %39, align 1
-  %822 = zext i8 %821 to i64
-  %823 = getelementptr inbounds i64, i64* %820, i64 %822
-  store i64 %819, i64* %823, align 8
-  %824 = load i8*, i8** @POOL_slot, align 8
-  %825 = load i8, i8* %40, align 1
-  %826 = zext i8 %825 to i64
-  %827 = getelementptr inbounds i8, i8* %824, i64 %826
-  %828 = load i8, i8* %827, align 1
-  %829 = load i8*, i8** @POOL_slot, align 8
-  %830 = load i8, i8* %39, align 1
+; <label>:815:                                    ; preds = %811
+  %816 = load i8, i8* %38, align 1
+  %817 = zext i8 %816 to i32
+  %818 = sdiv i32 %817, 2
+  %819 = trunc i32 %818 to i8
+  store i8 %819, i8* %39, align 1
+  %820 = load i8, i8* %39, align 1
+  %821 = zext i8 %820 to i32
+  %822 = mul nsw i32 %821, 2
+  %823 = trunc i32 %822 to i8
+  store i8 %823, i8* %40, align 1
+  %824 = load i8, i8* %39, align 1
+  %825 = zext i8 %824 to i32
+  %826 = mul nsw i32 %825, 2
+  %827 = add nsw i32 %826, 1
+  %828 = trunc i32 %827 to i8
+  store i8 %828, i8* %41, align 1
+  %829 = load i64*, i64** @POOL_timetag, align 8
+  %830 = load i8, i8* %40, align 1
   %831 = zext i8 %830 to i64
-  %832 = getelementptr inbounds i8, i8* %829, i64 %831
-  store i8 %828, i8* %832, align 1
-  br label %852
-
-; <label>:833:                                    ; preds = %789
+  %832 = getelementptr inbounds i64, i64* %829, i64 %831
+  %833 = load i64, i64* %832, align 8
   %834 = load i64*, i64** @POOL_timetag, align 8
   %835 = load i8, i8* %41, align 1
   %836 = zext i8 %835 to i64
   %837 = getelementptr inbounds i64, i64* %834, i64 %836
   %838 = load i64, i64* %837, align 8
-  %839 = load i64*, i64** @POOL_timetag, align 8
-  %840 = load i8, i8* %39, align 1
-  %841 = zext i8 %840 to i64
-  %842 = getelementptr inbounds i64, i64* %839, i64 %841
-  store i64 %838, i64* %842, align 8
-  %843 = load i8*, i8** @POOL_slot, align 8
-  %844 = load i8, i8* %41, align 1
-  %845 = zext i8 %844 to i64
-  %846 = getelementptr inbounds i8, i8* %843, i64 %845
-  %847 = load i8, i8* %846, align 1
-  %848 = load i8*, i8** @POOL_slot, align 8
-  %849 = load i8, i8* %39, align 1
-  %850 = zext i8 %849 to i64
-  %851 = getelementptr inbounds i8, i8* %848, i64 %850
-  store i8 %847, i8* %851, align 1
-  br label %852
+  %839 = icmp slt i64 %833, %838
+  br i1 %839, label %840, label %859
 
-; <label>:852:                                    ; preds = %833, %814
-  %853 = load i8, i8* %38, align 1
-  %854 = zext i8 %853 to i32
-  %855 = sdiv i32 %854, 2
-  %856 = trunc i32 %855 to i8
-  store i8 %856, i8* %38, align 1
-  br label %785
+; <label>:840:                                    ; preds = %815
+  %841 = load i64*, i64** @POOL_timetag, align 8
+  %842 = load i8, i8* %40, align 1
+  %843 = zext i8 %842 to i64
+  %844 = getelementptr inbounds i64, i64* %841, i64 %843
+  %845 = load i64, i64* %844, align 8
+  %846 = load i64*, i64** @POOL_timetag, align 8
+  %847 = load i8, i8* %39, align 1
+  %848 = zext i8 %847 to i64
+  %849 = getelementptr inbounds i64, i64* %846, i64 %848
+  store i64 %845, i64* %849, align 8
+  %850 = load i8*, i8** @POOL_slot, align 8
+  %851 = load i8, i8* %40, align 1
+  %852 = zext i8 %851 to i64
+  %853 = getelementptr inbounds i8, i8* %850, i64 %852
+  %854 = load i8, i8* %853, align 1
+  %855 = load i8*, i8** @POOL_slot, align 8
+  %856 = load i8, i8* %39, align 1
+  %857 = zext i8 %856 to i64
+  %858 = getelementptr inbounds i8, i8* %855, i64 %857
+  store i8 %854, i8* %858, align 1
+  br label %878
 
-; <label>:857:                                    ; preds = %785
-  %858 = load i8, i8* @POOL_slot0_last_chns, align 1
-  %859 = load i8*, i8** %67, align 8
-  store i8 %858, i8* %859, align 1
+; <label>:859:                                    ; preds = %815
   %860 = load i64*, i64** @POOL_timetag, align 8
-  %861 = getelementptr inbounds i64, i64* %860, i64 1
-  %862 = load i64, i64* %861, align 8
-  store i64 %862, i64* %66, align 8
-  br label %863
+  %861 = load i8, i8* %41, align 1
+  %862 = zext i8 %861 to i64
+  %863 = getelementptr inbounds i64, i64* %860, i64 %862
+  %864 = load i64, i64* %863, align 8
+  %865 = load i64*, i64** @POOL_timetag, align 8
+  %866 = load i8, i8* %39, align 1
+  %867 = zext i8 %866 to i64
+  %868 = getelementptr inbounds i64, i64* %865, i64 %867
+  store i64 %864, i64* %868, align 8
+  %869 = load i8*, i8** @POOL_slot, align 8
+  %870 = load i8, i8* %41, align 1
+  %871 = zext i8 %870 to i64
+  %872 = getelementptr inbounds i8, i8* %869, i64 %871
+  %873 = load i8, i8* %872, align 1
+  %874 = load i8*, i8** @POOL_slot, align 8
+  %875 = load i8, i8* %39, align 1
+  %876 = zext i8 %875 to i64
+  %877 = getelementptr inbounds i8, i8* %874, i64 %876
+  store i8 %873, i8* %877, align 1
+  br label %878
 
-; <label>:863:                                    ; preds = %857, %605
-  %864 = load i64, i64* %66, align 8
-  ret i64 %864
+; <label>:878:                                    ; preds = %859, %840
+  %879 = load i8, i8* %38, align 1
+  %880 = zext i8 %879 to i32
+  %881 = sdiv i32 %880, 2
+  %882 = trunc i32 %881 to i8
+  store i8 %882, i8* %38, align 1
+  br label %811
+
+; <label>:883:                                    ; preds = %811
+  %884 = load i8, i8* @POOL_slot0_last_chns, align 1
+  %885 = load i8*, i8** %67, align 8
+  store i8 %884, i8* %885, align 1
+  %886 = load i64*, i64** @POOL_timetag, align 8
+  %887 = getelementptr inbounds i64, i64* %886, i64 1
+  %888 = load i64, i64* %887, align 8
+  store i64 %888, i64* %66, align 8
+  br label %889
+
+; <label>:889:                                    ; preds = %883, %618
+  %890 = load i64, i64* %66, align 8
+  ret i64 %890
 }
 
 ; Function Attrs: alwaysinline uwtable
@@ -3039,35 +3098,37 @@ define i32 @FileReader_init(i8*, i64, i64, i64, i64, i64, i64) #1 {
   %34 = sext i32 %33 to i64
   store i64 %34, i64* @order_gurantee2, align 8
   store i32 -1, i32* %8, align 4
-  br label %49
+  br label %50
 
 ; <label>:35:                                     ; preds = %7
   %36 = load i64, i64* @READER_fseekpoint, align 8
   %37 = load %struct._iobuf*, %struct._iobuf** @"\01?READER_fpin@@3PEAU_iobuf@@EA", align 8
   %38 = call i32 @_fseeki64(%struct._iobuf* %37, i64 %36, i32 0)
-  %39 = load i32, i32* @READER_BytesofRecords, align 4
-  %40 = mul nsw i32 1000, %39
-  %41 = sext i32 %40 to i64
-  %42 = call noalias i8* @malloc(i64 %41)
-  store i8* %42, i8** @READER_buffer, align 8
-  %43 = load i8*, i8** @READER_buffer, align 8
-  %44 = icmp eq i8* %43, null
-  br i1 %44, label %45, label %48
+  %39 = load i64, i64* @READER_fseekpoint, align 8
+  store i64 %39, i64* @READER_batchend_pos_in_file, align 8
+  %40 = load i32, i32* @READER_BytesofRecords, align 4
+  %41 = mul nsw i32 1000, %40
+  %42 = sext i32 %41 to i64
+  %43 = call noalias i8* @malloc(i64 %42)
+  store i8* %43, i8** @READER_buffer, align 8
+  %44 = load i8*, i8** @READER_buffer, align 8
+  %45 = icmp eq i8* %44, null
+  br i1 %45, label %46, label %49
 
-; <label>:45:                                     ; preds = %35
-  %46 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([79 x i8], [79 x i8]* @"\01??_C@_0EP@PGBLNION@?6?5?$FLERROR?$FNReading?5buffer?5for?5Time@", i32 0, i32 0))
-  %47 = sext i32 %46 to i64
-  store i64 %47, i64* @order_gurantee2, align 8
+; <label>:46:                                     ; preds = %35
+  %47 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([79 x i8], [79 x i8]* @"\01??_C@_0EP@PGBLNION@?6?5?$FLERROR?$FNReading?5buffer?5for?5Time@", i32 0, i32 0))
+  %48 = sext i32 %47 to i64
+  store i64 %48, i64* @order_gurantee2, align 8
   store i32 -1, i32* %8, align 4
-  br label %49
+  br label %50
 
-; <label>:48:                                     ; preds = %35
+; <label>:49:                                     ; preds = %35
   store i32 0, i32* %8, align 4
-  br label %49
+  br label %50
 
-; <label>:49:                                     ; preds = %48, %45, %32
-  %50 = load i32, i32* %8, align 4
-  ret i32 %50
+; <label>:50:                                     ; preds = %49, %46, %32
+  %51 = load i32, i32* %8, align 4
+  ret i32 %51
 }
 
 declare %struct._iobuf* @fopen(i8*, i8*) #4

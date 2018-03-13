@@ -4,6 +4,7 @@ TTRes_pspr_get = link_global("TTRes_pspr")
 SYNCRate_pspr_get = link_global("SYNCRate_pspr")
 DTRes_pspr_get = link_global("DTRes_pspr")
 TTF_header_offset_get = link_global("TTF_header_offset")
+TTF_filesize_get = link_global("TTF_filesize")
 NumRecords_get = link_global("NumRecords")
 PARSE_TimeTagFileHeader = link_function("PARSE_TimeTagFileHeader")
 @jit(nopython=True, parallel=True, nogil=True)
@@ -17,11 +18,12 @@ def parse_header(filename1):
 
     return ([
             TTF_header_offset_get(),
-            TTF_header_offset_get() + NumRecords_get() * BytesofRecords_get(),
+            TTF_filesize_get(),
             BytesofRecords_get(),
             TTRes_pspr_get(),
             SYNCRate_pspr_get(),
-            DTRes_pspr_get()
+            DTRes_pspr_get(),
+            NumRecords_get()  # not including
             ])
 if __name__ == "__main__":
     out = parse_header(bytearray("HHT2.ptu", "ascii"))
