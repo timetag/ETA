@@ -25,6 +25,7 @@ build_script:
 test_script:
 - cmd: >-
      npm install -g github-release-cli
+     
      github-release upload --owner=timetag --repo=pyETA --tag="$APPVEYOR_BUILD_NUMBER%" --name="$APPVEYOR_BUILD_NUMBER%"  "C:/projects/pyeta/eta.zip"  "C:/projects/pyeta/dist/ETA/eta.exe"
 
 
