@@ -21,6 +21,3 @@ build_script:
 test: off
 artifacts:
 - path: ETA.zip
-  name: installer_zip
-- path: /dist/ETA/ETA.exe
-  name: coreapp
