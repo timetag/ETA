@@ -28,5 +28,5 @@ test_script:
   - ps: $base64 = [System.Convert]::ToBase64String($bytes)
   - ps: $basicAuthValue = "Basic $base64"
   - ps: $headers = @{ Authorization = $basicAuthValue }
-  - ps: Invoke-RestMethod  -Method PUT -Headers $headers -uri https://api.bintray.com/content/linzuzeng/eta/eta_installer/$APPVEYOR_BUILD_NUMBER/eta.zip?publish=1 -Infile $APPVEYOR_BUILD_FOLDER/eta.zip
+  - ps: Invoke-RestMethod  -Method PUT -Headers $headers -uri https://api.bintray.com/content/linzuzeng/eta/eta_installer/$APPVEYOR_BUILD_NUMBER/eta.zip?publish=1 -Infile C:/projects/pyeta/eta.zip
 
