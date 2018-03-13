@@ -21,3 +21,13 @@ build_script:
 test: off
 artifacts:
 - path: ETA.zip
+deploy:
+- provider: BinTray
+  username: linzuzeng
+  api_key:
+    secure: 4mZN2GK6AUnE2Kj/6Hx4Uu9DBennkzFWIgz34ZgGps8iYq4NsET9IFacwRFYtan5
+  subject: linuzeng
+  repo: eta
+  package: eta_install
+  publish: false
+  override: true
