@@ -11,6 +11,8 @@ environment:
   PYTHON: C:\Python36-x64
   PYTHON_VERSION: 3.6
   PYTHON_ARCH: 64
+  BINTRAYKEY:  
+    secure: 4mZN2GK6AUnE2Kj/6Hx4Uu9DBennkzFWIgz34ZgGps8iYq4NsET9IFacwRFYtan5
 install:
 - ps: "mkdir c:/whls \nif(!(Test-Path -Path \"c:/whls/llvmlite-0.22.0-cp36-cp36m-win_amd64.whl\" )){\n appveyor DownloadFile https://bitbucket.org/linzuzeng/pyeta/downloads/llvmlite-0.22.0-cp36-cp36m-win_amd64.whl -FileName c:/whls/llvmlite-0.22.0-cp36-cp36m-win_amd64.whl\n}\nif(!(Test-Path -Path \"c:/whls/numba-0.37.0-cp36-cp36m-win_amd64.whl\" )){\n appveyor DownloadFile https://bitbucket.org/linzuzeng/pyeta/downloads/numba-0.37.0-cp36-cp36m-win_amd64.whl -FileName c:/whls/numba-0.37.0-cp36-cp36m-win_amd64.whl\n}\nif(!(Test-Path -Path \"c:/whls/numpy-1.14.1+mkl-cp36-cp36m-win_amd64.whl\" )){\n appveyor DownloadFile https://bitbucket.org/linzuzeng/pyeta/downloads/numpy-1.14.1+mkl-cp36-cp36m-win_amd64.whl -FileName c:/whls/numpy-1.14.1+mkl-cp36-cp36m-win_amd64.whl\n}\npip install pypiwin32\npip install pyinstaller\npip install cffi\npip install c:/whls/numpy-1.14.1+mkl-cp36-cp36m-win_amd64.whl\npip install c:/whls/llvmlite-0.22.0-cp36-cp36m-win_amd64.whl\npip install c:/whls/numba-0.37.0-cp36-cp36m-win_amd64.whl"
 cache:
@@ -18,16 +20,13 @@ cache:
 - '%LOCALAPPDATA%\pip\Cache'
 build_script:
 - cmd: build.bat
-test: off
-artifacts:
-- path: ETA.zip
-deploy:
-- provider: BinTray
-  username: linzuzeng
-  api_key:
-    secure: 4mZN2GK6AUnE2Kj/6Hx4Uu9DBennkzFWIgz34ZgGps8iYq4NsET9IFacwRFYtan5
-  subject: linuzeng
-  repo: eta
-  package: eta_install
-  publish: false
-  override: true
+test_script:
+  - ps: $user = "linzuzeng"
+  - ps: $pass = "$Env:BINTRAYKEY"
+  - ps: $pair = "${user}:${pass}"
+  - ps: $bytes = [System.Text.Encoding]::ASCII.GetBytes($pair)
+  - ps: $base64 = [System.Convert]::ToBase64String($bytes)
+  - ps: $basicAuthValue = "Basic $base64"
+  - ps: $headers = @{ Authorization = $basicAuthValue }
+  - ps: Invoke-RestMethod  -Method PUT -Headers $headers -uri https://api.bintray.com/content/linzuzeng/eta/eta_installer/$APPVEYOR_BUILD_NUMBER/eta.zip?publish=1 -Infile $APPVEYOR_BUILD_FOLDER/eta.zip
+
