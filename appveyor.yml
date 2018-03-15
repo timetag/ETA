@@ -24,7 +24,7 @@ cache:
 
 build_script:
 - cmd: >-
-    pyinstaller --clean  --add-data "favicon.ico;."  --add-data "ll/*;ll" --add-data "plotly/package_data/*;plotly/package_data"-i favicon.ico  ETA.py
+    pyinstaller --clean  --add-data "favicon.ico;."  --add-data "ll/*;ll" --add-data "plotly/package_data/*;plotly/package_data" -i favicon.ico  ETA.py
     
     7z a ETA.zip %APPVEYOR_BUILD_FOLDER%\dist
     
@@ -32,7 +32,7 @@ build_script:
     
     RMDIR /S /Q %APPVEYOR_BUILD_FOLDER%\build
     
-    pyinstaller --clean --onefile --add-data "favicon.ico;."  --add-data "ll/*;ll" -i favicon.ico  ETA.py
+    pyinstaller --clean --onefile --add-data "favicon.ico;."  --add-data "ll/*;ll" --add-data "plotly/package_data/*;plotly/package_data" -i favicon.ico  ETA.py
     
     move %APPVEYOR_BUILD_FOLDER%\dist\ETA.exe %APPVEYOR_BUILD_FOLDER%\ETA.exe
   
