@@ -40,6 +40,6 @@ test_script:
 - cmd: >-
      npm install -g github-release-cli
      
-     github-release upload --owner=timetag --repo=ETABackend --tag="%APPVEYOR_BUILD_NUMBER%" --name="%APPVEYOR_BUILD_NUMBER%"  "C:/projects/pyeta/eta.zip"  "C:/projects/pyeta/eta.exe"
+     github-release upload --owner=timetag --repo=ETABackend --tag="%APPVEYOR_BUILD_NUMBER%" --name="%APPVEYOR_BUILD_NUMBER%"  "C:/projects/ETABackend/eta.zip"  "C:/projects/ETABackend/eta.exe"
 
 
