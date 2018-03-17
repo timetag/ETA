@@ -18,19 +18,20 @@ def compile_graph(content, automata=0):
             temp = onlyascii(each["text"])
             if len(temp) > 0:
                 node_text = temp
-        instruction_set.append(["nodes", [automata, node_count, node_text]])
+        instruction_set.append(
+            ["make_state", [automata, node_count, node_text]])
         if ("initial" in each):
             instruction_set.append(
-                ["make_init_node", [node_count]])
+                ["make_init_state", [node_count]])
         node_count += 1
     for each in jsobj["edges"]:
         if "text" in each:
             edge_text = each["text"]
             for each_condition in edge_text.split(","):
-                instruction_set.append(["trans", [automata,
-                                                  each["source"],
-                                                  each["target"],
-                                                  str(each_condition)]])
+                instruction_set.append(["make_trans", [automata,
+                                                       each["source"],
+                                                       each["target"],
+                                                       str(each_condition)]])
         else:
             raise ValueError(
                 "There is a transition with condition missing. Check the graph.")
