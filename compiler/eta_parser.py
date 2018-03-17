@@ -69,31 +69,53 @@ class Parser():
         return ret
 
     def parse_define(self, text):
-        ret = []
+        regex = r"(([-~]*(([0-9]*),?)*[-~]*>)?([A-Za-z0-9 _]*),?)*:"
         leftout = text
-        pivit = leftout.find(":")
-        define = leftout[:pivit]
-        # print("TEST",define)
-        if self.is_only_trigger(define):
-                #print("test okay")
-            leftout = leftout[pivit + 1:]
+        matches = re.finditer(regex, text, re.MULTILINE)
+        matches_count = 0
+        matches_fl = 0
+        matches_fr = 0
 
-            for each in define.replace(" ", "").split(","):
-                frm = None
-                to = None
-                if each.find(">") > 0:
-                    sym = each.find(">")
-                    frm = each[:sym]
-                    to = each[sym + 1:]
-                elif each.find("<") > 0:
-                    sym = each.find("<")
-                    to = each[:sym]
-                    frm = each[sym + 1:]
-                else:
-                    frm = "*"
-                    to = each
-                ret.append([frm, to])
+        for matchNum, match in enumerate(matches):
+            matches_count += 1
+            if matches_count == 1:
+                matches_fr = int(match.end())
+                matches_fl = int(match.start())
+        ret = []
+        if matches_count == 1:
 
+            leftout = text[matches_fr:]
+            text = text[matches_fl: matches_fr]
+            text = text.replace(" ", "")
+
+            regex = r"([A-Za-z0-9 _]*)([-~]*(([0-9]*),?)*[-~]*>)?([A-Za-z0-9 _]*),?"
+            matches = re.finditer(regex, text, re.MULTILINE)
+            for matchNum, match in enumerate(matches):
+                outblob = None
+                conditions = []
+                inblob = None
+                for groupNum in range(0, len(match.groups()) + 1):
+                    if groupNum == 1:
+                        outblob = match.group(groupNum)
+                    if groupNum == 2:
+                        text1 = match.group(groupNum)
+                        if text1 is not None:
+                            conditions = text1.replace(
+                                "-", "").replace("~", "").replace(">", "").split(",")
+                    if groupNum == 5:
+                        inblob = match.group(groupNum)
+                # print("leftout",conditions,blob)
+                if len(outblob) == 0:
+                    outblob = None
+                if len(conditions) == 0:
+                    conditions = None
+                if len(inblob) == 0:
+                    inblob = None
+                if (inblob is None) and (conditions is None):
+                    inblob = outblob
+                    outblob = None
+                if not(outblob is None and inblob is None):
+                    ret.append([outblob, conditions, inblob])
         return (ret, leftout)
 
     def main_loop(self):
@@ -134,12 +156,8 @@ class Parser():
 
 code = """
 asdf()
-a>b,b<0,c:{{
-    python code {}dfgadsf'ss{
-}}
-test1('adsf',"asdfsadf");
-a=66;
-a.clock(arg1 + arg2,"d()",c,f(css),ccc=true)###asdf;
+--2,1->bbb,-2->a,c:hist()
+a.clock(arg1 + arg2,"d()",c,f(css),ccc=true);
 f_hist(a);cmp(b>n,c>2)
 a=1
 c=c+1
