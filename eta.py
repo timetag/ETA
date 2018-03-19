@@ -11,6 +11,7 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 
+
 class WSSERVER():
 
     def __init__(self, PORT):
@@ -25,13 +26,13 @@ class WSSERVER():
                   " connected to port " + str(PORT) + ". ")
         self.server = ws_broadcast.WebsocketServer(
             PORT, host='0.0.0.0')
-        print("ETA Server URL: ws://localhost:"+str(PORT))
+        print("ETA Server URL: ws://localhost:" + str(PORT))
         self.server.set_fn_new_client(new_client)
         self.server.set_fn_message_received(new_message)
         self.server.run_forever()
 
-    def send(self, text):
-        self.server.send_message_to_all(str(text))
+    def send(self, text, endpoint="log"):
+        self.server.send_message_to_all(json.dumps([endpoint, str(text)]))
 
     def process_file(self, etaobj=None):
         with open("server.eta", 'w') as file:
@@ -49,14 +50,15 @@ class WSSERVER():
         loc["process"]()
         self.send("Timetag analysis is finished, starting display...")
         self.send("Display is running at http://localhost:5000.")
+        self.send("http://localhost:5000","dash")
         thread2 = threading.Thread(target=loc["display"])
         thread2.daemon = True
         thread2.start()
 
+
 if __name__ == '__main__':
     multiprocessing.freeze_support()
     ws = WSSERVER(5678)
-
 
 
 """
@@ -95,4 +97,3 @@ def get_data(path="."):
             tensors.append(str(os.path.join(path, each)))
     send_message(tensors, "display")
 """
-
