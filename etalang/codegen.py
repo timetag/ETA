@@ -20,7 +20,7 @@ def compile_eta(jsonstr):
     ri_count = 0
     real_chns_per_rslots = []
     for each in ris:
-        thiscount = int(each["class / # of channels"])
+        thiscount = int(each["group / # of channels"])
         real_chns_per_rslots.append(thiscount)
         each["output channels"] = str(
             [i for i in range(ri_count, ri_count + thiscount)])
