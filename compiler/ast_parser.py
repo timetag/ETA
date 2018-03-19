@@ -1,6 +1,7 @@
 import ast
 import astunparse
 import copy
+import textwrap
 
 
 class CrazyTransformer(ast.NodeTransformer):
@@ -35,6 +36,7 @@ class CrazyTransformer(ast.NodeTransformer):
 
 
 def code_parse(expr, contex=[], verbose=False):
+    expr = textwrap.dedent(expr)
     expr_ast = ast.parse(expr)
     transformer = CrazyTransformer(contex=contex)
 

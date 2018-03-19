@@ -10,10 +10,9 @@ def f(caller_parms):
     print(caller_parms)
     histogram = np.zeros(62502, dtype=np.int64)
 
-    def internal():
-        print("\n", mainloop(np.zeros(1, dtype=np.int8), histogram,
+    print("\n", mainloop(np.zeros(1, dtype=np.int8), histogram,
                              bytearray("HHT2.ptu", "ascii"), *caller_parms))
-    internal()
+    
     print(histogram)
     return(histogram)
 

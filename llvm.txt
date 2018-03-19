@@ -84,10 +84,10 @@ $"\01??_C@_0DE@PLFGPKJO@?6?5?$FLERROR?$FNTime?9tag?5file?5cannot?5be@" = comdat 
 @IsT2 = local_unnamed_addr global i8 0, align 1
 @"\01?TagHead@@3UTgHd@@A" = local_unnamed_addr global %struct.TgHd.5 zeroinitializer, align 8
 
-define i32 @"_ZN8mainloop12mainloop$241E5ArrayIaLi1E1C7mutable7alignedE5ArrayIxLi1E1C7mutable7alignedE35bytearray$28uint8$2c$201d$2c$20C$29xxxxxx"(i64* noalias nocapture %retptr, { i8*, i32 }** noalias nocapture readnone %excinfo, i8* noalias nocapture readnone %env, i8* %arg.chn.0, i8* nocapture readnone %arg.chn.1, i64 %arg.chn.2, i64 %arg.chn.3, i8* nocapture %arg.chn.4, i64 %arg.chn.5.0, i64 %arg.chn.6.0, i8* %arg.histogram.0, i8* nocapture readnone %arg.histogram.1, i64 %arg.histogram.2, i64 %arg.histogram.3, i64* nocapture %arg.histogram.4, i64 %arg.histogram.5.0, i64 %arg.histogram.6.0, i8* nocapture readnone %arg.filename1.0, i8* nocapture readnone %arg.filename1.1, i64 %arg.filename1.2, i64 %arg.filename1.3, i8* nocapture readonly %arg.filename1.4, i64 %arg.filename1.5.0, i64 %arg.filename1.6.0, i64 %arg.fseekpoint, i64 %arg.fendpoint, i64 %arg.BytesofRecords, i64 %arg.TTRes_pspr, i64 %arg.SYNCRate_pspr, i64 %arg.DTRes_pspr) local_unnamed_addr {
+define i32 @"_ZN8mainloop12mainloop$241E5ArrayIaLi1E1C7mutable7alignedE5ArrayIxLi1E1C7mutable7alignedE35bytearray$28uint8$2c$201d$2c$20C$29xxxxxx"(i64* noalias nocapture %retptr, { i8*, i32 }** noalias nocapture readnone %excinfo, i8* noalias nocapture readnone %env, i8* %arg.chn.0, i8* nocapture readnone %arg.chn.1, i64 %arg.chn.2, i64 %arg.chn.3, i8* nocapture %arg.chn.4, i64 %arg.chn.5.0, i64 %arg.chn.6.0, i8* %arg.t1.0, i8* nocapture readnone %arg.t1.1, i64 %arg.t1.2, i64 %arg.t1.3, i64* nocapture %arg.t1.4, i64 %arg.t1.5.0, i64 %arg.t1.6.0, i8* nocapture readnone %arg.filename1.0, i8* nocapture readnone %arg.filename1.1, i64 %arg.filename1.2, i64 %arg.filename1.3, i8* nocapture readonly %arg.filename1.4, i64 %arg.filename1.5.0, i64 %arg.filename1.6.0, i64 %arg.fseekpoint, i64 %arg.fendpoint, i64 %arg.BytesofRecords, i64 %arg.TTRes_pspr, i64 %arg.SYNCRate_pspr, i64 %arg.DTRes_pspr) local_unnamed_addr {
 entry:
   tail call void @NRT_incref(i8* %arg.chn.0)
-  tail call void @NRT_incref(i8* %arg.histogram.0)
+  tail call void @NRT_incref(i8* %arg.t1.0)
   %0 = trunc i64 %arg.BytesofRecords to i32
   store i32 %0, i32* @READER_BytesofRecords, align 4
   store i64 %arg.fseekpoint, i64* @READER_fseekpoint, align 8
@@ -260,10 +260,20 @@ FileReader_init.exit:                             ; preds = %.sink.split.i, %5
 
 POOL_init.exit:                                   ; preds = %POOL_init.exit.loopexit12, %.sink.split.i1
   %.028.i = phi i64 [ -1, %.sink.split.i1 ], [ 0, %POOL_init.exit.loopexit12 ]
-  br label %B80
+  br label %B110.outer.outer
 
-B80:                                              ; preds = %B88, %B116.endif, %POOL_init.exit
-  %start.0 = phi i64 [ 0, %POOL_init.exit ], [ %.581.start.0, %B116.endif ], [ %.581.start.0, %B88 ]
+B110.outer.outer:                                 ; preds = %B330, %POOL_init.exit
+  %now_0.0.ph.ph = phi i64 [ 1, %POOL_init.exit ], [ %.now_0.0, %B330 ]
+  %c1_start.0.ph.ph = phi i64 [ 0, %POOL_init.exit ], [ %.951.c1_start.0, %B330 ]
+  %.386 = sub i64 16, %c1_start.0.ph.ph
+  %.622 = sub i64 16, %c1_start.0.ph.ph
+  br label %B110.outer
+
+B110.outer:                                       ; preds = %B110.outer.backedge, %B110.outer.outer
+  %now_0.0.ph = phi i64 [ %now_0.0.ph.ph, %B110.outer.outer ], [ 1, %B110.outer.backedge ]
+  br label %B110
+
+B110:                                             ; preds = %B120, %B134, %B110.outer
   %71 = load i64*, i64** @POOL_timetag, align 8
   %72 = getelementptr inbounds i64, i64* %71, i64 1
   %73 = load i64, i64* %72, align 8
@@ -286,7 +296,7 @@ B80:                                              ; preds = %B88, %B116.endif, %
   %85 = icmp eq i64 %73, %const
   br i1 %85, label %279, label %86
 
-; <label>:86:                                     ; preds = %B80
+; <label>:86:                                     ; preds = %B110
   %87 = icmp slt i32 %promoted.i, 0
   br i1 %87, label %88, label %179
 
@@ -645,7 +655,7 @@ B80:                                              ; preds = %B88, %B116.endif, %
   %278 = icmp ugt i8 %.020.i, 3
   br i1 %278, label %.lr.ph22.i, label %POOL_next.exit
 
-; <label>:279:                                    ; preds = %B80
+; <label>:279:                                    ; preds = %B110
   %280 = tail call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([36 x i8], [36 x i8]* @"\01??_C@_0CE@OPKBMAFE@?6POOL?5is?5empty?0?5read?5from?5file?50@", i64 0, i64 0))
   %281 = sext i32 %280 to i64
   store i64 %281, i64* @order_gurantee2, align 8
@@ -821,38 +831,56 @@ B80:                                              ; preds = %B88, %B116.endif, %
 
 POOL_next.exit:                                   ; preds = %276, %176, %._crit_edge.i4, %246, %._crit_edge26.i, %146
   %.0233.i = phi i64 [ %374, %._crit_edge.i4 ], [ %73, %._crit_edge26.i ], [ %73, %146 ], [ %73, %246 ], [ %73, %176 ], [ %73, %276 ]
-  %.228 = icmp eq i64 %.0233.i, %const
-  br i1 %.228, label %B212, label %B88
+  %.285 = icmp eq i64 %.0233.i, %const
+  br i1 %.285, label %B386, label %B120
 
-B88:                                              ; preds = %POOL_next.exit
-  %.271 = load i8, i8* %arg.chn.4, align 1
-  %.283 = icmp eq i8 %.271, 0
-  %.581.start.0 = select i1 %.283, i64 %.0233.i, i64 %start.0
-  %.347 = icmp eq i8 %.271, 1
-  br i1 %.347, label %B116.endif, label %B80
+B120:                                             ; preds = %POOL_next.exit
+  %.328 = load i8, i8* %arg.chn.4, align 1
+  switch i8 %.328, label %B110 [
+    i8 1, label %B134
+    i8 0, label %B330
+  ]
 
-B212:                                             ; preds = %POOL_next.exit
+B134:                                             ; preds = %B120
+  switch i64 %now_0.0.ph, label %B110 [
+    i64 0, label %B110.outer.backedge.loopexit
+    i64 1, label %B232.endif
+  ]
+
+B330:                                             ; preds = %B120
+  %switch = icmp ult i64 %now_0.0.ph, 2
+  %.now_0.0 = select i1 %switch, i64 0, i64 %now_0.0.ph
+  %.951.c1_start.0 = select i1 %switch, i64 %.0233.i, i64 %c1_start.0.ph.ph
+  br label %B110.outer.outer
+
+B386:                                             ; preds = %POOL_next.exit
   %.198 = add nsw i64 %.028.i, %.0.i
-  tail call void @NRT_decref(i8* %arg.histogram.0)
+  tail call void @NRT_decref(i8* %arg.t1.0)
   tail call void @NRT_decref(i8* %arg.chn.0)
   store i64 %.198, i64* %retptr, align 8
   ret i32 0
 
-B116.endif:                                       ; preds = %B88
-  %.370 = add i64 %.0233.i, 16
-  %.397 = sub i64 %.370, %.581.start.0
-  %.405 = sitofp i64 %.397 to double
-  %.411 = fmul double %.405, 6.250000e-02
-  %.420 = fptosi double %.411 to i64
-  %375 = icmp slt i64 %.420, 62501
-  %n_i.1 = select i1 %375, i64 %.420, i64 62501
-  %376 = icmp sgt i64 %.420, 0
+B110.outer.backedge.loopexit:                     ; preds = %B134
+  br label %B110.outer.backedge
+
+B110.outer.backedge:                              ; preds = %B110.outer.backedge.loopexit, %B232.endif
+  %.386.sink = phi i64 [ %.622, %B232.endif ], [ %.386, %B110.outer.backedge.loopexit ]
+  %.410 = add i64 %.386.sink, %.0233.i
+  %.423 = sitofp i64 %.410 to double
+  %.429 = fmul double %.423, 6.250000e-02
+  %.438 = fptosi double %.429 to i64
+  %375 = icmp slt i64 %.438, 62501
+  %n_i.1 = select i1 %375, i64 %.438, i64 62501
+  %376 = icmp sgt i64 %.438, 0
   %.n_i.1 = select i1 %376, i64 %n_i.1, i64 0
-  %.521 = getelementptr i64, i64* %arg.histogram.4, i64 %.n_i.1
-  %.522 = load i64, i64* %.521, align 8
-  %.531 = add nsw i64 %.522, 1
-  store i64 %.531, i64* %.521, align 8
-  br label %B80
+  %.532 = getelementptr i64, i64* %arg.t1.4, i64 %.n_i.1
+  %.533 = load i64, i64* %.532, align 8
+  %.542 = add nsw i64 %.533, 1
+  store i64 %.542, i64* %.532, align 8
+  br label %B110.outer
+
+B232.endif:                                       ; preds = %B134
+  br label %B110.outer.backedge
 
 ; <label>:377:                                    ; preds = %.lr.ph.i.111
   %scevgep.i.1 = getelementptr i8, i8* %66, i64 40
