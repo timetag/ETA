@@ -1,10 +1,9 @@
 from . import eta_vm
 from . import etacode_parser
-import json
 from . import graph_parser
 from . import mainloop
 import textwrap
-
+import json
 
 def compile_eta(jsonstr):
     jsobj = json.loads(jsonstr)
