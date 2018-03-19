@@ -1,11 +1,5 @@
 def get_onefile_loop(tables,init,looping,globals_init):
     return """
-from jit_linker import *
-import numpy as np
-FileReader_init = link_function("FileReader_init", 7)
-POOL_init = link_function("POOL_init", 3)
-POOL_next = link_i64_function("POOL_next")
-READER_BytesofRecords_get = link_global("READER_BytesofRecords")
 @jit(nopython=True, parallel=True, nogil=True)
 def mainloop(chn, {tables}, filename1, fseekpoint, fendpoint, BytesofRecords, TTRes_pspr, SYNCRate_pspr, DTRes_pspr):
     link_libs()
@@ -31,6 +25,7 @@ def mainloop(chn, {tables}, filename1, fseekpoint, fendpoint, BytesofRecords, TT
 
 {globals_init}
 # routine warming up
-mainloop(np.zeros(1, dtype=np.int8), {tables},
-         bytearray("NONEXISTING", "ascii"), 1,1,1,1,1,1)
+#mainloop(np.zeros(1, dtype=np.int8), {tables},
+#         bytearray("NONEXISTING", "ascii"), 1,1,1,1,1,1)
+ret = mainloop
 """.format(init=init,looping=looping,globals_init=globals_init,tables=",".join(tables))
