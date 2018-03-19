@@ -22,8 +22,10 @@ def compile_graph(content, automata=0):
             ["make_state", [automata, node_count, node_text]])
         if ("initial" in each):
             instruction_set.append(
-                ["make_init_state", [node_count]])
+                ["make_init_state", [automata, node_count]])
         node_count += 1
+    instruction_set.append(
+        ["prepare_transitions", [automata]])
     for each in jsobj["edges"]:
         if "text" in each:
             edge_text = each["text"]
@@ -35,7 +37,8 @@ def compile_graph(content, automata=0):
         else:
             raise ValueError(
                 "There is a transition with condition missing. Check the graph.")
-    return instruction_set
+
+    return jsobj["usercode"], instruction_set
 
 
 if __name__ == "__main__":

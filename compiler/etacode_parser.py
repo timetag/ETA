@@ -153,20 +153,20 @@ class Parser():
 
         self.instructions = instructions
 
-
-code = """
-asdf()
---2,1->bbb,-2->a,c:hist()
-a.clock(arg1 + arg2,"d()",c,f(css),ccc=true);
-f_hist(a);cmp(b>n,c>2)
-a=1
-c=c+1
-a,b=fuck()
-{{
-DD
-}}
-"""
-intp = Parser(code, [777])
-for each in intp.instructions:
-    print(each)
-    print(" ")
+if __name__=="__main__":
+    code = """
+    asdf()
+    --2,1->bbb,-2->a,c:hist()
+    a.clock(arg1 + arg2,"d()",c,f(css),ccc=true);
+    f_hist(a);cmp(b>n,c>2)
+    a=1
+    c=c+1
+    a,b=fuck()
+    {{
+    DD
+    }}
+    """
+    intp = Parser(code, [777])
+    for each in intp.instructions:
+        print(each)
+        print(" ")
