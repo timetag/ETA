@@ -27,17 +27,6 @@ app.layout = html.Div(children=[
     )
 ])
 
-from flask import request
-server = app.server
-
-@server.route('/shutdown', methods=['GET'])
-def shutdown():
-    func = request.environ.get('werkzeug.server.shutdown')
-    if func is None:
-        raise RuntimeError('Not running with the Werkzeug Server')
-    func()
-    print("Server shutdown")
-    return 'Server shutting down...'
 if __name__ == '__main__':
         thread2 = threading.Thread(target=app.server.run)
         thread2.daemon = True

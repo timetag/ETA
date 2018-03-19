@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import os
+import numpy as np
 import ws_broadcast
 import json
 import threading
@@ -10,15 +10,18 @@ from core import sp_core, mp_core
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
+from flask import request
 
 
 class WSSERVER():
 
     def __init__(self, PORT):
-        def new_message(client, server, message):
+        self.displaying = False
 
-            print("client " + str(client["address"]) + " asks " + message)
+        def new_message(client, server, message):
             obj = json.loads(message)
+            print("client " + str(client["address"]
+                                  ) + " start " + obj["method"])
             getattr(self, obj["method"])(*obj["args"])
 
         def new_client(client, server):
@@ -35,25 +38,51 @@ class WSSERVER():
         self.server.send_message_to_all(json.dumps([endpoint, str(text)]))
 
     def process_file(self, etaobj=None):
-        with open("server.eta", 'w') as file:
-            file.write(json.dumps(etaobj))
-        servercode = etaobj["code"]
-        with open("server_code.py", 'wb') as file:
-            file.write(servercode.encode("utf-8"))
-        expcfg = json.loads(etaobj["#expcfg"])
+        if self.displaying:
+            self.send("Display is running at http://localhost:5000.")
+            self.send(
+                "The updated ETA program is not executed, in order to prevent data overwritting.")
+            self.send("http://localhost:5000", "dash")
+        else:
+            with open("server.eta", 'w') as file:
+                file.write(json.dumps(etaobj))
+            servercode = etaobj["code"]
+            # with open("server_code.py", 'wb') as file:
+            #    file.write(servercode.encode("utf-8"))
+            expcfg = json.loads(etaobj["#expcfg"])
+            self.send("Server received experiment file " +
+                      expcfg["exp_name"] + ".")
+            self.send("Run process()...")
+            loc = {"etaobj": json.dumps(etaobj)}
+            variables = json.loads(etaobj["eta_dpp_table"])
+            for each in variables:
+                loc[each["variable"]] = each["value"]
 
-        self.send("Server received experiment file " +
-                  expcfg["exp_name"] + ".")
-        self.send("Run process()...")
-        loc = {}
-        exec(servercode, globals(), loc)
-        loc["process"]()
-        self.send("Timetag analysis is finished, starting display...")
-        self.send("Display is running at http://localhost:5000.")
-        self.send("http://localhost:5000","dash")
-        thread2 = threading.Thread(target=loc["display"])
-        thread2.daemon = True
-        thread2.start()
+            exec(servercode, globals(), loc)
+            self.send("Timetag analysis is finished, starting display...")
+
+            app = loc['app']
+            if app is None:
+                self.send("No display dashboard for array output.", "err")
+            else:
+                @app.server.route('/shutdown', methods=['GET'])
+
+                def shutdown():
+                    func = request.environ.get('werkzeug.server.shutdown')
+                    if func is None:
+                        raise RuntimeError(
+                            'Not running with the Werkzeug Server')
+                    func()
+                    self.displaying = False
+                    self.send("Dashboard shutting down. ")
+                    self.send("http://localhost:5000", "discard")
+                    return 'Server shutting down...'
+                thread2 = threading.Thread(target=app.server.run)
+                thread2.daemon = True
+                thread2.start()
+            self.send("Display is running at http://localhost:5000.")
+            self.send("http://localhost:5000", "dash")
+            self.displaying = True
 
 
 if __name__ == '__main__':
