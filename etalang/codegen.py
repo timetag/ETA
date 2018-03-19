@@ -57,15 +57,15 @@ def compile_eta(jsonstr):
         print(each)
         etavm.exec_eta(each)
     # defines for tables
-    defines= etavm.check_defines()
+    defines = etavm.check_defines()
     tables = []
     for each in defines:
-        if isinstance(defines[each],list ) and defines[each][0]=="table":
+        if isinstance(defines[each], list) and defines[each][0] == "table":
             tables.append(each)
 
     code, init_code, global_init_code = etavm.dump_code()
-    onefile = mainloop.get_onefile_loop(tables,textwrap.indent(
-        init_code, "    "), textwrap.indent(code, "        "),textwrap.indent(global_init_code, ""))
+    onefile = mainloop.get_onefile_loop(tables, textwrap.indent(
+        init_code, "    "), textwrap.indent(code, "        "), textwrap.indent(global_init_code, ""))
     # update metadata
     metadata = []
     metadata += ris
@@ -75,11 +75,16 @@ def compile_eta(jsonstr):
     return onefile, metadata
 
 
+def compile_and_link(etacontent):
+    onefile, metadata = compile_eta(etacontent)
+    exec(onefile)
+    return mainloop, metadata
+
+
 if __name__ == "__main__":
     def compile_one_graph(filename):
         with open(filename) as f:
-            return compile_eta(f.read())
+            return compile_and_link(f.read())
     code, metadata = compile_one_graph("startstop.eta")
-    print(code)
 
     print(metadata)
