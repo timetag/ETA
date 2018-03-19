@@ -41,13 +41,14 @@ class WSSERVER():
             file.write(servercode.encode("utf-8"))
         expcfg = json.loads(etaobj["#expcfg"])
 
-        self.send("Compiled program for " +
-                  expcfg["exp_name"] + " is sent to server.")
+        self.send("Server received experiment file " +
+                  expcfg["exp_name"] + ".")
+        self.send("Run process()...")
         loc = {}
         exec(servercode, globals(), loc)
         loc["process"]()
-        print("start dash")
-        self.send("process finished, start display.")
+        self.send("Timetag analysis is finished, starting display...")
+        self.send("Display is running at http://localhost:5000.")
         thread2 = threading.Thread(target=loc["display"])
         thread2.daemon = True
         thread2.start()
