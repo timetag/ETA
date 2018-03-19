@@ -84,7 +84,7 @@ $"\01??_C@_0DE@PLFGPKJO@?6?5?$FLERROR?$FNTime?9tag?5file?5cannot?5be@" = comdat 
 @IsT2 = local_unnamed_addr global i8 0, align 1
 @"\01?TagHead@@3UTgHd@@A" = local_unnamed_addr global %struct.TgHd.5 zeroinitializer, align 8
 
-define i32 @"_ZN8mainloop12mainloop$241E5ArrayIaLi1E1C7mutable7alignedE5ArrayIxLi1E1C7mutable7alignedE35bytearray$28uint8$2c$201d$2c$20C$29xxxxxx"(i64* noalias nocapture %retptr, { i8*, i32 }** noalias nocapture readnone %excinfo, i8* noalias nocapture readnone %env, i8* %arg.chn.0, i8* nocapture readnone %arg.chn.1, i64 %arg.chn.2, i64 %arg.chn.3, i8* nocapture %arg.chn.4, i64 %arg.chn.5.0, i64 %arg.chn.6.0, i8* %arg.t1.0, i8* nocapture readnone %arg.t1.1, i64 %arg.t1.2, i64 %arg.t1.3, i64* nocapture %arg.t1.4, i64 %arg.t1.5.0, i64 %arg.t1.6.0, i8* nocapture readnone %arg.filename1.0, i8* nocapture readnone %arg.filename1.1, i64 %arg.filename1.2, i64 %arg.filename1.3, i8* nocapture readonly %arg.filename1.4, i64 %arg.filename1.5.0, i64 %arg.filename1.6.0, i64 %arg.fseekpoint, i64 %arg.fendpoint, i64 %arg.BytesofRecords, i64 %arg.TTRes_pspr, i64 %arg.SYNCRate_pspr, i64 %arg.DTRes_pspr) local_unnamed_addr {
+define i32 @"_ZN8__main__12mainloop$241E5ArrayIaLi1E1C7mutable7alignedE5ArrayIxLi1E1C7mutable7alignedE35bytearray$28uint8$2c$201d$2c$20C$29xxxxxx"(i64* noalias nocapture %retptr, { i8*, i32 }** noalias nocapture readnone %excinfo, i8* noalias nocapture readnone %env, i8* %arg.chn.0, i8* nocapture readnone %arg.chn.1, i64 %arg.chn.2, i64 %arg.chn.3, i8* nocapture %arg.chn.4, i64 %arg.chn.5.0, i64 %arg.chn.6.0, i8* %arg.t1.0, i8* nocapture readnone %arg.t1.1, i64 %arg.t1.2, i64 %arg.t1.3, i64* nocapture %arg.t1.4, i64 %arg.t1.5.0, i64 %arg.t1.6.0, i8* nocapture readnone %arg.filename1.0, i8* nocapture readnone %arg.filename1.1, i64 %arg.filename1.2, i64 %arg.filename1.3, i8* nocapture readonly %arg.filename1.4, i64 %arg.filename1.5.0, i64 %arg.filename1.6.0, i64 %arg.fseekpoint, i64 %arg.fendpoint, i64 %arg.BytesofRecords, i64 %arg.TTRes_pspr, i64 %arg.SYNCRate_pspr, i64 %arg.DTRes_pspr) local_unnamed_addr {
 entry:
   tail call void @NRT_incref(i8* %arg.chn.0)
   tail call void @NRT_incref(i8* %arg.t1.0)
@@ -894,7 +894,7 @@ POOL_init.exit.loopexit12:                        ; preds = %377, %.lr.ph.i.111
   br label %POOL_init.exit
 }
 
-define i8* @"_ZN7cpython8mainloop12mainloop$241E5ArrayIaLi1E1C7mutable7alignedE5ArrayIxLi1E1C7mutable7alignedE35bytearray$28uint8$2c$201d$2c$20C$29xxxxxx"(i8* %py_closure, i8* %py_args, i8* nocapture readnone %py_kws) local_unnamed_addr {
+define i8* @"_ZN7cpython8__main__12mainloop$241E5ArrayIaLi1E1C7mutable7alignedE5ArrayIxLi1E1C7mutable7alignedE35bytearray$28uint8$2c$201d$2c$20C$29xxxxxx"(i8* %py_closure, i8* %py_args, i8* nocapture readnone %py_kws) local_unnamed_addr {
 entry:
   %.5 = alloca i8*, align 8
   %.6 = alloca i8*, align 8
@@ -1171,7 +1171,7 @@ entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.en
 entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif: ; preds = %entry.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif.endif
   %.167 = call i8* @PyEval_SaveThread()
   store i64 0, i64* %.168, align 8
-  %.176 = call i32 @"_ZN8mainloop12mainloop$241E5ArrayIaLi1E1C7mutable7alignedE5ArrayIxLi1E1C7mutable7alignedE35bytearray$28uint8$2c$201d$2c$20C$29xxxxxx"(i64* nonnull %.168, { i8*, i32 }** undef, i8* undef, i8* %.43.fca.0.load, i8* %.43.fca.1.load, i64 %.43.fca.2.load, i64 %.43.fca.3.load, i8* %.43.fca.4.load, i64 %.43.fca.5.0.load, i64 %.43.fca.6.0.load, i8* %.54.fca.0.load, i8* %.54.fca.1.load, i64 %.54.fca.2.load, i64 %.54.fca.3.load, i64* %.54.fca.4.load, i64 %.54.fca.5.0.load, i64 %.54.fca.6.0.load, i8* %.71.fca.0.load, i8* %.71.fca.1.load, i64 %.71.fca.2.load, i64 %.71.fca.3.load, i8* %.71.fca.4.load, i64 %.71.fca.5.0.load, i64 %.71.fca.6.0.load, i64 %.78.0, i64 %.93.0, i64 %.108.0, i64 %.123.0, i64 %.138.0, i64 %.153.0)
+  %.176 = call i32 @"_ZN8__main__12mainloop$241E5ArrayIaLi1E1C7mutable7alignedE5ArrayIxLi1E1C7mutable7alignedE35bytearray$28uint8$2c$201d$2c$20C$29xxxxxx"(i64* nonnull %.168, { i8*, i32 }** undef, i8* undef, i8* %.43.fca.0.load, i8* %.43.fca.1.load, i64 %.43.fca.2.load, i64 %.43.fca.3.load, i8* %.43.fca.4.load, i64 %.43.fca.5.0.load, i64 %.43.fca.6.0.load, i8* %.54.fca.0.load, i8* %.54.fca.1.load, i64 %.54.fca.2.load, i64 %.54.fca.3.load, i64* %.54.fca.4.load, i64 %.54.fca.5.0.load, i64 %.54.fca.6.0.load, i8* %.71.fca.0.load, i8* %.71.fca.1.load, i64 %.71.fca.2.load, i64 %.71.fca.3.load, i8* %.71.fca.4.load, i64 %.71.fca.5.0.load, i64 %.71.fca.6.0.load, i64 %.78.0, i64 %.93.0, i64 %.108.0, i64 %.123.0, i64 %.138.0, i64 %.153.0)
   %.186 = load i64, i64* %.168, align 8
   call void @PyEval_RestoreThread(i8* %.167)
   call void @numba_release_buffer([80 x i8]* nonnull %.60)

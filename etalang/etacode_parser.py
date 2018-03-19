@@ -1,5 +1,5 @@
 import re
-import ast_parser
+from . import ast_parser
 
 
 class Parser():

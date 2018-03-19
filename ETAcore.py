@@ -1,11 +1,16 @@
 import multiprocessing
 import tensor
 from timeit import timeit
-from mainloop import mainloop
+
 from parser_header import parse_header
 import numpy as np
-
-
+import etalang
+from etalang import codegen
+def compile_one_graph(filename):
+        with open(filename) as f:
+            return codegen.compile_eta(f.read())
+code, metadata = compile_one_graph("etalang/startstop.eta")
+exec(code)
 def f(caller_parms):
     print(caller_parms)
     histogram = np.zeros(62502, dtype=np.int64)
