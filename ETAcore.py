@@ -1,10 +1,9 @@
 import multiprocessing
-import tensor
 from timeit import timeit
-
 from parser_header import parse_header
 import numpy as np
-import etalang
+
+from etalang import tensor
 from etalang import codegen
 def compile_one_graph(filename):
         with open(filename) as f:

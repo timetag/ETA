@@ -1,4 +1,4 @@
-import tensor
+from . import tensor
 import textwrap
 
 
