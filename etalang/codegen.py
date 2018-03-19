@@ -1,8 +1,8 @@
-import eta_vm
-import etacode_parser
+from . import eta_vm
+from . import etacode_parser
 import json
-import graph_parser
-import mainloop
+from . import graph_parser
+from . import mainloop
 import textwrap
 
 
@@ -81,4 +81,5 @@ if __name__ == "__main__":
             return compile_eta(f.read())
     code, metadata = compile_one_graph("startstop.eta")
     print(code)
+
     print(metadata)

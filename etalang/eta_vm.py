@@ -283,20 +283,20 @@ class ETA_VM():
         for each in self.graphs:
             global_init_code += "\n" + each.global_init_section
 
-
         mainloop = ""
-        mainloop_el=""
+        mainloop_el = ""
         inputs = self.check_input().keys()
         for chn in inputs:
             chn_stanza = ""
-            chn_stanza_el=""
+            chn_stanza_el = ""
             for graph in self.graphs:
                 for last in range(0, graph.maxstates):
                     now = graph.transition_table[chn][last]
                     if now is not None:  # valid transition
-                        chn_stanza += "\n{}if (now_{}=={}):".format(chn_stanza_el,graph.graphid, last)
-                        if chn_stanza_el=="":
-                            chn_stanza_el="el"
+                        chn_stanza += "\n{}if (now_{}=={}):".format(
+                            chn_stanza_el, graph.graphid, last)
+                        if chn_stanza_el == "":
+                            chn_stanza_el = "el"
                         # conditionless transout
                         now_stanza = ""
                         now_stanza += "\n" + \
@@ -306,7 +306,8 @@ class ETA_VM():
                             graph.tranout_to_section[chn][last]
                         now_stanza += "\nlast_{}=now_{}".format(
                             graph.graphid, graph.graphid)
-                        now_stanza += "\n# trans form {} to {}".format(last, now)
+                        now_stanza += "\n# trans form {} to {}".format(
+                            last, now)
                         now_stanza += "\nnow_{}={}".format(graph.graphid, now)
                         # conditionless
                         now_stanza += "\n" + \
@@ -324,9 +325,9 @@ class ETA_VM():
                         chn_stanza += now_stanza
             if True or len(chn_stanza) > 0:
                 chn_stanza = textwrap.indent(chn_stanza, "  ")
-                mainloop += "\n{}if (chn[0]=={}):".format(mainloop_el,chn)
-                if mainloop_el=="":
-                    mainloop_el="el"
+                mainloop += "\n{}if (chn[0]=={}):".format(mainloop_el, chn)
+                if mainloop_el == "":
+                    mainloop_el = "el"
                 mainloop += chn_stanza
         return mainloop, init_code, global_init_code
 
