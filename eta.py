@@ -1,30 +1,41 @@
-# -*- coding: utf-8 -*-
-import dash
-import dash_core_components as dcc
-import dash_html_components as html
+import multiprocessing
+from timeit import timeit
+import numpy as np
+from scheduler import scheduler
+from etalang import tensor
+from etalang import codegen
+from core import sp_core
 
-app = dash.Dash()
+@timeit
+def mp_core(filename, code):
+    caller_parms = scheduler(filename)
+    for each in caller_parms:
+        each.append(code)
+        each.append(filename)
+    print("MP core started")
+    with multiprocessing.Pool(8) as p:
+        ret = p.map(sp_core, caller_parms)
+        print("MP core stopped")
+        return caller_parms, ret
 
-app.layout = html.Div(children=[
-    html.H1(children='Hello Dash'),
-
-    html.Div(children='''
-        Dash: A web application framework for Python.
-    '''),
-
-    dcc.Graph(
-        id='example-graph',
-        figure={
-            'data': [
-                {'x': [1, 2, 3], 'y': [4, 1, 2], 'type': 'bar', 'name': 'SF'},
-                {'x': [1, 2, 3], 'y': [2, 4, 5], 'type': 'bar', 'name': u'Montr¨¦al'},
-            ],
-            'layout': {
-                'title': 'Dash Data Visualization'
-            }
-        }
-    )
-])
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    multiprocessing.freeze_support()
+
+    def compile_eta_file(filename):
+        with open(filename) as f:
+            code, metadata = codegen.compile_eta(f.read())
+        return code, metadata
+
+    code, metadata = compile_eta_file("startstop.eta")
+    caller_parms, ret = mp_core("HHT2.ptu", code)
+    histogram = np.zeros(62502, dtype=np.int64)
+
+    for each in range(len(ret)):
+        caller_parms[each].pop()
+        caller_parms[each].pop()
+        print(caller_parms[each])
+        print(ret[each])
+        histogram += ret[each]
+    with open("etanxg.tensor", "w") as writeto:
+        writeto.write(tensor.print_tensor(histogram.tolist()))
