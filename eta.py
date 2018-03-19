@@ -1,41 +1,97 @@
+#!/usr/bin/env python
+import os
+import ws_broadcast
+import json
+import threading
 import multiprocessing
-from timeit import timeit
-import numpy as np
-from scheduler import scheduler
 from etalang import tensor
 from etalang import codegen
-from core import sp_core
+from core import sp_core, mp_core
+import dash
+import dash_core_components as dcc
+import dash_html_components as html
 
-@timeit
-def mp_core(filename, code):
-    caller_parms = scheduler(filename)
-    for each in caller_parms:
-        each.append(code)
-        each.append(filename)
-    print("MP core started")
-    with multiprocessing.Pool(8) as p:
-        ret = p.map(sp_core, caller_parms)
-        print("MP core stopped")
-        return caller_parms, ret
+class WSSERVER():
 
+    def __init__(self, PORT):
+        def new_message(client, server, message):
+
+            print("client " + str(client["address"]) + " asks " + message)
+            obj = json.loads(message)
+            getattr(self, obj["method"])(*obj["args"])
+
+        def new_client(client, server):
+            print("New client " + str(client["address"]) +
+                  " connected to port " + str(PORT) + ". ")
+        self.server = ws_broadcast.WebsocketServer(
+            PORT, host='0.0.0.0')
+        print("ETA Server URL: ws://localhost:"+str(PORT))
+        self.server.set_fn_new_client(new_client)
+        self.server.set_fn_message_received(new_message)
+        self.server.run_forever()
+
+    def send(self, text):
+        self.server.send_message_to_all(str(text))
+
+    def process_file(self, etaobj=None):
+        with open("server.eta", 'w') as file:
+            file.write(json.dumps(etaobj))
+        servercode = etaobj["code"]
+        with open("server_code.py", 'wb') as file:
+            file.write(servercode.encode("utf-8"))
+        expcfg = json.loads(etaobj["#expcfg"])
+
+        self.send("Compiled program for " +
+                  expcfg["exp_name"] + " is sent to server.")
+        loc = {}
+        exec(servercode, globals(), loc)
+        loc["process"]()
+        print("start dash")
+        self.send("process finished, start display.")
+        thread2 = threading.Thread(target=loc["display"])
+        thread2.daemon = True
+        thread2.start()
 
 if __name__ == '__main__':
     multiprocessing.freeze_support()
+    ws = WSSERVER(5678)
 
-    def compile_eta_file(filename):
-        with open(filename) as f:
-            code, metadata = codegen.compile_eta(f.read())
-        return code, metadata
 
-    code, metadata = compile_eta_file("startstop.eta")
-    caller_parms, ret = mp_core("HHT2.ptu", code)
-    histogram = np.zeros(62502, dtype=np.int64)
 
-    for each in range(len(ret)):
-        caller_parms[each].pop()
-        caller_parms[each].pop()
-        print(caller_parms[each])
-        print(ret[each])
-        histogram += ret[each]
-    with open("etanxg.tensor", "w") as writeto:
-        writeto.write(tensor.print_tensor(histogram.tolist()))
+"""
+def start_program():
+    global ret
+    if ret:
+        send_message("Old program is killed.")
+        ret.terminate()
+    ret = subprocess.Popen(['timetag.exe', 'etaserver.code', 'etaserver.txt'],
+                           stdin=subprocess.PIPE,
+                           stdout=subprocess.PIPE,
+                           )
+    send_message("Program starting...")
+    out, err = ret.communicate()
+    print(out, err)
+    ret.terminate()
+    ret = None
+    read_file("etaserver.txt")
+    send_message("Program stopped.")
+
+
+def process_batch(purecode=None, first=None, path="..\\"):
+    onlyfiles = [f for f in os.listdir(
+        path) if os.path.isfile(os.path.join(path, f))]
+    for each in onlyfiles:
+        process_file(purecode, first, str(os.path.join(path, each)))
+    get_data(path)
+
+
+def get_data(path="."):
+    tensors = []
+    onlyfiles = [f for f in os.listdir(
+        path) if os.path.isfile(os.path.join(path, f))]
+    for each in onlyfiles:
+        if each.find(".tensor") >= 0:
+            tensors.append(str(os.path.join(path, each)))
+    send_message(tensors, "display")
+"""
+
