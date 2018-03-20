@@ -4,13 +4,13 @@ def get_onefile_loop(tables,init,looping,globals_init):
 def mainloop(chn, {tables}, filename1, fseekpoint, fendpoint, BytesofRecords, TTRes_pspr, SYNCRate_pspr, DTRes_pspr):
     link_libs()
     Channel = ffi.from_buffer(chn)
-    filename = ffi.from_buffer(filename1)
-    ret1 = 0
-    ret1 += FileReader_init(filename, fseekpoint, fendpoint,
+    Filename = ffi.from_buffer(filename1)
+    eta_ret = 0
+    eta_ret += FileReader_init(Filename, fseekpoint, fendpoint,
                             BytesofRecords, TTRes_pspr, SYNCRate_pspr, DTRes_pspr)
 
     # print("bytes of the rec", READER_BytesofRecords_get())
-    ret1 += POOL_init(1, 2, 2)
+    eta_ret += POOL_init(1, 2, 2)
     #count = 0
     {init}
     AbsTime_ps = POOL_next(Channel)
@@ -21,11 +21,16 @@ def mainloop(chn, {tables}, filename1, fseekpoint, fendpoint, BytesofRecords, TT
         {looping}
 
         AbsTime_ps = POOL_next(Channel)
-    return ret1
+    return eta_ret
 
-{globals_init}
+def sp_core(caller_parms,mainloop):
+    {globals_init}
+    filename = caller_parms.pop()
+    print(mainloop(np.zeros(1, dtype=np.int8), {tables},  bytearray(filename, "ascii"), *caller_parms))
+    return ({tables})
+
+#globals_init
 # routine warming up
 #mainloop(np.zeros(1, dtype=np.int8), {tables},
 #         bytearray("NONEXISTING", "ascii"), 1,1,1,1,1,1)
-ret = mainloop
 """.format(init=init,looping=looping,globals_init=globals_init,tables=",".join(tables))
