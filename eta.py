@@ -87,36 +87,38 @@ class WSSERVER():
                 logger.error(str(e), exc_info=True)
             finally:
                 self.send("Timetag analysis is finished, starting display...")
+            self.serve_dash(loc)
 
-            if not ("app" in loc):
-                self.send("No display dashboard for array output.", "err")
-            else:
-                try:
-                    app = loc['app']
+    def serve_dash(self, loc=None):
+        if (loc is None) or not ("app" in loc):
+            self.send("No display dashboard for array output.", "err")
+        else:
+            try:
+                app = loc['app']
 
-                    @app.server.route('/shutdown', methods=['GET'])
-                    def shutdown():
-                        func = request.environ.get('werkzeug.server.shutdown')
-                        if func is None:
-                            raise RuntimeError(
-                                'Not running with the Werkzeug Server')
-                        func()
-                        self.displaying = False
-                        self.send("Dashboard shutting down. ")
-                        self.send("http://localhost:5000", "discard")
-                        response = app.server.make_response('Hello, World')
-                        response.headers.add(
-                            'Access-Control-Allow-Origin', '*')
-                        return response
-                    thread2 = threading.Thread(target=app.server.run)
-                    thread2.daemon = True
-                    thread2.start()
-                    self.send("Display is running at http://localhost:5000.")
-                    self.send("http://localhost:5000", "dash")
-                    self.displaying = True
-                except Exception as e:
-                    self.send(str(e), "err")
-                    logger.error(str(e), exc_info=True)
+                @app.server.route('/shutdown', methods=['GET'])
+                def shutdown():
+                    func = request.environ.get('werkzeug.server.shutdown')
+                    if func is None:
+                        raise RuntimeError(
+                            'Not running with the Werkzeug Server')
+                    func()
+                    self.displaying = False
+                    self.send("Dashboard shutting down. ")
+                    self.send("http://localhost:5000", "discard")
+                    response = app.server.make_response('Hello, World')
+                    response.headers.add(
+                        'Access-Control-Allow-Origin', '*')
+                    return response
+                thread2 = threading.Thread(target=app.server.run)
+                thread2.daemon = True
+                thread2.start()
+                self.send("Display is running at http://localhost:5000.")
+                self.send("http://localhost:5000", "dash")
+                self.displaying = True
+            except Exception as e:
+                self.send(str(e), "err")
+                logger.error(str(e), exc_info=True)
 
 
 if __name__ == '__main__':
