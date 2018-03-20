@@ -106,20 +106,29 @@ class Graph():
             raise ValueError(
                 "Calling non-existing embedded code #{}".format(id))
         self.EMIT_LINE(triggers, self.embedded[id])
-    #########################
 
+    def make_output_chn(self, chn):
+        self.output_chn[chn] = True
+
+    #########################
+    def make_init_state(self, init):
+        self.init_now = init
+        
     def make_state(self, stateid, name):
         if not isinstance(name, str):
             raise ValueError(
-                "State name must be a string, but a {type} is found.".format(str(name)))
+                "State name must be a string, but a {type} is found on graph {}.".format(str(name), self.name))
         self.id_to_states[stateid] = name
         self.states_to_id[name] = stateid
 
     def make_trans(self, gofrom, goto, cond):
         cond = int(cond)
         self.input_chn[cond] = True
-
-        self.transition_table[cond][gofrom] = goto
+        if self.transition_table[cond][gofrom] is None:
+            self.transition_table[cond][gofrom] = goto
+        else:
+            raise ValueError(
+                "Ambiguous transition with condition {} on graph{}.".format(cond, self.name))
 
     def to_sized_table(self, symbol, type_desired):
         symbol = symbol.replace(" ", "")
@@ -134,8 +143,9 @@ class Graph():
                 if self.defined_symbols[symbol][0] == "table":
                     self.defined_symbols[symbol] = type_desired
                     raise ValueError(
-                        "Table resize is currently not supported for symbol {}".format(symbol))
-        raise ValueError("Illegal type for symbol {}".format(symbol))
+                        "Table resize is currently not supported for symbol {}, found on graph {}.".format(symbol, self.name))
+        raise ValueError(
+            "Illegal type for symbol {} on graph {}.".format(symbol, self.name))
 
     def MAKE_INTI_SYMBOLS(self):
         # state registers
@@ -187,14 +197,12 @@ class Graph():
                    bin_step=bin_step, bin_num=bin_num)
         self.EMIT_LINE(triggers, code)
 
-    def table(self, table, name, p2):
-        self.used_array[name] = table
-
-    def make_output_chn(self, chn):
-        self.output_chn[chn] = True
-
-    def make_init_state(self, init):
-        self.init_now = init
+    def emit(self, triggers, chn, waittime):
+        chn = int(chn)
+        self.make_output_chn(chn)
+        code = """eta_ret+=VSLOT_put(AbsTime_ps+{waittime},nb.int8({chn}));""".format(
+            chn=chn, waittime=int(waittime))
+        self.EMIT_LINE(triggers, code)
 
 
 class ETA_VM():
@@ -246,16 +254,16 @@ class ETA_VM():
         output_chn_used_by_which_graph = {}
         for i in range(0, self.chn_real):
             output_chn_used_by_which_graph[i] = -1
-        for graphid in range(0, self.graphs):
+        for graphid in range(0, len(self.graphs)):
             for chn in self.graphs[graphid].output_chn:
                 # reserved for real devices
-                if (chn in self.output_chn_used_by_which_graph):
+                if (chn in output_chn_used_by_which_graph):
                     raise ValueError(
-                        "Graph {} trys to output to a used channel {} by Graph.".format(
+                        "Graph {} trys to output to a used channel {} by Graph {}.".format(
                             self.get_graph_name(graphid), chn,
                             self.get_graph_name(output_chn_used_by_which_graph[chn])))
                 else:
-                    self.output_chn_used_by_which_graph[chn] = graphid
+                    output_chn_used_by_which_graph[chn] = graphid
         return output_chn_used_by_which_graph
 
     def check_input(self):

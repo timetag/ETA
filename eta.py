@@ -8,6 +8,7 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 from etalang import tensor, codegen
+from jit_linker import link_jit_code
 from core import *
 import numpy as np
 logger = logging.getLogger(__name__)
@@ -65,7 +66,12 @@ class WSSERVER():
             self.send("Server received experiment file " +
                       expcfg["exp_name"] + ".")
             self.send("Compiling...")
-            loc = {"code": self.compile_eta(etaobj)}
+            eta_compiled_code = self.compile_eta(etaobj)
+            wrapper, mainloop = link_jit_code(eta_compiled_code)
+            loc = {"code": eta_compiled_code,
+                   "mainloop": mainloop,
+                   "wrapper": wrapper
+                   }
             variables = json.loads(etaobj["eta_dpp_table"])
             for each in variables:
                 loc[each["variable"]] = each["value"]
@@ -94,7 +100,10 @@ class WSSERVER():
                         self.displaying = False
                         self.send("Dashboard shutting down. ")
                         self.send("http://localhost:5000", "discard")
-                        return 'Server shutting down...'
+                        response = app.server.make_response('Hello, World')
+                        response.headers.add(
+                            'Access-Control-Allow-Origin', '*')
+                        return response
                     thread2 = threading.Thread(target=app.server.run)
                     thread2.daemon = True
                     thread2.start()

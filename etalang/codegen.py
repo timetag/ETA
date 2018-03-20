@@ -28,25 +28,26 @@ def compile_eta(jsobj):
     vi_code_list = []
     graphnames = []
 
-    for each in vis:
-        instname = each["name"]
-        instid = each["id"]
+    for each in range(len(vis)):
+        instname = vis[each]["name"]
+        instid = vis[each]["id"]
         if not (instid in jsobj):
             raise ValueError(
                 "ETA file corrupted. Graph for {} is not found.".format(instname))
         usercode, graph_instructions = graph_parser.compile_graph(
-            jsobj[instid])
+            jsobj[instid], automata=each)
         # print(usercode)
         # parse user code
-        intp = etacode_parser.Parser(usercode, [len(graphnames)])
+
+        intp = etacode_parser.Parser(usercode, [each])
         vi_code_list += graph_instructions
-        vi_code_list += [["PREP_code_assignment", [len(graphnames)]]]
+        vi_code_list += [["PREP_code_assignment", [each]]]
         # load embed codes
         vi_code_list += [["LOAD_EMBEDDED_CODE",
-                          [len(graphnames), intp.escaped_code]]]
+                          [each, intp.escaped_code]]]
         vi_code_list += intp.instructions
         vi_code_list += [["MAKE_INTI_SYMBOLS",
-                          [len(graphnames)]]]
+                          [each]]]
         graphnames.append(instname)
     # code gen main process
     etavm = eta_vm.ETA_VM(real_chns_per_rslots, graphnames)
@@ -55,6 +56,7 @@ def compile_eta(jsobj):
         print(each)
         etavm.exec_eta(each)
     # defines for tables
+    etavm.check_output()
     defines = etavm.check_defines()
     tables = []
     for each in defines:
@@ -63,7 +65,7 @@ def compile_eta(jsobj):
 
     code, init_code, global_init_code = etavm.dump_code()
     onefile = mainloop.get_onefile_loop(tables, textwrap.indent(
-        init_code, "    "), textwrap.indent(code, "        "), textwrap.indent(global_init_code, ""))
+        init_code, "    "), textwrap.indent(code, "        "), textwrap.indent(global_init_code, "    "))
     # update metadata
 
     def select_by_name(obj, name):

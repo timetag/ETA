@@ -1,7 +1,7 @@
 from llvmlite import ir, binding as ll
 import numba as nb
 from numba import jit
-
+import numpy as np
 from os import listdir
 from os.path import isfile, join
 import cffi
@@ -108,7 +108,7 @@ def link_libs(typingctx):
     return sig, codegen
 
 
-def link_function(func_name="", param=1):
+def link_function(func_name="", param=1, i64=False):
     def codegen(context, builder, sig, args):
         argtypes = [context.get_argument_type(aty) for aty in sig.args]
         restype = context.get_argument_type(sig.return_type)
@@ -133,29 +133,55 @@ def link_function(func_name="", param=1):
     def ONEPARAM(typingctx, a1):
         sig = nb.typing.signature(nb.int32, a1)
         return sig, codegen
-    if (param == 1):
-        return ONEPARAM
-    elif (param == 7):
-        return EIGHTPARAM
-    elif (param == 3):
-        return THREEPARAM
-
-
-def link_i64_function(func_name="", param=1):
-    def codegen(context, builder, sig, args):
-        argtypes = [context.get_argument_type(aty) for aty in sig.args]
-        restype = context.get_argument_type(sig.return_type)
-        fnty = ir.FunctionType(restype, argtypes)
-        fn = nb.cgutils.insert_pure_function(
-            builder.module, fnty, name=func_name)
-        retval = context.call_external_function(builder, fn, sig.args, args)
-        print(fn)
-        return retval
 
     @nb.extending.intrinsic
-    def ONEPARAM(typingctx, a1):
+    def TWOPARAM(typingctx, a1, a2):
+        sig = nb.typing.signature(nb.int32, a1, a2)
+        return sig, codegen
+
+    @nb.extending.intrinsic
+    def i64ONEPARAM(typingctx, a1):
         print(a1)
         sig = nb.typing.signature(nb.int64, a1)
         return sig, codegen
-    if (param == 1):
-        return ONEPARAM
+    if (i64):
+        if (param == 1):
+            return i64ONEPARAM
+    else:
+        if (param == 1):
+            return ONEPARAM
+        if (param == 2):
+            return TWOPARAM
+        elif (param == 7):
+            return EIGHTPARAM
+        elif (param == 3):
+            return THREEPARAM
+
+
+def link_jit_code(code):
+    FileReader_init = link_function("FileReader_init", 7)
+    POOL_init = link_function("POOL_init", 3)
+    POOL_next = link_function("POOL_next", 1, i64=True)
+    READER_BytesofRecords_get = link_global("READER_BytesofRecords")
+    VSLOT_put = link_function("VSLOT_put", 2)
+    glb = {
+        "jit": jit, "ffi": ffi, "nb": nb, "np": np,
+        "link_libs": link_libs,
+        "VSLOT_put": VSLOT_put,
+        "FileReader_init": FileReader_init,
+        "POOL_init": POOL_init,
+        "POOL_next": POOL_next,
+        "READER_BytesofRecords_get": READER_BytesofRecords_get,
+    }
+    loc = {}
+
+    exec(code, glb, loc)
+    mainloop = loc["mainloop"]
+    wrapper = loc["sp_core"]
+    with open("llvm.txt", "w") as writeto:
+        codelist = mainloop.inspect_llvm()
+        for each in codelist:
+            writeto.write(str(each))
+            writeto.write("//////////////")
+            writeto.write(codelist[each])
+    return wrapper, mainloop
