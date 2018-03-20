@@ -1,12 +1,12 @@
-from jit_linker import link_jit_code
 import numpy as np
 import multiprocessing
-
-from etatimeit import timeit
 from scheduler import scheduler
+import time
+import dash
+import dash_core_components as dcc
+import dash_html_components as html
 
 
-@timeit
 def ETA_MULTITHREAD(filename, code):
     caller_parms = scheduler(filename, 4)
     for each in caller_parms:
@@ -26,12 +26,14 @@ def ETA_MULTITHREAD(filename, code):
     return histogram
 
 
+def ETA(filename, wrapper, mainloop,print):
 
-@timeit
-def ETA(filename, wrapper,mainloop):
     caller_parms = scheduler(filename)
     for each in caller_parms:
         each.append(filename)
-    return wrapper(caller_parms[0],mainloop)
+    ts = time.time()
+    result = wrapper(caller_parms[0], mainloop)
+    te = time.time()
+    print('Time: {} ms'.format( (te - ts) * 1000))
 
-
+    return result
