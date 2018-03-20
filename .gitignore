@@ -11,4 +11,5 @@ __pycache__/
 etaserver*
 *.ipynb
 .*
+llvm.txt
 *.ptu

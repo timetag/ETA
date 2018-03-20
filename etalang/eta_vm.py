@@ -1,5 +1,8 @@
-from . import tensor
 import textwrap
+if __name__ == "__main__":
+    import tensor
+else:
+    from . import tensor
 
 
 class Graph():
@@ -113,7 +116,7 @@ class Graph():
     #########################
     def make_init_state(self, init):
         self.init_now = init
-        
+
     def make_state(self, stateid, name):
         if not isinstance(name, str):
             raise ValueError(
@@ -173,6 +176,9 @@ class Graph():
 
     def TABLE(self, triggers, table):
         self.get_symbol(table, "table", define=True)
+
+    def COUNTER(self, triggers, table):
+        self.get_symbol(table, "counter", define=True)
 
     def startclock(self, triggers, clock_name):
         clock_name = self.get_symbol(clock_name, "clock")
@@ -340,15 +346,3 @@ class ETA_VM():
         return mainloop, init_code, global_init_code
 
         ################################################
-
-
-if __name__ == "__main__":
-    a = ETA_VM([4, 4], ["asd"])
-
-    a.create_graph("tsetgp1")
-    a.create_graph("tsetgp2")
-    a.exec_eta(["make_output_chn", [0, 8]])
-    a.exec_eta(["make_output_chn", [0, 9]])
-    a.exec_eta(['make_state', [0, 0, 'a']])
-    a.exec_eta(['make_state', [0, 1, 'aa']])
-    a.exec_eta(['prepare_transitions', [0]])
