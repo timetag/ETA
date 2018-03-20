@@ -1,16 +1,17 @@
-#!/usr/bin/env python
-import numpy as np
+from flask import request
 import ws_broadcast
 import json
 import threading
+import logging
 import multiprocessing
-from etalang import tensor
-from etalang import codegen
-from core import sp_core, mp_core
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
-from flask import request
+from etalang import tensor, codegen
+from core import *
+import numpy as np
+logger = logging.getLogger(__name__)
+logging.basicConfig()
 
 
 class WSSERVER():
@@ -37,11 +38,22 @@ class WSSERVER():
     def send(self, text, endpoint="log"):
         self.server.send_message_to_all(json.dumps([endpoint, str(text)]))
 
-    def process_file(self, etaobj=None):
+    def compile_eta(self, etaobj=None):
+        try:
+            code, metadata = codegen.compile_eta(etaobj)
+        except Exception as e:
+            self.send(str(e), "err")
+            self.send("Compilation failed.")
+            logger.error(str(e), exc_info=True)
+        finally:
+            self.send(metadata, "table")
+        return code
+
+    def process_eta(self, etaobj=None):
         if self.displaying:
             self.send("Display is running at http://localhost:5000.")
             self.send(
-                "The updated ETA program is not executed, in order to prevent data overwritting.")
+                "The ETA program is not executed, in order to prevent data overwritting.")
             self.send("http://localhost:5000", "dash")
         else:
             with open("server.eta", 'w') as file:
@@ -52,77 +64,59 @@ class WSSERVER():
             expcfg = json.loads(etaobj["#expcfg"])
             self.send("Server received experiment file " +
                       expcfg["exp_name"] + ".")
-            self.send("Run process()...")
-            loc = {"etaobj": json.dumps(etaobj)}
+            self.send("Compiling...")
+            loc = {"code": self.compile_eta(etaobj)}
             variables = json.loads(etaobj["eta_dpp_table"])
             for each in variables:
                 loc[each["variable"]] = each["value"]
+            try:
+                self.send("Run process()...")
+                exec(servercode, globals(), loc)
+            except Exception as e:
+                self.send(str(e), "err")
+                logger.error(str(e), exc_info=True)
+            finally:
+                self.send("Timetag analysis is finished, starting display...")
 
-            exec(servercode, globals(), loc)
-            self.send("Timetag analysis is finished, starting display...")
-
-            app = loc['app']
-            if app is None:
+            if not ("app" in loc):
                 self.send("No display dashboard for array output.", "err")
             else:
-                @app.server.route('/shutdown', methods=['GET'])
+                try:
+                    app = loc['app']
 
-                def shutdown():
-                    func = request.environ.get('werkzeug.server.shutdown')
-                    if func is None:
-                        raise RuntimeError(
-                            'Not running with the Werkzeug Server')
-                    func()
-                    self.displaying = False
-                    self.send("Dashboard shutting down. ")
-                    self.send("http://localhost:5000", "discard")
-                    return 'Server shutting down...'
-                thread2 = threading.Thread(target=app.server.run)
-                thread2.daemon = True
-                thread2.start()
-            self.send("Display is running at http://localhost:5000.")
-            self.send("http://localhost:5000", "dash")
-            self.displaying = True
+                    @app.server.route('/shutdown', methods=['GET'])
+                    def shutdown():
+                        func = request.environ.get('werkzeug.server.shutdown')
+                        if func is None:
+                            raise RuntimeError(
+                                'Not running with the Werkzeug Server')
+                        func()
+                        self.displaying = False
+                        self.send("Dashboard shutting down. ")
+                        self.send("http://localhost:5000", "discard")
+                        return 'Server shutting down...'
+                    thread2 = threading.Thread(target=app.server.run)
+                    thread2.daemon = True
+                    thread2.start()
+                    self.send("Display is running at http://localhost:5000.")
+                    self.send("http://localhost:5000", "dash")
+                    self.displaying = True
+                except Exception as e:
+                    self.send(str(e), "err")
+                    logger.error(str(e), exc_info=True)
 
 
 if __name__ == '__main__':
+    print(""" 
+     _______           _________            ________             
+    |\  ___ \         |\___   ___\         |\   __  \            
+    \ \   __/|        \|___ \  \_|         \ \  \|\  \           
+     \ \  \_|/__           \ \  \           \ \   __  \          
+      \ \  \_|\ \           \ \  \           \ \  \ \  \         
+       \ \_______\           \ \__\           \ \__\ \__\        
+        \|_______|            \|__|            \|__|\|__|        
+                                                                 
+=================================================================
+""")
     multiprocessing.freeze_support()
     ws = WSSERVER(5678)
-
-
-"""
-def start_program():
-    global ret
-    if ret:
-        send_message("Old program is killed.")
-        ret.terminate()
-    ret = subprocess.Popen(['timetag.exe', 'etaserver.code', 'etaserver.txt'],
-                           stdin=subprocess.PIPE,
-                           stdout=subprocess.PIPE,
-                           )
-    send_message("Program starting...")
-    out, err = ret.communicate()
-    print(out, err)
-    ret.terminate()
-    ret = None
-    read_file("etaserver.txt")
-    send_message("Program stopped.")
-
-
-def process_batch(purecode=None, first=None, path="..\\"):
-    onlyfiles = [f for f in os.listdir(
-        path) if os.path.isfile(os.path.join(path, f))]
-    for each in onlyfiles:
-        process_file(purecode, first, str(os.path.join(path, each)))
-    get_data(path)
-
-
-def get_data(path="."):
-    tensors = []
-    onlyfiles = [f for f in os.listdir(
-        path) if os.path.isfile(os.path.join(path, f))]
-    for each in onlyfiles:
-        if each.find(".tensor") >= 0:
-            tensors.append(str(os.path.join(path, each)))
-    send_message(tensors, "display")
-"""

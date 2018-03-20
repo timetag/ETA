@@ -1,7 +1,6 @@
 from parser_header import parse_header
-def scheduler(filename):
+def scheduler(filename,THREAD_MAX=1):
     out = parse_header(bytearray(filename, "ascii"))
-    THREAD_MAX = 2
     TTF_header_offset = out[0]
     TTF_filesize = out[1]
     BytesofRecords = out[2]

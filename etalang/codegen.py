@@ -5,9 +5,8 @@ from . import mainloop
 import textwrap
 import json
 
-def compile_eta(jsonstr):
-    jsobj = json.loads(jsonstr)
 
+def compile_eta(jsobj):
     # split vi/ri
     vis = []
     ris = []
@@ -66,6 +65,18 @@ def compile_eta(jsonstr):
     onefile = mainloop.get_onefile_loop(tables, textwrap.indent(
         init_code, "    "), textwrap.indent(code, "        "), textwrap.indent(global_init_code, ""))
     # update metadata
+
+    def select_by_name(obj, name):
+        for each in obj:
+            if each["name"] == name:
+                return each
+    for each in etavm.graphs:
+        select_by_name(vis, each.name)["input channels"] = str(
+            list(each.input_chn.keys()))
+        select_by_name(vis, each.name)["output channels"] = str(
+            list(each.output_chn.keys()))
+        select_by_name(vis, each.name)["tables"] = str(
+            list(each.defined_symbols.keys()))
     metadata = []
     metadata += ris
     metadata += vis
