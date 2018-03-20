@@ -58,7 +58,7 @@ def link_global(name, do_get=True, type=nb.int64):
                 builder.module, fnty, name=name + "_get")
             retval = context.call_external_function(
                 builder, fn, sig.args, args)
-            print(fn)
+            #print(fn)
             return retval
         return sig, codegen
 
@@ -77,7 +77,7 @@ def link_global(name, do_get=True, type=nb.int64):
                 builder.module, fnty, name=name + "_set")
             retval = context.call_external_function(
                 builder, fn, sig.args, args)
-            print(fn)
+            #print(fn)
             return retval
         return sig, codegen
     if do_get:
@@ -91,71 +91,45 @@ def link_libs(typingctx):
     sig = nb.typing.signature(nb.int32)
 
     def codegen(context, builder, sig, args):
-        print("===== linking =====")
+        #print("===== linking =====")
         codegen.libs = []   # Weird hack to get the library linked
         for f in listdir(ll_path):
             lib_path = join(ll_path, f)
             if isfile(lib_path):
-
-                print(lib_path)
+                #print(lib_path)
                 with open(lib_path, "r") as fio:
                     assembly = fio.read()
                     library = compile_library(context, assembly, lib_path)
                 codegen.libs.append(library)
-        print("===== done =====")
+        #print("===== done =====")
         return context.get_constant(nb.int32, 42)
 
     return sig, codegen
 
 
 def link_function(func_name="", param=1, i64=False):
+    typer = "int32"
+    if (i64):
+        typer = "int64"
+    code = """
+def ARB_PARAM_MAKER():
     def codegen(context, builder, sig, args):
         argtypes = [context.get_argument_type(aty) for aty in sig.args]
         restype = context.get_argument_type(sig.return_type)
         fnty = ir.FunctionType(restype, argtypes)
         fn = nb.cgutils.insert_pure_function(
-            builder.module, fnty, name=func_name)
+            builder.module, fnty, name="{func_name}")
         retval = context.call_external_function(builder, fn, sig.args, args)
-        print(fn)
+        #print(fn)
         return retval
-
     @nb.extending.intrinsic
-    def EIGHTPARAM(typingctx, a1, a2, a3, a4, a5, a6, a7):
-        sig = nb.typing.signature(nb.int32, a1, a2, a3, a4, a5, a6, a7)
+    def ARB_PARAM(typingctx, {para}):
+        sig = nb.typing.signature(nb.{typer}, {para})
         return sig, codegen
-
-    @nb.extending.intrinsic
-    def THREEPARAM(typingctx, a1, a2, a3):
-        sig = nb.typing.signature(nb.int32, a1, a2, a3)
-        return sig, codegen
-
-    @nb.extending.intrinsic
-    def ONEPARAM(typingctx, a1):
-        sig = nb.typing.signature(nb.int32, a1)
-        return sig, codegen
-
-    @nb.extending.intrinsic
-    def TWOPARAM(typingctx, a1, a2):
-        sig = nb.typing.signature(nb.int32, a1, a2)
-        return sig, codegen
-
-    @nb.extending.intrinsic
-    def i64ONEPARAM(typingctx, a1):
-        print(a1)
-        sig = nb.typing.signature(nb.int64, a1)
-        return sig, codegen
-    if (i64):
-        if (param == 1):
-            return i64ONEPARAM
-    else:
-        if (param == 1):
-            return ONEPARAM
-        if (param == 2):
-            return TWOPARAM
-        elif (param == 7):
-            return EIGHTPARAM
-        elif (param == 3):
-            return THREEPARAM
+    return ARB_PARAM
+""".format(para=",".join(["a{}".format(i) for i in range(0, param)]), func_name=func_name, typer=typer)
+    exec(code, globals(), locals())
+    return locals()["ARB_PARAM_MAKER"]()
 
 
 def link_jit_code(code):
@@ -178,10 +152,5 @@ def link_jit_code(code):
     exec(code, glb, loc)
     mainloop = loc["mainloop"]
     wrapper = loc["sp_core"]
-    with open("llvm.txt", "w") as writeto:
-        codelist = mainloop.inspect_llvm()
-        for each in codelist:
-            writeto.write(str(each))
-            writeto.write("//////////////")
-            writeto.write(codelist[each])
+
     return wrapper, mainloop
