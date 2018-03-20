@@ -4,13 +4,10 @@ import json
 import threading
 import logging
 import multiprocessing
-import dash
-import dash_core_components as dcc
-import dash_html_components as html
-from etalang import tensor, codegen
+from etalang import codegen
 from jit_linker import link_jit_code
-from core import *
-import numpy as np
+import runtime
+
 logger = logging.getLogger(__name__)
 logging.basicConfig()
 
@@ -70,14 +67,21 @@ class WSSERVER():
             wrapper, mainloop = link_jit_code(eta_compiled_code)
             loc = {"code": eta_compiled_code,
                    "mainloop": mainloop,
-                   "wrapper": wrapper
+                   "wrapper": wrapper,
                    }
+            glob = {
+                "print": self.send,
+                "etaserver": self
+            }
+            for setting in dir(runtime):
+                glob[setting] = getattr(runtime, setting)
+
             variables = json.loads(etaobj["eta_dpp_table"])
             for each in variables:
                 loc[each["variable"]] = each["value"]
             try:
                 self.send("Run process()...")
-                exec(servercode, globals(), loc)
+                exec(servercode, glob, loc)
             except Exception as e:
                 self.send(str(e), "err")
                 logger.error(str(e), exc_info=True)
