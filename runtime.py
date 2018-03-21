@@ -5,7 +5,9 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 from parser_header import parse_header
-def scheduler(filename,THREAD_MAX=1):
+
+
+def scheduler(filename, THREAD_MAX=1):
     out = parse_header(bytearray(filename, "ascii"))
     TTF_header_offset = out[0]
     TTF_filesize = out[1]
@@ -27,7 +29,6 @@ def scheduler(filename,THREAD_MAX=1):
     return caller_parms
 
 
-
 def ETA_MULTITHREAD(filename, code):
     caller_parms = scheduler(filename, 4)
     for each in caller_parms:
@@ -47,7 +48,7 @@ def ETA_MULTITHREAD(filename, code):
     return histogram
 
 
-def ETA(filename, wrapper, mainloop,print):
+def ETA(filename, wrapper, mainloop, print):
 
     caller_parms = scheduler(filename)
     for each in caller_parms:
@@ -55,7 +56,7 @@ def ETA(filename, wrapper, mainloop,print):
     ts = time.time()
     result = wrapper(caller_parms[0], mainloop)
     te = time.time()
-    print('Time: {} ms'.format( (te - ts) * 1000))
+    print('Time: {} ms'.format((te - ts) * 1000))
     with open("llvm.txt", "w") as writeto:
         codelist = mainloop.inspect_llvm()
         for each in codelist:

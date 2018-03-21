@@ -46,7 +46,7 @@ def compile_eta(jsobj):
         vi_code_list += [["LOAD_EMBEDDED_CODE",
                           [each, intp.escaped_code]]]
         vi_code_list += intp.instructions
-        vi_code_list += [["MAKE_INTI_SYMBOLS",
+        vi_code_list += [["MAKE_init_for_syms",
                           [each]]]
         graphnames.append(instname)
     # code gen main process
