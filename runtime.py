@@ -1,11 +1,8 @@
 import numpy as np
 import multiprocessing
 import time
-import dash
-import dash_core_components as dcc
-import dash_html_components as html
+from jit_linker import link_jit_code
 from parser_header import parse_header
-
 
 def scheduler(filename, THREAD_MAX=1):
     out = parse_header(bytearray(filename, "ascii"))
@@ -29,23 +26,50 @@ def scheduler(filename, THREAD_MAX=1):
     return caller_parms
 
 
-def ETA_MULTITHREAD(filename, code):
-    caller_parms = scheduler(filename, 4)
-    for each in caller_parms:
-        each.append(code)
+def external_wrpper(param):
+    eta_compiled_code = param.pop()
+    wrapper, mainloop = link_jit_code(eta_compiled_code)
+    return wrapper(param, mainloop)
+
+
+def ETA_MUTLITRHEAD(filename, eta_compiled_code, print, thread=1):
+
+    param1 = scheduler(filename, thread)
+    for each in param1:
         each.append(filename)
+        each.append(eta_compiled_code)
+
+    ts = time.time()
     print("ETA_MULTITHREAD started")
-    with multiprocessing.Pool(8) as p:
-        ret = p.map(sp_core, caller_parms)
+    with multiprocessing.Pool(thread) as p:
+        ret = p.map(external_wrpper, param1)
     print("ETA_MULTITHREAD stopped")
+    te = time.time()
+    print('Time: {} ms'.format((te - ts) * 1000))
     histogram = np.zeros(62502, dtype=np.int64)
     for each in range(len(ret)):
-        caller_parms[each].pop()
-        caller_parms[each].pop()
-        print(caller_parms[each])
         print(ret[each])
         histogram += ret[each]
     return histogram
+
+
+"""
+def ETA_MUTLITRHEAD(filename, wrapper, mainloop, print, thread=1):
+    caller_parms = scheduler(filename, thread)
+    ts = time.time()
+    histogram = np.zeros(62502, dtype=np.int64)
+    threads = []
+    for each in caller_parms:
+        each.append(filename)
+        thread = threading.Thread(target=wrapper, args=(each, mainloop,))
+        thread.start()
+        threads.append(thread)
+    for t in threads:
+        t.join()
+    te = time.time()
+    print('Time: {} ms'.format((te - ts) * 1000))
+    return histogram
+"""
 
 
 def ETA(filename, wrapper, mainloop, print):
@@ -63,4 +87,5 @@ def ETA(filename, wrapper, mainloop, print):
             writeto.write(str(each))
             writeto.write("//////////////")
             writeto.write(codelist[each])
+            break
     return result

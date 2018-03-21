@@ -96,8 +96,8 @@ class ETA_VM():
         inputs = self.check_input().keys()
         for chn in inputs:
             chn_stanza = ""
-            chn_stanza_el = ""
             for graph in self.graphs:
+                chn_stanza_el = ""
                 for last in range(0, graph.maxstates):
                     now = graph.transition_table[chn][last]
                     if now is not None:  # valid transition
@@ -116,7 +116,7 @@ class ETA_VM():
                             graph.graphid, graph.graphid)
                         now_stanza += "\n# trans form {} to {}".format(
                             last, now)
-                        now_stanza += "\nnow_{}={}".format(graph.graphid, now)
+                        now_stanza += "\nnow_{}=nb.int8({})".format(graph.graphid, now)
                         # conditionless
                         now_stanza += "\n" + \
                             graph.transition_to_section[last][max_chn - 1][now]
