@@ -1,20 +1,18 @@
-from flask import request
+import multiprocessing
 import ws_broadcast
 import json
 import threading
 import logging
-import multiprocessing
 from etalang import codegen
 from jit_linker import link_jit_code
 import runtime
 
-logger = logging.getLogger(__name__)
-logging.basicConfig()
-
-
 class WSSERVER():
 
     def __init__(self, PORT):
+        self.logger = logging.getLogger(__name__)
+        logging.basicConfig()
+
         self.displaying = False
 
         def new_message(client, server, message):
@@ -42,12 +40,15 @@ class WSSERVER():
         except Exception as e:
             self.send(str(e), "err")
             self.send("Compilation failed.")
-            logger.error(str(e), exc_info=True)
+            self.logger.error(str(e), exc_info=True)
         finally:
             self.send(metadata, "table")
         return code
 
     def process_eta(self, etaobj=None):
+        import dash
+        import dash_core_components as dcc
+        import dash_html_components as html
         if self.displaying:
             self.send("Display is running at http://localhost:5000.")
             self.send(
@@ -65,13 +66,16 @@ class WSSERVER():
             self.send("Compiling...")
             eta_compiled_code = self.compile_eta(etaobj)
             wrapper, mainloop = link_jit_code(eta_compiled_code)
-            loc = {"code": eta_compiled_code,
+            loc = {"eta_compiled_code": eta_compiled_code,
                    "mainloop": mainloop,
                    "wrapper": wrapper,
                    }
             glob = {
                 "print": self.send,
-                "etaserver": self
+                "etaserver": self,
+                "dash": dash,
+                "dcc": dcc,
+                "html": html
             }
             for setting in dir(runtime):
                 glob[setting] = getattr(runtime, setting)
@@ -84,12 +88,13 @@ class WSSERVER():
                 exec(servercode, glob, loc)
             except Exception as e:
                 self.send(str(e), "err")
-                logger.error(str(e), exc_info=True)
+                self.logger.error(str(e), exc_info=True)
             finally:
                 self.send("Timetag analysis is finished, starting display...")
             self.serve_dash(loc)
 
     def serve_dash(self, loc=None):
+        from flask import request
         if (loc is None) or not ("app" in loc):
             self.send("No display dashboard for array output.", "err")
         else:
@@ -118,10 +123,11 @@ class WSSERVER():
                 self.displaying = True
             except Exception as e:
                 self.send(str(e), "err")
-                logger.error(str(e), exc_info=True)
+                self.logger.error(str(e), exc_info=True)
 
 
 if __name__ == '__main__':
+    multiprocessing.freeze_support()
     print(""" 
      _______           _________            ________             
     |\  ___ \         |\___   ___\         |\   __  \            
@@ -133,5 +139,5 @@ if __name__ == '__main__':
                                                                  
 =================================================================
 """)
-    multiprocessing.freeze_support()
+
     ws = WSSERVER(5678)

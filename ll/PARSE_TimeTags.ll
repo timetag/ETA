@@ -860,7 +860,7 @@ define i32 @read_next_minibatch() #1 {
   %1 = alloca i32, align 4
   %2 = alloca i32, align 4
   %3 = load i32, i32* @READER_BytesofRecords, align 4
-  %4 = mul nsw i32 1000, %3
+  %4 = mul nsw i32 10000, %3
   store i32 %4, i32* %2, align 4
   %5 = load i64, i64* @READER_batchend_pos_in_file, align 8
   %6 = load i32, i32* %2, align 4
@@ -944,7 +944,7 @@ define i64 @pop_signal_from_file(i8*) #1 {
 
 ; <label>:26:                                     ; preds = %1
   %27 = load i32, i32* @READER_BytesofRecords, align 4
-  %28 = mul nsw i32 1000, %27
+  %28 = mul nsw i32 10000, %27
   store i32 %28, i32* %12, align 4
   %29 = load i64, i64* @READER_batchend_pos_in_file, align 8
   %30 = load i32, i32* %12, align 4
@@ -1481,7 +1481,7 @@ define i32 @POOL_init(i64, i64, i64) #1 {
   %103 = sext i32 %102 to i64
   %104 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %101, i64 %103
   %105 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %104, i32 0, i32 3
-  store i64 1000000, i64* %105, align 8
+  store i64 4000000, i64* %105, align 8
   %106 = load %struct.circular_buf_t*, %struct.circular_buf_t** @VSLOT_timetag, align 8
   %107 = load i32, i32* %12, align 4
   %108 = sext i32 %107 to i64
@@ -1945,7 +1945,7 @@ define i64 @POOL_next(i8*) #1 {
 
 ; <label>:114:                                    ; preds = %106
   %115 = load i32, i32* @READER_BytesofRecords, align 4
-  %116 = mul nsw i32 1000, %115
+  %116 = mul nsw i32 10000, %115
   store i32 %116, i32* %58, align 4
   %117 = load i64, i64* @READER_batchend_pos_in_file, align 8
   %118 = load i32, i32* %58, align 4
@@ -2664,7 +2664,7 @@ define i64 @POOL_next(i8*) #1 {
 
 ; <label>:629:                                    ; preds = %620
   %630 = load i32, i32* @READER_BytesofRecords, align 4
-  %631 = mul nsw i32 1000, %630
+  %631 = mul nsw i32 10000, %630
   store i32 %631, i32* %28, align 4
   %632 = load i64, i64* @READER_batchend_pos_in_file, align 8
   %633 = load i32, i32* %28, align 4
@@ -3107,7 +3107,7 @@ define i32 @FileReader_init(i8*, i64, i64, i64, i64, i64, i64) #1 {
   %39 = load i64, i64* @READER_fseekpoint, align 8
   store i64 %39, i64* @READER_batchend_pos_in_file, align 8
   %40 = load i32, i32* @READER_BytesofRecords, align 4
-  %41 = mul nsw i32 1000, %40
+  %41 = mul nsw i32 10000, %40
   %42 = sext i32 %41 to i64
   %43 = call noalias i8* @malloc(i64 %42)
   store i8* %43, i8** @READER_buffer, align 8

@@ -148,7 +148,7 @@ def link_jit_code(code):
         "READER_BytesofRecords_get": READER_BytesofRecords_get,
     }
     loc = {}
-
+    #print(code)
     exec(code, glb, loc)
     mainloop = loc["mainloop"]
     wrapper = loc["sp_core"]

@@ -107,6 +107,23 @@ class Graph():
                 raise ValueError(
                     "Referring to undefiend symbol {}.".format(symbol))
 
+    def get_table(self, symbol, type_desired):
+        symbol = symbol.replace(" ", "")
+        if self.defined_symbols[symbol] == type_desired:
+            return symbol
+        if self.defined_symbols[symbol] == "table":
+            self.defined_symbols[symbol] = type_desired
+            print("AUTO TYPE: ", symbol, type_desired)
+            return symbol
+        else:
+            if isinstance(self.defined_symbols[symbol], list):
+                if self.defined_symbols[symbol][0] == "table":
+                    self.defined_symbols[symbol] = type_desired
+                    raise ValueError(
+                        "Table resize is currently not supported for symbol {}, found on graph {}.".format(symbol, self.name))
+        raise ValueError(
+            "Illegal type for symbol {} on graph {}.".format(symbol, self.name))
+
     def attach_code(self, trigger, code, maxchn=255):
         code = textwrap.dedent(code)
         if isinstance(trigger, str):
@@ -152,36 +169,19 @@ class Graph():
     ##########
     # Extensions
 
-    def to_sized_table(self, symbol, type_desired):
-        symbol = symbol.replace(" ", "")
-        if self.defined_symbols[symbol] == type_desired:
-            return symbol
-        if self.defined_symbols[symbol] == "table":
-            self.defined_symbols[symbol] = type_desired
-            print("AUTO TYPE: ", symbol, type_desired)
-            return symbol
-        else:
-            if isinstance(self.defined_symbols[symbol], list):
-                if self.defined_symbols[symbol][0] == "table":
-                    self.defined_symbols[symbol] = type_desired
-                    raise ValueError(
-                        "Table resize is currently not supported for symbol {}, found on graph {}.".format(symbol, self.name))
-        raise ValueError(
-            "Illegal type for symbol {} on graph {}.".format(symbol, self.name))
-
     def MAKE_init_for_syms(self):
         # state registers
 
         if self.init_now is not None:
             self.EMIT_LINE(
-                "uettp_initial", "now_{graphid}={init_now};last_{graphid}={init_now}".format(graphid=self.graphid, init_now=self.init_now))
+                "uettp_initial", "now_{graphid}=nb.int8({init_now});last_{graphid}=nb.int8({init_now})".format(graphid=self.graphid, init_now=self.init_now))
         else:
             raise ValueError("Init blob is not defined.")
         for each in self.defined_symbols:
             if isinstance(self.defined_symbols[each], list):
                 if self.defined_symbols[each][0] == "table":
                     self.EMIT_LINE("global_initial", "{}=np.zeros({}, dtype=np.int64)".format(
-                        each, ",".join(self.defined_symbols[each][1:])))
+                        each, ",".join(self.defined_symbols[each][2:])))
                     continue
             raise ValueError("Illegal type for symbol {}".format(each))
         for each in self.internal_symbols:
@@ -211,6 +211,15 @@ class Graph():
         if self.get_symbol(clock_name, "clock"):
             self.startclock(triggers, clock_name)
 
+    def hist(self, triggers, symbol, histogram, range_min, bin_step, bin_num):
+        if self.get_symbol(symbol, "clock"):
+            self.histclock(triggers, symbol, histogram,
+                           range_min, bin_step, bin_num)
+
+    def append(self, triggers, counter, histogram):
+        if self.get_symbol(counter, "counter"):
+            self.appendcounter(counter, histogram)
+
     def startclock(self, triggers, clock_name):
         clock_name = self.get_symbol(clock_name, "clock", force_success=True)
         self.EMIT_LINE(triggers, "{}_start=AbsTime_ps".format(clock_name))
@@ -219,9 +228,9 @@ class Graph():
         clock_name = self.get_symbol(clock_name, "clock", force_success=True)
         self.EMIT_LINE(triggers, "{}_stop=AbsTime_ps".format(clock_name))
 
-    def hist(self, triggers, clock, histogram, range_min, bin_step, bin_num):
-        clock = self.get_symbol(clock, "clock")
-        histogram = self.to_sized_table(histogram, ["table", bin_num])
+    def histclock(self, triggers, clock, histogram, range_min, bin_step, bin_num):
+        clock = self.get_symbol(clock, "clock", force_success=True)
+        histogram = self.get_table(histogram, ["table", "hist", bin_num])
         # check
         code = """
             n_i = nb.int64(({clock}_stop -{clock}_start - {range_min} + {bin_step}) / {bin_step})
@@ -234,8 +243,20 @@ class Graph():
                    bin_step=bin_step, bin_num=bin_num)
         self.EMIT_LINE(triggers, code)
 
-    def append(self, triggers, hisgtogram):
-        pass
+    def appendcounter(self, triggers, counter, histogram):
+        bin_num = 100
+        counter = self.get_symbol(counter, "counter", force_success=True)
+        histogram = self.get_table(histogram, ["table", "append", bin_num])
+        # check
+        code = """
+            n_i = nb.int64({counter})
+            if (n_i >= {bin_num}):
+                n_i = {bin_num} - 1  # +inf time_interval
+            if (n_i < 0):
+                n_i = 0  # -inf time_interval
+            {histogram}[n_i] += 1
+        """.format(counter=counter, histogram=histogram, bin_num=bin_num)
+        self.EMIT_LINE(triggers, code)
 
     def emit(self, triggers, chn, waittime):
         chn = int(chn)
