@@ -25,7 +25,7 @@ def compile_graph(content, automata=0):
                 ["make_init_state", [automata, node_count]])
         node_count += 1
     instruction_set.append(
-        ["prepare_transitions", [automata]])
+        ["PREP_transitions", [automata]])
     for each in jsobj["edges"]:
         if "text" in each:
             edge_text = each["text"]
