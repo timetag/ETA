@@ -115,93 +115,100 @@ define i32 @circular_buf_reset(%struct.circular_buf_t*) #0 {
 
 ; Function Attrs: alwaysinline uwtable
 define i32 @circular_buf_put(%struct.circular_buf_t*, i64) #1 {
-  %3 = alloca i64, align 8
-  %4 = alloca %struct.circular_buf_t*, align 8
-  %5 = alloca i32, align 4
-  %6 = alloca %struct.circular_buf_t, align 8
-  store i64 %1, i64* %3, align 8
-  store %struct.circular_buf_t* %0, %struct.circular_buf_t** %4, align 8
-  store i32 -1, i32* %5, align 4
-  %7 = load %struct.circular_buf_t*, %struct.circular_buf_t** %4, align 8
-  %8 = icmp ne %struct.circular_buf_t* %7, null
-  br i1 %8, label %9, label %64
+  %3 = alloca i32, align 4
+  %4 = alloca i64, align 8
+  %5 = alloca %struct.circular_buf_t*, align 8
+  %6 = alloca i32, align 4
+  %7 = alloca %struct.circular_buf_t, align 8
+  store i64 %1, i64* %4, align 8
+  store %struct.circular_buf_t* %0, %struct.circular_buf_t** %5, align 8
+  store i32 -1, i32* %6, align 4
+  %8 = load %struct.circular_buf_t*, %struct.circular_buf_t** %5, align 8
+  %9 = icmp ne %struct.circular_buf_t* %8, null
+  br i1 %9, label %10, label %65
 
-; <label>:9:                                      ; preds = %2
-  %10 = load %struct.circular_buf_t*, %struct.circular_buf_t** %4, align 8
-  %11 = bitcast %struct.circular_buf_t* %6 to i8*
-  %12 = bitcast %struct.circular_buf_t* %10 to i8*
-  call void @llvm.memcpy.p0i8.p0i8.i64(i8* %11, i8* %12, i64 32, i32 8, i1 false)
-  %13 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %6, i32 0, i32 1
-  %14 = load i64, i64* %13, align 8
-  %15 = add i64 %14, 1
-  %16 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %6, i32 0, i32 3
-  %17 = load i64, i64* %16, align 8
-  %18 = urem i64 %15, %17
-  %19 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %6, i32 0, i32 2
-  %20 = load i64, i64* %19, align 8
-  %21 = icmp eq i64 %18, %20
-  br i1 %21, label %22, label %25
+; <label>:10:                                     ; preds = %2
+  %11 = load %struct.circular_buf_t*, %struct.circular_buf_t** %5, align 8
+  %12 = bitcast %struct.circular_buf_t* %7 to i8*
+  %13 = bitcast %struct.circular_buf_t* %11 to i8*
+  call void @llvm.memcpy.p0i8.p0i8.i64(i8* %12, i8* %13, i64 32, i32 8, i1 false)
+  %14 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %7, i32 0, i32 1
+  %15 = load i64, i64* %14, align 8
+  %16 = add i64 %15, 1
+  %17 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %7, i32 0, i32 3
+  %18 = load i64, i64* %17, align 8
+  %19 = urem i64 %16, %18
+  %20 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %7, i32 0, i32 2
+  %21 = load i64, i64* %20, align 8
+  %22 = icmp eq i64 %19, %21
+  br i1 %22, label %23, label %26
 
-; <label>:22:                                     ; preds = %9
-  %23 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([26 x i8], [26 x i8]* @"\01??_C@_0BK@OGCGHAOO@?6?5?$FLERROR?$FNBuffer?5overflow?$CB?$AA@", i32 0, i32 0))
-  %24 = sext i32 %23 to i64
-  store i64 %24, i64* @order_gurantee2, align 8
+; <label>:23:                                     ; preds = %10
+  %24 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([26 x i8], [26 x i8]* @"\01??_C@_0BK@OGCGHAOO@?6?5?$FLERROR?$FNBuffer?5overflow?$CB?$AA@", i32 0, i32 0))
+  %25 = sext i32 %24 to i64
+  store i64 %25, i64* @order_gurantee2, align 8
+  store i32 -1, i32* %3, align 4
+  br label %67
+
+; <label>:26:                                     ; preds = %10
+  %27 = load i64, i64* %4, align 8
+  %28 = load %struct.circular_buf_t*, %struct.circular_buf_t** %5, align 8
+  %29 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %28, i32 0, i32 0
+  %30 = load i64*, i64** %29, align 8
+  %31 = load %struct.circular_buf_t*, %struct.circular_buf_t** %5, align 8
+  %32 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %31, i32 0, i32 1
+  %33 = load i64, i64* %32, align 8
+  %34 = getelementptr inbounds i64, i64* %30, i64 %33
+  store i64 %27, i64* %34, align 8
+  %35 = load %struct.circular_buf_t*, %struct.circular_buf_t** %5, align 8
+  %36 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %35, i32 0, i32 1
+  %37 = load i64, i64* %36, align 8
+  %38 = add i64 %37, 1
+  %39 = load %struct.circular_buf_t*, %struct.circular_buf_t** %5, align 8
+  %40 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %39, i32 0, i32 3
+  %41 = load i64, i64* %40, align 8
+  %42 = urem i64 %38, %41
+  %43 = load %struct.circular_buf_t*, %struct.circular_buf_t** %5, align 8
+  %44 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %43, i32 0, i32 1
+  store i64 %42, i64* %44, align 8
+  %45 = load %struct.circular_buf_t*, %struct.circular_buf_t** %5, align 8
+  %46 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %45, i32 0, i32 1
+  %47 = load i64, i64* %46, align 8
+  %48 = load %struct.circular_buf_t*, %struct.circular_buf_t** %5, align 8
+  %49 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %48, i32 0, i32 2
+  %50 = load i64, i64* %49, align 8
+  %51 = icmp eq i64 %47, %50
+  br i1 %51, label %52, label %63
+
+; <label>:52:                                     ; preds = %26
+  %53 = load %struct.circular_buf_t*, %struct.circular_buf_t** %5, align 8
+  %54 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %53, i32 0, i32 2
+  %55 = load i64, i64* %54, align 8
+  %56 = add i64 %55, 1
+  %57 = load %struct.circular_buf_t*, %struct.circular_buf_t** %5, align 8
+  %58 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %57, i32 0, i32 3
+  %59 = load i64, i64* %58, align 8
+  %60 = urem i64 %56, %59
+  %61 = load %struct.circular_buf_t*, %struct.circular_buf_t** %5, align 8
+  %62 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %61, i32 0, i32 2
+  store i64 %60, i64* %62, align 8
   br label %63
 
-; <label>:25:                                     ; preds = %9
-  %26 = load i64, i64* %3, align 8
-  %27 = load %struct.circular_buf_t*, %struct.circular_buf_t** %4, align 8
-  %28 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %27, i32 0, i32 0
-  %29 = load i64*, i64** %28, align 8
-  %30 = load %struct.circular_buf_t*, %struct.circular_buf_t** %4, align 8
-  %31 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %30, i32 0, i32 1
-  %32 = load i64, i64* %31, align 8
-  %33 = getelementptr inbounds i64, i64* %29, i64 %32
-  store i64 %26, i64* %33, align 8
-  %34 = load %struct.circular_buf_t*, %struct.circular_buf_t** %4, align 8
-  %35 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %34, i32 0, i32 1
-  %36 = load i64, i64* %35, align 8
-  %37 = add i64 %36, 1
-  %38 = load %struct.circular_buf_t*, %struct.circular_buf_t** %4, align 8
-  %39 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %38, i32 0, i32 3
-  %40 = load i64, i64* %39, align 8
-  %41 = urem i64 %37, %40
-  %42 = load %struct.circular_buf_t*, %struct.circular_buf_t** %4, align 8
-  %43 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %42, i32 0, i32 1
-  store i64 %41, i64* %43, align 8
-  %44 = load %struct.circular_buf_t*, %struct.circular_buf_t** %4, align 8
-  %45 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %44, i32 0, i32 1
-  %46 = load i64, i64* %45, align 8
-  %47 = load %struct.circular_buf_t*, %struct.circular_buf_t** %4, align 8
-  %48 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %47, i32 0, i32 2
-  %49 = load i64, i64* %48, align 8
-  %50 = icmp eq i64 %46, %49
-  br i1 %50, label %51, label %62
-
-; <label>:51:                                     ; preds = %25
-  %52 = load %struct.circular_buf_t*, %struct.circular_buf_t** %4, align 8
-  %53 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %52, i32 0, i32 2
-  %54 = load i64, i64* %53, align 8
-  %55 = add i64 %54, 1
-  %56 = load %struct.circular_buf_t*, %struct.circular_buf_t** %4, align 8
-  %57 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %56, i32 0, i32 3
-  %58 = load i64, i64* %57, align 8
-  %59 = urem i64 %55, %58
-  %60 = load %struct.circular_buf_t*, %struct.circular_buf_t** %4, align 8
-  %61 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %60, i32 0, i32 2
-  store i64 %59, i64* %61, align 8
-  br label %62
-
-; <label>:62:                                     ; preds = %51, %25
-  store i32 0, i32* %5, align 4
-  br label %63
-
-; <label>:63:                                     ; preds = %62, %22
+; <label>:63:                                     ; preds = %52, %26
+  store i32 0, i32* %6, align 4
   br label %64
 
-; <label>:64:                                     ; preds = %63, %2
-  %65 = load i32, i32* %5, align 4
-  ret i32 %65
+; <label>:64:                                     ; preds = %63
+  br label %65
+
+; <label>:65:                                     ; preds = %64, %2
+  %66 = load i32, i32* %6, align 4
+  store i32 %66, i32* %3, align 4
+  br label %67
+
+; <label>:67:                                     ; preds = %65, %23
+  %68 = load i32, i32* %3, align 4
+  ret i32 %68
 }
 
 ; Function Attrs: alwaysinline nounwind uwtable
@@ -1540,272 +1547,166 @@ declare noalias i8* @malloc(i64) #4
 
 ; Function Attrs: alwaysinline uwtable
 define i32 @VSLOT_put(i64, i8) #1 {
-  %3 = alloca i8, align 1
-  %4 = alloca i64, align 8
-  %5 = alloca i8, align 1
-  %6 = alloca i8, align 1
-  %7 = alloca i8, align 1
-  %8 = alloca i8, align 1
-  %9 = alloca i64, align 8
-  %10 = alloca %struct.circular_buf_t*, align 8
-  %11 = alloca i32, align 4
-  %12 = alloca %struct.circular_buf_t, align 8
+  %3 = alloca %struct.circular_buf_t*, align 8
+  %4 = alloca i32, align 4
+  %5 = alloca i32, align 4
+  %6 = alloca i64, align 8
+  %7 = alloca %struct.circular_buf_t*, align 8
+  %8 = alloca i32, align 4
+  %9 = alloca %struct.circular_buf_t, align 8
+  %10 = alloca i8, align 1
+  %11 = alloca i64, align 8
+  %12 = alloca i32, align 4
   %13 = alloca i32, align 4
-  %14 = alloca i8, align 1
-  %15 = alloca i64, align 8
-  %16 = alloca i32, align 4
-  %17 = alloca i32, align 4
-  %18 = alloca %struct.circular_buf_t, align 8
-  store i8 %1, i8* %14, align 1
-  store i64 %0, i64* %15, align 8
-  %19 = load i8, i8* %14, align 1
-  %20 = zext i8 %19 to i32
-  %21 = load i8, i8* @POOL_real_chns, align 1
+  %14 = alloca %struct.circular_buf_t, align 8
+  store i8 %1, i8* %10, align 1
+  store i64 %0, i64* %11, align 8
+  %15 = load i8, i8* %10, align 1
+  %16 = zext i8 %15 to i32
+  %17 = load i8, i8* @POOL_real_chns, align 1
+  %18 = zext i8 %17 to i32
+  %19 = sub nsw i32 %16, %18
+  store i32 %19, i32* %12, align 4
+  %20 = load i32, i32* %12, align 4
+  %21 = load i8, i8* @POOL_real_slots, align 1
   %22 = zext i8 %21 to i32
-  %23 = sub nsw i32 %20, %22
-  store i32 %23, i32* %16, align 4
-  %24 = load i32, i32* %16, align 4
-  %25 = load i8, i8* @POOL_real_slots, align 1
-  %26 = zext i8 %25 to i32
-  %27 = add nsw i32 %24, %26
-  store i32 %27, i32* %17, align 4
-  %28 = load i32, i32* %16, align 4
-  %29 = icmp slt i32 %28, 0
-  br i1 %29, label %30, label %31
-
-; <label>:30:                                     ; preds = %2
-  store i32 -1, i32* %13, align 4
-  br label %201
+  %23 = add nsw i32 %20, %22
+  store i32 %23, i32* %13, align 4
+  %24 = load i64, i64* %11, align 8
+  %25 = load %struct.circular_buf_t*, %struct.circular_buf_t** @VSLOT_timetag, align 8
+  %26 = load i32, i32* %12, align 4
+  %27 = sext i32 %26 to i64
+  %28 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %25, i64 %27
+  store i64 %24, i64* %6, align 8
+  store %struct.circular_buf_t* %28, %struct.circular_buf_t** %7, align 8
+  store i32 -1, i32* %8, align 4
+  %29 = load %struct.circular_buf_t*, %struct.circular_buf_t** %7, align 8
+  %30 = icmp ne %struct.circular_buf_t* %29, null
+  br i1 %30, label %31, label %85
 
 ; <label>:31:                                     ; preds = %2
-  %32 = load %struct.circular_buf_t*, %struct.circular_buf_t** @VSLOT_timetag, align 8
-  %33 = load i32, i32* %16, align 4
-  %34 = sext i32 %33 to i64
-  %35 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %32, i64 %34
-  %36 = bitcast %struct.circular_buf_t* %18 to i8*
-  %37 = bitcast %struct.circular_buf_t* %35 to i8*
-  call void @llvm.memcpy.p0i8.p0i8.i64(i8* %36, i8* %37, i64 32, i32 8, i1 false)
-  %38 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %18, i32 0, i32 1
+  %32 = load %struct.circular_buf_t*, %struct.circular_buf_t** %7, align 8
+  %33 = bitcast %struct.circular_buf_t* %9 to i8*
+  %34 = bitcast %struct.circular_buf_t* %32 to i8*
+  call void @llvm.memcpy.p0i8.p0i8.i64(i8* %33, i8* %34, i64 32, i32 8, i1 false)
+  %35 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %9, i32 0, i32 1
+  %36 = load i64, i64* %35, align 8
+  %37 = add i64 %36, 1
+  %38 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %9, i32 0, i32 3
   %39 = load i64, i64* %38, align 8
-  %40 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %18, i32 0, i32 2
-  %41 = load i64, i64* %40, align 8
-  %42 = icmp eq i64 %39, %41
-  br i1 %42, label %43, label %136
+  %40 = urem i64 %37, %39
+  %41 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %9, i32 0, i32 2
+  %42 = load i64, i64* %41, align 8
+  %43 = icmp eq i64 %40, %42
+  br i1 %43, label %44, label %47
 
-; <label>:43:                                     ; preds = %31
-  %44 = load i32, i32* %17, align 4
-  %45 = trunc i32 %44 to i8
-  %46 = load i64, i64* %15, align 8
-  store i8 %45, i8* %3, align 1
-  store i64 %46, i64* %4, align 8
-  %47 = load i8, i8* @POOL_total_slots, align 1
-  %48 = zext i8 %47 to i32
-  %49 = load i8, i8* %3, align 1
-  %50 = zext i8 %49 to i32
-  %51 = add nsw i32 %48, %50
-  %52 = trunc i32 %51 to i8
-  store i8 %52, i8* %5, align 1
-  %53 = load i64, i64* %4, align 8
-  %54 = load i64*, i64** @POOL_timetag, align 8
-  %55 = load i8, i8* %5, align 1
-  %56 = zext i8 %55 to i64
-  %57 = getelementptr inbounds i64, i64* %54, i64 %56
-  store i64 %53, i64* %57, align 8
-  %58 = load i8, i8* %3, align 1
-  %59 = load i8*, i8** @POOL_slot, align 8
-  %60 = load i8, i8* %5, align 1
-  %61 = zext i8 %60 to i64
-  %62 = getelementptr inbounds i8, i8* %59, i64 %61
-  store i8 %58, i8* %62, align 1
-  br label %63
+; <label>:44:                                     ; preds = %31
+  %45 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([26 x i8], [26 x i8]* @"\01??_C@_0BK@OGCGHAOO@?6?5?$FLERROR?$FNBuffer?5overflow?$CB?$AA@", i32 0, i32 0))
+  %46 = sext i32 %45 to i64
+  store i64 %46, i64* @order_gurantee2, align 8
+  store i32 -1, i32* %5, align 4
+  br label %87
 
-; <label>:63:                                     ; preds = %130, %43
-  %64 = load i8, i8* %5, align 1
-  %65 = zext i8 %64 to i32
-  %66 = icmp sgt i32 %65, 1
-  br i1 %66, label %67, label %135
+; <label>:47:                                     ; preds = %31
+  %48 = load i64, i64* %6, align 8
+  %49 = load %struct.circular_buf_t*, %struct.circular_buf_t** %7, align 8
+  %50 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %49, i32 0, i32 0
+  %51 = load i64*, i64** %50, align 8
+  %52 = load %struct.circular_buf_t*, %struct.circular_buf_t** %7, align 8
+  %53 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %52, i32 0, i32 1
+  %54 = load i64, i64* %53, align 8
+  %55 = getelementptr inbounds i64, i64* %51, i64 %54
+  store i64 %48, i64* %55, align 8
+  %56 = load %struct.circular_buf_t*, %struct.circular_buf_t** %7, align 8
+  %57 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %56, i32 0, i32 1
+  %58 = load i64, i64* %57, align 8
+  %59 = add i64 %58, 1
+  %60 = load %struct.circular_buf_t*, %struct.circular_buf_t** %7, align 8
+  %61 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %60, i32 0, i32 3
+  %62 = load i64, i64* %61, align 8
+  %63 = urem i64 %59, %62
+  %64 = load %struct.circular_buf_t*, %struct.circular_buf_t** %7, align 8
+  %65 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %64, i32 0, i32 1
+  store i64 %63, i64* %65, align 8
+  %66 = load %struct.circular_buf_t*, %struct.circular_buf_t** %7, align 8
+  %67 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %66, i32 0, i32 1
+  %68 = load i64, i64* %67, align 8
+  %69 = load %struct.circular_buf_t*, %struct.circular_buf_t** %7, align 8
+  %70 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %69, i32 0, i32 2
+  %71 = load i64, i64* %70, align 8
+  %72 = icmp eq i64 %68, %71
+  br i1 %72, label %73, label %84
 
-; <label>:67:                                     ; preds = %63
-  %68 = load i8, i8* %5, align 1
-  %69 = zext i8 %68 to i32
-  %70 = sdiv i32 %69, 2
-  %71 = trunc i32 %70 to i8
-  store i8 %71, i8* %6, align 1
-  %72 = load i8, i8* %6, align 1
-  %73 = zext i8 %72 to i32
-  %74 = mul nsw i32 %73, 2
-  %75 = trunc i32 %74 to i8
-  store i8 %75, i8* %7, align 1
-  %76 = load i8, i8* %6, align 1
-  %77 = zext i8 %76 to i32
-  %78 = mul nsw i32 %77, 2
-  %79 = add nsw i32 %78, 1
-  %80 = trunc i32 %79 to i8
-  store i8 %80, i8* %8, align 1
-  %81 = load i64*, i64** @POOL_timetag, align 8
-  %82 = load i8, i8* %7, align 1
-  %83 = zext i8 %82 to i64
-  %84 = getelementptr inbounds i64, i64* %81, i64 %83
-  %85 = load i64, i64* %84, align 8
-  %86 = load i64*, i64** @POOL_timetag, align 8
-  %87 = load i8, i8* %8, align 1
-  %88 = zext i8 %87 to i64
-  %89 = getelementptr inbounds i64, i64* %86, i64 %88
-  %90 = load i64, i64* %89, align 8
-  %91 = icmp slt i64 %85, %90
-  br i1 %91, label %92, label %111
+; <label>:73:                                     ; preds = %47
+  %74 = load %struct.circular_buf_t*, %struct.circular_buf_t** %7, align 8
+  %75 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %74, i32 0, i32 2
+  %76 = load i64, i64* %75, align 8
+  %77 = add i64 %76, 1
+  %78 = load %struct.circular_buf_t*, %struct.circular_buf_t** %7, align 8
+  %79 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %78, i32 0, i32 3
+  %80 = load i64, i64* %79, align 8
+  %81 = urem i64 %77, %80
+  %82 = load %struct.circular_buf_t*, %struct.circular_buf_t** %7, align 8
+  %83 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %82, i32 0, i32 2
+  store i64 %81, i64* %83, align 8
+  br label %84
 
-; <label>:92:                                     ; preds = %67
-  %93 = load i64*, i64** @POOL_timetag, align 8
-  %94 = load i8, i8* %7, align 1
-  %95 = zext i8 %94 to i64
-  %96 = getelementptr inbounds i64, i64* %93, i64 %95
-  %97 = load i64, i64* %96, align 8
-  %98 = load i64*, i64** @POOL_timetag, align 8
-  %99 = load i8, i8* %6, align 1
-  %100 = zext i8 %99 to i64
-  %101 = getelementptr inbounds i64, i64* %98, i64 %100
-  store i64 %97, i64* %101, align 8
-  %102 = load i8*, i8** @POOL_slot, align 8
-  %103 = load i8, i8* %7, align 1
-  %104 = zext i8 %103 to i64
-  %105 = getelementptr inbounds i8, i8* %102, i64 %104
-  %106 = load i8, i8* %105, align 1
-  %107 = load i8*, i8** @POOL_slot, align 8
-  %108 = load i8, i8* %6, align 1
-  %109 = zext i8 %108 to i64
-  %110 = getelementptr inbounds i8, i8* %107, i64 %109
-  store i8 %106, i8* %110, align 1
-  br label %130
+; <label>:84:                                     ; preds = %73, %47
+  store i32 0, i32* %8, align 4
+  br label %85
 
-; <label>:111:                                    ; preds = %67
-  %112 = load i64*, i64** @POOL_timetag, align 8
-  %113 = load i8, i8* %8, align 1
-  %114 = zext i8 %113 to i64
-  %115 = getelementptr inbounds i64, i64* %112, i64 %114
-  %116 = load i64, i64* %115, align 8
-  %117 = load i64*, i64** @POOL_timetag, align 8
-  %118 = load i8, i8* %6, align 1
-  %119 = zext i8 %118 to i64
-  %120 = getelementptr inbounds i64, i64* %117, i64 %119
-  store i64 %116, i64* %120, align 8
-  %121 = load i8*, i8** @POOL_slot, align 8
-  %122 = load i8, i8* %8, align 1
-  %123 = zext i8 %122 to i64
-  %124 = getelementptr inbounds i8, i8* %121, i64 %123
-  %125 = load i8, i8* %124, align 1
-  %126 = load i8*, i8** @POOL_slot, align 8
-  %127 = load i8, i8* %6, align 1
-  %128 = zext i8 %127 to i64
-  %129 = getelementptr inbounds i8, i8* %126, i64 %128
-  store i8 %125, i8* %129, align 1
-  br label %130
+; <label>:85:                                     ; preds = %84, %2
+  %86 = load i32, i32* %8, align 4
+  store i32 %86, i32* %5, align 4
+  br label %87
 
-; <label>:130:                                    ; preds = %111, %92
-  %131 = load i8, i8* %5, align 1
-  %132 = zext i8 %131 to i32
-  %133 = sdiv i32 %132, 2
-  %134 = trunc i32 %133 to i8
-  store i8 %134, i8* %5, align 1
-  br label %63
+; <label>:87:                                     ; preds = %44, %85
+  %88 = load i32, i32* %5, align 4
+  %89 = load %struct.circular_buf_t*, %struct.circular_buf_t** @VSLOT_timetag, align 8
+  %90 = load i32, i32* %12, align 4
+  %91 = sext i32 %90 to i64
+  %92 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %89, i64 %91
+  %93 = bitcast %struct.circular_buf_t* %14 to i8*
+  %94 = bitcast %struct.circular_buf_t* %92 to i8*
+  call void @llvm.memcpy.p0i8.p0i8.i64(i8* %93, i8* %94, i64 32, i32 8, i1 false)
+  %95 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %14, i32 0, i32 1
+  %96 = load i64, i64* %95, align 8
+  %97 = add i64 %96, 1
+  %98 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %14, i32 0, i32 3
+  %99 = load i64, i64* %98, align 8
+  %100 = urem i64 %97, %99
+  %101 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %14, i32 0, i32 2
+  %102 = load i64, i64* %101, align 8
+  %103 = icmp eq i64 %100, %102
+  br i1 %103, label %104, label %118
 
-; <label>:135:                                    ; preds = %63
-  br label %136
+; <label>:104:                                    ; preds = %87
+  %105 = load %struct.circular_buf_t*, %struct.circular_buf_t** @VSLOT_timetag, align 8
+  %106 = load i32, i32* %12, align 4
+  %107 = sext i32 %106 to i64
+  %108 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %105, i64 %107
+  store %struct.circular_buf_t* %108, %struct.circular_buf_t** %3, align 8
+  store i32 -1, i32* %4, align 4
+  %109 = load %struct.circular_buf_t*, %struct.circular_buf_t** %3, align 8
+  %110 = icmp ne %struct.circular_buf_t* %109, null
+  br i1 %110, label %111, label %116
 
-; <label>:136:                                    ; preds = %135, %31
-  %137 = load i64, i64* %15, align 8
-  %138 = load %struct.circular_buf_t*, %struct.circular_buf_t** @VSLOT_timetag, align 8
-  %139 = load i32, i32* %16, align 4
-  %140 = sext i32 %139 to i64
-  %141 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %138, i64 %140
-  store i64 %137, i64* %9, align 8
-  store %struct.circular_buf_t* %141, %struct.circular_buf_t** %10, align 8
-  store i32 -1, i32* %11, align 4
-  %142 = load %struct.circular_buf_t*, %struct.circular_buf_t** %10, align 8
-  %143 = icmp ne %struct.circular_buf_t* %142, null
-  br i1 %143, label %144, label %199
+; <label>:111:                                    ; preds = %104
+  %112 = load %struct.circular_buf_t*, %struct.circular_buf_t** %3, align 8
+  %113 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %112, i32 0, i32 1
+  store i64 0, i64* %113, align 8
+  %114 = load %struct.circular_buf_t*, %struct.circular_buf_t** %3, align 8
+  %115 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %114, i32 0, i32 2
+  store i64 0, i64* %115, align 8
+  store i32 0, i32* %4, align 4
+  br label %116
 
-; <label>:144:                                    ; preds = %136
-  %145 = load %struct.circular_buf_t*, %struct.circular_buf_t** %10, align 8
-  %146 = bitcast %struct.circular_buf_t* %12 to i8*
-  %147 = bitcast %struct.circular_buf_t* %145 to i8*
-  call void @llvm.memcpy.p0i8.p0i8.i64(i8* %146, i8* %147, i64 32, i32 8, i1 false)
-  %148 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %12, i32 0, i32 1
-  %149 = load i64, i64* %148, align 8
-  %150 = add i64 %149, 1
-  %151 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %12, i32 0, i32 3
-  %152 = load i64, i64* %151, align 8
-  %153 = urem i64 %150, %152
-  %154 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %12, i32 0, i32 2
-  %155 = load i64, i64* %154, align 8
-  %156 = icmp eq i64 %153, %155
-  br i1 %156, label %157, label %160
+; <label>:116:                                    ; preds = %104, %111
+  %117 = load i32, i32* %4, align 4
+  br label %118
 
-; <label>:157:                                    ; preds = %144
-  %158 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([26 x i8], [26 x i8]* @"\01??_C@_0BK@OGCGHAOO@?6?5?$FLERROR?$FNBuffer?5overflow?$CB?$AA@", i32 0, i32 0))
-  %159 = sext i32 %158 to i64
-  store i64 %159, i64* @order_gurantee2, align 8
-  br label %198
-
-; <label>:160:                                    ; preds = %144
-  %161 = load i64, i64* %9, align 8
-  %162 = load %struct.circular_buf_t*, %struct.circular_buf_t** %10, align 8
-  %163 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %162, i32 0, i32 0
-  %164 = load i64*, i64** %163, align 8
-  %165 = load %struct.circular_buf_t*, %struct.circular_buf_t** %10, align 8
-  %166 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %165, i32 0, i32 1
-  %167 = load i64, i64* %166, align 8
-  %168 = getelementptr inbounds i64, i64* %164, i64 %167
-  store i64 %161, i64* %168, align 8
-  %169 = load %struct.circular_buf_t*, %struct.circular_buf_t** %10, align 8
-  %170 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %169, i32 0, i32 1
-  %171 = load i64, i64* %170, align 8
-  %172 = add i64 %171, 1
-  %173 = load %struct.circular_buf_t*, %struct.circular_buf_t** %10, align 8
-  %174 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %173, i32 0, i32 3
-  %175 = load i64, i64* %174, align 8
-  %176 = urem i64 %172, %175
-  %177 = load %struct.circular_buf_t*, %struct.circular_buf_t** %10, align 8
-  %178 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %177, i32 0, i32 1
-  store i64 %176, i64* %178, align 8
-  %179 = load %struct.circular_buf_t*, %struct.circular_buf_t** %10, align 8
-  %180 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %179, i32 0, i32 1
-  %181 = load i64, i64* %180, align 8
-  %182 = load %struct.circular_buf_t*, %struct.circular_buf_t** %10, align 8
-  %183 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %182, i32 0, i32 2
-  %184 = load i64, i64* %183, align 8
-  %185 = icmp eq i64 %181, %184
-  br i1 %185, label %186, label %197
-
-; <label>:186:                                    ; preds = %160
-  %187 = load %struct.circular_buf_t*, %struct.circular_buf_t** %10, align 8
-  %188 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %187, i32 0, i32 2
-  %189 = load i64, i64* %188, align 8
-  %190 = add i64 %189, 1
-  %191 = load %struct.circular_buf_t*, %struct.circular_buf_t** %10, align 8
-  %192 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %191, i32 0, i32 3
-  %193 = load i64, i64* %192, align 8
-  %194 = urem i64 %190, %193
-  %195 = load %struct.circular_buf_t*, %struct.circular_buf_t** %10, align 8
-  %196 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %195, i32 0, i32 2
-  store i64 %194, i64* %196, align 8
-  br label %197
-
-; <label>:197:                                    ; preds = %186, %160
-  store i32 0, i32* %11, align 4
-  br label %198
-
-; <label>:198:                                    ; preds = %197, %157
-  br label %199
-
-; <label>:199:                                    ; preds = %136, %198
-  %200 = load i32, i32* %11, align 4
-  store i32 %200, i32* %13, align 4
-  br label %201
-
-; <label>:201:                                    ; preds = %199, %30
-  %202 = load i32, i32* %13, align 4
-  ret i32 %202
+; <label>:118:                                    ; preds = %116, %87
+  ret i32 0
 }
 
 ; Function Attrs: alwaysinline uwtable

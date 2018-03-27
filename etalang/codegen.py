@@ -78,7 +78,7 @@ def compile_eta(jsobj):
         select_by_name(vis, each.name)["output channels"] = str(
             list(each.output_chn.keys()))
         select_by_name(vis, each.name)["tables"] = str(
-            list(each.defined_symbols.keys()))
+            list(each.external_table_symbols.keys()))
     metadata = []
     metadata += ris
     metadata += vis

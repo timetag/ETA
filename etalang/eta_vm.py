@@ -1,8 +1,5 @@
 import textwrap
-if __name__ == "__main__":
-    from eta_exp import Graph
-else:
-    from .eta_exp import Graph
+from .eta_exp import Graph
 
 
 class ETA_VM():
@@ -33,7 +30,7 @@ class ETA_VM():
     def exec_eta(self, instruction):
         graphid = instruction[1][0]  # calling convesion
         functionnmae = instruction[0]
-        if (graphid > len(self.graphs)):
+        if graphid > len(self.graphs):
             raise ValueError(
                 "try to execute command on a non-existing graph. ", instruction)
         did = False
@@ -57,7 +54,7 @@ class ETA_VM():
         for graphid in range(0, len(self.graphs)):
             for chn in self.graphs[graphid].output_chn:
                 # reserved for real devices
-                if (chn in output_chn_used_by_which_graph):
+                if chn in output_chn_used_by_which_graph:
                     raise ValueError(
                         "Graph {} trys to output to a used channel {} by Graph {}.".format(
                             self.get_graph_name(graphid), chn,
@@ -76,11 +73,12 @@ class ETA_VM():
     def check_defines(self):
         defines_used_by_which_graph = {}
         for graph in self.graphs:
-            for each in graph.defined_symbols:
+            for each in graph.external_table_symbols:
                 if each in defines_used_by_which_graph:
                     print(
-                        "Table {} is used by more than one graph, it could be dangerous if you dont mean to do that.".format(each))
-                defines_used_by_which_graph[each] = graph.defined_symbols[each]
+                        "Table {} is used by more than one graph, it could be dangerous if you dont mean to do that.".format(
+                            each))
+                defines_used_by_which_graph[each] = graph.external_table_symbols[each]
         return defines_used_by_which_graph
 
     def dump_code(self, max_chn=255):
@@ -105,30 +103,30 @@ class ETA_VM():
                             chn_stanza_el, graph.graphid, last)
                         if chn_stanza_el == "":
                             chn_stanza_el = "el"
-                        # conditionless transout
+                        # condition-less trans-out
                         now_stanza = ""
                         now_stanza += "\n" + \
-                            graph.tranout_to_section[max_chn - 1][last]
-                        # conditional transout
+                                      graph.tranout_to_section[max_chn - 1][last]
+                        # conditional trans-out
                         now_stanza += "\n" + \
-                            graph.tranout_to_section[chn][last]
+                                      graph.tranout_to_section[chn][last]
                         now_stanza += "\nlast_{}=now_{}".format(
                             graph.graphid, graph.graphid)
                         now_stanza += "\n# trans form {} to {}".format(
                             last, now)
                         now_stanza += "\nnow_{}=nb.int8({})".format(graph.graphid, now)
-                        # conditionless
+                        # condition-less
                         now_stanza += "\n" + \
-                            graph.transition_to_section[last][max_chn - 1][now]
+                                      graph.transition_to_section[last][max_chn - 1][now]
                         # conditional
                         now_stanza += "\n" + \
-                            graph.transition_to_section[last][chn][now]
+                                      graph.transition_to_section[last][chn][now]
                         # condition less
                         now_stanza += "\n" + \
-                            graph.tranin_to_section[max_chn - 1][now]
-                        # conditional transin
+                                      graph.tranin_to_section[max_chn - 1][now]
+                        # conditional trans-in
                         now_stanza += "\n" + \
-                            graph.tranin_to_section[chn][now]
+                                      graph.tranin_to_section[chn][now]
                         now_stanza = textwrap.indent(now_stanza, "     ")
                         chn_stanza += now_stanza
             if True or len(chn_stanza) > 0:
