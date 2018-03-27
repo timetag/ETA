@@ -133,7 +133,7 @@ def ARB_PARAM_MAKER():
 
 
 def link_jit_code(code):
-    FileReader_init = link_function("FileReader_init", 7)
+    FileReader_init = link_function("FileReader_init", 8)
     POOL_init = link_function("POOL_init", 3)
     POOL_next = link_function("POOL_next", 1, i64=True)
     READER_BytesofRecords_get = link_global("READER_BytesofRecords")

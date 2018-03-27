@@ -66,7 +66,7 @@ class WSSERVER():
                       expcfg["exp_name"] + ".")
             self.send("Compiling...")
             eta_compiled_code = self.compile_eta(etaobj)
-            
+
             #with open("server_code.py", 'wb') as file:
             #    file.write(eta_compiled_code.encode("utf-8"))
             wrapper, mainloop = link_jit_code(eta_compiled_code)
