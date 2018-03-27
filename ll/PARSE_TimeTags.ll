@@ -880,7 +880,7 @@ define i32 @read_next_minibatch() #1 {
   %7 = sext i32 %6 to i64
   %8 = add nsw i64 %5, %7
   %9 = load i64, i64* @READER_fendpoint, align 8
-  %10 = icmp slt i64 %8, %9
+  %10 = icmp sge i64 %8, %9
   br i1 %10, label %11, label %21
 
 ; <label>:11:                                     ; preds = %0
@@ -1015,7 +1015,7 @@ define i64 @pop_signal_from_file(i8*) #1 {
   %74 = sext i32 %73 to i64
   %75 = add nsw i64 %72, %74
   %76 = load i64, i64* @READER_fendpoint, align 8
-  %77 = icmp slt i64 %75, %76
+  %77 = icmp sge i64 %75, %76
   br i1 %77, label %78, label %88
 
 ; <label>:78:                                     ; preds = %69
@@ -2788,7 +2788,7 @@ define i64 @POOL_next(i8*) #1 {
   %205 = sext i32 %204 to i64
   %206 = add nsw i64 %203, %205
   %207 = load i64, i64* @READER_fendpoint, align 8
-  %208 = icmp slt i64 %206, %207
+  %208 = icmp sge i64 %206, %207
   br i1 %208, label %209, label %219
 
 ; <label>:209:                                    ; preds = %200
@@ -4204,7 +4204,7 @@ define i64 @POOL_next(i8*) #1 {
   %1195 = sext i32 %1194 to i64
   %1196 = add nsw i64 %1193, %1195
   %1197 = load i64, i64* @READER_fendpoint, align 8
-  %1198 = icmp slt i64 %1196, %1197
+  %1198 = icmp sge i64 %1196, %1197
   br i1 %1198, label %1199, label %1209
 
 ; <label>:1199:                                   ; preds = %1190

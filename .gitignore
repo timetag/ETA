@@ -13,3 +13,4 @@ etaserver*
 .*
 llvm.txt
 *.ptu
+*.bin
