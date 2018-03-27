@@ -7,9 +7,10 @@ from etalang import codegen
 from jit_linker import link_jit_code
 import runtime
 
+
 class WSSERVER():
 
-    def __init__(self, PORT):
+    def __init__(self, port):
         self.logger = logging.getLogger(__name__)
         logging.basicConfig()
 
@@ -23,10 +24,10 @@ class WSSERVER():
 
         def new_client(client, server):
             print("New client " + str(client["address"]) +
-                  " connected to port " + str(PORT) + ". ")
+                  " connected to port " + str(port) + ". ")
         self.server = ws_broadcast.WebsocketServer(
-            PORT, host='0.0.0.0')
-        print("ETA Server URL: ws://localhost:" + str(PORT))
+            port, host='0.0.0.0')
+        print("ETA Server URL: ws://localhost:" + str(port))
         self.server.set_fn_new_client(new_client)
         self.server.set_fn_message_received(new_message)
         self.server.run_forever()
