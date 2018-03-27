@@ -16,14 +16,16 @@ def compile_eta(jsobj):
         else:
             ris.append(each)
     # compile ri
-    ri_count = 0
+    num_rslot = 0
+    num_rchns = 0
     real_chns_per_rslots = []
     for each in ris:
         thiscount = int(each["group / # of channels"])
         real_chns_per_rslots.append(thiscount)
         each["output channels"] = str(
-            [i for i in range(ri_count, ri_count + thiscount)])
-        ri_count += thiscount
+            [i for i in range(num_rchns, num_rchns + thiscount)])
+        num_rchns += thiscount
+        num_rslot += 1
     # compile vi
     vi_code_list = []
     graphnames = []
@@ -53,8 +55,34 @@ def compile_eta(jsobj):
     etavm = eta_vm.ETA_VM(real_chns_per_rslots, graphnames)
     # execute instructions
     for each in vi_code_list:
-        print(each)
+        # print(each)
         etavm.exec_eta(each)
+
+    # update metadata
+
+    def select_by_name(obj, name):
+        for each in obj:
+            if each["name"] == name:
+                return each
+
+    num_vslot = 0
+    for each in etavm.graphs:
+        select_by_name(vis, each.name)["input channels"] = str(
+            list(each.input_chn.keys()))
+        select_by_name(vis, each.name)["output channels"] = str(
+            list(each.output_chn.keys()))
+        for a in list(each.output_chn.keys()):
+            if num_vslot < int(a):
+                num_vslot = int(a)
+        select_by_name(vis, each.name)["tables"] = str(
+            list(each.external_table_symbols.keys()))
+    num_vslot -= num_rchns
+    num_vslot += 1
+    metadata = []
+    metadata += ris
+    metadata += vis
+    metadata = json.dumps(metadata)
+
     # defines for tables
     etavm.check_output()
     defines = etavm.check_defines()
@@ -64,25 +92,11 @@ def compile_eta(jsobj):
             tables.append(each)
 
     code, init_code, global_init_code = etavm.dump_code()
-    onefile = mainloop.get_onefile_loop(tables, textwrap.indent(
-        init_code, "    "), textwrap.indent(code, "        "), textwrap.indent(global_init_code, "    "))
-    # update metadata
-
-    def select_by_name(obj, name):
-        for each in obj:
-            if each["name"] == name:
-                return each
-    for each in etavm.graphs:
-        select_by_name(vis, each.name)["input channels"] = str(
-            list(each.input_chn.keys()))
-        select_by_name(vis, each.name)["output channels"] = str(
-            list(each.output_chn.keys()))
-        select_by_name(vis, each.name)["tables"] = str(
-            list(each.external_table_symbols.keys()))
-    metadata = []
-    metadata += ris
-    metadata += vis
-    metadata = json.dumps(metadata)
+    onefile = mainloop.get_onefile_loop(tables,
+                                        textwrap.indent(init_code, "    "),
+                                        textwrap.indent(code, "        "),
+                                        textwrap.indent(global_init_code, "    "),
+                                        num_rslot=1,num_rchns=num_rchns, num_vslot=num_vslot)
 
     return onefile, metadata
 
@@ -97,6 +111,8 @@ if __name__ == "__main__":
     def compile_one_graph(filename):
         with open(filename) as f:
             return compile_and_link(f.read())
+
+
     code, metadata = compile_one_graph("startstop.eta")
 
     print(metadata)
