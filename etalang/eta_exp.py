@@ -305,7 +305,7 @@ class Graph(CLOCK, SSMS, TABLE):
             else:
                 raise ValueError("Illegal type initializer for symbol {}".format(each))
 
-    ######### Extensions ########
+    ######### Polymorphism ########
 
     def emit(self, triggers, chn, waittime):
         chn = int(chn)

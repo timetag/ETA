@@ -1,4 +1,4 @@
-def get_onefile_loop(tables,init,looping,globals_init):
+def get_onefile_loop(tables, init, looping, globals_init, num_rslot,num_rchns, num_vslot):
     return """
 @jit(nopython=True, parallel=True, nogil=True)
 def mainloop(chn, {tables}, filename1, fseekpoint, fendpoint, BytesofRecords, TTRes_pspr, SYNCRate_pspr, DTRes_pspr):
@@ -10,7 +10,7 @@ def mainloop(chn, {tables}, filename1, fseekpoint, fendpoint, BytesofRecords, TT
                             BytesofRecords, TTRes_pspr, SYNCRate_pspr, DTRes_pspr)
 
     # print("bytes of the rec", READER_BytesofRecords_get())
-    eta_ret += POOL_init(1, 2, 2)
+    eta_ret += POOL_init({num_rslot},{num_rchns},  {num_vslot})
     #count = 0
     {init}
     AbsTime_ps = POOL_next(Channel)
@@ -33,4 +33,5 @@ def sp_core(caller_parms,mainloop):
 # routine warming up
 #mainloop(np.zeros(1, dtype=np.int8), {tables},
 #         bytearray("NONEXISTING", "ascii"), 1,1,1,1,1,1)
-""".format(init=init,looping=looping,globals_init=globals_init,tables=",".join(tables))
+""".format(init=init, looping=looping, globals_init=globals_init, tables=",".join(tables), num_rslot=num_rslot,
+           num_vslot=num_vslot,num_rchns=num_rchns)
