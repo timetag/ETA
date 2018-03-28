@@ -12,33 +12,12 @@ class TABLE():
             trigger = "uettp_initial"
         else:
             trigger = "global_initial"
+
         self.EMIT_LINE(trigger, "{}=np.zeros({}, dtype=np.int64)"
                        .format(sym, ",".join(type[2:])))
 
     def TABLE(self, triggers, name):
-        self.get_symbol(name, "table", define=True, internal=False)
-
-    def get_table(self, symbol, type_desired, internal=False):
-        if internal:
-            sds = self.internal_symbols
-        else:
-            sds = self.external_table_symbols
-        symbol = symbol.replace(" ", "")
-        if sds[symbol] == type_desired:
-            return symbol
-        if sds[symbol] == "table":
-            sds[symbol] = type_desired
-            print("AUTO TYPE: ", symbol, type_desired)
-            return symbol
-        else:
-            if isinstance(sds[symbol], list):
-                if sds[symbol][0] == "table":
-                    sds[symbol] = type_desired
-                    raise ValueError(
-                        "Table resize is currently not supported for symbol {}, found on graph {}.".format(symbol,
-                                                                                                           self.name))
-        raise ValueError(
-            "Illegal type for symbol {} on graph {}.".format(symbol, self.name))
+        self.define_syms(name, "table", internal=False)
 
 
 class CLOCK():
@@ -50,19 +29,19 @@ class CLOCK():
         self.EMIT_LINE(trigger, "{sym}_start=nb.int64(0);{sym}_stop=nb.int64(0)".format(sym=sym))
 
     def CLOCK(self, triggers, name):
-        self.get_symbol(name, "clock", define=True)
+        self.define_syms(name, "clock")
 
     def startclock(self, triggers, clock_name):
-        clock_name = self.get_symbol(clock_name, "clock")
+        clock_name = self.assert_syms(clock_name, "clock")
         self.EMIT_LINE(triggers, "{}_start=AbsTime_ps".format(clock_name))
 
     def stopclock(self, triggers, clock_name):
-        clock_name = self.get_symbol(clock_name, "clock")
+        clock_name = self.assert_syms(clock_name, "clock")
         self.EMIT_LINE(triggers, "{}_stop=AbsTime_ps".format(clock_name))
 
     def histclock(self, triggers, clock_name, histogram, range_min, bin_step, bin_num):
-        clock_name = self.get_symbol(clock_name, "clock")
-        histogram = self.get_table(histogram, ["table", "hist", bin_num])
+        clock_name = self.assert_syms(clock_name, "clock")
+        histogram = self.define_syms(histogram, ["table", "hist", str(bin_num)], internal=False)
         # check
         code = """
             n_i = nb.int64(({clock}_stop -{clock}_start - {range_min} + {bin_step}) / {bin_step})
@@ -76,44 +55,102 @@ class CLOCK():
         self.EMIT_LINE(triggers, code)
 
 
+class BUFFER():
+    def buffer_init(self, sym, type, internal=False):
+        if internal:
+            trigger = "uettp_initial"
+        else:
+            raise ValueError("BUFFER symbol can not be global.")
+        self.EMIT_LINE(trigger, """
+               {buffer}_head=nb.int32(0)
+               {buffer}_tail=nb.int32(0)
+               {buffer}_size=nb.int32({buflen})
+               """.format(buffer=sym, buflen=type[1]))
+
+    def BUFFER(self, triggers, name):
+        self.define_syms(name, "buffer", internal=True)
+        self.define_syms(name + "_tab", "table", internal=True)
+
+    def putbuffer(self, triggers, name, num):
+        name = self.assert_syms(name, "buffer")
+        table = self.define_syms(name + "_tab", "table", internal=True)
+        self.EMIT_LINE(triggers, """
+            {tab}[{buffer}_head] = {num}
+            {buffer}_head = ({buffer}_head + 1) % {buffer}_size
+            if ({buffer}_head == {buffer}_tail): #if empty
+                {buffer}_tail = ({buffer}_tail + 1) % {buffer}_size
+        """.format(tab=table, buffer=name, num=num))
+
+    def buffer_cond_pop(self, triggers, name, cond):
+        name = self.assert_syms(name, "buffer")
+        table = self.define_syms(name + "_tab", "table", internal=True)
+        self.EMIT_LINE(triggers, """
+        while True:
+            if not({buffer}_head == {buffer}_tail):
+                if not({tab}[{buffer}_tail] {cond}):
+                    break
+                {buffer}_tail = ({buffer}_tail + 1) % {buffer}_size
+            else:
+                break
+        
+        """.format(tab=table, buffer=name, cond=cond))
+
+
 class SSMS():
     def ssms_init(self, sym, type, internal=False):
         if internal:
             trigger = "uettp_initial"
         else:
             raise ValueError("SSMS symbol can not be global.")
-        self.EMIT_LINE(trigger, "{}_last=nb.int64(0);{}_buffer=nb.int64(0)".format(each, each))
+        self.EMIT_LINE(trigger, """
+        {clock_name}_stop=nb.int64(0)
+        """.format(clock_name=sym))
+
     ########## SSMS ############
     def SSMS(self, triggers, name):
-        self.get_symbol(name, "ssms", define=True)
-        self.get_symbol(name, "table", internal=True, define=True)
+        self.define_syms(name, "ssms", internal=True)
+        self.BUFFER(triggers, name + "_starts")
 
     def startssms(self, triggers, clock_name):
-        self.pushssms(triggers, clock_name, 1)
+        clock_name = self.assert_syms(clock_name, "ssms")
+        buffer_name = self.assert_syms(clock_name + "_starts", "buffer")
+        self.putbuffer(triggers, buffer_name, "AbsTime_ps")
 
     def stopssms(self, triggers, clock_name):
-        self.pushssms(triggers, clock_name, 0)
-
-    def pushssms(self, triggers, clock_name, number):
-        clock_name = self.get_symbol(clock_name, "ssms")
+        clock_name = self.assert_syms(clock_name, "ssms")
+        buffer_name = self.assert_syms(clock_name + "_starts", "buffer")
+        self.EMIT_LINE(triggers, "{}_stop=AbsTime_ps".format(clock_name))
 
     def histssms(self, triggers, clock_name, histogram, range_min, bin_step, bin_num):
-        bin_num = 100
-        counter = self.get_symbol(counter, "counter")
-        histogram = self.get_table(histogram, ["table", "append", bin_num])
+        clock_name = self.define_syms(clock_name, ["ssms"])
+        buffer_name = self.define_syms(clock_name + "_starts", ["buffer", str(bin_num)])
+        table_buffer_name = self.define_syms(buffer_name + "_tab", ["table", "buffer", str(bin_num)])
+        histogram = self.define_syms(histogram, ["table", "hist", str(bin_num)], internal=False)
+
         # check
+        self.buffer_cond_pop(triggers, buffer_name,"< {clock_name}_stop - np.int64({time})".format(clock_name=clock_name,
+                                                                                       time=int(bin_num) * int(bin_step)))
+        hister = """
+                n_i = nb.int64(({clock_name}_stop - {table_buffer_name}[i] - {range_min} + {bin_step}) / {bin_step})
+                {histogram}[n_i] += 1
+        """.format(clock_name=clock_name, histogram=histogram, buffer_name=buffer_name,
+                   table_buffer_name=table_buffer_name, range_min=range_min, bin_step=bin_step, bin_num=bin_num)
+
         code = """
-            n_i = nb.int64({counter})
-            if (n_i >= {bin_num}):
-                n_i = {bin_num} - 1  # +inf time_interval
-            if (n_i < 0):
-                n_i = 0  # -inf time_interval
-            {histogram}[n_i] += 1
-        """.format(counter=counter, histogram=histogram, bin_num=bin_num)
+        if {buffer_name}_tail<{buffer_name}_head:
+            for i in range({buffer_name}_tail,{buffer_name}_head):
+{hister}
+        elif {buffer_name}_tail>{buffer_name}_head:
+            for i in range({buffer_name}_tail,{buffer_name}_size):
+{hister}
+            for i in range(0,{buffer_name}_head):
+{hister}
+        """.format(clock_name=clock_name, histogram=histogram, buffer_name=buffer_name,
+                   table_buffer_name=table_buffer_name, range_min=range_min, bin_step=bin_step, bin_num=bin_num,hister=hister)
         self.EMIT_LINE(triggers, code)
 
 
-class Graph(CLOCK, SSMS, TABLE):
+class Graph(CLOCK, SSMS, TABLE,BUFFER):
     def __init__(self, name="NONAME-GRAPH", gid=0):
         self.name = name
         self.graphid = gid
@@ -229,34 +266,46 @@ class Graph(CLOCK, SSMS, TABLE):
         self.EMIT_LINE(triggers, self.embedded[id])
 
     ########## typing ########
-    def get_symbol(self, symbol, type, define=False, internal=True, force_success=True):
+    def define_syms(self, symbol, type_desired, internal=True):
         if internal:
             sds = self.internal_symbols
         else:
             sds = self.external_table_symbols
         symbol = symbol.replace(" ", "")
-        if symbol in (sds):
-            if sds[symbol] == type:
-                if define:
-                    if force_success:
-                        raise ValueError(
-                            "Symbol {} is already defined as a same type.".format(symbol))
-                    else:
-                        return None
-                else:
+        if symbol in sds:
+            if sds[symbol] == type_desired:
+                return symbol
+
+            basetype = self.get_type_of_syms(symbol, internal, fulltype=False)
+            fulltype = self.get_type_of_syms(symbol, internal, fulltype=True)
+
+            if isinstance(type_desired, list):
+                if fulltype == type_desired[0]:
+                    sds[symbol] = type_desired
                     return symbol
-            else:
-                if force_success:
-                    raise ValueError("Type mismatch for symbol {}, you want {}, but it is defined by type {}.".format(
-                        symbol, type, sds[symbol]))
                 else:
-                    return None
-        else:
-            if define:
-                sds[symbol] = type
+                    raise ValueError("Type mismatch for symbol {}, found on graph {}.".format(symbol, self.name))
+            elif isinstance(type_desired, str):
+                if type_desired == basetype:
+                    return symbol
+                else:
+                    raise ValueError("Type mismatch for symbol {}, found on graph {}.".format(symbol, self.name))
             else:
-                raise ValueError(
-                    "Referring to undefiend symbol {}.".format(symbol))
+                raise ValueError("WTF!!!")
+        else:
+            sds[symbol] = type_desired
+            return symbol
+
+    def assert_syms(self, symbol, type, internal=True, force_success=True):
+        fulltype = self.get_type_of_syms(symbol, internal, fulltype=True)
+        if fulltype == type:
+            return symbol
+        basetype = self.get_type_of_syms(symbol, internal, fulltype=False)
+        if basetype == type:
+            return symbol
+
+        raise ValueError("Type mismatch for symbol {}, you want {}, but it is defined by type {}.".format(
+            symbol, type, fulltype))
 
     def get_type_of_syms(self, symbol, internal, fulltype):
         if internal:
@@ -315,20 +364,16 @@ class Graph(CLOCK, SSMS, TABLE):
         self.EMIT_LINE(triggers, code)
 
     def start(self, triggers, clock_name):
-        if self.get_symbol(clock_name, "clock"):
-            self.startclock(triggers, clock_name, force_success=False)
-        if self.get_symbol(clock_name, "ssms"):
-            self.startssms(triggers, clock_name, force_success=False)
+        type = self.get_type_of_syms(clock_name, internal=True, fulltype=False)
+        func = getattr(self, "start" + type, None)
+        func(triggers, clock_name)
 
     def stop(self, triggers, clock_name):
-        if self.get_symbol(clock_name, "clock"):
-            self.stopclock(triggers, clock_name, force_success=False)
-        if self.get_symbol(clock_name, "ssms"):
-            self.stopssms(triggers, clock_name, force_success=False)
+        type = self.get_type_of_syms(clock_name, internal=True, fulltype=False)
+        func = getattr(self, "stop" + type, None)
+        func(triggers, clock_name)
 
     def hist(self, triggers, clock_name, histogram, range_min, bin_step, bin_num):
-        if self.get_symbol(clock_name, "clock", force_success=False):
-            self.histclock(triggers, clock_name, histogram,
-                           range_min, bin_step, bin_num)
-        if self.get_symbol(clock_name, "ssms", force_success=False):
-            self.histssms(triggers, clock_name)
+        type = self.get_type_of_syms(clock_name, internal=True, fulltype=False)
+        func = getattr(self, "hist" + type, None)
+        func(triggers, clock_name, histogram, range_min, bin_step, bin_num)
