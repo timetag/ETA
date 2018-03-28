@@ -92,7 +92,6 @@ class BUFFER():
                 {buffer}_tail = ({buffer}_tail + 1) % {buffer}_size
             else:
                 break
-        
         """.format(tab=table, buffer=name, cond=cond))
 
 
@@ -128,8 +127,8 @@ class SSMS():
         histogram = self.define_syms(histogram, ["table", "hist", str(bin_num)], internal=False)
 
         # check
-        self.buffer_cond_pop(triggers, buffer_name,"< {clock_name}_stop - np.int64({time})".format(clock_name=clock_name,
-                                                                                       time=int(bin_num) * int(bin_step)))
+        self.buffer_cond_pop(triggers, buffer_name,"<= {clock_name}_stop - np.int64({time})".format(clock_name=clock_name,
+                                                                                       time=(int(bin_num)-2) * int(bin_step)))
         hister = """
                 n_i = nb.int64(({clock_name}_stop - {table_buffer_name}[i] - {range_min} + {bin_step}) / {bin_step})
                 {histogram}[n_i] += 1
