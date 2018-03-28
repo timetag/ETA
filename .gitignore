@@ -6,7 +6,6 @@ __pycache__/
 *.pyc
 *.exe
 *.tensor
-*.code
 *.sh
 etaserver*
 *.ipynb
@@ -14,3 +13,4 @@ etaserver*
 llvm.txt
 *.ptu
 *.bin
+*.txt

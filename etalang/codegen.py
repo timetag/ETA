@@ -78,6 +78,7 @@ def compile_eta(jsobj):
             list(each.external_table_symbols.keys()))
     num_vslot -= num_rchns
     num_vslot += 1
+    num_vslot=max(num_vslot,0)
     metadata = []
     metadata += ris
     metadata += vis
