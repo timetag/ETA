@@ -39,7 +39,7 @@ class CLOCK():
         clock_name = self.assert_syms(clock_name, "clock")
         self.EMIT_LINE(triggers, "{}_stop=AbsTime_ps".format(clock_name))
 
-    def histclock(self, triggers, clock_name, histogram, range_min, bin_step, bin_num):
+    def histclock(self, triggers, clock_name, histogram, range_min, bin_step, bin_num,integrate_time=None):
         clock_name = self.assert_syms(clock_name, "clock")
         histogram = self.define_syms(histogram, ["table", "hist", str(bin_num)], internal=False)
         # check
@@ -75,11 +75,13 @@ class BUFFER():
         name = self.assert_syms(name, "buffer")
         table = self.define_syms(name + "_tab", "table", internal=True)
         self.EMIT_LINE(triggers, """
-            {tab}[{buffer}_head] = {num}
+            {table}[{buffer}_head] = {num}
             {buffer}_head = ({buffer}_head + 1) % {buffer}_size
-            if ({buffer}_head == {buffer}_tail): #if empty
+            if ({buffer}_head == {buffer}_tail): 
+                #if overflowed, force pop
                 {buffer}_tail = ({buffer}_tail + 1) % {buffer}_size
-        """.format(tab=table, buffer=name, num=num))
+           
+        """.format(table=table, buffer=name, num=num))
 
     def buffer_cond_pop(self, triggers, name, cond):
         name = self.assert_syms(name, "buffer")
@@ -87,12 +89,15 @@ class BUFFER():
         self.EMIT_LINE(triggers, """
         while True:
             if not({buffer}_head == {buffer}_tail):
-                if not({tab}[{buffer}_tail] {cond}):
+                if not({table}[{buffer}_tail] {cond}):
+                    #print("buffer tail",{table}[{buffer}_tail])
                     break
+                    
                 {buffer}_tail = ({buffer}_tail + 1) % {buffer}_size
             else:
                 break
-        """.format(tab=table, buffer=name, cond=cond))
+        #print("buffersize",{buffer}_head , {buffer}_tail)
+        """.format(table=table, buffer=name, cond=cond))
 
 
 class SSMS():
@@ -120,17 +125,24 @@ class SSMS():
         buffer_name = self.assert_syms(clock_name + "_starts", "buffer")
         self.EMIT_LINE(triggers, "{}_stop=AbsTime_ps".format(clock_name))
 
-    def histssms(self, triggers, clock_name, histogram, range_min, bin_step, bin_num):
+    def histssms(self, triggers, clock_name, histogram, range_min, bin_step, bin_num, integrate_time=None):
         clock_name = self.define_syms(clock_name, ["ssms"])
-        buffer_name = self.define_syms(clock_name + "_starts", ["buffer", str(bin_num)])
-        table_buffer_name = self.define_syms(buffer_name + "_tab", ["table", "buffer", str(bin_num)])
+        if integrate_time is None:
+            integrate_time=int(bin_step)*int(bin_num)
+        buffer_name = self.define_syms(clock_name + "_starts", ["buffer", str(integrate_time)])
+        table_buffer_name = self.define_syms(buffer_name + "_tab", ["table", "buffer", str(integrate_time)])
         histogram = self.define_syms(histogram, ["table", "hist", str(bin_num)], internal=False)
-
         # check
-        self.buffer_cond_pop(triggers, buffer_name,"<= {clock_name}_stop - np.int64({time})".format(clock_name=clock_name,
-                                                                                       time=(int(bin_num)-2) * int(bin_step)))
+        self.buffer_cond_pop(triggers, buffer_name,
+                             "<= {clock_name}_stop - np.int64({time})".format(clock_name=clock_name,
+                                                                              time=integrate_time))
+
         hister = """
                 n_i = nb.int64(({clock_name}_stop - {table_buffer_name}[i] - {range_min} + {bin_step}) / {bin_step})
+                if (n_i >= {bin_num}):
+                    n_i = {bin_num} - 1  # +inf time_interval
+                if (n_i < 0):
+                    n_i = 0  # -inf time_interval
                 {histogram}[n_i] += 1
         """.format(clock_name=clock_name, histogram=histogram, buffer_name=buffer_name,
                    table_buffer_name=table_buffer_name, range_min=range_min, bin_step=bin_step, bin_num=bin_num)
@@ -145,11 +157,11 @@ class SSMS():
             for i in range(0,{buffer_name}_head):
 {hister}
         """.format(clock_name=clock_name, histogram=histogram, buffer_name=buffer_name,
-                   table_buffer_name=table_buffer_name, range_min=range_min, bin_step=bin_step, bin_num=bin_num,hister=hister)
+                   table_buffer_name=table_buffer_name, range_min=range_min, bin_step=bin_step, bin_num=bin_num, hister=hister)
         self.EMIT_LINE(triggers, code)
 
 
-class Graph(CLOCK, SSMS, TABLE,BUFFER):
+class Graph(CLOCK, SSMS, TABLE, BUFFER):
     def __init__(self, name="NONAME-GRAPH", gid=0):
         self.name = name
         self.graphid = gid
@@ -372,7 +384,7 @@ class Graph(CLOCK, SSMS, TABLE,BUFFER):
         func = getattr(self, "stop" + type, None)
         func(triggers, clock_name)
 
-    def hist(self, triggers, clock_name, histogram, range_min, bin_step, bin_num):
+    def hist(self, triggers, clock_name, histogram, range_min, bin_step, bin_num, integrate_time=None):
         type = self.get_type_of_syms(clock_name, internal=True, fulltype=False)
         func = getattr(self, "hist" + type, None)
-        func(triggers, clock_name, histogram, range_min, bin_step, bin_num)
+        func(triggers, clock_name, histogram, range_min, bin_step, bin_num,integrate_time)
