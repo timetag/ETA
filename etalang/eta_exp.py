@@ -1,9 +1,22 @@
 import textwrap
-
+import ast
 if __name__ == "__main__":
     import tensor
 else:
     from . import tensor
+
+
+###base type####
+class INTEGER():
+    def integer_init(self, sym, type, internal=False):
+        if internal:
+            trigger = "uettp_initial"
+        else:
+            trigger = "global_initial"
+        self.EMIT_LINE(trigger, "{}=nb.int64(0)".format(sym))
+
+    def INTEGER(self, triggers, name):
+        self.define_syms(name, "integer", internal=True)
 
 
 class TABLE():
@@ -16,10 +29,18 @@ class TABLE():
         self.EMIT_LINE(trigger, "{}=np.zeros({}, dtype=np.int64)"
                        .format(sym, ",".join(type[2:])))
 
-    def TABLE(self, triggers, name):
-        self.define_syms(name, "table", internal=False)
+    def TABLE(self, triggers, name, dimension=None):
+        if dimension:
+            base =  ["table", "userdefined" ]
+            dimension = ast.literal_eval(dimension)
+            for each in dimension:
+                base.append(str(each))
+            self.define_syms(name,base, internal=False)
+        else:
+            self.define_syms(name, "table", internal=False)
 
 
+### other thingys#####
 class HISTOGRAM():
     def histogram_init(self, sym, type, internal=False):
         pass
@@ -185,7 +206,7 @@ class SSMS():
         self.EMIT_LINE(triggers, code)
 
 
-class Graph(CLOCK, SSMS, TABLE, BUFFER, HISTOGRAM):
+class Graph(INTEGER, TABLE, CLOCK, SSMS, BUFFER, HISTOGRAM):
     def __init__(self, name="NONAME-GRAPH", gid=0):
         self.name = name
         self.graphid = gid
@@ -300,15 +321,21 @@ class Graph(CLOCK, SSMS, TABLE, BUFFER, HISTOGRAM):
                 "Calling non-existing embedded code #{}".format(id))
         self.EMIT_LINE(triggers, self.embedded[id])
 
+    def ASSIGN_values_to(self, triggers, target, value):
+        a = self.must_exist_syms(target, internal=True, must=False)
+        if not (a):
+            self.must_exist_syms(target, internal=False, must=True)
+        self.EMIT_LINE(triggers, target + " = " + value)
+
     ########## typing ########
     def define_syms(self, symbol, type_desired, internal=True):
         if internal:
             sds = self.internal_symbols
         else:
             sds = self.external_table_symbols
-        symbol = symbol.replace(" ", "")
-        if symbol in sds:
-            if sds[symbol] == type_desired:
+        symbol_name = self.get_symbol_without_indexes(symbol)
+        if symbol_name in sds:
+            if sds[symbol_name] == type_desired:
                 return symbol
 
             basetype = self.get_type_of_syms(symbol, internal, fulltype=False)
@@ -316,20 +343,32 @@ class Graph(CLOCK, SSMS, TABLE, BUFFER, HISTOGRAM):
 
             if isinstance(type_desired, list):
                 if fulltype == type_desired[0]:
-                    sds[symbol] = type_desired
+                    sds[symbol_name] = type_desired
                     return symbol
                 else:
-                    raise ValueError("Type mismatch for symbol {}, found on graph {}.".format(symbol, self.name))
+                    raise ValueError("Type mismatch for symbol {}, found on graph {}.".format(symbol_name, self.name))
             elif isinstance(type_desired, str):
                 if type_desired == basetype:
                     return symbol
                 else:
-                    raise ValueError("Type mismatch for symbol {}, found on graph {}.".format(symbol, self.name))
+                    raise ValueError("Type mismatch for symbol {}, found on graph {}.".format(symbol_name, self.name))
             else:
                 raise ValueError("WTF!!!")
         else:
-            sds[symbol] = type_desired
+            sds[symbol_name] = type_desired
             return symbol
+
+    def must_exist_syms(self, symbol, internal, must=True):
+        if internal:
+            sds = self.internal_symbols
+        else:
+            sds = self.external_table_symbols
+        symbol_name = self.get_symbol_without_indexes(symbol)
+        if symbol_name in (sds):
+            return symbol
+        else:
+            if must:
+                raise ValueError("Undefined symbol {}".format(symbol))
 
     def assert_syms(self, symbol, type, internal=True, force_success=True):
         fulltype = self.get_type_of_syms(symbol, internal, fulltype=True)
@@ -347,20 +386,22 @@ class Graph(CLOCK, SSMS, TABLE, BUFFER, HISTOGRAM):
             sds = self.internal_symbols
         else:
             sds = self.external_table_symbols
-        symbol = symbol.replace(" ", "")
-        if symbol in (sds):
-            if fulltype:
-                return sds[symbol]
-            else:
-                if isinstance(sds[symbol], str):
-                    return sds[symbol]
-                elif isinstance(sds[symbol], list):
-                    return sds[symbol][0]
-                else:
-                    raise ValueError("Ill-typed symbol {}".format(symbol))
-
+        symbol_name = self.get_symbol_without_indexes(symbol)
+        self.must_exist_syms(symbol, internal)
+        if fulltype:
+            return sds[symbol_name]
         else:
-            raise ValueError("Undefined symbol {}".format(symbol))
+            if isinstance(sds[symbol_name], str):
+                return sds[symbol_name]
+            elif isinstance(sds[symbol_name], list):
+                return sds[symbol_name][0]
+            else:
+                raise ValueError("Ill-typed symbol {}".format(symbol_name))
+
+    def get_symbol_without_indexes(self, symbol):
+        symbol_name = symbol.split('[', 1)[0]
+        symbol_name = symbol_name.replace(" ", "")
+        return symbol_name
 
     def MAKE_init_for_syms(self):
         # state registers

@@ -27,14 +27,32 @@ class CrazyTransformer(ast.NodeTransformer):
         return node
 
     def visit_Assign(self, node):
-        args = copy.deepcopy(self.contex)
-        args.append(astunparse.unparse(node).replace("\n", ""))
-
-        self.code_list.append(
-            ["EMBED_LINE", args])
+        print(ast.dump(node))
+        for each in node.targets:
+            args = copy.deepcopy(self.contex)
+            args.append(astunparse.unparse(each).replace("\n", ""))
+            args.append(astunparse.unparse(node.value).replace("\n", ""))
+            self.code_list.append(
+                ["ASSIGN_values_to", args])
         return None
 
-
+    def visit_AugAssign(self,node):
+        args = copy.deepcopy(self.contex)
+        target=astunparse.unparse(node.target).replace("\n", "")
+        args.append(target)
+        op=node.op
+        if isinstance(op,ast.Add):
+            op = "+"
+        elif isinstance(op,ast.Sub):
+            op = "-"
+        elif isinstance(op,ast.Mult):
+            op = "*"
+        else:
+            raise ValueError("Unsupported operand for {}".format(target))
+        value = astunparse.unparse(node.value).replace("\n", "")
+        args.append(target+op+value)
+        self.code_list.append(
+                ["ASSIGN_values_to", args])
 def code_parse(expr, contex=[], verbose=False):
     expr = textwrap.dedent(expr)
     expr_ast = ast.parse(expr)
