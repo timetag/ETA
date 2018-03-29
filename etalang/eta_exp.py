@@ -432,11 +432,29 @@ class Graph(INTEGER, TABLE, CLOCK, SSMS, BUFFER, HISTOGRAM):
 
     ######### Polymorphism ########
 
-    def emit(self, triggers, chn, waittime):
+    def emit(self, triggers, chn, waittime,repeat=None):
         chn = int(chn)
         self.output_chn[chn] = True  # self.make_output_chn(chn)
-        code = """eta_ret+=VSLOT_put(AbsTime_ps+{waittime},nb.int8({chn}));""".format(
-            chn=chn, waittime=int(waittime))
+        if int(waittime)<0:
+            raise ValueError("Wait time for emit() must be larger than zero.")
+        if repeat:
+            if repeat.find("-")>=0 or repeat=="abs":
+                code = """
+            if waittime> AbsTime_ps:
+                    eta_ret+=VSLOT_put({waittime},nb.int8({chn}))
+            else:
+                print("Emit to past is not allowed, you can not change the history.")
+            """.format(
+                    chn=chn, waittime=int(waittime))
+            else:
+                code = """
+                for emit_times in range(0,{repeat}):
+                    eta_ret+=VSLOT_put(AbsTime_ps+{waittime}*(emit_times+1),nb.int8({chn}))
+                """.format(
+                    chn=chn, waittime=int(waittime),repeat=repeat)
+        else:
+            code = """eta_ret+=VSLOT_put(AbsTime_ps+{waittime},nb.int8({chn}))""".format(
+                chn=chn, waittime=int(waittime))
         self.EMIT_LINE(triggers, code)
 
     def start(self, triggers, clock_name):
