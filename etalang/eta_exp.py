@@ -5,16 +5,7 @@ if __name__ == "__main__":
 else:
     from . import tensor
 
-class COUNTER():
-    def COUNTER(self,triggers,name):
-        self.define_syms(name, ["table","counter",1], internal=False)
 
-    def reset_counter(self,triggers,name):
-        self.EMIT_LINE(trigger, "{}"
-                       .format(sym, ",".join(type[2:])))
-    def add_counter(self,triggers,name):
-        self.EMIT_LINE(trigger, "{}=np.zeros({}, dtype=np.int64)"
-                       .format(sym, ",".join(type[2:])))
 class TABLE():
     def table_init(self, sym, type, internal=False):
         if internal:
@@ -27,6 +18,15 @@ class TABLE():
 
     def TABLE(self, triggers, name):
         self.define_syms(name, "table", internal=False)
+
+
+class HISTOGRAM():
+    def histogram_init(self, sym, type, internal=False):
+        pass
+
+    def HISTOGRAM(self, triggers, name, range_min, bin_step, bin_num):
+        self.define_syms(name, ["histogram", range_min, bin_step, bin_num], internal=True)
+        self.define_syms(name, ["table", "hist", bin_num], internal=False)
 
 
 class CLOCK():
@@ -48,9 +48,15 @@ class CLOCK():
         clock_name = self.assert_syms(clock_name, "clock")
         self.EMIT_LINE(triggers, "{}_stop=AbsTime_ps".format(clock_name))
 
-    def histclock(self, triggers, clock_name, histogram, range_min, bin_step, bin_num,integrate_time=None):
+    def clock_record(self, triggers, histogram, clock_name, integrate_time=None):
         clock_name = self.assert_syms(clock_name, "clock")
-        histogram = self.define_syms(histogram, ["table", "hist", str(bin_num)], internal=False)
+
+        histogram = self.assert_syms(histogram, "histogram")
+        histogram_info = self.get_type_of_syms(histogram, internal=True, fulltype=True)
+        range_min = histogram_info[1]
+        bin_step = histogram_info[2]
+        bin_num = histogram_info[3]
+
         # check
         code = """
             n_i = nb.int64(({clock}_stop -{clock}_start - {range_min} + {bin_step}) / {bin_step})
@@ -134,15 +140,22 @@ class SSMS():
         buffer_name = self.assert_syms(clock_name + "_starts", "buffer")
         self.EMIT_LINE(triggers, "{}_stop=AbsTime_ps".format(clock_name))
 
-    def histssms(self, triggers, clock_name, histogram, range_min, bin_step, bin_num, integrate_time=None):
-        clock_name = self.define_syms(clock_name, ["ssms"])
+    def ssms_record(self, triggers, histogram, clock_name, integrate_time=None):
+        clock_name = self.assert_syms(clock_name, "ssms")
+
+        histogram = self.assert_syms(histogram, "histogram")
+        histogram_info = self.get_type_of_syms(histogram, internal=True, fulltype=True)
+        range_min = histogram_info[1]
+        bin_step = histogram_info[2]
+        bin_num = histogram_info[3]
+
         if integrate_time is None:
-            integrate_time=int(bin_step)*int(bin_num)
+            integrate_time = int(bin_step) * int(bin_num)
         buffer_name = self.define_syms(clock_name + "_starts", ["buffer", str(integrate_time)])
         table_buffer_name = self.define_syms(buffer_name + "_tab", ["table", "buffer", str(integrate_time)])
-        histogram = self.define_syms(histogram, ["table", "hist", str(bin_num)], internal=False)
+
         # check
-        #self.buffer_cond_pop(triggers, buffer_name,
+        # self.buffer_cond_pop(triggers, buffer_name,
         #                     "<= {clock_name}_stop - np.int64({time})".format(clock_name=clock_name,
         #                                                                      time=integrate_time))
 
@@ -167,11 +180,12 @@ class SSMS():
             for i in range({buffer_name}_size-1,{buffer_name}_tail-1,-1):
 {hister}
         """.format(clock_name=clock_name, histogram=histogram, buffer_name=buffer_name,
-                   table_buffer_name=table_buffer_name, range_min=range_min, bin_step=bin_step, bin_num=bin_num, hister=hister)
+                   table_buffer_name=table_buffer_name, range_min=range_min, bin_step=bin_step, bin_num=bin_num,
+                   hister=hister)
         self.EMIT_LINE(triggers, code)
 
 
-class Graph(CLOCK, SSMS, TABLE, BUFFER):
+class Graph(CLOCK, SSMS, TABLE, BUFFER, HISTOGRAM):
     def __init__(self, name="NONAME-GRAPH", gid=0):
         self.name = name
         self.graphid = gid
@@ -394,7 +408,7 @@ class Graph(CLOCK, SSMS, TABLE, BUFFER):
         func = getattr(self, "stop" + type, None)
         func(triggers, clock_name)
 
-    def hist(self, triggers, clock_name, histogram, range_min, bin_step, bin_num, integrate_time=None):
+    def record(self, triggers, histogram, clock_name, integrate_time=None):
         type = self.get_type_of_syms(clock_name, internal=True, fulltype=False)
-        func = getattr(self, "hist" + type, None)
-        func(triggers, clock_name, histogram, range_min, bin_step, bin_num,integrate_time)
+        func = getattr(self, type + "_record", None)
+        func(triggers, histogram, clock_name, integrate_time)
