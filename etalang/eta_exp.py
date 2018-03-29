@@ -5,7 +5,16 @@ if __name__ == "__main__":
 else:
     from . import tensor
 
+class COUNTER():
+    def COUNTER(self,triggers,name):
+        self.define_syms(name, ["table","counter",1], internal=False)
 
+    def reset_counter(self,triggers,name):
+        self.EMIT_LINE(trigger, "{}"
+                       .format(sym, ",".join(type[2:])))
+    def add_counter(self,triggers,name):
+        self.EMIT_LINE(trigger, "{}=np.zeros({}, dtype=np.int64)"
+                       .format(sym, ",".join(type[2:])))
 class TABLE():
     def table_init(self, sym, type, internal=False):
         if internal:
@@ -71,7 +80,7 @@ class BUFFER():
         self.define_syms(name, "buffer", internal=True)
         self.define_syms(name + "_tab", "table", internal=True)
 
-    def putbuffer(self, triggers, name, num):
+    def buffer_put(self, triggers, name, num):
         name = self.assert_syms(name, "buffer")
         table = self.define_syms(name + "_tab", "table", internal=True)
         self.EMIT_LINE(triggers, """
@@ -118,7 +127,7 @@ class SSMS():
     def startssms(self, triggers, clock_name):
         clock_name = self.assert_syms(clock_name, "ssms")
         buffer_name = self.assert_syms(clock_name + "_starts", "buffer")
-        self.putbuffer(triggers, buffer_name, "AbsTime_ps")
+        self.buffer_put(triggers, buffer_name, "AbsTime_ps")
 
     def stopssms(self, triggers, clock_name):
         clock_name = self.assert_syms(clock_name, "ssms")
@@ -133,14 +142,15 @@ class SSMS():
         table_buffer_name = self.define_syms(buffer_name + "_tab", ["table", "buffer", str(integrate_time)])
         histogram = self.define_syms(histogram, ["table", "hist", str(bin_num)], internal=False)
         # check
-        self.buffer_cond_pop(triggers, buffer_name,
-                             "<= {clock_name}_stop - np.int64({time})".format(clock_name=clock_name,
-                                                                              time=integrate_time))
+        #self.buffer_cond_pop(triggers, buffer_name,
+        #                     "<= {clock_name}_stop - np.int64({time})".format(clock_name=clock_name,
+        #                                                                      time=integrate_time))
 
         hister = """
                 n_i = nb.int64(({clock_name}_stop - {table_buffer_name}[i] - {range_min} + {bin_step}) / {bin_step})
                 if (n_i >= {bin_num}):
                     n_i = {bin_num} - 1  # +inf time_interval
+                    break
                 if (n_i < 0):
                     n_i = 0  # -inf time_interval
                 {histogram}[n_i] += 1
@@ -149,12 +159,12 @@ class SSMS():
 
         code = """
         if {buffer_name}_tail<{buffer_name}_head:
-            for i in range({buffer_name}_tail,{buffer_name}_head):
+            for i in range({buffer_name}_head-1,{buffer_name}_tail-1,-1):
 {hister}
         elif {buffer_name}_tail>{buffer_name}_head:
-            for i in range({buffer_name}_tail,{buffer_name}_size):
+            for i in range({buffer_name}_head-1,0,-1):
 {hister}
-            for i in range(0,{buffer_name}_head):
+            for i in range({buffer_name}_size-1,{buffer_name}_tail-1,-1):
 {hister}
         """.format(clock_name=clock_name, histogram=histogram, buffer_name=buffer_name,
                    table_buffer_name=table_buffer_name, range_min=range_min, bin_step=bin_step, bin_num=bin_num, hister=hister)
