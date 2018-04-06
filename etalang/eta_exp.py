@@ -1,5 +1,6 @@
 import textwrap
 import ast
+
 if __name__ == "__main__":
     import tensor
 else:
@@ -26,16 +27,16 @@ class TABLE():
         else:
             trigger = "global_initial"
 
-        self.EMIT_LINE(trigger, "{}=np.zeros({}, dtype=np.int64)"
-                       .format(sym, ",".join(type[2:])))
+        self.EMIT_LINE(trigger, "{}=np.zeros(({}), dtype=np.int64)"
+                       .format(sym, ",".join(list(map(str, type[2:])))))
 
     def TABLE(self, triggers, name, dimension=None):
         if dimension:
-            base =  ["table", "userdefined" ]
+            base = ["table", "sum"]
             dimension = ast.literal_eval(dimension)
             for each in dimension:
                 base.append(str(each))
-            self.define_syms(name,base, internal=False)
+            self.define_syms(name, base, internal=False)
         else:
             self.define_syms(name, "table", internal=False)
 
@@ -45,9 +46,103 @@ class HISTOGRAM():
     def histogram_init(self, sym, type, internal=False):
         pass
 
-    def HISTOGRAM(self, triggers, name, range_min, bin_step, bin_num):
-        self.define_syms(name, ["histogram", range_min, bin_step, bin_num], internal=True)
-        self.define_syms(name, ["table", "hist", bin_num], internal=False)
+    def HISTOGRAM(self, triggers, name, dims, dimension=None):
+        base = ["table", "sum"]
+        if dimension is not None:
+            dimension = ast.literal_eval(dimension)
+            for each in dimension:
+                base.append(str(each))
+        dims = ast.literal_eval(dims)
+        if isinstance(dims, tuple):
+            dims = [dims]
+        if isinstance(dims, list):
+            for each in dims:
+                if isinstance(each, tuple):
+                    base.append(each[0])
+                else:
+                    raise ValueError(
+                        "Histogram dimension should be a tuple(bin_num,bin_step,pre_act).")
+
+        self.define_syms(name, ["histogram", dims], internal=True)
+        self.define_syms(name, base, internal=False)
+
+    def record(self, triggers, histogram, *therest):
+        histogram = self.assert_syms(histogram, "histogram")
+        histogram_info = self.get_type_of_syms(histogram, internal=True, fulltype=True)
+        dims = histogram_info[1]
+        if len(dims) == 1 and self.get_type_of_syms(therest[0], internal=True, fulltype=False) == "ssms":
+            clock_name = therest[0]
+            clock_name = self.assert_syms(clock_name, "ssms")
+            bin_num = dims[0][0]
+            bin_step = dims[0][1]
+            integrate_time = bin_num * bin_step
+            buffer_name = self.define_syms(clock_name + "_starts", ["buffer", integrate_time])
+            table_buffer_name = self.define_syms(buffer_name + "_tab", ["table", "buffer", integrate_time])
+
+            diff = "({clock_name}_stop - {table_buffer_name}[i])".format(clock_name=clock_name,
+                                                                         table_buffer_name=table_buffer_name)
+            # time difference preparing stage
+            if len(dims[0]) > 2:
+                preact = dims[0][2]
+                preact = preact.replace("time", diff)
+            else:
+                preact = diff
+
+            hister = """
+                            ssms_i = nb.int64((({preact}) + {bin_step}) / {bin_step})
+                            if (ssms_i >= {bin_num}):
+                                ssms_i = {bin_num} - 1  # +inf time_interval
+                                break
+                            if (ssms_i < 0):
+                                ssms_i = 0  # -inf time_interval
+                            {histogram}[ssms_i] += 1
+                    """.format(histogram=histogram, buffer_name=buffer_name,
+                               preact=preact, bin_step=bin_step,
+                               bin_num=bin_num)
+
+            code = """
+                    if {buffer_name}_tail<{buffer_name}_head:
+                        for i in range({buffer_name}_head-1,{buffer_name}_tail-1,-1):
+            {hister}
+                    elif {buffer_name}_tail>{buffer_name}_head:
+                        for i in range({buffer_name}_head-1,0,-1):
+            {hister}
+                        for i in range({buffer_name}_size-1,{buffer_name}_tail-1,-1):
+            {hister}
+                    """.format(buffer_name=buffer_name, hister=hister)
+            self.EMIT_LINE(triggers, code)
+        for i in range(len(dims)):
+            if i >= len(therest):
+                raise ValueError(
+                    "Dimension mismatch. {i}th dimension is not found when recording to histogram.".format(i=i))
+            # clock_preparing stage
+            clock_name = therest[i]
+            clock_type = self.get_type_of_syms(clock_name, internal=True, fulltype=False)
+            if clock_type == "clock":
+                bin_num = dims[i][0]
+                bin_step = dims[i][1]
+                diff = "({clock}_stop - {clock}_start)".format(clock=clock_name)
+                # time difference preparing stage
+                if len(dims[i]) > 2:
+                    preact = each[2]
+                    preact = preact.replace("time", diff)
+                else:
+                    preact = diff
+
+                code = """
+                         histdim_{i} = nb.int64((({preact})  + {bin_step}) / {bin_step})
+                         if (histdim_{i}  >= {bin_num}):
+                             histdim_{i} = {bin_num} - 1 
+                         if (histdim_{i} < 0):
+                             histdim_{i} = 0  
+                     """.format(clock=clock_name, i=i, preact=preact, histogram=histogram, bin_step=bin_step,
+                                bin_num=bin_num)
+                self.EMIT_LINE(triggers, code)
+        selector = ""
+        for i in range(len(dims)):
+            selector += "[histdim_{i}]".format(i=i)
+        code = """{histogram}{selector} += 1""".format(histogram=histogram, selector=selector)
+        self.EMIT_LINE(triggers, code)
 
 
 class CLOCK():
@@ -68,27 +163,6 @@ class CLOCK():
     def stopclock(self, triggers, clock_name):
         clock_name = self.assert_syms(clock_name, "clock")
         self.EMIT_LINE(triggers, "{}_stop=AbsTime_ps".format(clock_name))
-
-    def clock_record(self, triggers, histogram, clock_name, integrate_time=None):
-        clock_name = self.assert_syms(clock_name, "clock")
-
-        histogram = self.assert_syms(histogram, "histogram")
-        histogram_info = self.get_type_of_syms(histogram, internal=True, fulltype=True)
-        range_min = histogram_info[1]
-        bin_step = histogram_info[2]
-        bin_num = histogram_info[3]
-
-        # check
-        code = """
-            n_i = nb.int64(({clock}_stop -{clock}_start - {range_min} + {bin_step}) / {bin_step})
-            if (n_i >= {bin_num}):
-                n_i = {bin_num} - 1  # +inf time_interval
-            if (n_i < 0):
-                n_i = 0  # -inf time_interval
-            {histogram}[n_i] += 1
-        """.format(clock=clock_name, histogram=histogram, range_min=range_min,
-                   bin_step=bin_step, bin_num=bin_num)
-        self.EMIT_LINE(triggers, code)
 
 
 class BUFFER():
@@ -116,7 +190,6 @@ class BUFFER():
             if ({buffer}_head == {buffer}_tail): 
                 #if overflowed, force pop
                 {buffer}_tail = ({buffer}_tail + 1) % {buffer}_size
-           
         """.format(table=table, buffer=name, num=num))
 
     def buffer_cond_pop(self, triggers, name, cond):
@@ -160,50 +233,6 @@ class SSMS():
         clock_name = self.assert_syms(clock_name, "ssms")
         buffer_name = self.assert_syms(clock_name + "_starts", "buffer")
         self.EMIT_LINE(triggers, "{}_stop=AbsTime_ps".format(clock_name))
-
-    def ssms_record(self, triggers, histogram, clock_name, integrate_time=None):
-        clock_name = self.assert_syms(clock_name, "ssms")
-
-        histogram = self.assert_syms(histogram, "histogram")
-        histogram_info = self.get_type_of_syms(histogram, internal=True, fulltype=True)
-        range_min = histogram_info[1]
-        bin_step = histogram_info[2]
-        bin_num = histogram_info[3]
-
-        if integrate_time is None:
-            integrate_time = int(bin_step) * int(bin_num)
-        buffer_name = self.define_syms(clock_name + "_starts", ["buffer", str(integrate_time)])
-        table_buffer_name = self.define_syms(buffer_name + "_tab", ["table", "buffer", str(integrate_time)])
-
-        # check
-        # self.buffer_cond_pop(triggers, buffer_name,
-        #                     "<= {clock_name}_stop - np.int64({time})".format(clock_name=clock_name,
-        #                                                                      time=integrate_time))
-
-        hister = """
-                n_i = nb.int64(({clock_name}_stop - {table_buffer_name}[i] - {range_min} + {bin_step}) / {bin_step})
-                if (n_i >= {bin_num}):
-                    n_i = {bin_num} - 1  # +inf time_interval
-                    break
-                if (n_i < 0):
-                    n_i = 0  # -inf time_interval
-                {histogram}[n_i] += 1
-        """.format(clock_name=clock_name, histogram=histogram, buffer_name=buffer_name,
-                   table_buffer_name=table_buffer_name, range_min=range_min, bin_step=bin_step, bin_num=bin_num)
-
-        code = """
-        if {buffer_name}_tail<{buffer_name}_head:
-            for i in range({buffer_name}_head-1,{buffer_name}_tail-1,-1):
-{hister}
-        elif {buffer_name}_tail>{buffer_name}_head:
-            for i in range({buffer_name}_head-1,0,-1):
-{hister}
-            for i in range({buffer_name}_size-1,{buffer_name}_tail-1,-1):
-{hister}
-        """.format(clock_name=clock_name, histogram=histogram, buffer_name=buffer_name,
-                   table_buffer_name=table_buffer_name, range_min=range_min, bin_step=bin_step, bin_num=bin_num,
-                   hister=hister)
-        self.EMIT_LINE(triggers, code)
 
 
 class Graph(INTEGER, TABLE, CLOCK, SSMS, BUFFER, HISTOGRAM):
@@ -314,12 +343,14 @@ class Graph(INTEGER, TABLE, CLOCK, SSMS, BUFFER, HISTOGRAM):
 
     def LOAD_EMBEDDED_CODE(self, codes):
         self.embedded = codes
+        print("embedded code loaded.")
+        print(codes)
 
     def EMIT_CODE(self, triggers, id):
-        if not (id in self.embedded):
+        if not (int(id) < len(self.embedded)):
             raise ValueError(
                 "Calling non-existing embedded code #{}".format(id))
-        self.EMIT_LINE(triggers, self.embedded[id])
+        self.EMIT_LINE(triggers, self.embedded[int(id)])
 
     def ASSIGN_values_to(self, triggers, target, value):
         a = self.must_exist_syms(target, internal=True, must=False)
@@ -432,13 +463,13 @@ class Graph(INTEGER, TABLE, CLOCK, SSMS, BUFFER, HISTOGRAM):
 
     ######### Polymorphism ########
 
-    def emit(self, triggers, chn, waittime,repeat=None):
+    def emit(self, triggers, chn, waittime, repeat=None):
         chn = int(chn)
         self.output_chn[chn] = True  # self.make_output_chn(chn)
-        if int(waittime)<0:
+        if int(waittime) < 0:
             raise ValueError("Wait time for emit() must be larger than zero.")
         if repeat:
-            if repeat.find("-")>=0 or repeat=="abs":
+            if repeat.find("-") >= 0 or repeat == "abs":
                 code = """
             if waittime> AbsTime_ps:
                     eta_ret+=VSLOT_put({waittime},nb.int8({chn}))
@@ -451,7 +482,7 @@ class Graph(INTEGER, TABLE, CLOCK, SSMS, BUFFER, HISTOGRAM):
                 for emit_times in range(0,{repeat}):
                     eta_ret+=VSLOT_put(AbsTime_ps+{waittime}*(emit_times+1),nb.int8({chn}))
                 """.format(
-                    chn=chn, waittime=int(waittime),repeat=repeat)
+                    chn=chn, waittime=int(waittime), repeat=repeat)
         else:
             code = """eta_ret+=VSLOT_put(AbsTime_ps+{waittime},nb.int8({chn}))""".format(
                 chn=chn, waittime=int(waittime))
@@ -466,8 +497,3 @@ class Graph(INTEGER, TABLE, CLOCK, SSMS, BUFFER, HISTOGRAM):
         type = self.get_type_of_syms(clock_name, internal=True, fulltype=False)
         func = getattr(self, "stop" + type, None)
         func(triggers, clock_name)
-
-    def record(self, triggers, histogram, clock_name, integrate_time=None):
-        type = self.get_type_of_syms(clock_name, internal=True, fulltype=False)
-        func = getattr(self, type + "_record", None)
-        func(triggers, histogram, clock_name, integrate_time)

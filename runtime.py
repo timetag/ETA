@@ -1,10 +1,9 @@
 import numpy as np
-import scipy as scipy
-import lmfit as lmfit
 import multiprocessing
 import time
 from jit_linker import link_jit_code
 from parser_header import parse_header
+
 
 def scheduler(filename, THREAD_MAX=1):
     out = parse_header(bytearray(filename, "ascii"))
@@ -16,9 +15,9 @@ def scheduler(filename, THREAD_MAX=1):
     for i in range(THREAD_MAX):
         # fine-cutter
         start_point = int(NumRecords / THREAD_MAX) * \
-            BytesofRecords * i + TTF_header_offset
+                      BytesofRecords * i + TTF_header_offset
         stop_point = int(NumRecords / THREAD_MAX) * \
-            BytesofRecords * (i + 1) + TTF_header_offset
+                     BytesofRecords * (i + 1) + TTF_header_offset
         if (stop_point > TTF_filesize):
             stop_point = TTF_filesize
         if (stop_point - start_point > BytesofRecords):
@@ -35,7 +34,6 @@ def external_wrpper(param):
 
 
 def ETA_MUTLITRHEAD(filename, eta_compiled_code, print, thread=1):
-
     param1 = scheduler(filename, thread)
     for each in param1:
         each.append(filename)
@@ -55,27 +53,7 @@ def ETA_MUTLITRHEAD(filename, eta_compiled_code, print, thread=1):
     return histogram
 
 
-"""
-def ETA_MUTLITRHEAD(filename, wrapper, mainloop, print, thread=1):
-    caller_parms = scheduler(filename, thread)
-    ts = time.time()
-    histogram = np.zeros(62502, dtype=np.int64)
-    threads = []
-    for each in caller_parms:
-        each.append(filename)
-        thread = threading.Thread(target=wrapper, args=(each, mainloop,))
-        thread.start()
-        threads.append(thread)
-    for t in threads:
-        t.join()
-    te = time.time()
-    print('Time: {} ms'.format((te - ts) * 1000))
-    return histogram
-"""
-
-
 def ETA(filename, wrapper, mainloop, print):
-
     caller_parms = scheduler(filename)
     for each in caller_parms:
         each.append(filename)

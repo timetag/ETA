@@ -3,7 +3,7 @@ from . import etacode_parser
 from . import graph_parser
 from . import mainloop
 import textwrap
-import json
+import json,copy
 
 
 def compile_eta(jsobj):
@@ -46,7 +46,7 @@ def compile_eta(jsobj):
         vi_code_list += [["PREP_code_assignment", [each]]]
         # load embed codes
         vi_code_list += [["LOAD_EMBEDDED_CODE",
-                          [each, intp.escaped_code]]]
+                          [each, copy.deepcopy(intp.escaped_code)]]]
         vi_code_list += intp.instructions
         vi_code_list += [["MAKE_init_for_syms",
                           [each]]]
