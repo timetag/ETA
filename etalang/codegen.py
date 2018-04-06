@@ -3,7 +3,7 @@ from . import etacode_parser
 from . import graph_parser
 from . import mainloop
 import textwrap
-import json,copy
+import json, copy
 
 
 def compile_eta(jsobj):
@@ -78,7 +78,7 @@ def compile_eta(jsobj):
             list(each.external_table_symbols.keys()))
     num_vslot -= num_rchns
     num_vslot += 1
-    num_vslot=max(num_vslot,0)
+    num_vslot = max(num_vslot, 0)
     metadata = []
     metadata += ris
     metadata += vis
@@ -97,7 +97,7 @@ def compile_eta(jsobj):
                                         textwrap.indent(init_code, "    "),
                                         textwrap.indent(code, "        "),
                                         textwrap.indent(global_init_code, "    "),
-                                        num_rslot=1,num_rchns=num_rchns, num_vslot=num_vslot)
+                                        num_rslot=1, num_rchns=num_rchns, num_vslot=num_vslot)
 
     return onefile, metadata
 

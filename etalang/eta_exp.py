@@ -322,21 +322,21 @@ class Graph(INTEGER, TABLE, CLOCK, SSMS, BUFFER, HISTOGRAM):
             outblob = trigger[0]
             if outblob:
                 outblob = self.states_to_id[outblob]
-            condition = trigger[1]
-            if condition:
-                condition = int(condition)
             inblob = trigger[2]
             if inblob:
                 inblob = self.states_to_id[inblob]
+            condition = trigger[1]
             if condition is None:
-                condition = maxchn - 1
-            if inblob is None and outblob is None:
-                self.transition_to_section[outblob][condition][inblob] += "\n" + code
-            else:
-                if outblob is None:
-                    self.tranin_to_section[condition][inblob] += "\n" + code
-                if inblob is None:
-                    self.tranout_to_section[condition][outblob] += "\n" + code
+                condition = [maxchn - 1]
+            for each_cond in condition:
+                each_cond = int(each_cond)
+                if inblob is None and outblob is None:
+                    self.transition_to_section[outblob][each_cond][inblob] += "\n" + code
+                else:
+                    if outblob is None:
+                        self.tranin_to_section[each_cond][inblob] += "\n" + code
+                    if inblob is None:
+                        self.tranout_to_section[each_cond][outblob] += "\n" + code
 
     def EMIT_LINE(self, triggers, code):
         if isinstance(triggers, str):
@@ -465,29 +465,26 @@ class Graph(INTEGER, TABLE, CLOCK, SSMS, BUFFER, HISTOGRAM):
 
     ######### Polymorphism ########
 
-    def emit(self, triggers, chn, waittime, repeat=None):
+    def emit(self, triggers, chn, waittime, period=0, repeat=1):
         chn = int(chn)
+        repeat = int(repeat)
+        waittime = int(waittime.replace("abs", "-"))
+        period = int(period)
         self.output_chn[chn] = True  # self.make_output_chn(chn)
-        if int(waittime) < 0:
-            raise ValueError("Wait time for emit() must be larger than zero.")
-        if repeat:
-            if repeat.find("-") >= 0 or repeat == "abs":
-                code = """
-            if waittime> AbsTime_ps:
-                    eta_ret+=VSLOT_put({waittime},nb.int8({chn}))
-            else:
-                print("Emit to past is not allowed, you can not change the history.")
-            """.format(
-                    chn=chn, waittime=int(waittime))
-            else:
-                code = """
-                for emit_times in range(0,{repeat}):
-                    eta_ret+=VSLOT_put(AbsTime_ps+{waittime}*(emit_times+1),nb.int8({chn}))
-                """.format(
-                    chn=chn, waittime=int(waittime), repeat=repeat)
+        if waittime < 0:
+            phase = "({waittime})".format(waittime=-waittime)
         else:
-            code = """eta_ret+=VSLOT_put(AbsTime_ps+{waittime},nb.int8({chn}))""".format(
-                chn=chn, waittime=int(waittime))
+            phase = "(AbsTime_ps+{waittime})".format(waittime=waittime)
+        if repeat > 1:
+            code = """
+                for emit_times in range(0,{repeat}):
+                    eta_ret+=VSLOT_put({phase}+{period}*(emit_times),nb.int8({chn}))
+                """.format(phase=phase,
+                           chn=chn, waittime=int(waittime), repeat=repeat, period=period)
+        else:
+            code = """eta_ret+=VSLOT_put(AbsTime_ps+{waittime},nb.int8({chn}))""".format(phase=phase,
+                                                                                         chn=chn,
+                                                                                         waittime=int(waittime))
         self.EMIT_LINE(triggers, code)
 
     def start(self, triggers, clock_name):
