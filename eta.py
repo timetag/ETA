@@ -58,8 +58,7 @@ class WSSERVER():
             with open("server.eta", 'w') as file:
                 file.write(json.dumps(etaobj))
             servercode = etaobj["code"]
-            # with open("server_code.py", 'wb') as file:
-            #    file.write(servercode.encode("utf-8"))
+
             expcfg = json.loads(etaobj["#expcfg"])
             self.send("Server received experiment file " +
                       expcfg["exp_name"] + ".")
@@ -67,8 +66,6 @@ class WSSERVER():
             try:
                 eta_compiled_code = self.compile_eta(etaobj)
                 wrapper, mainloop = link_jit_code(eta_compiled_code)
-                # with open("code2.py", 'wb') as file:
-                #    file.write(eta_compiled_code.encode("utf-8"))
 
                 loc = {"eta_compiled_code": eta_compiled_code,
                        "mainloop": mainloop,
@@ -87,6 +84,7 @@ class WSSERVER():
                 for each in variables:
                     loc[each["variable"]] = each["value"]
             except Exception as e:
+                print(eta_compiled_code)
                 self.send(str(e), "err")
                 self.send("JIT failed.")
                 self.logger.error(str(e), exc_info=True)
@@ -96,7 +94,8 @@ class WSSERVER():
             try:
                 exec(servercode, glob, loc)
             except Exception as e:
-                self.send(str(e), "err")
+
+                self.send('['+str(type(e).__name__)+']'+str(e), "err")
                 self.logger.error(str(e), exc_info=True)
                 return
             self.send("Timetag analysis is finished, starting display...")
