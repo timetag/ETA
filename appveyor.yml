@@ -29,7 +29,10 @@ build_script:
     --add-data "dash_core_components/*;dash_core_components" 
     --add-data "dash_renderer/*;dash_renderer" 
     --add-data "dash_html_components/*;dash_html_components" 
-    -i favicon.ico  ETA.py
+    -i favicon.ico 
+    --hidden-import scipy._lib.messagestream 
+    --paths "c:\\python36-x64\\lib\\site-packages\\scipy\\extra-dll"
+    ETA.py
     
     7z a ETA.zip %APPVEYOR_BUILD_FOLDER%\dist
     
@@ -42,7 +45,10 @@ build_script:
     --add-data "dash_core_components/*;dash_core_components" 
     --add-data "dash_renderer/*;dash_renderer" 
     --add-data "dash_html_components/*;dash_html_components" 
-    -i favicon.ico  ETA.py
+    -i favicon.ico  
+    --hidden-import scipy._lib.messagestream 
+    --paths "c:\\python36-x64\\lib\\site-packages\\scipy\\extra-dll"
+    ETA.py
     
     move %APPVEYOR_BUILD_FOLDER%\dist\ETA.exe %APPVEYOR_BUILD_FOLDER%\ETA.exe
   
