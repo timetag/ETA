@@ -110,7 +110,9 @@ class HISTOGRAM():
                         for i in range({buffer_name}_size-1,{buffer_name}_tail-1,-1):
             {hister}
                     """.format(buffer_name=buffer_name, hister=hister)
+
             self.EMIT_LINE(triggers, code)
+            return
         for i in range(len(dims)):
             if i >= len(therest):
                 raise ValueError(
@@ -138,6 +140,8 @@ class HISTOGRAM():
                      """.format(clock=clock_name, i=i, preact=preact, histogram=histogram, bin_step=bin_step,
                                 bin_num=bin_num)
                 self.EMIT_LINE(triggers, code)
+            else:
+                raise ValueError("Object is not currently supported by record().")
         selector = ""
         for i in range(len(dims)):
             selector += "[histdim_{i}]".format(i=i)
@@ -343,8 +347,6 @@ class Graph(INTEGER, TABLE, CLOCK, SSMS, BUFFER, HISTOGRAM):
 
     def LOAD_EMBEDDED_CODE(self, codes):
         self.embedded = codes
-        print("embedded code loaded.")
-        print(codes)
 
     def EMIT_CODE(self, triggers, id):
         if not (int(id) < len(self.embedded)):
