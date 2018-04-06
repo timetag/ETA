@@ -38,13 +38,12 @@ class WSSERVER():
     def compile_eta(self, etaobj=None):
         try:
             code, metadata = codegen.compile_eta(etaobj)
+            self.send(metadata, "table")
+            return code
         except Exception as e:
             self.send(str(e), "err")
             self.send("Compilation failed.")
             self.logger.error(str(e), exc_info=True)
-        finally:
-            self.send(metadata, "table")
-        return code
 
     def process_eta(self, etaobj=None):
         import dash
@@ -65,36 +64,42 @@ class WSSERVER():
             self.send("Server received experiment file " +
                       expcfg["exp_name"] + ".")
             self.send("Compiling...")
-            eta_compiled_code = self.compile_eta(etaobj)
-
-            #with open("code2.py", 'wb') as file:
-            #    file.write(eta_compiled_code.encode("utf-8"))
-            wrapper, mainloop = link_jit_code(eta_compiled_code)
-            loc = {"eta_compiled_code": eta_compiled_code,
-                   "mainloop": mainloop,
-                   "wrapper": wrapper,
-                   }
-            glob = {
-                "print": self.send,
-                "etaserver": self,
-                "dash": dash,
-                "dcc": dcc,
-                "html": html
-            }
-            for setting in dir(runtime):
-                glob[setting] = getattr(runtime, setting)
-
-            variables = json.loads(etaobj["eta_dpp_table"])
-            for each in variables:
-                loc[each["variable"]] = each["value"]
             try:
-                self.send("Run process()...")
+                eta_compiled_code = self.compile_eta(etaobj)
+                wrapper, mainloop = link_jit_code(eta_compiled_code)
+                # with open("code2.py", 'wb') as file:
+                #    file.write(eta_compiled_code.encode("utf-8"))
+
+                loc = {"eta_compiled_code": eta_compiled_code,
+                       "mainloop": mainloop,
+                       "wrapper": wrapper,
+                       }
+                glob = {
+                    "print": self.send,
+                    "etaserver": self,
+                    "dash": dash,
+                    "dcc": dcc,
+                    "html": html
+                }
+                for setting in dir(runtime):
+                    glob[setting] = getattr(runtime, setting)
+                variables = json.loads(etaobj["eta_dpp_table"])
+                for each in variables:
+                    loc[each["variable"]] = each["value"]
+            except Exception as e:
+                self.send(str(e), "err")
+                self.send("JIT failed.")
+                self.logger.error(str(e), exc_info=True)
+                return
+
+            self.send("Run process()...")
+            try:
                 exec(servercode, glob, loc)
             except Exception as e:
                 self.send(str(e), "err")
                 self.logger.error(str(e), exc_info=True)
-            finally:
-                self.send("Timetag analysis is finished, starting display...")
+                return
+            self.send("Timetag analysis is finished, starting display...")
             self.serve_dash(loc)
 
     def serve_dash(self, loc=None):
@@ -127,6 +132,7 @@ class WSSERVER():
                 self.displaying = True
             except Exception as e:
                 self.send(str(e), "err")
+                self.displaying = False
                 self.logger.error(str(e), exc_info=True)
 
 
