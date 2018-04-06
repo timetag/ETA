@@ -1,4 +1,6 @@
 import numpy as np
+import scipy as scipy
+import lmfit as lmfit
 import multiprocessing
 import time
 from jit_linker import link_jit_code
