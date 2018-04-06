@@ -24,22 +24,24 @@ class Parser():
                     newcode += "'STR" + str(len(self.escaped_str)) + "'"
                     self.escaped_str.append(escape_dict[matchNum])
                 else:
-                    newcode += "EMBED_CODE(" + \
-                        str(len(self.escaped_code)) + ")"
+                    newcode += "EMIT_CODE(" + \
+                               str(len(self.escaped_code)) + ")"
+
                     self.escaped_code.append(escape_dict[matchNum])
 
         self.code = newcode
 
-    def escape_regex(self, matches, isstring=True):
+    def escape_regex(self, matches, isstring=True, braci=0):
         escape_dict = []
         slice_point = [0]
         for match in matches:
             slice_point.append(match.start())
             slice_point.append(match.end())
-            escape_dict.append(match.group())
+            stringi = match.group()
+            escape_dict.append(stringi[braci:-braci])
 
         slice_point.append(len(self.code))
-        #print(slice_point, escape_dict)
+        # print(slice_point, escape_dict)
         self.escape(slice_point, escape_dict, isstring)
         # print(self.code)
 
@@ -55,7 +57,7 @@ class Parser():
             regex = cascaed + r".+?" + cascaed.replace("{", "}")
             matches = re.finditer(regex, self.code, re.DOTALL)
 
-            self.escape_regex(matches, False)
+            self.escape_regex(matches, False,braci)
 
     def replace_marks(self):
         self.code = self.code.replace(":", ":\n")
@@ -114,7 +116,7 @@ class Parser():
                 if (inblob is None) and (conditions is None):
                     inblob = outblob
                     outblob = None
-                if not(outblob is None and inblob is None):
+                if not (outblob is None and inblob is None):
                     ret.append([outblob, conditions, inblob])
         return (ret, leftout)
 
@@ -153,7 +155,8 @@ class Parser():
 
         self.instructions = instructions
 
-if __name__=="__main__":
+
+if __name__ == "__main__":
     code = """
     asdf()
     --2,1->bbb,-2->a,c:hist()

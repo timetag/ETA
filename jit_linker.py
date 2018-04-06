@@ -2,10 +2,13 @@ from llvmlite import ir, binding as ll
 import numba as nb
 from numba import jit
 import numpy as np
+import scipy as scipy
+import lmfit as lmfit
 from os import listdir
 from os.path import isfile, join
 import cffi
 import sys
+
 ffi = cffi.FFI()
 if getattr(sys, 'frozen', False):
     ll_path = join(sys._MEIPASS, ".\\ll\\")
@@ -50,7 +53,7 @@ def link_global(name, do_get=True, type=nb.int64):
         def codegen(context, builder, sig, args):
             library = compile_library(
                 context, llvm_global_get.replace("test", name))
-            codegen.libs = [library]   # Weird hack to get the library linked
+            codegen.libs = [library]  # Weird hack to get the library linked
             argtypes = [context.get_argument_type(aty) for aty in sig.args]
             restype = context.get_argument_type(sig.return_type)
             fnty = ir.FunctionType(restype, argtypes)
@@ -58,8 +61,9 @@ def link_global(name, do_get=True, type=nb.int64):
                 builder.module, fnty, name=name + "_get")
             retval = context.call_external_function(
                 builder, fn, sig.args, args)
-            #print(fn)
+            # print(fn)
             return retval
+
         return sig, codegen
 
     def BytesofRecords_set(typingctx, param1):
@@ -69,7 +73,7 @@ def link_global(name, do_get=True, type=nb.int64):
             code = llvm_global_set.replace("test", name)
             library = compile_library(
                 context, code)
-            codegen.libs = [library]   # Weird hack to get the library linked
+            codegen.libs = [library]  # Weird hack to get the library linked
             argtypes = [context.get_argument_type(aty) for aty in sig.args]
             restype = context.get_argument_type(sig.return_type)
             fnty = ir.FunctionType(restype, argtypes)
@@ -77,9 +81,11 @@ def link_global(name, do_get=True, type=nb.int64):
                 builder.module, fnty, name=name + "_set")
             retval = context.call_external_function(
                 builder, fn, sig.args, args)
-            #print(fn)
+            # print(fn)
             return retval
+
         return sig, codegen
+
     if do_get:
         return BytesofRecords_get
     else:
@@ -91,17 +97,17 @@ def link_libs(typingctx):
     sig = nb.typing.signature(nb.int32)
 
     def codegen(context, builder, sig, args):
-        #print("===== linking =====")
-        codegen.libs = []   # Weird hack to get the library linked
+        # print("===== linking =====")
+        codegen.libs = []  # Weird hack to get the library linked
         for f in listdir(ll_path):
             lib_path = join(ll_path, f)
             if isfile(lib_path):
-                #print(lib_path)
+                # print(lib_path)
                 with open(lib_path, "r") as fio:
                     assembly = fio.read()
                     library = compile_library(context, assembly, lib_path)
                 codegen.libs.append(library)
-        #print("===== done =====")
+        # print("===== done =====")
         return context.get_constant(nb.int32, 42)
 
     return sig, codegen
@@ -140,6 +146,7 @@ def link_jit_code(code):
     VSLOT_put = link_function("VSLOT_put", 2)
     glb = {
         "jit": jit, "ffi": ffi, "nb": nb, "np": np,
+        "scipy": scipy, "lmfit": lmfit,
         "link_libs": link_libs,
         "VSLOT_put": VSLOT_put,
         "FileReader_init": FileReader_init,
@@ -148,7 +155,7 @@ def link_jit_code(code):
         "READER_BytesofRecords_get": READER_BytesofRecords_get,
     }
     loc = {}
-    #print(code)
+
     exec(code, glb, loc)
     mainloop = loc["mainloop"]
     wrapper = loc["sp_core"]
