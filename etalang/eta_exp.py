@@ -188,6 +188,7 @@ class HISTOGRAM():
                     preact = diff
 
                 code = """
+                         #print({clock}_stop ,{clock}_start)
                          histdim_{i} = nb.int64((({preact})  + {bin_step}) / {bin_step})
                          if (histdim_{i}  >= {bin_num}):
                              histdim_{i} = {bin_num} - 1 
@@ -211,10 +212,6 @@ class CLOCK():
             trigger = "uettp_initial"
         else:
             raise ValueError("CLOCK symbol can not be global.")
-        if type[1] == 1:
-            self.EMIT_LINE(trigger, "{sym}_start=nb.int64(0);".format(sym=sym))
-        if type[2] == 1:
-            self.EMIT_LINE(trigger, "{sym}_stop=nb.int64(0)".format(sym=sym))
 
     def CLOCK(self, triggers, name, starttimes="1", stoptimes="1"):
         starttimes = int(ast.literal_eval(starttimes))
@@ -225,8 +222,12 @@ class CLOCK():
             self.define_syms(name, ["clock", starttimes, stoptimes])
         if starttimes > 1:
             self.BUFFER(triggers, name + "_starts")
+        else:
+            self.INTEGER(triggers, name + "_start")
         if stoptimes > 1:
             self.BUFFER(triggers, name + "_stopss")
+        else:
+            self.INTEGER(triggers, name + "_stop")
 
     def clock_start(self, triggers, clock_name, obj="AbsTime_ps"):
         clock_name = self.assert_syms(clock_name, "clock")
@@ -263,7 +264,7 @@ class COINCIDENCE():
             raise ValueError("Coincidence number shoud be something larger than 1.")
         else:
             self.output_chn[chn] = True
-            self.define_syms(name, ["coincidence", num,chn])
+            self.define_syms(name, ["coincidence", num, chn])
 
     def coincidence_clear(self, trigger, sym):
         sym = self.assert_syms(sym, "coincidence")
@@ -278,7 +279,7 @@ class COINCIDENCE():
         {sym}|=nb.int64(1<<{thisnum})
         if {sym}== {fullint}:
             eta_ret+=VSLOT_put(AbsTime_ps,nb.int8({chn}))
-        """.format(sym=sym, thisnum=thisnum, fullint=fullint,chn=chn)
+        """.format(sym=sym, thisnum=thisnum, fullint=fullint, chn=chn)
         self.EMIT_LINE(trigger, code)
 
 
@@ -353,7 +354,7 @@ class Graph(INTEGER, TABLE, CLOCK, BUFFER, HISTOGRAM, COINCIDENCE):
         self.internal_symbols = {}
 
     def attach_code(self, trigger, code, maxchn=255):
-        print("attaching ...",trigger,code)
+        # print("attaching ...", trigger, code)
         code = textwrap.dedent(code)
         if isinstance(trigger, str):
             if trigger == "uettp_initial":
@@ -531,20 +532,45 @@ class Graph(INTEGER, TABLE, CLOCK, BUFFER, HISTOGRAM, COINCIDENCE):
                                                                                          waittime=int(waittime))
         self.EMIT_LINE(triggers, code)
 
-    def start(self, triggers, clock_name, obj="AbsTime_ps"):
-        type = self.get_type_of_syms(clock_name, internal=True, fulltype=False)
-        func = getattr(self, type + "_start", None)
-        func(triggers, clock_name, obj)
+    def parse_multi_object(self, names):
+        names = names.strip()
+        names = names.strip("(")
+        names = names.strip(")")
+        return names.split(',')
 
-    def stop(self, triggers, clock_name, obj="AbsTime_ps"):
-        type = self.get_type_of_syms(clock_name, internal=True, fulltype=False)
-        func = getattr(self, type + "_stop", None)
-        func(triggers, clock_name, obj)
-    def fill(self, triggers, clock_name, obj):
-        type = self.get_type_of_syms(clock_name, internal=True, fulltype=False)
-        func = getattr(self, type + "_fill", None)
-        func(triggers, clock_name, obj)
-    def clear(self, triggers, clock_name):
-        type = self.get_type_of_syms(clock_name, internal=True, fulltype=False)
-        func = getattr(self, type + "_clear", None)
-        func(triggers, clock_name)
+    def start(self, triggers, clock_names, obj="AbsTime_ps"):
+        for clock_name in self.parse_multi_object(clock_names):
+            type = self.get_type_of_syms(clock_name, internal=True, fulltype=False)
+            func = getattr(self, type + "_start", None)
+            func(triggers, clock_name, obj)
+
+    def stop(self, triggers, clock_names, obj="AbsTime_ps"):
+        for clock_name in self.parse_multi_object(clock_names):
+            type = self.get_type_of_syms(clock_name, internal=True, fulltype=False)
+            func = getattr(self, type + "_stop", None)
+            func(triggers, clock_name, obj)
+
+    def fill(self, triggers, clock_names, obj):
+        for clock_name in self.parse_multi_object(clock_names):
+            type = self.get_type_of_syms(clock_name, internal=True, fulltype=False)
+            func = getattr(self, type + "_fill", None)
+            func(triggers, clock_names, obj)
+
+    def clear(self, triggers, clock_names):
+        for clock_name in self.parse_multi_object(clock_names):
+            type = self.get_type_of_syms(clock_name, internal=True, fulltype=False)
+            func = getattr(self, type + "_clear", None)
+            func(triggers, clock_name)
+
+    def find_start(self, triggers, clock_names_orig, ref):
+        clock_names = self.parse_multi_object(clock_names_orig)
+        clock_stops = []
+        for each in clock_names:
+            clock_stops.append(each + "_stop")
+        self.INTEGER(triggers, "common_start")
+        self.EMIT_LINE(triggers, """common_start=min({})""".format(",".join(clock_stops)))
+        if ref == "SYNC":
+            self.EMIT_LINE(triggers, """common_start-=common_start%SYNCRate_pspr""")
+        else:
+            raise ValueError("find start from anything other than the last sync is not yet implemented.")
+        self.start(triggers, clock_names_orig, "common_start")
