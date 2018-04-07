@@ -69,7 +69,7 @@ if __name__ == "__main__":
 EMBED_LINE(0)
 a=1
 c=c+1
-a,b=fuck()
+(a,b).fuck()
 code1()
 EMBED_LINE(0)
  """

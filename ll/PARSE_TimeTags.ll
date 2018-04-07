@@ -2242,7 +2242,7 @@ define i32 @POOL_init(i64, i64, i64) #1 {
   %103 = sext i32 %102 to i64
   %104 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %101, i64 %103
   %105 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %104, i32 0, i32 3
-  store i64 4000000, i64* %105, align 8
+  store i64 8000000, i64* %105, align 8
   %106 = load %struct.circular_buf_t*, %struct.circular_buf_t** @VSLOT_timetag, align 8
   %107 = load i32, i32* %12, align 4
   %108 = sext i32 %107 to i64
