@@ -41,6 +41,50 @@ class TABLE():
             self.define_syms(name, "table", internal=False)
 
 
+class BUFFER():
+    def buffer_init(self, sym, type, internal=False):
+        if internal:
+            trigger = "uettp_initial"
+        else:
+            raise ValueError("BUFFER symbol can not be global.")
+        self.EMIT_LINE(trigger, """
+               {buffer}_head=nb.int32(0)
+               {buffer}_tail=nb.int32(0)
+               {buffer}_size=nb.int32({buflen})
+               """.format(buffer=sym, buflen=type[1]))
+
+    def BUFFER(self, triggers, name):
+        self.define_syms(name, "buffer", internal=True)
+        self.define_syms(name + "_tab", "table", internal=True)
+
+    def buffer_put(self, triggers, name, num):
+        name = self.assert_syms(name, "buffer")
+        table = self.define_syms(name + "_tab", "table", internal=True)
+        self.EMIT_LINE(triggers, """
+            {table}[{buffer}_head] = {num}
+            {buffer}_head = ({buffer}_head + 1) % {buffer}_size
+            if ({buffer}_head == {buffer}_tail): 
+                #if overflowed, force pop
+                {buffer}_tail = ({buffer}_tail + 1) % {buffer}_size
+        """.format(table=table, buffer=name, num=num))
+
+    def buffer_cond_pop(self, triggers, name, cond):
+        name = self.assert_syms(name, "buffer")
+        table = self.define_syms(name + "_tab", "table", internal=True)
+        self.EMIT_LINE(triggers, """
+        while True:
+            if not({buffer}_head == {buffer}_tail):
+                if not({table}[{buffer}_tail] {cond}):
+                    #print("buffer tail",{table}[{buffer}_tail])
+                    break
+
+                {buffer}_tail = ({buffer}_tail + 1) % {buffer}_size
+            else:
+                break
+        #print("buffersize",{buffer}_head , {buffer}_tail)
+        """.format(table=table, buffer=name, cond=cond))
+
+
 ### other thingys#####
 class HISTOGRAM():
     def histogram_init(self, sym, type, internal=False):
@@ -66,21 +110,28 @@ class HISTOGRAM():
         self.define_syms(name, ["histogram", dims], internal=True)
         self.define_syms(name, base, internal=False)
 
-    def record(self, triggers, histogram, *therest):
+    def record_all(self, triggers, histogram, clock_name):
         histogram = self.assert_syms(histogram, "histogram")
         histogram_info = self.get_type_of_syms(histogram, internal=True, fulltype=True)
+
         dims = histogram_info[1]
-        if len(dims) == 1 and self.get_type_of_syms(therest[0], internal=True, fulltype=False) == "ssms":
-            clock_name = therest[0]
-            clock_name = self.assert_syms(clock_name, "ssms")
+
+        if len(dims) == 1:
+            clock_name = self.assert_syms(clock_name, "clock")
+            clock_fulltype = self.get_type_of_syms(clock_name, internal=True, fulltype=True)
             bin_num = dims[0][0]
             bin_step = dims[0][1]
             integrate_time = bin_num * bin_step
-            buffer_name = self.define_syms(clock_name + "_starts", ["buffer", integrate_time])
-            table_buffer_name = self.define_syms(buffer_name + "_tab", ["table", "buffer", integrate_time])
-
-            diff = "({clock_name}_stop - {table_buffer_name}[i])".format(clock_name=clock_name,
-                                                                         table_buffer_name=table_buffer_name)
+            if clock_fulltype[1] > 1:
+                buffer_name = self.define_syms(clock_name + "_starts", ["buffer", integrate_time])
+                table_buffer_name = self.define_syms(buffer_name + "_tab", ["table", "buffer", integrate_time])
+                diff = "({clock_name}_stop - {table_buffer_name}[i])".format(clock_name=clock_name,
+                                                                             table_buffer_name=table_buffer_name)
+            elif clock_fulltype[2] > 1:
+                buffer_name = self.define_syms(clock_name + "_stops", ["buffer", integrate_time])
+                table_buffer_name = self.define_syms(buffer_name + "_tab", ["table", "buffer", integrate_time])
+                diff = "({table_buffer_name}[i] - {clock_name}_start )".format(clock_name=clock_name,
+                                                                               table_buffer_name=table_buffer_name)
             # time difference preparing stage
             if len(dims[0]) > 2:
                 preact = dims[0][2]
@@ -89,30 +140,35 @@ class HISTOGRAM():
                 preact = diff
 
             hister = """
-                            ssms_i = nb.int64((({preact}) + {bin_step}) / {bin_step})
-                            if (ssms_i >= {bin_num}):
-                                ssms_i = {bin_num} - 1  # +inf time_interval
-                                break
-                            if (ssms_i < 0):
-                                ssms_i = 0  # -inf time_interval
-                            {histogram}[ssms_i] += 1
-                    """.format(histogram=histogram, buffer_name=buffer_name,
-                               preact=preact, bin_step=bin_step,
-                               bin_num=bin_num)
-
-            code = """
-                    if {buffer_name}_tail<{buffer_name}_head:
-                        for i in range({buffer_name}_head-1,{buffer_name}_tail-1,-1):
-            {hister}
-                    elif {buffer_name}_tail>{buffer_name}_head:
-                        for i in range({buffer_name}_head-1,0,-1):
-            {hister}
-                        for i in range({buffer_name}_size-1,{buffer_name}_tail-1,-1):
-            {hister}
-                    """.format(buffer_name=buffer_name, hister=hister)
-
+                                  ssms_i = nb.int64((({preact}) + {bin_step}) / {bin_step})
+                                  if (ssms_i >= {bin_num}):
+                                      ssms_i = {bin_num} - 1  # +inf time_interval
+                                      break
+                                  if (ssms_i < 0):
+                                      ssms_i = 0  # -inf time_interval
+                                  {histogram}[ssms_i] += 1
+                          """.format(histogram=histogram, buffer_name=buffer_name,
+                                     preact=preact, bin_step=bin_step,
+                                     bin_num=bin_num)
+            if clock_fulltype[1] > 1:
+                code = """
+                          if {buffer_name}_tail<{buffer_name}_head:
+                              for i in range({buffer_name}_head-1,{buffer_name}_tail-1,-1):
+                  {hister}
+                          elif {buffer_name}_tail>{buffer_name}_head:
+                              for i in range({buffer_name}_head-1,0,-1):
+                  {hister}
+                              for i in range({buffer_name}_size-1,{buffer_name}_tail-1,-1):
+                  {hister}
+                          """.format(buffer_name=buffer_name, hister=hister)
+            else:
+                raise ValueError("single start mutiple stop is not currently supported.")
             self.EMIT_LINE(triggers, code)
-            return
+
+    def record(self, triggers, histogram, *therest):
+        histogram = self.assert_syms(histogram, "histogram")
+        histogram_info = self.get_type_of_syms(histogram, internal=True, fulltype=True)
+        dims = histogram_info[1]
         for i in range(len(dims)):
             if i >= len(therest):
                 raise ValueError(
@@ -155,91 +211,78 @@ class CLOCK():
             trigger = "uettp_initial"
         else:
             raise ValueError("CLOCK symbol can not be global.")
-        self.EMIT_LINE(trigger, "{sym}_start=nb.int64(0);{sym}_stop=nb.int64(0)".format(sym=sym))
+        if type[1] == 1:
+            self.EMIT_LINE(trigger, "{sym}_start=nb.int64(0);".format(sym=sym))
+        if type[2] == 1:
+            self.EMIT_LINE(trigger, "{sym}_stop=nb.int64(0)".format(sym=sym))
 
-    def CLOCK(self, triggers, name):
-        self.define_syms(name, "clock")
+    def CLOCK(self, triggers, name, starttimes="1", stoptimes="1"):
+        starttimes = int(ast.literal_eval(starttimes))
+        stoptimes = int(ast.literal_eval(stoptimes))
+        if starttimes > 1 and stoptimes > 1:
+            raise ValueError("General type of clock is not currenctly supported.")
+        else:
+            self.define_syms(name, ["clock", starttimes, stoptimes])
+        if starttimes > 1:
+            self.BUFFER(triggers, name + "_starts")
+        if stoptimes > 1:
+            self.BUFFER(triggers, name + "_stopss")
 
-    def startclock(self, triggers, clock_name):
+    def clock_start(self, triggers, clock_name, obj="AbsTime_ps"):
         clock_name = self.assert_syms(clock_name, "clock")
-        self.EMIT_LINE(triggers, "{}_start=AbsTime_ps".format(clock_name))
+        fulltype = self.get_type_of_syms(clock_name, internal=True, fulltype=True)
+        if fulltype[1] == 1:
+            self.EMIT_LINE(triggers, "{}_start={}".format(clock_name, obj))
+        else:
+            buffer_name = self.assert_syms(clock_name + "_starts", "buffer")
+            self.buffer_put(triggers, buffer_name, obj)
 
-    def stopclock(self, triggers, clock_name):
+    def clock_stop(self, triggers, clock_name, obj="AbsTime_ps"):
         clock_name = self.assert_syms(clock_name, "clock")
-        self.EMIT_LINE(triggers, "{}_stop=AbsTime_ps".format(clock_name))
+        fulltype = self.get_type_of_syms(clock_name, internal=True, fulltype=True)
+        if fulltype[2] == 1:
+            self.EMIT_LINE(triggers, "{}_stop={}".format(clock_name, obj))
+        else:
+            buffer_name = self.assert_syms(clock_name + "_stops", "buffer")
+            self.buffer_put(triggers, buffer_name, obj)
 
 
-class BUFFER():
-    def buffer_init(self, sym, type, internal=False):
+class COINCIDENCE():
+    def coincidence_init(self, sym, type, internal=False):
         if internal:
             trigger = "uettp_initial"
         else:
-            raise ValueError("BUFFER symbol can not be global.")
-        self.EMIT_LINE(trigger, """
-               {buffer}_head=nb.int32(0)
-               {buffer}_tail=nb.int32(0)
-               {buffer}_size=nb.int32({buflen})
-               """.format(buffer=sym, buflen=type[1]))
+            raise ValueError("COINCIDENCE symbol can not be global.")
+        sym = self.assert_syms(sym, "coincidence")
+        self.EMIT_LINE(trigger, "{sym}=nb.int64(0)".format(sym=sym))
 
-    def BUFFER(self, triggers, name):
-        self.define_syms(name, "buffer", internal=True)
-        self.define_syms(name + "_tab", "table", internal=True)
-
-    def buffer_put(self, triggers, name, num):
-        name = self.assert_syms(name, "buffer")
-        table = self.define_syms(name + "_tab", "table", internal=True)
-        self.EMIT_LINE(triggers, """
-            {table}[{buffer}_head] = {num}
-            {buffer}_head = ({buffer}_head + 1) % {buffer}_size
-            if ({buffer}_head == {buffer}_tail): 
-                #if overflowed, force pop
-                {buffer}_tail = ({buffer}_tail + 1) % {buffer}_size
-        """.format(table=table, buffer=name, num=num))
-
-    def buffer_cond_pop(self, triggers, name, cond):
-        name = self.assert_syms(name, "buffer")
-        table = self.define_syms(name + "_tab", "table", internal=True)
-        self.EMIT_LINE(triggers, """
-        while True:
-            if not({buffer}_head == {buffer}_tail):
-                if not({table}[{buffer}_tail] {cond}):
-                    #print("buffer tail",{table}[{buffer}_tail])
-                    break
-                    
-                {buffer}_tail = ({buffer}_tail + 1) % {buffer}_size
-            else:
-                break
-        #print("buffersize",{buffer}_head , {buffer}_tail)
-        """.format(table=table, buffer=name, cond=cond))
-
-
-class SSMS():
-    def ssms_init(self, sym, type, internal=False):
-        if internal:
-            trigger = "uettp_initial"
+    def COINCIDENCE(self, triggers, name, num, chn):
+        num = int(ast.literal_eval(num))
+        chn = int(ast.literal_eval(chn))
+        if num <= 1:
+            raise ValueError("Coincidence number shoud be something larger than 1.")
         else:
-            raise ValueError("SSMS symbol can not be global.")
-        self.EMIT_LINE(trigger, """
-        {clock_name}_stop=nb.int64(0)
-        """.format(clock_name=sym))
+            self.output_chn[chn] = True
+            self.define_syms(name, ["coincidence", num,chn])
 
-    ########## SSMS ############
-    def SSMS(self, triggers, name):
-        self.define_syms(name, "ssms", internal=True)
-        self.BUFFER(triggers, name + "_starts")
+    def coincidence_clear(self, trigger, sym):
+        sym = self.assert_syms(sym, "coincidence")
+        self.EMIT_LINE(trigger, "{sym}=nb.int64(0)".format(sym=sym))
 
-    def startssms(self, triggers, clock_name):
-        clock_name = self.assert_syms(clock_name, "ssms")
-        buffer_name = self.assert_syms(clock_name + "_starts", "buffer")
-        self.buffer_put(triggers, buffer_name, "AbsTime_ps")
+    def coincidence_fill(self, trigger, sym, thisnum):
+        fulltype = self.get_type_of_syms(sym, internal=True, fulltype=True)
+        fullint = (1 << fulltype[1]) - 1
+        chn = fulltype[2]
+        thisnum = int(ast.literal_eval(thisnum))
+        code = """
+        {sym}|=nb.int64(1<<{thisnum})
+        if {sym}== {fullint}:
+            eta_ret+=VSLOT_put(AbsTime_ps,nb.int8({chn}))
+        """.format(sym=sym, thisnum=thisnum, fullint=fullint,chn=chn)
+        self.EMIT_LINE(trigger, code)
 
-    def stopssms(self, triggers, clock_name):
-        clock_name = self.assert_syms(clock_name, "ssms")
-        buffer_name = self.assert_syms(clock_name + "_starts", "buffer")
-        self.EMIT_LINE(triggers, "{}_stop=AbsTime_ps".format(clock_name))
 
-
-class Graph(INTEGER, TABLE, CLOCK, SSMS, BUFFER, HISTOGRAM):
+class Graph(INTEGER, TABLE, CLOCK, BUFFER, HISTOGRAM, COINCIDENCE):
     def __init__(self, name="NONAME-GRAPH", gid=0):
         self.name = name
         self.graphid = gid
@@ -310,6 +353,7 @@ class Graph(INTEGER, TABLE, CLOCK, SSMS, BUFFER, HISTOGRAM):
         self.internal_symbols = {}
 
     def attach_code(self, trigger, code, maxchn=255):
+        print("attaching ...",trigger,code)
         code = textwrap.dedent(code)
         if isinstance(trigger, str):
             if trigger == "uettp_initial":
@@ -330,7 +374,7 @@ class Graph(INTEGER, TABLE, CLOCK, SSMS, BUFFER, HISTOGRAM):
                 condition = [maxchn - 1]
             for each_cond in condition:
                 each_cond = int(each_cond)
-                if inblob is None and outblob is None:
+                if inblob is not None and outblob is not None:
                     self.transition_to_section[outblob][each_cond][inblob] += "\n" + code
                 else:
                     if outblob is None:
@@ -448,7 +492,7 @@ class Graph(INTEGER, TABLE, CLOCK, SSMS, BUFFER, HISTOGRAM):
             raise ValueError("Init blob is not defined.")
         # make externals
         for each in self.external_table_symbols:
-            print(self.get_type_of_syms(each, internal=False, fulltype=False))
+            # print(self.get_type_of_syms(each, internal=False, fulltype=False))
             command = getattr(self, self.get_type_of_syms(each, internal=False, fulltype=False) + "_init", None)
             if command:
                 command(each, self.get_type_of_syms(each, internal=False, fulltype=True), internal=False)
@@ -487,12 +531,20 @@ class Graph(INTEGER, TABLE, CLOCK, SSMS, BUFFER, HISTOGRAM):
                                                                                          waittime=int(waittime))
         self.EMIT_LINE(triggers, code)
 
-    def start(self, triggers, clock_name):
+    def start(self, triggers, clock_name, obj="AbsTime_ps"):
         type = self.get_type_of_syms(clock_name, internal=True, fulltype=False)
-        func = getattr(self, "start" + type, None)
-        func(triggers, clock_name)
+        func = getattr(self, type + "_start", None)
+        func(triggers, clock_name, obj)
 
-    def stop(self, triggers, clock_name):
+    def stop(self, triggers, clock_name, obj="AbsTime_ps"):
         type = self.get_type_of_syms(clock_name, internal=True, fulltype=False)
-        func = getattr(self, "stop" + type, None)
+        func = getattr(self, type + "_stop", None)
+        func(triggers, clock_name, obj)
+    def fill(self, triggers, clock_name, obj):
+        type = self.get_type_of_syms(clock_name, internal=True, fulltype=False)
+        func = getattr(self, type + "_fill", None)
+        func(triggers, clock_name, obj)
+    def clear(self, triggers, clock_name):
+        type = self.get_type_of_syms(clock_name, internal=True, fulltype=False)
+        func = getattr(self, type + "_clear", None)
         func(triggers, clock_name)

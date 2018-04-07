@@ -1,5 +1,5 @@
 def get_onefile_loop(tables, init, looping, globals_init, num_rslot, num_rchns, num_vslot):
-    return """
+    text ="""
 @jit(nopython=True, parallel=True, nogil=True)
 def mainloop(chn, {tables}, filename1, fseekpoint, fendpoint, BytesofRecords, TTRes_pspr, SYNCRate_pspr, DTRes_pspr,RecordType):
     link_libs()
@@ -9,13 +9,16 @@ def mainloop(chn, {tables}, filename1, fseekpoint, fendpoint, BytesofRecords, TT
     eta_ret += FileReader_init(Filename, fseekpoint, fendpoint,
                             BytesofRecords, TTRes_pspr, SYNCRate_pspr, DTRes_pspr,RecordType)
 
-    #print("Record Type", RecordType)
+    print("TTRes_pspr", TTRes_pspr)
+    print("SYNCRate_pspr", SYNCRate_pspr)
+    print("DTRes_pspr",DTRes_pspr)
     eta_ret += POOL_init({num_rslot},{num_rchns}, {num_vslot})
     AbsTime_ps = nb.int64(0)
     {init}
     AbsTime_ps = POOL_next(Channel)
     while AbsTime_ps != 9223372036854775807:
         #print(AbsTime_ps,chn)
+        #print(now_0)
         {looping}
 
         AbsTime_ps = POOL_next(Channel)
@@ -33,3 +36,5 @@ def sp_core(caller_parms,mainloop):
 #         bytearray("NONEXISTING", "ascii"), 1,1,1,1,1,1)
 """.format(init=init, looping=looping, globals_init=globals_init, tables=",".join(tables), num_rslot=num_rslot,
            num_vslot=num_vslot, num_rchns=num_rchns)
+    print(text)
+    return text
