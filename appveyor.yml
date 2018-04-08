@@ -35,6 +35,7 @@ build_script:
     --exclude-module dash
     --exclude-module dash_core_components
     --hidden-import timeit
+    --hidden-import http
     -i favicon.ico  
     ETA.py
 
@@ -46,6 +47,5 @@ test_script:
 - cmd: >-
      npm install -g github-release-cli
      
-     github-release upload --owner=timetag --repo=ETABackend --tag="%APPVEYOR_BUILD_NUMBER%" --name="%APPVEYOR_BUILD_NUMBER%"  "C:/projects/ETABackend/eta.exe"
+     github-release upload --owner=timetag --repo=ETABackend --tag="%APPVEYOR_BUILD_NUMBER%" --name="%APPVEYOR_BUILD_NUMBER%"  "C:/projects/ETABackend/eta.exe" "C:/projects/ETABackend/ETA_LIB.zip"
 
-     github-release upload --owner=timetag --repo=ETABackend --tag="eta_lib" --name="ETA_LIB"  "C:/projects/ETABackend/ETA_LIB.zip"
