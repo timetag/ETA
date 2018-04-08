@@ -574,16 +574,19 @@ class Graph(INTEGER, TABLE, CLOCK, BUFFER, HISTOGRAM, COINCIDENCE):
             raise ValueError("find start from anything other than the last sync is not yet implemented.")
         self.start(triggers, clock_names_orig, "common_start")
 
-    def sort_stop(self, triggers, *therest):
+    def sort(self, triggers, based_on, *therest):
         if len(therest) == 1:
             therest = self.parse_multi_object(therest[0])
         to_be_sorted = []
+        based_on = ast.literal_eval(based_on)
+        if not (based_on == "start" or based_on == "stop"):
+            raise ValueError("Clock sort base must be either 'start' or 'stop'")
         for i in range(len(therest)):
             # clock_preparing stage
             clock_name = therest[i]
             clock_type = self.get_type_of_syms(clock_name, internal=True, fulltype=True)
             if clock_type[0] == "clock" and clock_type[2] == 1:
-                to_be_sorted.append(clock_name + "_stop")
+                to_be_sorted.append(clock_name + "_" + based_on)
             else:
                 raise ValueError("Object is not currently supported by record().")
 
