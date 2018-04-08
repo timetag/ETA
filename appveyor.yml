@@ -36,6 +36,7 @@ build_script:
     --exclude-module dash_core_components
     --hidden-import timeit
     --hidden-import http
+    --hidden-import http.cookies
     -i favicon.ico  
     ETA.py
 
