@@ -24,7 +24,8 @@ cache:
 
 build_script:
 - cmd: >-
-    pyinstaller --clean  --add-data "favicon.ico;."  --add-data "ll/*;ll"  
+    pyinstaller --clean  --add-data "favicon.ico;." 
+    --add-data "ll/*;ll"  
     --add-data "plotly/package_data/*;plotly/package_data" 
     --add-data "dash_core_components/*;dash_core_components" 
     --add-data "dash_renderer/*;dash_renderer" 
@@ -40,14 +41,15 @@ build_script:
     
     RMDIR /S /Q %APPVEYOR_BUILD_FOLDER%\build
     
-    pyinstaller --clean --onefile --add-data "favicon.ico;."  --add-data "ll/*;ll" 
-    --add-data "plotly/package_data/*;plotly/package_data" 
-    --add-data "dash_core_components/*;dash_core_components" 
-    --add-data "dash_renderer/*;dash_renderer" 
-    --add-data "dash_html_components/*;dash_html_components" 
+    pyinstaller --clean --onefile --add-data "favicon.ico;." 
+    --add-data "ll/*;ll" 
+    --exclude-module numpy
+    --exclude-module scipy
+    --exclude-module plotly
+    --exclude-module dash_html_components
+    --exclude-module dash
+    --exclude-module dash_core_components
     -i favicon.ico  
-    --hidden-import scipy._lib.messagestream 
-    --paths "c:\\python36-x64\\lib\\site-packages\\scipy\\extra-dll"
     ETA.py
     
     move %APPVEYOR_BUILD_FOLDER%\dist\ETA.exe %APPVEYOR_BUILD_FOLDER%\ETA.exe
