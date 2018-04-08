@@ -2,8 +2,7 @@ import os, sys
 
 env_dist = os.environ
 env_dist = env_dist.get('ETA_LIB')
-if env_dist is not None and os.path.isdir(env_dist + "/numpy") and os.path.isdir(env_dist + "/plotly"):
-
+if env_dist is not None and os.path.isdir(env_dist + "/numpy")and os.path.isdir(env_dist + "/plotly") and os.path.isdir(env_dist + "/llvmlite")and os.path.isdir(env_dist + "/dash_core_components")and os.path.isdir(env_dist + "/dash_html_components"):
     sys.path.append(env_dist)
 else:
     os.environ["ETA_LIB"] = input("Please specify ETA_LIB path (use a full path like C:\Python\Python36\Lib\site-packages):")
