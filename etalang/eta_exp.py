@@ -188,22 +188,21 @@ class HISTOGRAM():
                     preact = diff
 
                 code = """
-                         #print({clock}_stop ,{clock}_start)
-                         histdim_{i} = nb.int64((({preact})  + {bin_step}) / {bin_step})
-                         if (histdim_{i}  >= {bin_num}):
-                             histdim_{i} = {bin_num} - 1 
-                         if (histdim_{i} < 0):
-                             histdim_{i} = 0  
-                     """.format(clock=clock_name, i=i, preact=preact, histogram=histogram, bin_step=bin_step,
-                                bin_num=bin_num)
+                                        #print({clock}_stop ,{clock}_start)
+                                        histdim_{i} = nb.int64((({preact})  + {bin_step}) / {bin_step})
+                                        if (histdim_{i}  >= {bin_num}):
+                                            histdim_{i} = {bin_num} - 1 
+                                        if (histdim_{i} < 0):
+                                            histdim_{i} = 0  
+                                    """.format(clock=clock_name, i=i, preact=preact, histogram=histogram,
+                                               bin_step=bin_step,
+                                               bin_num=bin_num)
                 self.EMIT_LINE(triggers, code)
             else:
                 raise ValueError("Object is not currently supported by record().")
-        selector = ""
-        for i in range(len(dims)):
-            selector += "[histdim_{i}]".format(i=i)
-        code = """{histogram}{selector} += 1""".format(histogram=histogram, selector=selector)
-        self.EMIT_LINE(triggers, code)
+
+        selector = "".join(["[histdim_{i}]".format(i=i) for i in range(len(dims))])
+        self.EMIT_LINE(triggers, """{histogram}{selector} += 1""".format(histogram=histogram, selector=selector))
 
 
 class CLOCK():
@@ -574,3 +573,22 @@ class Graph(INTEGER, TABLE, CLOCK, BUFFER, HISTOGRAM, COINCIDENCE):
         else:
             raise ValueError("find start from anything other than the last sync is not yet implemented.")
         self.start(triggers, clock_names_orig, "common_start")
+
+    def sort_stop(self, triggers, *therest):
+        if len(therest) == 1:
+            therest = self.parse_multi_object(therest[0])
+        to_be_sorted = []
+        for i in range(len(therest)):
+            # clock_preparing stage
+            clock_name = therest[i]
+            clock_type = self.get_type_of_syms(clock_name, internal=True, fulltype=True)
+            if clock_type[0] == "clock" and clock_type[2] == 1:
+                to_be_sorted.append(clock_name + "_stop")
+            else:
+                raise ValueError("Object is not currently supported by record().")
+
+        self.EMIT_LINE(triggers,
+                       "hist_sort=[" + ",".join(to_be_sorted) + "]")
+        self.EMIT_LINE(triggers, "hist_sort.sort()")
+        self.EMIT_LINE(triggers,
+                       ",".join(to_be_sorted) + "=hist_sort")
