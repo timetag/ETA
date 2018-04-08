@@ -35,14 +35,16 @@ build_script:
     --paths "c:\\python36-x64\\lib\\site-packages\\scipy\\extra-dll"
     ETA.py
     
-    7z a ETA.zip %APPVEYOR_BUILD_FOLDER%\dist
-    
+    7z a ETA_bundle.zip %APPVEYOR_BUILD_FOLDER%\dist
+
     RMDIR /S /Q %APPVEYOR_BUILD_FOLDER%\dist
     
     RMDIR /S /Q %APPVEYOR_BUILD_FOLDER%\build
     
     pyinstaller --clean --onefile --add-data "favicon.ico;." 
     --add-data "ll/*;ll" 
+    --exclude-module numba
+    --exclude-module llvmlite
     --exclude-module numpy
     --exclude-module scipy
     --exclude-module plotly
@@ -51,6 +53,8 @@ build_script:
     --exclude-module dash_core_components
     -i favicon.ico  
     ETA.py
+
+    7z a ETA_LIB.zip "c:\python36-x64\lib\site-packages"
     
     move %APPVEYOR_BUILD_FOLDER%\dist\ETA.exe %APPVEYOR_BUILD_FOLDER%\ETA.exe
   
@@ -58,6 +62,6 @@ test_script:
 - cmd: >-
      npm install -g github-release-cli
      
-     github-release upload --owner=timetag --repo=ETABackend --tag="%APPVEYOR_BUILD_NUMBER%" --name="%APPVEYOR_BUILD_NUMBER%"  "C:/projects/ETABackend/eta.zip"  "C:/projects/ETABackend/eta.exe"
+     github-release upload --owner=timetag --repo=ETABackend --tag="%APPVEYOR_BUILD_NUMBER%" --name="%APPVEYOR_BUILD_NUMBER%"  "C:/projects/ETABackend/ETA_bundle.zip"  "C:/projects/ETABackend/eta.exe"  "C:/projects/ETABackend/ETA_LIB.zip"
 
 
