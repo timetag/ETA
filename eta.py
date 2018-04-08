@@ -1,4 +1,18 @@
+import os, sys
+
+env_dist = os.environ
+env_dist = env_dist.get('ETA_LIB')
+if env_dist is not None and os.path.isdir(env_dist + "/numpy") and os.path.isdir(env_dist + "/plotly"):
+
+    sys.path.append(env_dist)
+else:
+    os.environ["ETA_LIB"] = input("Please specify ETA_LIB path (use a full path like C:\Python\Python36\Lib\site-packages):")
+    print("ETA will now close to apply the changes. ")
+    input()
+    sys.exit()
 import multiprocessing
+
+multiprocessing.freeze_support()
 import ws_broadcast
 import json
 import threading
@@ -25,6 +39,7 @@ class WSSERVER():
         def new_client(client, server):
             print("New client " + str(client["address"]) +
                   " connected to port " + str(port) + ". ")
+
         self.server = ws_broadcast.WebsocketServer(
             port, host='0.0.0.0')
         print("ETA Server URL: ws://localhost:" + str(port))
@@ -49,6 +64,8 @@ class WSSERVER():
         import dash
         import dash_core_components as dcc
         import dash_html_components as html
+        import plotly.graph_objs as go
+
         if self.displaying:
             self.send("Display is running at http://localhost:5000.")
             self.send(
@@ -76,6 +93,7 @@ class WSSERVER():
                     "etaserver": self,
                     "dash": dash,
                     "dcc": dcc,
+                    "go": go,
                     "html": html
                 }
                 for setting in dir(runtime):
@@ -95,7 +113,7 @@ class WSSERVER():
                 exec(servercode, glob, loc)
             except Exception as e:
 
-                self.send('['+str(type(e).__name__)+']'+str(e), "err")
+                self.send('[' + str(type(e).__name__) + ']' + str(e), "err")
                 self.logger.error(str(e), exc_info=True)
                 return
             self.send("Timetag analysis is finished, starting display...")
@@ -123,6 +141,7 @@ class WSSERVER():
                     response.headers.add(
                         'Access-Control-Allow-Origin', '*')
                     return response
+
                 thread2 = threading.Thread(target=app.server.run)
                 thread2.daemon = True
                 thread2.start()
@@ -136,7 +155,6 @@ class WSSERVER():
 
 
 if __name__ == '__main__':
-    multiprocessing.freeze_support()
     print(""" 
      _______           _________            ________             
     |\  ___ \         |\___   ___\         |\   __  \            
@@ -148,5 +166,5 @@ if __name__ == '__main__':
                                                                  
 =================================================================
 """)
-
+    print("Using Python libraries from ", env_dist)
     ws = WSSERVER(5678)
