@@ -26,6 +26,8 @@ build_script:
 - cmd: >-
     pyinstaller --clean --onefile 
     --add-data "ll/*;ll" 
+    --exclude-module numba
+    --exclude-module llvmlite
     --exclude-module numpy
     --exclude-module scipy
     --exclude-module plotly

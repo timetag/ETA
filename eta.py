@@ -1,14 +1,19 @@
 import os, sys
 
-env_dist = os.environ
-env_dist = env_dist.get('ETA_LIB')
-if env_dist is not None and os.path.isdir(env_dist + "/numpy")and os.path.isdir(env_dist + "/plotly") and os.path.isdir(env_dist + "/llvmlite")and os.path.isdir(env_dist + "/dash_core_components")and os.path.isdir(env_dist + "/dash_html_components"):
-    sys.path.append(env_dist)
-else:
-    os.environ["ETA_LIB"] = input("Please specify ETA_LIB path (use a full path like C:\Python\Python36\Lib\site-packages):")
-    print("ETA will now close to apply the changes. ")
-    input()
-    sys.exit()
+while True:
+    env_dist = os.environ
+    env_dist = env_dist.get('ETA_LIB')
+    if env_dist is not None and os.path.isdir(env_dist + "/numpy") and os.path.isdir(
+            env_dist + "/plotly") and os.path.isdir(env_dist + "/llvmlite") and os.path.isdir(
+        env_dist + "/dash_core_components") and os.path.isdir(env_dist + "/dash_html_components"):
+        sys.path.append(env_dist)
+        break
+    else:
+        print("ETA_LIB not found or incorrect.")
+        print("Please use a full path (C:/.../site-packages), and make sure that the path is not read-only.")
+        os.environ["ETA_LIB"] = input("Specify the path to ETA_LIB:")
+        os.system('setx ETA_LIB "' + os.environ["ETA_LIB"] + '"')
+
 import multiprocessing
 
 multiprocessing.freeze_support()
@@ -155,15 +160,13 @@ class WSSERVER():
 
 if __name__ == '__main__':
     print(""" 
-     _______           _________            ________             
-    |\  ___ \         |\___   ___\         |\   __  \            
-    \ \   __/|        \|___ \  \_|         \ \  \|\  \           
-     \ \  \_|/__           \ \  \           \ \   __  \          
-      \ \  \_|\ \           \ \  \           \ \  \ \  \         
-       \ \_______\           \ \__\           \ \__\ \__\        
-        \|_______|            \|__|            \|__|\|__|        
-                                                                 
-=================================================================
+    ______  ______    ___ 
+   / ____/ /_  __/   /   |
+  / /___    / /     / /| |
+ / /___    / /     / ___ |
+/_____/   /_/     /_/  |_|
+                          
+==============================
 """)
     print("Using Python libraries from ", env_dist)
     ws = WSSERVER(5678)
