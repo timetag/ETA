@@ -36,5 +36,5 @@ def sp_core(caller_parms,mainloop):
 #         bytearray("NONEXISTING", "ascii"), 1,1,1,1,1,1)
 """.format(init=init, looping=looping, globals_init=globals_init, tables=",".join(tables), num_rslot=num_rslot,
            num_vslot=num_vslot, num_rchns=num_rchns)
-
+    print(text)
     return text
