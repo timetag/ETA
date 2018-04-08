@@ -46,11 +46,12 @@ def ETA_MUTLITRHEAD(filename, eta_compiled_code, print, thread=1):
     print("ETA_MULTITHREAD stopped")
     te = time.time()
     print('Time: {} ms'.format((te - ts) * 1000))
-    histogram = np.zeros(62502, dtype=np.int64)
-    for each in range(len(ret)):
-        print(ret[each])
-        histogram += ret[each]
-    return histogram
+    print("multi thread is not currectly supported in this version")
+    #histogram = np.zeros(62502, dtype=np.int64)
+    #for each in range(len(ret)):
+    #    print(ret[each])
+    #    histogram += ret[each]
+    #return histogram
 
 
 def ETA(filename, wrapper, mainloop, print):
