@@ -17,16 +17,15 @@ while True:
 import multiprocessing
 
 multiprocessing.freeze_support()
+
 import ws_broadcast
 import json
 import threading
 import logging
-from etalang import codegen
-from jit_linker import link_jit_code
-import runtime
+from runtime import *
 
 
-class WSSERVER():
+class WSSERVER(ETA):
 
     def __init__(self, port):
         self.logger = logging.getLogger(__name__)
@@ -54,22 +53,7 @@ class WSSERVER():
     def send(self, text, endpoint="log"):
         self.server.send_message_to_all(json.dumps([endpoint, str(text)]))
 
-    def compile_eta(self, etaobj=None):
-        try:
-            code, metadata = codegen.compile_eta(etaobj)
-            self.send(metadata, "table")
-            return code
-        except Exception as e:
-            self.send(str(e), "err")
-            self.send("Compilation failed.")
-            self.logger.error(str(e), exc_info=True)
-
     def process_eta(self, etaobj=None):
-        import dash
-        import dash_core_components as dcc
-        import dash_html_components as html
-        import plotly.graph_objs as go
-
         if self.displaying:
             self.send("Display is running at http://localhost:5000.")
             self.send(
@@ -86,7 +70,7 @@ class WSSERVER():
             self.send("Compiling...")
             try:
                 eta_compiled_code = self.compile_eta(etaobj)
-                wrapper, mainloop = link_jit_code(eta_compiled_code)
+                wrapper, mainloop = self.link_eta(eta_compiled_code)
 
                 loc = {"eta_compiled_code": eta_compiled_code,
                        "mainloop": mainloop,
@@ -94,14 +78,9 @@ class WSSERVER():
                        }
                 glob = {
                     "print": self.send,
-                    "etaserver": self,
-                    "dash": dash,
-                    "dcc": dcc,
-                    "go": go,
-                    "html": html
+                    "eta": self,
                 }
-                for setting in dir(runtime):
-                    glob[setting] = getattr(runtime, setting)
+
                 variables = json.loads(etaobj["eta_dpp_table"])
                 for each in variables:
                     loc[each["variable"]] = each["value"]
@@ -120,16 +99,17 @@ class WSSERVER():
                 self.send('[' + str(type(e).__name__) + ']' + str(e), "err")
                 self.logger.error(str(e), exc_info=True)
                 return
-            self.send("Timetag analysis is finished, starting display...")
-            self.serve_dash(loc)
+            self.send("Timetag analysis is finished.")
+            #if 'app' in loc:
+            #    self.display(loc['app'])
 
-    def serve_dash(self, loc=None):
-        from flask import request
-        if (loc is None) or not ("app" in loc):
-            self.send("No display dashboard for array output.", "err")
+    def display(self, app=None):
+        self.send("Starting display.")
+        if (app is None):
+            self.send("No display dashboard crated. Use 'app = dash.Dash() to create a Dash graph.' .", "err")
         else:
             try:
-                app = loc['app']
+                from flask import request
 
                 @app.server.route('/shutdown', methods=['GET'])
                 def shutdown():
