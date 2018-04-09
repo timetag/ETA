@@ -5,7 +5,7 @@ from jit_linker import link_jit_code
 from parser_header import parse_header
 
 
-def scheduler(filename, THREAD_MAX=1):
+def scheduler(filename,trunc=-1, THREAD_MAX=1):
     out = parse_header(bytearray(filename, "ascii"))
     TTF_header_offset = out[0]
     TTF_filesize = out[1]

@@ -2,8 +2,6 @@ from llvmlite import ir, binding as ll
 import numba as nb
 from numba import jit
 import numpy as np
-import scipy as scipy
-import lmfit as lmfit
 from os import listdir
 from os.path import isfile, join
 import cffi
@@ -146,7 +144,6 @@ def link_jit_code(code):
     VSLOT_put = link_function("VSLOT_put", 2)
     glb = {
         "jit": jit, "ffi": ffi, "nb": nb, "np": np,
-        "scipy": scipy, "lmfit": lmfit,
         "link_libs": link_libs,
         "VSLOT_put": VSLOT_put,
         "FileReader_init": FileReader_init,
