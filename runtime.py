@@ -3,11 +3,103 @@ import time
 from jit_linker import link_jit_code
 from parser_header import parse_header
 from etalang import codegen
+import threading
+import json
+
+
+def external_wrpper(param):
+    eta_compiled_code = param.pop()
+    wrapper, mainloop = link_jit_code(eta_compiled_code)
+
+    with open("llvm.txt", "w") as writeto:
+        codelist = mainloop.inspect_llvm()
+        for each in codelist:
+            writeto.write(str(each))
+            writeto.write("//////////////")
+            writeto.write(codelist[each])
+            break
+    return wrapper(param, mainloop)
 
 
 class ETA():
     def __init__(self):
-        pass
+        self.eta_compiled_code = None
+
+    def process_eta(self, etaobj=None):
+        if self.displaying:
+            self.send("Display is running at http://localhost:5000.")
+            self.send(
+                "The ETA program is not executed, in order to prevent data overwritting.")
+            self.send("http://localhost:5000", "dash")
+        else:
+            with open("server.eta", 'w') as file:
+                file.write(json.dumps(etaobj))
+            servercode = etaobj["code"]
+
+            expcfg = json.loads(etaobj["#expcfg"])
+            self.send("Server received experiment file " +
+                      expcfg["exp_name"] + ".")
+            self.send("Compiling...")
+            try:
+                self.eta_compiled_code = self.compile_eta(etaobj)
+
+                glob = {"eta": self}
+
+                # side configuration panel
+                loc = {}
+                variables = json.loads(etaobj["eta_dpp_table"])
+                for each in variables:
+                    loc[each["variable"]] = each["value"]
+            except Exception as e:
+                print(self.eta_compiled_code)
+                self.send(str(e), "err")
+                self.send("JIT failed.")
+                self.logger.error(str(e), exc_info=True)
+                return
+
+            self.send("Run process()...")
+            try:
+                exec(servercode, glob, loc)
+            except Exception as e:
+
+                self.send('[' + str(type(e).__name__) + ']' + str(e), "err")
+                self.logger.error(str(e), exc_info=True)
+                return
+            self.send("Timetag analysis is finished.")
+
+    def display(self, app=None):
+        if app is None:
+            self.send("No display dashboard crated. Use 'app = dash.Dash() to create a Dash graph.' .", "err")
+        else:
+            self.send("Starting display.")
+            try:
+                from flask import request
+
+                @app.server.route('/shutdown', methods=['GET'])
+                def shutdown():
+                    func = request.environ.get('werkzeug.server.shutdown')
+                    if func is None:
+                        raise RuntimeError(
+                            'Not running with the Werkzeug Server')
+                    func()
+                    self.displaying = False
+                    self.send("Dashboard shutting down. ")
+                    self.send("http://localhost:5000", "discard")
+                    response = app.server.make_response('Hello, World')
+                    response.headers.add(
+                        'Access-Control-Allow-Origin', '*')
+                    return response
+
+                thread2 = threading.Thread(target=app.server.run)
+                thread2.daemon = True
+                thread2.start()
+                self.send("Display is running at http://localhost:5000.")
+                self.send("http://localhost:5000", "dash")
+                self.displaying = True
+            except Exception as e:
+                self.send(str(e), "err")
+                self.displaying = False
+                self.logger.error(str(e), exc_info=True)
 
     def compile_eta(self, etaobj=None):
         try:
@@ -43,44 +135,26 @@ class ETA():
                 print(start_point, stop_point)
         return caller_parms
 
-    def external_wrpper(self, param):
-        eta_compiled_code = param.pop()
-        wrapper, mainloop = link_jit_code(eta_compiled_code)
-        return wrapper(param, mainloop)
-
-    def RUN_MUTLITRHEAD(self, filename, eta_compiled_code, print, thread=1):
-        param1 = self.scheduler(filename, thread)
-        for each in param1:
-            each.append(filename)
-            each.append(eta_compiled_code)
-
-        ts = time.time()
-        print("ETA_MULTITHREAD started")
-        with multiprocessing.Pool(thread) as p:
-            ret = p.map(self.external_wrpper, param1)
-        print("ETA_MULTITHREAD stopped")
-        te = time.time()
-        print('Time: {} ms'.format((te - ts) * 1000))
-        print("multi thread is not currectly supported in this version")
-        # histogram = np.zeros(62502, dtype=np.int64)
-        # for each in range(len(ret)):
-        #    print(ret[each])
-        #    histogram += ret[each]
-        # return histogram
-
-    def run(self, filename, wrapper, mainloop, print):
+    def run(self, filename, thread=1):
         caller_parms = self.scheduler(filename)
         for each in caller_parms:
             each.append(filename)
+            each.append(self.eta_compiled_code)
+
         ts = time.time()
-        result = wrapper(caller_parms[0], mainloop)
+        if thread == 1:
+            rets = external_wrpper(caller_parms[0])
+            result = rets
+        else:
+            self.send("ETA_MULTITHREAD started using {} cores".format(thread))
+            with multiprocessing.Pool(thread) as p:
+                rets = p.map(external_wrpper, caller_parms)
+            self.send("ETA_MULTITHREAD finished.")
+            for each_graph in range(len(rets[0])):
+                for each in range(1,len(rets)):
+                    rets[0][each_graph] += rets[each][each_graph]
+            result=rets[0]
+
         te = time.time()
-        print('Time: {} ms'.format((te - ts) * 1000))
-        with open("llvm.txt", "w") as writeto:
-            codelist = mainloop.inspect_llvm()
-            for each in codelist:
-                writeto.write(str(each))
-                writeto.write("//////////////")
-                writeto.write(codelist[each])
-                break
+        self.send('Time: {} ms'.format((te - ts) * 1000))
         return result
