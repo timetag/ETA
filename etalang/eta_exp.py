@@ -182,7 +182,7 @@ class HISTOGRAM():
                 diff = "({clock}_stop - {clock}_start)".format(clock=clock_name)
                 # time difference preparing stage
                 if len(dims[i]) > 2:
-                    preact = each[2]
+                    preact = dims[i][2]
                     preact = preact.replace("time", diff)
                 else:
                     preact = diff
