@@ -1,4 +1,6 @@
 def get_onefile_loop(tables, init, looping, globals_init, num_rslot, num_rchns, num_vslot):
+    if len(tables)==0:
+        raise ValueError("At least one table/histogram should be defined.")
     text ="""
 @jit(nopython=True, parallel=True, nogil=True)
 def mainloop(chn, {tables}, filename1, fseekpoint, fendpoint, BytesofRecords, TTRes_pspr, SYNCRate_pspr, DTRes_pspr,RecordType):
