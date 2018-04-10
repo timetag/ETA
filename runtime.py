@@ -91,7 +91,7 @@ class ETA():
                 thread2 = threading.Thread(target=app.server.run, kwargs={'host': "0.0.0.0"})
                 thread2.daemon = True
                 thread2.start()
-                self.send("Display is running at http://localhost:5000.")
+                self.send("Display is running at http://{}:5000.".format(self.hostip))
                 self.send("http://{}:5000".format(self.hostip), "dash")
                 self.displaying = True
             except Exception as e:
