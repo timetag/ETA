@@ -92,7 +92,7 @@ class ETA():
                 thread2.daemon = True
                 thread2.start()
                 self.send("Display is running at http://localhost:5000.")
-                self.send("http://localhost:5000", "dash")
+                self.send("http://{}:5000".format(self.hostip), "dash")
                 self.displaying = True
             except Exception as e:
                 self.send(str(e), "err")
