@@ -10,15 +10,13 @@ import json
 def external_wrpper(param):
     eta_compiled_code = param.pop()
     wrapper, mainloop = link_jit_code(eta_compiled_code)
-
+    ret = wrapper(param, mainloop)
     with open("llvm.txt", "w") as writeto:
         codelist = mainloop.inspect_llvm()
         for each in codelist:
-            writeto.write(str(each))
-            writeto.write("//////////////")
             writeto.write(codelist[each])
             break
-    return wrapper(param, mainloop)
+    return ret
 
 
 class ETA():
@@ -111,8 +109,6 @@ class ETA():
             self.send("Compilation failed.")
             self.logger.error(str(e), exc_info=True)
 
-    def link_eta(self, eta_compiled_code=None):
-        return link_jit_code(eta_compiled_code)
 
     def scheduler(self, filename, trunc=-1, THREAD_MAX=1):
         out = parse_header(bytearray(filename, "ascii"))
