@@ -1,8 +1,8 @@
 import os, sys
 
 while True:
-    env_dist = os.environ
-    env_dist = env_dist.get('ETA_LIB')
+    env = os.environ
+    env_dist = env.get('ETA_LIB')
     if env_dist is not None and os.path.isdir(env_dist + "/numpy") and os.path.isdir(
             env_dist + "/plotly") and os.path.isdir(env_dist + "/llvmlite") and os.path.isdir(
         env_dist + "/dash_core_components") and os.path.isdir(env_dist + "/dash_html_components"):
@@ -28,6 +28,14 @@ class WSSERVER(ETA):
     def __init__(self, port):
         self.logger = logging.getLogger(__name__)
         logging.basicConfig()
+        self.hostip=None
+        while True:
+            self.hostip = os.environ.get('ETA_HOST')
+            if self.hostip is not None:
+                break
+            else:
+                os.environ["ETA_HOST"] = input("Specify the IP address of this computer:")
+                os.system('setx ETA_HOST "' + os.environ["ETA_HOST"] + '"')
 
         self.displaying = False
 
@@ -43,7 +51,7 @@ class WSSERVER(ETA):
 
         self.server = ws_broadcast.WebsocketServer(
             port, host='0.0.0.0')
-        print("ETA Server URL: ws://localhost:" + str(port))
+        print("ETA Server URL: ws://{}:{}".format(self.hostip,port))
         self.server.set_fn_new_client(new_client)
         self.server.set_fn_message_received(new_message)
         self.server.run_forever()
