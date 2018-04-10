@@ -28,7 +28,7 @@ class ETA():
             self.send("Display is running at http://{}:5000.".format(self.hostip))
             self.send(
                 "The ETA program is not executed, in order to prevent data overwritting.")
-            self.send("http://{}:5000",format(self.hostip), "dash")
+            self.send("http://{}:5000".format(self.hostip), "dash")
         else:
             with open("server.eta", 'w') as file:
                 file.write(json.dumps(etaobj))
