@@ -88,7 +88,7 @@ class ETA():
                         'Access-Control-Allow-Origin', '*')
                     return response
 
-                thread2 = threading.Thread(target=app.server.run)
+                thread2 = threading.Thread(target=app.server.run, kwargs={'host': "0.0.0.0"})
                 thread2.daemon = True
                 thread2.start()
                 self.send("Display is running at http://localhost:5000.")
@@ -108,7 +108,6 @@ class ETA():
             self.send(str(e), "err")
             self.send("Compilation failed.")
             self.logger.error(str(e), exc_info=True)
-
 
     def scheduler(self, filename, trunc=-1, THREAD_MAX=1):
         out = parse_header(bytearray(filename, "ascii"))
@@ -147,9 +146,9 @@ class ETA():
                 rets = p.map(external_wrpper, caller_parms)
             self.send("ETA_MULTITHREAD finished.")
             for each_graph in range(len(rets[0])):
-                for each in range(1,len(rets)):
+                for each in range(1, len(rets)):
                     rets[0][each_graph] += rets[each][each_graph]
-            result=rets[0]
+            result = rets[0]
 
         te = time.time()
         self.send('Time: {} ms'.format((te - ts) * 1000))
