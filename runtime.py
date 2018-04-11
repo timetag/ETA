@@ -2,7 +2,7 @@ import multiprocessing
 import time
 from jit_linker import link_jit_code
 from parser_header import parse_header
-from etalang import codegen
+from etalang import eta_codegen
 import threading
 import json
 
@@ -101,7 +101,7 @@ class ETA():
 
     def compile_eta(self, etaobj=None):
         try:
-            code, metadata = codegen.compile_eta(etaobj)
+            code, metadata = eta_codegen.compile_eta(etaobj)
             self.send(metadata, "table")
             return code
         except Exception as e:

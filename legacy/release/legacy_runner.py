@@ -1,6 +1,6 @@
 import multiprocessing
 from etalang import tensor
-from etalang import codegen
+from etalang import eta_codegen
 from core import sp_core,mp_core
 
 if __name__ == '__main__':
@@ -9,7 +9,7 @@ if __name__ == '__main__':
     def read_file(filename):
         with open(filename) as f:
             return f.read()
-    code, metadata = codegen.compile_eta(read_file("startstop.eta"))
+    code, metadata = eta_codegen.compile_eta(read_file("startstop.eta"))
     ### below this line are user code
     histogram = mp_core("HHT2.ptu", code)
 
