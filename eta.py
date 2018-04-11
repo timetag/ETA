@@ -1,10 +1,14 @@
+import multiprocessing
+
+multiprocessing.freeze_support()
+
 import os, sys
 
 while True:
     env_dist = os.environ.get('ETA_LIB')
     if env_dist is not None and os.path.isdir(env_dist + "/numpy") and  os.path.isdir(env_dist + "/llvmlite"):
-        print(sys.path)
         sys.path.append(env_dist)
+        print(sys.path)
         break
     else:
         print("ETA_LIB not found or incorrect.")
@@ -12,12 +16,9 @@ while True:
         os.environ["ETA_LIB"] = input("Specify the path to ETA_LIB:")
         os.system('setx ETA_LIB "' + os.environ["ETA_LIB"] + '"')
 
-import multiprocessing
 
-multiprocessing.freeze_support()
 
 import ws_broadcast
-import json
 import logging
 from runtime import *
 
