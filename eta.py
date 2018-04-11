@@ -3,9 +3,8 @@ import os, sys
 while True:
     env = os.environ
     env_dist = env.get('ETA_LIB')
-    if env_dist is not None and os.path.isdir(env_dist + "/numpy") and os.path.isdir(
-            env_dist + "/plotly") and os.path.isdir(env_dist + "/llvmlite") and os.path.isdir(
-        env_dist + "/dash_core_components") and os.path.isdir(env_dist + "/dash_html_components"):
+    if env_dist is not None and os.path.isdir(env_dist + "/numpy") and  os.path.isdir(env_dist + "/llvmlite"):
+        print(sys.path)
         sys.path.append(env_dist)
         break
     else:
