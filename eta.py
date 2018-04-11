@@ -1,8 +1,7 @@
 import os, sys
 
 while True:
-    env = os.environ
-    env_dist = env.get('ETA_LIB')
+    env_dist = os.environ.get('ETA_LIB')
     if env_dist is not None and os.path.isdir(env_dist + "/numpy") and  os.path.isdir(env_dist + "/llvmlite"):
         print(sys.path)
         sys.path.append(env_dist)
