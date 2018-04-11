@@ -20,7 +20,7 @@ while True:
 
 import ws_broadcast
 import logging
-from runtime import *
+from eta_runtime import *
 
 class WSSERVER(ETA):
 
