@@ -3,7 +3,9 @@ skip_tags: true
 image: Visual Studio 2017
 init:
 - cmd: >-
-    pip install --user --upgrade pip
+    SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%
+    
+    echo pip install --user --upgrade pip
 
     python --version
 environment:
