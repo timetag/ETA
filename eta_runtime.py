@@ -1,10 +1,7 @@
-import multiprocessing
-import time
+import multiprocessing, time, threading, json
 from jit_linker import link_jit_code
 from parser_header import parse_header
 from etalang import eta_codegen
-import threading
-import json
 
 
 def external_wrpper(param):
@@ -71,26 +68,46 @@ class ETA():
         else:
             self.send("Starting display.")
             try:
-                from flask import request
+                if str(type(app)) == "<class 'dash.dash.Dash'>":
+                    from flask import request
+                    @app.server.route('/shutdown', methods=['GET'])
+                    def shutdown():
+                        func = request.environ.get('werkzeug.server.shutdown')
+                        if func is None:
+                            raise RuntimeError(
+                                'Not running with the Werkzeug Server')
+                        func()
+                        self.displaying = False
+                        self.send("Dashboard shutting down. ")
+                        self.send("http://localhost:5000", "discard")
+                        response = app.server.make_response('Hello, World')
+                        response.headers.add(
+                            'Access-Control-Allow-Origin', '*')
+                        return response
 
-                @app.server.route('/shutdown', methods=['GET'])
-                def shutdown():
-                    func = request.environ.get('werkzeug.server.shutdown')
-                    if func is None:
-                        raise RuntimeError(
-                            'Not running with the Werkzeug Server')
-                    func()
-                    self.displaying = False
-                    self.send("Dashboard shutting down. ")
-                    self.send("http://localhost:5000", "discard")
-                    response = app.server.make_response('Hello, World')
-                    response.headers.add(
-                        'Access-Control-Allow-Origin', '*')
-                    return response
+                    thread2 = threading.Thread(target=app.server.run, kwargs={'host': "0.0.0.0"})
+                    thread2.daemon = True
+                    thread2.start()
+                else:
+                    from bokeh.server.server import Server
+                    global bokserver
 
-                thread2 = threading.Thread(target=app.server.run, kwargs={'host': "0.0.0.0"})
-                thread2.daemon = True
-                thread2.start()
+                    def shutdown(doc):
+                        bokserver.unlisten()
+                        bokserver.stop()
+                        self.displaying = False
+                        self.send("Dashboard shutting down. ")
+                        self.send("http://localhost:5000", "discard")
+
+                    import asyncio
+                    asyncio.set_event_loop(asyncio.new_event_loop())
+
+                    bokserver = Server({"/": app, "/shutdown": shutdown}, address="0.0.0.0", port=5000)
+                    bokserver.start()
+                    thread3 = threading.Thread(target=bokserver.io_loop.start)
+                    thread3.daemon = True
+                    thread3.start()
+
                 self.send("Display is running at http://{}:5000.".format(self.hostip))
                 self.send("http://{}:5000".format(self.hostip), "dash")
                 self.displaying = True
