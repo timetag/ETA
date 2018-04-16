@@ -9,6 +9,7 @@ init:
 
     python --version
 environment:
+  PIP_DISABLE_PIP_VERSION_CHECK: 1
   PYTHON: C:\Python36-x64
   PYTHON_VERSION: 3.6
   PYTHON_ARCH: 64
