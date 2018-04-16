@@ -66,6 +66,9 @@ install:
     
     pip install c:/whls/numba-0.37.0-cp36-cp36m-win_amd64.whl
 
+cache:
+- c:/whls
+- '%LOCALAPPDATA%\pip\Cache'
 
 build_script:
 - cmd: >-
