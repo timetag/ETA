@@ -6,9 +6,12 @@ import os, sys
 
 while True:
     env_dist = os.environ.get('ETA_LIB')
-    if env_dist is not None and os.path.isdir(env_dist + "/numpy") and  os.path.isdir(env_dist + "/llvmlite"):
-        sys.path.insert(0,env_dist)
-        print(sys.path)
+    if env_dist is not None and os.path.isdir(env_dist + "/numpy") and os.path.isdir(env_dist + "/llvmlite"):
+        if getattr(sys, 'frozen', False):
+            sys.path.insert(0, env_dist)
+        else:
+            sys.path.append(env_dist)
+
         break
     else:
         print("ETA_LIB not found or incorrect.")
@@ -16,18 +19,18 @@ while True:
         os.environ["ETA_LIB"] = input("Specify the path to ETA_LIB:")
         os.system('setx ETA_LIB "' + os.environ["ETA_LIB"] + '"')
 
-
-
 import ws_broadcast
 import logging
 from eta_runtime import *
 
+
 class WSSERVER(ETA):
 
     def __init__(self, port):
+
         self.logger = logging.getLogger(__name__)
         logging.basicConfig()
-        self.hostip=None
+        self.hostip = None
         while True:
             self.hostip = os.environ.get('ETA_HOST')
             if self.hostip is not None:
@@ -50,15 +53,14 @@ class WSSERVER(ETA):
 
         self.server = ws_broadcast.WebsocketServer(
             port, host='0.0.0.0')
-        print("ETA Server URL: ws://{}:{}".format(self.hostip,port))
+        print("ETA Server URL: ws://{}:{}".format(self.hostip, port))
         self.server.set_fn_new_client(new_client)
         self.server.set_fn_message_received(new_message)
         self.server.run_forever()
-        self.eta_compiled_code=None
+        self.eta_compiled_code = None
 
     def send(self, text, endpoint="log"):
         self.server.send_message_to_all(json.dumps([endpoint, str(text)]))
-
 
 
 if __name__ == '__main__':
