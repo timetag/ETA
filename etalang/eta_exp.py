@@ -567,7 +567,10 @@ class Graph(INTEGER, TABLE, CLOCK, BUFFER, HISTOGRAM, COINCIDENCE):
         for each in clock_names:
             clock_stops.append(each + "_stop")
         self.INTEGER(triggers, "common_start")
-        self.EMIT_LINE(triggers, """common_start=min({})""".format(",".join(clock_stops)))
+        if len(clock_stops)>1:
+            self.EMIT_LINE(triggers, """common_start=min({})""".format(",".join(clock_stops)))
+        else:
+            self.EMIT_LINE(triggers,"""common_start={}""".format(",".join(clock_stops)))
         if ref == "SYNC":
             self.EMIT_LINE(triggers, """common_start-=common_start%SYNCRate_pspr""")
         else:
