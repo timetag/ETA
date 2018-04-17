@@ -1,4 +1,4 @@
-import multiprocessing, time, threading, json
+import multiprocessing, time, threading, json, sys
 from jit_linker import link_jit_code
 from parser_header import parse_header
 from etalang import eta_codegen
@@ -7,7 +7,10 @@ from etalang import eta_codegen
 def external_wrpper(param):
     eta_compiled_code = param.pop()
     wrapper, mainloop = link_jit_code(eta_compiled_code)
+    old = sys.stdout
+    sys.stdout = open("log.txt", 'w')
     ret = wrapper(param, mainloop)
+    sys.stdout = old
     with open("llvm.txt", "w") as writeto:
         codelist = mainloop.inspect_llvm()
         for each in codelist:
