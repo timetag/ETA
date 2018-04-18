@@ -6,28 +6,32 @@ import os, sys
 
 while True:
     env_dist = os.environ.get('ETA_LIB')
-    if env_dist is not None and os.path.isdir(env_dist + "/numpy") and os.path.isdir(env_dist + "/llvmlite"):
+    if env_dist is not None:
         if getattr(sys, 'frozen', False):
             sys.path.insert(0, env_dist)
         else:
             sys.path.append(env_dist)
-
         break
     else:
-        print("ETA_LIB not found or incorrect.")
+        print("ETA_LIB is not found.")
         print("Please use a full path (C:/.../site-packages), and make sure that the path is not read-only.")
         os.environ["ETA_LIB"] = input("Specify the path to ETA_LIB:")
         os.system('setx ETA_LIB "' + os.environ["ETA_LIB"] + '"')
 
 import ws_broadcast
-import logging
-from eta_runtime import *
-
+try:
+    from eta_runtime import *
+except Exception as e:
+    print(str(e))
+    print("ETA_LIB is found, but it seems there is an unknown error that prevents ETA to load the packages, \n"
+          "please try to put ETA_LIB in another path.")
+    os.environ["ETA_LIB"] = input("Specify the path to ETA_LIB:")
+    os.system('setx ETA_LIB "' + os.environ["ETA_LIB"] + '"')
 
 class WSSERVER(ETA):
 
     def __init__(self, port):
-
+        import logging
         self.logger = logging.getLogger(__name__)
         logging.basicConfig()
         self.hostip = None
