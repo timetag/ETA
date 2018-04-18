@@ -1,7 +1,10 @@
-import multiprocessing, time, threading, json, sys
+import multiprocessing, time, threading, json, sys, logging
+
+multiprocessing.log_to_stderr(logging.DEBUG)
 from jit_linker import link_jit_code
 from parser_header import parse_header
 from etalang import eta_codegen
+
 
 
 def external_wrpper(param):
@@ -55,11 +58,10 @@ class ETA():
                 self.logger.error(str(e), exc_info=True)
                 return
 
-            self.send("Run process()...")
+            self.send("Runing user-defined code in data processing panel...")
             try:
                 exec(servercode, glob, loc)
             except Exception as e:
-
                 self.send('[' + str(type(e).__name__) + ']' + str(e), "err")
                 self.logger.error(str(e), exc_info=True)
                 return
@@ -125,7 +127,7 @@ class ETA():
             self.send(metadata, "table")
             return code
         except Exception as e:
-            self.send(str(e), "err")
+            self.send('[' + str(type(e).__name__) + ']' + str(e), "err")
             self.send("Compilation failed.")
             self.logger.error(str(e), exc_info=True)
 
@@ -157,19 +159,16 @@ class ETA():
             each.append(self.eta_compiled_code)
 
         ts = time.time()
-        if thread == 1:
-            rets = external_wrpper(caller_parms[0])
-            result = rets
-        else:
-            self.send("ETA_MULTITHREAD started using {} cores".format(thread))
-            with multiprocessing.Pool(thread) as p:
-                rets = p.map(external_wrpper, caller_parms)
-            self.send("ETA_MULTITHREAD finished.")
-            for each_graph in range(len(rets[0])):
-                for each in range(1, len(rets)):
-                    rets[0][each_graph] += rets[each][each_graph]
-            result = rets[0]
+        self.send("ETA core started using {} cores".format(thread))
 
+        self.pool =  multiprocessing.Pool(thread)
+        rets = self.pool.map(external_wrpper, caller_parms)
+        self.pool.close()
+        self.pool.join()
+        for each_graph in range(len(rets[0])):
+            for each in range(1, len(rets)):
+                rets[0][each_graph] += rets[each][each_graph]
+        result = rets[0]
         te = time.time()
-        self.send('Time: {} ms'.format((te - ts) * 1000))
+        self.send('ETA core finished in {} ms'.format((te - ts) * 1000))
         return result

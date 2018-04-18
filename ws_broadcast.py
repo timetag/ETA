@@ -63,7 +63,7 @@ class API():
             logger.info("Server terminated.")
         except Exception as e:
             logger.error(str(e), exc_info=True)
-            #exit(1)
+            # exit(1)
 
     def new_client(self, client, server):
         pass
@@ -153,8 +153,14 @@ class WebsocketServer(ThreadingMixIn, TCPServer, API):
         to_client['handler'].send_message(msg)
 
     def _multicast_(self, msg):
+        successfull = []
         for client in self.clients:
-            self._unicast_(client, msg)
+            try:
+                self._unicast_(client, msg)
+                successfull.append(client)
+            except Exception as e:
+                print(e)
+        self.clients = successfull
 
     def handler_to_client(self, handler):
         for client in self.clients:
@@ -261,7 +267,7 @@ class WebSocketHandler(StreamRequestHandler):
                 logger.warning(
                     "Can\'t send message, message is not valid UTF-8")
                 return False
-        elif sys.version_info < (3, 0) and (isinstance(message, str) ):
+        elif sys.version_info < (3, 0) and (isinstance(message, str)):
             pass
         elif isinstance(message, str):
             pass
@@ -319,10 +325,10 @@ class WebSocketHandler(StreamRequestHandler):
 
     def make_handshake_response(self, key):
         return \
-            'HTTP/1.1 101 Switching Protocols\r\n'\
-            'Upgrade: websocket\r\n'              \
-            'Connection: Upgrade\r\n'             \
-            'Sec-WebSocket-Accept: %s\r\n'        \
+            'HTTP/1.1 101 Switching Protocols\r\n' \
+            'Upgrade: websocket\r\n' \
+            'Connection: Upgrade\r\n' \
+            'Sec-WebSocket-Accept: %s\r\n' \
             '\r\n' % self.calculate_response_key(key)
 
     def calculate_response_key(self, key):
@@ -342,7 +348,7 @@ def encode_to_UTF8(data):
         logger.error("Could not encode data to UTF-8 -- %s" % e)
         return False
     except Exception as e:
-        raise(e)
+        raise (e)
         return False
 
 
@@ -352,7 +358,8 @@ def try_decode_UTF8(data):
     except UnicodeDecodeError:
         return False
     except Exception as e:
-        raise(e)
+        raise (e)
+
 
 ############## MESSAGING MODEL ###############
 
@@ -367,7 +374,7 @@ class broadcast:
             if (message == "update"):
                 if (self.sent_record is not None):
                     server.send_message(client, self.sent_record)
-                    #print("client "+str(client["address"])+" asks for update")
+                    # print("client "+str(client["address"])+" asks for update")
                     # print(self.sent_record)
             else:
                 print("client " + str(client["address"]) + " asks " + message)
@@ -375,6 +382,7 @@ class broadcast:
         def new_client(client, server):
             print("New client " + str(client["address"]) +
                   " connected to port " + str(PORT) + ". ")
+
         self.server = WebsocketServer(
             PORT, host='0.0.0.0', loglevel=logging.INFO)
         self.server.set_fn_new_client(new_client)
@@ -392,5 +400,6 @@ class broadcast:
             self.server.send_message_to_all(now)
             millis = int(round(time.time() * 1000))
             self.last_sent = millis
+
     def server_close(self):
         self.server.server_close()
