@@ -15,9 +15,7 @@ def parse_header(filename1):
     #i = BytesofRecords_set(8)
     filename = ffi.from_buffer(filename1)
     ret1 = PARSE_TimeTagFileHeader(filename)
-    print(ret1)
-
-    return ([
+    return (ret1,[
             TTF_header_offset_get(),
             TTF_filesize_get(),
             BytesofRecords_get(),

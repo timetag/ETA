@@ -132,7 +132,9 @@ class ETA():
             self.logger.error(str(e), exc_info=True)
 
     def scheduler(self, filename, trunc=-1, THREAD_MAX=1):
-        out = parse_header(bytearray(filename, "ascii"))
+        ret1, out = parse_header(bytearray(filename, "ascii"))
+        if ret1 is not 0:
+            raise ValueError("File {} is not found or incorrect, err code {}.".format(filename,ret1))
         TTF_header_offset = out[0]
         TTF_filesize = out[1]
         BytesofRecords = out[2]
