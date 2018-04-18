@@ -1,6 +1,5 @@
 import multiprocessing, time, threading, json, sys, logging
-
-multiprocessing.log_to_stderr(logging.DEBUG)
+#multiprocessing.log_to_stderr(logging.DEBUG)
 from jit_linker import link_jit_code
 from parser_header import parse_header
 from etalang import eta_codegen
