@@ -142,11 +142,9 @@ class HISTOGRAM():
             hister = """
                                   ssms_i = nb.int64((({preact}) + {bin_step}) / {bin_step})
                                   if (ssms_i >= {bin_num}):
-                                      ssms_i = {bin_num} - 1  # +inf time_interval
                                       break
-                                  if (ssms_i < 0):
-                                      ssms_i = 0  # -inf time_interval
-                                  {histogram}[ssms_i] += 1
+                                  if (ssms_i > 0):
+                                      {histogram}[ssms_i] += 1
                           """.format(histogram=histogram, buffer_name=buffer_name,
                                      preact=preact, bin_step=bin_step,
                                      bin_num=bin_num)
@@ -169,6 +167,7 @@ class HISTOGRAM():
         histogram = self.assert_syms(histogram, "histogram")
         histogram_info = self.get_type_of_syms(histogram, internal=True, fulltype=True)
         dims = histogram_info[1]
+        boundry_checker = []
         for i in range(len(dims)):
             if i >= len(therest):
                 raise ValueError(
@@ -187,22 +186,19 @@ class HISTOGRAM():
                 else:
                     preact = diff
 
-                code = """
-                                        #print({clock}_stop ,{clock}_start)
-                                        histdim_{i} = nb.int64((({preact})  + {bin_step}) / {bin_step})
-                                        if (histdim_{i}  >= {bin_num}):
-                                            histdim_{i} = {bin_num} - 1 
-                                        if (histdim_{i} < 0):
-                                            histdim_{i} = 0  
-                                    """.format(clock=clock_name, i=i, preact=preact, histogram=histogram,
-                                               bin_step=bin_step,
-                                               bin_num=bin_num)
-                self.EMIT_LINE(triggers, code)
+                boundry_checker.append(" (histdim_{i} >= 0 and histdim_{i} < {bin_num}) ".
+                                       format(i=i, bin_num=bin_num))
+                self.EMIT_LINE(triggers, """histdim_{i} = nb.int64((({preact})) / {bin_step})""".
+                               format(i=i, preact=preact, bin_step=bin_step))
+
             else:
                 raise ValueError("Object is not currently supported by record().")
-
+        boundry_checker = " and ".join(boundry_checker)
         selector = "".join(["[histdim_{i}]".format(i=i) for i in range(len(dims))])
-        self.EMIT_LINE(triggers, """{histogram}{selector} += 1""".format(histogram=histogram, selector=selector))
+        self.EMIT_LINE(triggers, """
+        if ({boundry_checker}):
+            {histogram}{selector} += 1
+        """.format(histogram=histogram, boundry_checker=boundry_checker, selector=selector))
 
 
 class CLOCK():
@@ -567,10 +563,10 @@ class Graph(INTEGER, TABLE, CLOCK, BUFFER, HISTOGRAM, COINCIDENCE):
         for each in clock_names:
             clock_stops.append(each + "_stop")
         self.INTEGER(triggers, "common_start")
-        if len(clock_stops)>1:
+        if len(clock_stops) > 1:
             self.EMIT_LINE(triggers, """common_start=min({})""".format(",".join(clock_stops)))
         else:
-            self.EMIT_LINE(triggers,"""common_start={}""".format(",".join(clock_stops)))
+            self.EMIT_LINE(triggers, """common_start={}""".format(",".join(clock_stops)))
         if ref == "SYNC":
             self.EMIT_LINE(triggers, """common_start-=common_start%SYNCRate_pspr""")
         else:
