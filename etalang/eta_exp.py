@@ -527,6 +527,10 @@ class Graph(INTEGER, TABLE, CLOCK, BUFFER, HISTOGRAM, COINCIDENCE):
                                                                                          waittime=int(waittime))
         self.EMIT_LINE(triggers, code)
 
+    def cancel_emit(self, triggers, chn):
+        chn = int(chn)
+        self.EMIT_LINE(triggers, """eta_ret+=VSLOT_put(nb.int64(9223372036854775807),nb.int8({chn}))""".format(chn=chn))
+
     def parse_multi_object(self, names):
         names = names.strip()
         names = names.strip("(")
