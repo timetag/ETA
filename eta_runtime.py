@@ -1,9 +1,8 @@
 import multiprocessing, time, threading, json, sys, logging
-#multiprocessing.log_to_stderr(logging.DEBUG)
+# multiprocessing.log_to_stderr(logging.DEBUG)
 from jit_linker import link_jit_code
 from parser_header import parse_header
 from etalang import eta_codegen
-
 
 
 def external_wrpper(param):
@@ -24,6 +23,11 @@ def external_wrpper(param):
 class ETA():
     def __init__(self):
         self.eta_compiled_code = None
+
+    def frontend_version(self, frontend_version):
+        if frontend_version > self.max_frontend:
+            self.send("Please update your ETA backend via <a href='http://timetag.github.io/'>timetag.github.io</a>",
+                      "err")
 
     def process_eta(self, etaobj=None):
         if self.displaying:
@@ -133,7 +137,7 @@ class ETA():
     def scheduler(self, filename, trunc=-1, THREAD_MAX=1):
         ret1, out = parse_header(bytearray(filename, "ascii"))
         if ret1 is not 0:
-            raise ValueError("File {} is not found or incorrect, err code {}.".format(filename,ret1))
+            raise ValueError("File {} is not found or incorrect, err code {}.".format(filename, ret1))
         TTF_header_offset = out[0]
         TTF_filesize = out[1]
         BytesofRecords = out[2]
@@ -162,7 +166,7 @@ class ETA():
         ts = time.time()
         self.send("ETA core started using {} cores".format(thread))
 
-        self.pool =  multiprocessing.Pool(thread)
+        self.pool = multiprocessing.Pool(thread)
         rets = self.pool.map(external_wrpper, caller_parms)
         self.pool.close()
         self.pool.join()

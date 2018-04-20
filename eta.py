@@ -19,6 +19,7 @@ while True:
         os.system('setx ETA_LIB "' + os.environ["ETA_LIB"] + '"')
 
 import ws_broadcast
+
 try:
     from eta_runtime import *
 except Exception as e:
@@ -28,10 +29,12 @@ except Exception as e:
     os.environ["ETA_LIB"] = input("Specify the path to ETA_LIB:")
     os.system('setx ETA_LIB "' + os.environ["ETA_LIB"] + '"')
 
+
 class WSSERVER(ETA):
 
     def __init__(self, port):
         import logging
+        self.max_frontend = 1.0
         self.logger = logging.getLogger(__name__)
         logging.basicConfig()
         self.hostip = None
