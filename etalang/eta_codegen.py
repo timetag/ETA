@@ -20,7 +20,11 @@ def compile_eta(jsobj):
     num_rchns = 0
     real_chns_per_rslots = []
     for each in ris:
-        thiscount = 2
+        config = json.loads(each["group / configurations"])
+        if isinstance(config, int):
+            thiscount = config
+        elif isinstance(config, list):
+            thiscount = config[0]
         real_chns_per_rslots.append(thiscount)
         each["output channels"] = str(
             [i for i in range(num_rchns, num_rchns + thiscount)])
