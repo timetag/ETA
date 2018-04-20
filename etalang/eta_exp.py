@@ -505,7 +505,7 @@ class Graph(INTEGER, TABLE, CLOCK, BUFFER, HISTOGRAM, COINCIDENCE):
 
     ######### Polymorphism ########
 
-    def emit(self, triggers, chn, waittime, period=0, repeat=1):
+    def emit(self, triggers, chn, waittime=0, period=0, repeat=1):
         chn = int(chn)
         repeat = int(repeat)
         waittime = int(waittime.replace("abs", "-"))

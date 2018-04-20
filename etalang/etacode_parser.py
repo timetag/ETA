@@ -57,7 +57,7 @@ class Parser():
             regex = cascaed + r".+?" + cascaed.replace("{", "}")
             matches = re.finditer(regex, self.code, re.DOTALL)
 
-            self.escape_regex(matches, False,braci)
+            self.escape_regex(matches, False, braci)
 
     def replace_marks(self):
         self.code = self.code.replace(":", ":\n")
@@ -128,7 +128,11 @@ class Parser():
         curr_define = None
         curr_code = ""
         for each in self.code.split("\n"):
+
             if each.find(":") > 0:
+                if each.find("#")>=0:
+                    each = each[:each.find("#")]
+                print(each)
                 # code with trigger
                 (ret1, ret2) = self.parse_define(each)
 
