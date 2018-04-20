@@ -20,7 +20,7 @@ def compile_eta(jsobj):
     num_rchns = 0
     real_chns_per_rslots = []
     for each in ris:
-        thiscount = int(each["group / configurations"])
+        thiscount = 4
         real_chns_per_rslots.append(thiscount)
         each["output channels"] = str(
             [i for i in range(num_rchns, num_rchns + thiscount)])
