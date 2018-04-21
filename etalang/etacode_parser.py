@@ -132,7 +132,7 @@ class Parser():
             if each.find(":") > 0:
                 if each.find("#")>=0:
                     each = each[:each.find("#")]
-                print(each)
+                #print(each)
                 # code with trigger
                 (ret1, ret2) = self.parse_define(each)
 
