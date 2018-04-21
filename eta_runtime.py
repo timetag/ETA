@@ -29,9 +29,13 @@ class ETA():
             self.send("Please update your ETA backend via <a href='http://timetag.github.io/'>timetag.github.io</a>",
                       "err")
 
-    def compile_eta(self, etaobj=None):
+    def compile_eta(self, etaobj=None, verbose=False):
         try:
-            code, metadata = eta_codegen.compile_eta(etaobj,self.send)
+            if verbose:
+                info_emitter = self.send
+            else:
+                info_emitter = print
+            code, metadata = eta_codegen.compile_eta(etaobj, info_emitter)
             self.send(metadata, "table")
             return code
         except Exception as e:
@@ -53,7 +57,7 @@ class ETA():
             expcfg = json.loads(etaobj["#expcfg"])
             self.send("Server received experiment file " +
                       expcfg["exp_name"] + ".")
-            self.eta_compiled_code = self.compile_eta(etaobj)
+            self.eta_compiled_code = self.compile_eta(etaobj, verbose=True)
             if self.eta_compiled_code is not None:
                 self.send("Compiling success.")
                 self.send("Starting user-code in data processing panel...")
@@ -153,6 +157,8 @@ class ETA():
                 caller_parms.append(
                     [start_point, stop_point, out[2], out[3], out[4], out[5], out[6], filename])
                 # print(start_point, stop_point)
+        if trunc>0:
+            caller_parms=caller_parms[:trunc]
         return caller_parms
 
     def run(self, filenames, group="compile"):
@@ -175,12 +181,18 @@ class ETA():
             else:
                 self.send("Try to eta.run() on a non-existing group {}.".format(group), "err")
                 return None
-        self.pool = multiprocessing.Pool(cores)
         ts = time.time()
-        rets = self.pool.map(external_wrpper, caller_parms)
-        self.pool.close()
+
+        if cores ==1:
+            rets = [external_wrpper(caller_parms[0])]
+        else:
+            self.pool = multiprocessing.Pool(cores)
+            rets = self.pool.map(external_wrpper, caller_parms)
+            self.pool.close()
+            self.pool.join()
         te = time.time()
-        self.pool.join()
+
+
         for each_graph in range(len(rets[0])):
             for each in range(1, len(rets)):
                 rets[0][each_graph] += rets[each][each_graph]
