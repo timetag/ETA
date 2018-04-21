@@ -30,7 +30,7 @@ def sp_core(caller_parms,mainloop):
     {globals_init}
     filename = caller_parms.pop()
     print(mainloop(np.zeros(1, dtype=np.int8), {tables},  bytearray(filename, "ascii"), *caller_parms))
-    return ({tables})
+    return [{tables}]
 
 #globals_init
 # routine warming up

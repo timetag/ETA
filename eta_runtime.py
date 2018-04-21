@@ -134,7 +134,11 @@ class ETA():
             self.send("Compilation failed.")
             self.logger.error(str(e), exc_info=True)
 
-    def scheduler(self, filename, trunc=-1, THREAD_MAX=1):
+    def simple_cut(self, filename, cuts=1, trunc=-1):
+        self.send("SIMPLE_CUT: Cutting the file into {} equal size section. ".format(cuts))
+        if cuts == 1:
+            self.send("SIMPLE_CUT:  You can increase the cuts to make full use of multithreading.")
+
         ret1, out = parse_header(bytearray(filename, "ascii"))
         if ret1 is not 0:
             raise ValueError("File {} is not found or incorrect, err code {}.".format(filename, ret1))
@@ -143,37 +147,48 @@ class ETA():
         BytesofRecords = out[2]
         NumRecords = out[-1]
         caller_parms = []
-        for i in range(THREAD_MAX):
+        for i in range(cuts):
             # fine-cutter
-            start_point = int(NumRecords / THREAD_MAX) * \
+            start_point = int(NumRecords / cuts) * \
                           BytesofRecords * i + TTF_header_offset
-            stop_point = int(NumRecords / THREAD_MAX) * \
+            stop_point = int(NumRecords / cuts) * \
                          BytesofRecords * (i + 1) + TTF_header_offset
             if (stop_point > TTF_filesize):
                 stop_point = TTF_filesize
             if (stop_point - start_point > BytesofRecords):
                 caller_parms.append(
-                    [start_point, stop_point, out[2], out[3], out[4], out[5], out[6]])
-                print(start_point, stop_point)
+                    [start_point, stop_point, out[2], out[3], out[4], out[5], out[6], filename])
+                # print(start_point, stop_point)
         return caller_parms
 
-    def run(self, filename, thread=1):
-        caller_parms = self.scheduler(filename)
+    def run(self, filenames, group="compile"):
+        if isinstance(filenames, str):
+            self.send("eta.simple_cut({},cuts=1) is executed.".format(filenames))
+            caller_parms = self.simple_cut(filenames)
+        else:
+            caller_parms = filenames
+
+
+        cores = min(len(caller_parms), multiprocessing.cpu_count())
+        self.send(
+            "ETA.run([...], group='{}') started with {} threads using {} cores.".format(group, len(caller_parms),
+                                                                                          cores))
+        #print(caller_parms)
+
+        # assign code
         for each in caller_parms:
-            each.append(filename)
             each.append(self.eta_compiled_code)
 
+        self.pool = multiprocessing.Pool(cores)
         ts = time.time()
-        self.send("ETA core started using {} cores".format(thread))
-
-        self.pool = multiprocessing.Pool(thread)
         rets = self.pool.map(external_wrpper, caller_parms)
         self.pool.close()
+        te = time.time()
         self.pool.join()
         for each_graph in range(len(rets[0])):
             for each in range(1, len(rets)):
                 rets[0][each_graph] += rets[each][each_graph]
         result = rets[0]
-        te = time.time()
-        self.send('ETA core finished in {} ms'.format((te - ts) * 1000))
+
+        self.send('ETA.run() finished in {} ms.'.format((te - ts) * 1000))
         return result
