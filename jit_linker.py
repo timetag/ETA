@@ -140,6 +140,8 @@ def link_jit_code(code):
     FileReader_init = link_function("FileReader_init", 8)
     POOL_init = link_function("POOL_init", 3)
     POOL_next = link_function("POOL_next", 1, i64=True)
+    POOL_update = link_function("POOL_update", 2, i64=False)
+    pop_signal_from_file = link_function("pop_signal_from_file", 1, i64=True)
     READER_BytesofRecords_get = link_global("READER_BytesofRecords")
     VSLOT_put = link_function("VSLOT_put", 2)
     glb = {
@@ -149,6 +151,8 @@ def link_jit_code(code):
         "FileReader_init": FileReader_init,
         "POOL_init": POOL_init,
         "POOL_next": POOL_next,
+        "pop_signal_from_file": pop_signal_from_file,
+        "POOL_update": POOL_update,
         "READER_BytesofRecords_get": READER_BytesofRecords_get,
     }
     loc = {}
