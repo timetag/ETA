@@ -133,9 +133,10 @@ class ETA():
                 self.logger.error(str(e), exc_info=True)
 
     def simple_cut(self, filename, cuts=1, trunc=-1):
-        self.send("SIMPLE_CUT: Cutting the file into {} equal size section. ".format(cuts))
+        self.send("ETA.simple_cut('{filename}',cuts={cuts}):"
+                  " cuts the file into {cuts} equal size section. ".format(filename=filename, cuts=cuts))
         if cuts == 1:
-            self.send("SIMPLE_CUT:  You can increase the cuts to make full use of multithreading.")
+            self.send("SIMPLE_CUT: You can increase the cuts to enable multi-threading.")
 
         ret1, out = parse_header(bytearray(filename, "ascii"))
         if ret1 is not 0:
@@ -157,13 +158,13 @@ class ETA():
                 caller_parms.append(
                     [start_point, stop_point, out[2], out[3], out[4], out[5], out[6], filename])
                 # print(start_point, stop_point)
-        if trunc>0:
-            caller_parms=caller_parms[:trunc]
+        if trunc > 0:
+            caller_parms = caller_parms[:trunc]
         return caller_parms
 
     def run(self, filenames, group="compile"):
         if isinstance(filenames, str):
-            self.send("eta.simple_cut({},cuts=1) is executed.".format(filenames))
+
             caller_parms = self.simple_cut(filenames)
         else:
             caller_parms = filenames
@@ -183,7 +184,7 @@ class ETA():
                 return None
         ts = time.time()
 
-        if cores ==1:
+        if cores == 1:
             rets = [external_wrpper(caller_parms[0])]
         else:
             self.pool = multiprocessing.Pool(cores)
@@ -191,7 +192,6 @@ class ETA():
             self.pool.close()
             self.pool.join()
         te = time.time()
-
 
         for each_graph in range(len(rets[0])):
             for each in range(1, len(rets)):
