@@ -88,12 +88,12 @@ build_script:
 
     7z a ETA_LIB.zip "c:\python36-x64\lib\site-packages"
     
-    move %APPVEYOR_BUILD_FOLDER%\dist\ETA.exe %APPVEYOR_BUILD_FOLDER%\ETA.exe
+    move %APPVEYOR_BUILD_FOLDER%\dist\ETA.exe %APPVEYOR_BUILD_FOLDER%\ETABackend.exe
   
 test_script:
 - cmd: >-
      npm install -g github-release-cli
      
-     github-release upload --owner=timetag --repo=ETABackend --tag="%APPVEYOR_BUILD_NUMBER%" --name="%APPVEYOR_BUILD_NUMBER%"  "C:/projects/ETABackend/eta.exe"
+     github-release upload --owner=timetag --repo=ETABackend --tag="%APPVEYOR_BUILD_NUMBER%" --name="%APPVEYOR_BUILD_NUMBER%"  "C:/projects/ETABackend/ETABackend.exe"
 
      echo  "C:/projects/ETABackend/ETA_LIB.zip" 
