@@ -9,9 +9,8 @@ import ws_broadcast
 while True:
     env_dist = os.environ.get('ETA_LIB')
     if env_dist is not None:
-        
-        #sys.path.insert(0, env_dist)
-        sys.path.append(env_dist)
+        sys.path.insert(0, env_dist)
+        #sys.path.append(env_dist)
     else:
         print("ETA_LIB is not found.")
         print("Please use a full path (C:/.../site-packages), and make sure that the path is not read-only.")
