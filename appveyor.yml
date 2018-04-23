@@ -91,6 +91,9 @@ build_script:
     --hidden-import logging
     --hidden-import ctypes.wintypes
     --hidden-import colorsys
+    --hidden-import csv
+    --hidden-import numbers
+    --hidden-import gettext
     -i icon.ico  
     ETA.py
 
