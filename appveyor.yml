@@ -90,6 +90,7 @@ build_script:
     --hidden-import logging.handlers
     --hidden-import logging
     --hidden-import ctypes.wintypes
+    --hidden-import colorsys
     -i icon.ico  
     ETA.py
 
