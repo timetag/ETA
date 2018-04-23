@@ -87,6 +87,8 @@ build_script:
     --hidden-import timeit
     --hidden-import http
     --hidden-import http.cookies
+    --hidden-import logging.handlers
+    --hidden-import logging
     -i icon.ico  
     ETA.py
 
