@@ -89,6 +89,7 @@ build_script:
     --hidden-import http.cookies
     --hidden-import logging.handlers
     --hidden-import logging
+    --hidden-import ctypes.wintypes
     -i icon.ico  
     ETA.py
 
