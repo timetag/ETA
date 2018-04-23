@@ -6,5 +6,6 @@ ETA Backend
 
 Installation
 ---------
-1. Unzip [ETA_LIB.zip](https://github.com/timetag/ETABackend/releases/tag/ETA_LIB) to a path
-2. Run ETA.exe and input the path to ETA_LIB
+1. Download and unzip [ETA_LIB.zip] to a path.
+2. Download and run ETABackend.exe.
+3. Input the path to ETA_LIB and your IP address in the ETA Backend.
