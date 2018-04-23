@@ -192,12 +192,13 @@ class ETA():
             self.pool.close()
             self.pool.join()
         te = time.time()
-
-        for each_graph in range(len(rets[0])):
-            for each in range(1, len(rets)):
+        for each in range(1, len(rets)):
+            for each_graph in range(len(rets[0])):
                 rets[0][each_graph] += rets[each][each_graph]
         result = rets[0]
-
         self.send('ETA.run() finished in {} ms.'.format((te - ts) * 1000))
         self.send("none", "dash")
-        return result
+        if isinstance(result,list) and len(result)==1:
+            return result[0]
+        else:
+            return result
