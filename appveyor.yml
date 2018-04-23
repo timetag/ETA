@@ -83,7 +83,7 @@ build_script:
     --hidden-import timeit
     --hidden-import http
     --hidden-import http.cookies
-    -i favicon.ico  
+    -i icon.ico  
     ETA.py
 
     7z a ETA_LIB.zip "c:\python36-x64\lib\site-packages"
