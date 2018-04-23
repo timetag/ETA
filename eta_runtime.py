@@ -199,4 +199,5 @@ class ETA():
         result = rets[0]
 
         self.send('ETA.run() finished in {} ms.'.format((te - ts) * 1000))
+        self.send("none", "dash")
         return result
