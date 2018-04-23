@@ -4,10 +4,13 @@ image: Visual Studio 2017
 init:
 - cmd: >-
     SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%
-    
-    echo pip install --user --upgrade pip
 
     python --version
+    
+    python -m pip install --disable-pip-version-check --upgrade pip
+
+    python -m pip --version
+
 environment:
   PIP_DISABLE_PIP_VERSION_CHECK: 1
   PYTHON: C:\Python36-x64
@@ -37,35 +40,35 @@ install:
     
     }
     
-    pip install pypiwin32
+    python -m pip install pypiwin32
     
-    pip install --upgrade pyinstaller
+    python -m pip install --upgrade pyinstaller
     
-    pip install cffi
+    python -m pip install cffi
     
-    pip install numpy
+    python -m pip install numpy
     
-    pip install scipy
+    python -m pip install scipy
     
-    pip install lmfit
+    python -m pip install lmfit
     
-    pip install astunparse
+    python -m pip install astunparse
     
-    pip install dash==0.21.0
+    python -m pip install dash==0.21.0
     
-    pip install dash-renderer==0.11.3
+    python -m pip install dash-renderer==0.11.3
     
-    pip install dash-html-components==0.9.0
+    python -m pip install dash-html-components==0.9.0
     
-    pip install dash-core-components==0.21.0
+    python -m pip install dash-core-components==0.21.0
     
-    pip install plotly --upgrade
+    python -m pip install plotly --upgrade
     
-    pip install bokeh --upgrade
+    python -m pip install bokeh --upgrade
     
-    pip install c:/whls/llvmlite-0.22.0-cp36-cp36m-win_amd64.whl
+    python -m pip install c:/whls/llvmlite-0.22.0-cp36-cp36m-win_amd64.whl
     
-    pip install c:/whls/numba-0.37.0-cp36-cp36m-win_amd64.whl
+    python -m pip install c:/whls/numba-0.37.0-cp36-cp36m-win_amd64.whl
 
 cache:
 - c:/whls
