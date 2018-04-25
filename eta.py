@@ -8,7 +8,11 @@ import ws_broadcast
 while True:
     env_dist = os.environ.get('ETA_LIB')
     if env_dist is not None:
-        sys.path.insert(0, env_dist)
+        if getattr(sys, 'frozen', False):
+            sys.path.insert(0, env_dist)
+        else:
+            sys.path.append(env_dist)
+
         break
     else:
         print("ETA_LIB is not found.")

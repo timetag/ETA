@@ -7,14 +7,14 @@ TTF_header_offset_get = link_global("TTF_header_offset")
 TTF_filesize_get = link_global("TTF_filesize")
 NumRecords_get = link_global("NumRecords")
 RecordType_get =link_global("RecordType")
-PARSE_TimeTagFileHeader = link_function("PARSE_TimeTagFileHeader")
+PARSE_TimeTagFileHeader = link_function("PARSE_TimeTagFileHeader",2)
 @jit(nopython=True, parallel=True, nogil=True)
-def parse_header(filename1):
+def parse_header(filename1,filetype=-1):
     link_libs()
     # read file header
     #i = BytesofRecords_set(8)
     filename = ffi.from_buffer(filename1)
-    ret1 = PARSE_TimeTagFileHeader(filename)
+    ret1 = PARSE_TimeTagFileHeader(filename,nb.int32(filetype))
     return (ret1,[
             TTF_header_offset_get(),
             TTF_filesize_get(),
