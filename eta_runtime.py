@@ -132,13 +132,13 @@ class ETA():
                 self.displaying = False
                 self.logger.error(str(e), exc_info=True)
 
-    def simple_cut(self, filename, cuts=1, trunc=-1):
+    def simple_cut(self, filename, cuts=1, trunc=-1,format=0):
         self.send("ETA.simple_cut('{filename}',cuts={cuts}):"
                   " cuts the file into {cuts} equal size section. ".format(filename=filename, cuts=cuts))
         if cuts == 1:
             self.send("SIMPLE_CUT: You can increase the cuts to enable multi-threading.")
 
-        ret1, out = parse_header(bytearray(filename, "ascii"))
+        ret1, out = parse_header(bytearray(filename, "ascii"),format)
         if ret1 is not 0:
             raise ValueError("File {} is not found or incorrect, err code {}.".format(filename, ret1))
         TTF_header_offset = out[0]
