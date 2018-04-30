@@ -508,7 +508,7 @@ class Graph(INTEGER, TABLE, CLOCK, BUFFER, HISTOGRAM, COINCIDENCE):
     def emit(self, triggers, chn, waittime=0, period=0, repeat=1):
         chn = int(chn)
         repeat = int(repeat)
-        waittime = int(waittime.replace("abs", "-"))
+        waittime = int(waittime)
         period = int(period)
         self.output_chn[chn] = True  # self.make_output_chn(chn)
         if waittime < 0:
