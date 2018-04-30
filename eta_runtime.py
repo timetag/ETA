@@ -62,7 +62,10 @@ class ETA():
                 try:
                     glob = {"eta": self}
                     # side configuration panel
-                    loc = vars[group]
+                    if group in vars:
+                        loc = vars[group]
+                    else:
+                        loc = {}
                     exec(servercode, glob, loc)
                 except Exception as e:
                     self.send('[' + str(type(e).__name__) + ']' + str(e), "err")
