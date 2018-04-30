@@ -70,6 +70,7 @@ class ETA():
                     self.send("This error comes from user-code in the display panel.")
                     return
                 self.send("Timetag analysis is finished.")
+                self.send("Don't forget to save the recipe and SHARE it on ETAHub!")
 
     # user code API
     def display(self, app=None):
