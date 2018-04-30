@@ -6,42 +6,72 @@ import textwrap
 import json, copy
 
 
-def compile_eta(jsobj, print,vars=[]):
+def compile_eta(jsobj, print, vars=[]):
+    def group_viri(vi_groupings, vis_all):
+        for each in range(len(vis_all)):
+            instgroup = vis_all[each]["group"]
+            if instgroup in vi_groupings:
+                vi_groupings[instgroup].append(vis_all[each])
+            else:
+                vi_groupings[instgroup] = [vis_all[each]]
+
+    def select_by_name(obj, name):
+        for each in obj:
+            if each["name"] == name:
+                return each
+
     # split vi/ri
     vis_all = []
-    ris = []
+    ris_all = []
+    dpps_all = []
+    var_all = []
     for each in json.loads(jsobj["eta_index_table"]):
         if each["id"].find("vi_") >= 0:
             vis_all.append(each)
+        elif each["id"].find("ri_") >= 0:
+            ris_all.append(each)
+        elif each["id"].find("var_") >= 0:
+            var_all.append(each)
         else:
-            ris.append(each)
-    # compile ri
-    num_rslot = 0
-    num_rchns = 0
-    real_chns_per_rslots = []
-    for each in ris:
-        config = json.loads(each["group / configurations"])
-        if isinstance(config, int):
-            thiscount = config
-        elif isinstance(config, list):
-            thiscount = config[0]
-        real_chns_per_rslots.append(thiscount)
-        each["output channels"] = str(
-            [i for i in range(num_rchns, num_rchns + thiscount)])
-        num_rchns += thiscount
-        num_rslot += 1
-
-    # compile vi
+            dpps_all.append(each)
+    # groupings
     vi_groupings = {}
+    ri_groupings = {}
+    var_groupings = {}
+    group_viri(vi_groupings, vis_all)
+    group_viri(ri_groupings, ris_all)
+    group_viri(var_groupings, var_all)
+    var_per_groupings= {}
+    for vargroup in var_groupings:
+        vars = var_groupings[vargroup]
+        var_per_groupings[vargroup]={}
+        for each in vars:
+            key = each["name"]
+            value = each["config"]
+            var_per_groupings[vargroup][key]=value
+    # prepare output per group
     code_per_groupings = {}
-    for each in range(len(vis_all)):
-        instgroup = vis_all[each]["group / configurations"]
-        if instgroup in vi_groupings:
-            vi_groupings[instgroup].append(vis_all[each])
-        else:
-            vi_groupings[instgroup] = [vis_all[each]]
     for instgroup in vi_groupings:
-        vis=vi_groupings[instgroup]
+        # compile ri
+        ris = ri_groupings[instgroup]
+
+        num_rslot = 0
+        num_rchns = 0
+        real_chns_per_rslots = []
+        for each in ris:
+            config = json.loads(each["config"])
+            if isinstance(config, int):
+                thiscount = config
+            elif isinstance(config, list):
+                thiscount = config[0]
+            real_chns_per_rslots.append(thiscount)
+            each["info"] = "OutCHN " + json.dumps([i for i in range(num_rchns, num_rchns + thiscount)])
+
+            num_rchns += thiscount
+            num_rslot += 1
+
+        # compile vi
+        vis = vi_groupings[instgroup]
         vi_code_list = []
         graphnames = []
         print("Compiling ETA recipie group {}...".format(instgroup))
@@ -75,22 +105,18 @@ def compile_eta(jsobj, print,vars=[]):
             # print(each)
             etavm.exec_eta(each)
 
-        def select_by_name(obj, name):
-            for each in obj:
-                if each["name"] == name:
-                    return each
-
         num_vslot = 0
         for each in etavm.graphs:
-            select_by_name(vis, each.name)["input channels"] = str(
-                list(each.input_chn.keys()))
-            select_by_name(vis, each.name)["output channels"] = str(
-                list(each.output_chn.keys()))
             for a in list(each.output_chn.keys()):
                 if num_vslot < int(a):
                     num_vslot = int(a)
-            select_by_name(vis, each.name)["tables"] = str(
-                list(each.external_table_symbols.keys()))
+            select_by_name(vis, each.name)["info"] = "InCHN {}, OutCHN {}, Tables {} ".format(
+                str(list(each.input_chn.keys())),
+                str(list(each.output_chn.keys())),
+                str(list(each.external_table_symbols.keys()))
+            )
+
+            select_by_name(vis, each.name)["config"] = ""
         num_vslot -= num_rchns
         num_vslot += 1
         num_vslot = max(num_vslot, 0)
@@ -113,7 +139,9 @@ def compile_eta(jsobj, print,vars=[]):
 
     # update metadata
     metadata = []
-    metadata += ris
+    metadata += var_all
+    metadata += dpps_all
+    metadata += ris_all
     metadata += vis_all
     metadata = json.dumps(metadata)
-    return code_per_groupings, metadata
+    return code_per_groupings,var_per_groupings, metadata
