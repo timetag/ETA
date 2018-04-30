@@ -35,15 +35,15 @@ class ETA():
                 info_emitter = self.send
             else:
                 info_emitter = print
-            code, metadata = eta_codegen.compile_eta(etaobj, info_emitter)
+            code,vars, metadata = eta_codegen.compile_eta(etaobj, info_emitter)
             self.send(metadata, "table")
-            return code
+            return code,vars
         except Exception as e:
             self.send('[' + str(type(e).__name__) + ']' + str(e), "err")
             self.send("Compilation failed.")
             self.logger.error(str(e), exc_info=True)
 
-    def process_eta(self, etaobj=None):
+    def process_eta(self, etaobj=None, id="code",group="grp"):
         if self.displaying:
             self.send("Display is running at http://{}:5000.".format(self.hostip))
             self.send(
@@ -52,28 +52,22 @@ class ETA():
         else:
             with open("server.eta", 'w') as file:
                 file.write(json.dumps(etaobj))
-            servercode = etaobj["code"]
+            servercode = etaobj[id]
 
-            expcfg = json.loads(etaobj["#expcfg"])
-            self.send("Server received experiment file " +
-                      expcfg["exp_name"] + ".")
-            self.eta_compiled_code = self.compile_eta(etaobj, verbose=True)
+            self.send("ETA Backend starting with id {}.".format(id))
+            self.eta_compiled_code,vars = self.compile_eta(etaobj, verbose=True)
             if self.eta_compiled_code is not None:
                 self.send("Compiling success.")
                 self.send("Starting user-code in data processing panel...")
                 try:
                     glob = {"eta": self}
-
                     # side configuration panel
-                    loc = {}
-                    variables = json.loads(etaobj["eta_dpp_table"])
-                    for each in variables:
-                        loc[each["variable"]] = each["value"]
+                    loc = vars[group]
                     exec(servercode, glob, loc)
                 except Exception as e:
                     self.send('[' + str(type(e).__name__) + ']' + str(e), "err")
                     self.logger.error(str(e), exc_info=True)
-                    self.send("This error is not a ETA error. It comes from user-code in data processing panel.")
+                    self.send("This error comes from user-code in the display panel.")
                     return
                 self.send("Timetag analysis is finished.")
 
@@ -132,13 +126,13 @@ class ETA():
                 self.displaying = False
                 self.logger.error(str(e), exc_info=True)
 
-    def simple_cut(self, filename, cuts=1, trunc=-1,format=0):
+    def simple_cut(self, filename, cuts=1, trunc=-1, format=0):
         self.send("ETA.simple_cut('{filename}',cuts={cuts}):"
                   " cuts the file into {cuts} equal size section. ".format(filename=filename, cuts=cuts))
         if cuts == 1:
             self.send("SIMPLE_CUT: You can increase the cuts to enable multi-threading.")
 
-        ret1, out = parse_header(bytearray(filename, "ascii"),format)
+        ret1, out = parse_header(bytearray(filename, "ascii"), format)
         if ret1 is not 0:
             raise ValueError("File {} is not found or incorrect, err code {}.".format(filename, ret1))
         TTF_header_offset = out[0]
@@ -198,7 +192,7 @@ class ETA():
         result = rets[0]
         self.send('ETA.run() finished in {} ms.'.format((te - ts) * 1000))
         self.send("none", "dash")
-        if isinstance(result,list) and len(result)==1:
+        if isinstance(result, list) and len(result) == 1:
             return result[0]
         else:
             return result

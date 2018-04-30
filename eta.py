@@ -34,7 +34,7 @@ class WSSERVER(ETA):
 
     def __init__(self, port):
         import logging
-        self.max_frontend = 19
+        self.max_frontend = 23
         self.logger = logging.getLogger(__name__)
         logging.basicConfig()
         self.hostip = None
