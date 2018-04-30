@@ -66,9 +66,9 @@ install:
     
     python -m pip install bokeh --upgrade
     
-    python -m pip install c:/whls/llvmlite-0.22.0-cp36-cp36m-win_amd64.whl
+    python -m pip install llvmlite --upgrade
     
-    python -m pip install c:/whls/numba-0.37.0-cp36-cp36m-win_amd64.whl
+    python -m pip install numba --upgrade
 
 cache:
 - c:/whls
