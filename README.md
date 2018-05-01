@@ -3,7 +3,7 @@ ETA
 [![Build status](https://ci.appveyor.com/api/projects/status/ajwi3hnfxnsakj0u?svg=true)](https://ci.appveyor.com/project/linzuzeng/etabackend)
 [![License](https://img.shields.io/github/license/timetag/ETAServer.svg)](https://github.com/timetag/ETAServer/blob/master/LICENSE)
 [![Github All Releases](https://img.shields.io/github/downloads/timetag/ETABackend/total.svg)](https://github.com/timetag/ETABackend/releases)
-
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1231348.svg)](https://doi.org/10.5281/zenodo.1231348)
 
 [ETA Web GUI](https://timetag.github.io/ETA/gui/src/renderer/)
 
