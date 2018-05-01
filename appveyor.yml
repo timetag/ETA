@@ -1,16 +1,6 @@
 version: build.{build}
 skip_tags: true
 image: Visual Studio 2017
-init:
-- cmd: >-
-    SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%
-
-    python --version
-    
-    python -m pip install --disable-pip-version-check --upgrade pip
-
-    python -m pip --version
-
 environment:
   PIP_DISABLE_PIP_VERSION_CHECK: 1
   PYTHON: C:\Python36-x64
@@ -19,13 +9,36 @@ environment:
   ETA_VER: v0.0.23
   GITHUB_TOKEN:
     secure: IdgCOIno/YfkZynVnR2pBSjpkNG+4+XZneFXnqBVvxwX3MYX0EKqdzIUVPxQrkJu
+  GOPATH: c:\gopath
+
+init:
+- cmd: >-
+    SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%
+
+
+    echo %GOPATH%
+
+    set PATH=%GOPATH%\bin;c:\go\bin;%PATH%
+    
+    python --version
+    
+    go version
+
+    go env
 
 install:
 - ps: >-
-    Install-Product node 8 x64
-    
+   
     go get github.com/itchio/gothub
     
+    gothub info -u timetag -r ETA
+
+    Install-Product node 8 x64
+
+    python -m pip install --disable-pip-version-check --upgrade pip
+
+    python -m pip --version
+
     python -m pip install pypiwin32 --upgrade
     
     python -m pip install pyinstaller --upgrade 
@@ -105,7 +118,7 @@ test_script:
 
      cd ..
 
-     gothub -u timetag -r ETA
+     
 
      echo %APPVEYOR_BUILD_FOLDER%
      
