@@ -16,6 +16,7 @@ environment:
   PYTHON: C:\Python36-x64
   PYTHON_VERSION: 3.6
   PYTHON_ARCH: 64
+  ETA_VER: v0.0.23
   GITHUB_TOKEN:
     secure: IdgCOIno/YfkZynVnR2pBSjpkNG+4+XZneFXnqBVvxwX3MYX0EKqdzIUVPxQrkJu
 
@@ -23,7 +24,7 @@ install:
 - ps: >-
     Install-Product node 8 x64
     
-    npm install -g github-release-cli
+    go get github.com/itchio/gothub
     
     python -m pip install pypiwin32 --upgrade
     
@@ -95,13 +96,19 @@ build_script:
     
     move %APPVEYOR_BUILD_FOLDER%\dist\ETA.exe %APPVEYOR_BUILD_FOLDER%\ETABackend.exe
     
-    cd gui
-
-    yarn dist
-
-    cd ..
 test_script:
 - cmd: >-
 
-     
-     github-release upload --owner=timetag --repo=ETABackend --tag="%APPVEYOR_BUILD_NUMBER%" --name="%APPVEYOR_BUILD_NUMBER%"  "C:/projects/ETABackend/ETABackend.exe" "C:/projects/ETABackend/ETA_LIB.zip" 
+     cd gui
+
+     yarn dist
+
+     cd ..
+
+     gothub -u timetag -r ETA
+
+     echo %ETA_VER%
+
+     gothub -v upload -u timetag -r ETA -t "%ETA_VER%" -n "C:/projects/ETABackend/ETABackend.exe"
+
+     gothub -v upload -u timetag -r ETA -t "%ETA_VER%" -n "C:/projects/ETABackend/ETA_LIB.zip" 
