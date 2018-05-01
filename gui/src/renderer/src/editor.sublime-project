@@ -1,0 +1,16 @@
+{
+    "folders":
+    [
+        {
+             "path": "/"
+        }
+    ],
+    "settings":
+    {
+        "Combine: FileList": "/files.txt",
+        "Combine: InPath": "/",
+        "Combine: OutPath": "/",
+        "Combine: MasterName": "editor.js",
+        "Combine: MinifyName": "editor.min.js"
+    }
+}
