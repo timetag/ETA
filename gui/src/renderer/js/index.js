@@ -229,7 +229,7 @@ d3.select('#btn_connect').on('click', function() {
 d3.select('#btn_compile').on('click', function() {
     if (ws==null){
         d3.select('#btn_connect').on('click')();
-        return;
+        
     }
     $("#remoteLOG").html("");// clear log
     eta_linker_result=export_localstorage();
@@ -244,7 +244,7 @@ d3.select('#btn_compile').on('click', function() {
  function run_dpp(id,group) {
     if (ws==null){
         d3.select('#btn_connect').on('click')();
-        return;
+        
     }
     $("#remoteLOG").html("");// clear log
     $("#exampleModalLabel").html('<div class="loader d-inline-block"></div> <div class="d-inline-block">ETA Running...</div>');
@@ -256,4 +256,3 @@ d3.select('#btn_compile').on('click', function() {
     }
 };
 d3.select('#btn_connect').on('click')();
-d3.select('#btn_connect_dialog').on('click',d3.select('#btn_connect').on('click'));

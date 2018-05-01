@@ -1,7 +1,10 @@
 def get_onefile_loop(tables, init, looping, globals_init, num_rslot, num_rchns, num_vslot):
-    if len(tables)==0:
-        raise ValueError("At least one table/histogram should be defined.")
-    text ="""
+    table_list = "{"
+    for each in tables:
+        table_list += '"' + each + '":' + each + ","
+    table_list += "}"
+    print(table_list)
+    text = """
 @jit(nopython=True, parallel=True, nogil=True)
 def mainloop({tables}, filename1, fseekpoint, fendpoint, BytesofRecords, TTRes_pspr, SYNCRate_pspr, DTRes_pspr,RecordType):
     link_libs()
@@ -37,9 +40,10 @@ def sp_core(caller_parms,mainloop):
     {globals_init}
     filename = caller_parms.pop()
     print(mainloop( {tables},  bytearray(filename, "ascii"), *caller_parms))
-    return [ {tables} ]
 
-""".format(init=init, looping=looping, globals_init=globals_init, tables=",".join(tables), num_rslot=num_rslot,
+    return {table_list}
+
+""".format(init=init, looping=looping, globals_init=globals_init, tables=",".join(tables),table_list=table_list, num_rslot=num_rslot,
            num_vslot=num_vslot, num_rchns=num_rchns)
-    #print(text)
+    # print(text)
     return text

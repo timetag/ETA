@@ -6,7 +6,7 @@ import textwrap
 import json, copy
 
 
-def compile_eta(jsobj, print, vars=[]):
+def compile_eta(jsobj, print):
     def group_viri(vi_groupings, vis_all):
         for each in range(len(vis_all)):
             instgroup = vis_all[each]["group"]
@@ -41,14 +41,14 @@ def compile_eta(jsobj, print, vars=[]):
     group_viri(vi_groupings, vis_all)
     group_viri(ri_groupings, ris_all)
     group_viri(var_groupings, var_all)
-    var_per_groupings= {}
+    var_per_groupings = {}
     for vargroup in var_groupings:
         vars = var_groupings[vargroup]
-        var_per_groupings[vargroup]={}
+        var_per_groupings[vargroup] = {}
         for each in vars:
             key = each["name"]
             value = each["config"]
-            var_per_groupings[vargroup][key]=value
+            var_per_groupings[vargroup][key] = value
     # prepare output per group
     code_per_groupings = {}
     for instgroup in vi_groupings:
@@ -85,7 +85,12 @@ def compile_eta(jsobj, print, vars=[]):
                     "ETA file corrupted. Graph for {} is not found.".format(instname))
             usercode, graph_instructions = graph_parser.compile_graph(
                 jsobj[instid], automata=each)
-            # print(usercode)
+            # apply vars to user code
+            if instgroup in var_groupings:
+                for eachvar in var_groupings[instgroup]:
+                    varkey = eachvar["name"]
+                    varvalue = eachvar["config"]
+                    usercode=usercode.replace("`{}`".format(varkey),varvalue)
             # parse user code
 
             intp = etacode_parser.Parser(usercode, [each])
@@ -144,4 +149,4 @@ def compile_eta(jsobj, print, vars=[]):
     metadata += ris_all
     metadata += vis_all
     metadata = json.dumps(metadata)
-    return code_per_groupings,var_per_groupings, metadata
+    return code_per_groupings, var_per_groupings, metadata
