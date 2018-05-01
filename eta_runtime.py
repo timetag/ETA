@@ -181,7 +181,7 @@ class ETA():
                 self.send("Try to eta.run() on a non-existing group {}.".format(group), "err")
                 return None
         ts = time.time()
-
+        #map
         if cores == 1:
             rets = [external_wrpper(caller_parms[0])]
         else:
@@ -190,8 +190,9 @@ class ETA():
             self.pool.close()
             self.pool.join()
         te = time.time()
+        #reduce
         for each in range(1, len(rets)):
-            for each_graph in range(len(rets[0])):
+            for each_graph in rets[0].keys():
                 rets[0][each_graph] += rets[each][each_graph]
         result = rets[0]
         self.send('ETA.run() finished in {} ms.'.format((te - ts) * 1000))
