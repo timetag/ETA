@@ -118,12 +118,10 @@ test_script:
 
      cd ..
 
-     
-
      echo %APPVEYOR_BUILD_FOLDER%
      
      echo %ETA_VER%
 
-     gothub -v upload -u timetag -r ETA -t "%ETA_VER%" -n "ETABackend.exe"
+     gothub -v upload -u timetag -r ETA -t "%ETA_VER%" -f "ETABackend.exe" -n "ETABackend.exe"
 
-     gothub -v upload -u timetag -r ETA -t "%ETA_VER%" -n "ETA_LIB.zip" 
+     gothub -v upload -u timetag -r ETA -t "%ETA_VER%" -f "ETA_LIB.zip"  -n "ETA_LIB.zip"
