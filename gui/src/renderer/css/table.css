@@ -1,0 +1,70 @@
+.table-editable {
+  position: relative;
+
+}
+td{
+  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+td:focus {
+    color: #495057;
+    background-color: #fff;
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+}
+
+.table-remove:hover {
+  color: #f00;
+}
+
+.table-up, .table-down, .table-copy,.table-remove{
+  color: #343a40;
+  cursor: pointer;
+ 
+}
+
+.table-copy,.table-remove{
+ 
+  padding-right: 0.8em;
+}
+.table-up:hover, .table-down:hover, .table-copy:hover {
+  color: #6c757d;
+}
+
+.inst_name:before{
+  -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    font-weight: 900;
+    padding-right: .35rem;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+}
+.viicon:before{
+color: #f00;
+content: "\f20e";
+font-family: Font Awesome\ 5 Brands;
+}
+.riicon:before{
+    color: #4a87be;
+content: "\f233";
+font-family: Font Awesome\ 5 Free;
+}
+.dppicon:before{
+    color: #41ace3;
+content: "\f080";
+font-family: Font Awesome\ 5 Free;
+}
+
+.varicon:before{
+    color: #9744b8;
+content: "\f12c";
+font-family: Font Awesome\ 5 Free;
+}
+
+.table-dpp {
+    color: #41ace3;
+}
+.table-design{
+color: #f00;
+}

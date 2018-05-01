@@ -21,24 +21,9 @@ environment:
 
 install:
 - ps: >-
-    mkdir c:/whls
-
-    if(!(Test-Path -Path "c:/whls/llvmlite-0.22.0-cp36-cp36m-win_amd64.whl" )){
-
-     appveyor DownloadFile https://github.com/timetag/ETABackend/releases/download/wheels/llvmlite-0.22.0-cp36-cp36m-win_amd64.whl -FileName c:/whls/llvmlite-0.22.0-cp36-cp36m-win_amd64.whl
+    Install-Product node 8 x64
     
-    }
-    if(!(Test-Path -Path "c:/whls/numba-0.37.0-cp36-cp36m-win_amd64.whl" )){
-    
-     appveyor DownloadFile https://github.com/timetag/ETABackend/releases/download/wheels/numba-0.37.0-cp36-cp36m-win_amd64.whl -FileName c:/whls/numba-0.37.0-cp36-cp36m-win_amd64.whl
-    
-    }
-    
-    if(!(Test-Path -Path "c:/whls/numpy-1.14.1+mkl-cp36-cp36m-win_amd64.whl" )){
-    
-     appveyor DownloadFile https://github.com/timetag/ETABackend/releases/download/wheels/numpy-1.14.1.mkl-cp36-cp36m-win_amd64.whl -FileName c:/whls/numpy-1.14.1+mkl-cp36-cp36m-win_amd64.whl
-    
-    }
+    npm install -g github-release-cli
     
     python -m pip install pypiwin32 --upgrade
     
@@ -69,10 +54,19 @@ install:
     python -m pip install llvmlite --upgrade
     
     python -m pip install numba --upgrade
+    
+    cd gui
+
+    yarn
+
+    cd ..
 
 cache:
-- c:/whls
 - '%LOCALAPPDATA%\pip\Cache'
+- gui\node_modules
+- '%USERPROFILE%\.electron'
+- '%LOCALAPPDATA%\electron\Cache'
+- '%LOCALAPPDATA%\electron-builder\cache'
 
 build_script:
 - cmd: >-
@@ -100,9 +94,14 @@ build_script:
     7z a ETA_LIB.zip "c:\python36-x64\lib\site-packages"
     
     move %APPVEYOR_BUILD_FOLDER%\dist\ETA.exe %APPVEYOR_BUILD_FOLDER%\ETABackend.exe
-  
+    
+    cd gui
+
+    yarn dist
+
+    cd ..
 test_script:
 - cmd: >-
-     npm install -g github-release-cli
+
      
      github-release upload --owner=timetag --repo=ETABackend --tag="%APPVEYOR_BUILD_NUMBER%" --name="%APPVEYOR_BUILD_NUMBER%"  "C:/projects/ETABackend/ETABackend.exe" "C:/projects/ETABackend/ETA_LIB.zip" 

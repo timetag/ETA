@@ -1,0 +1,38 @@
+{
+  "name": "ETA",
+  "license": "MIT",
+  "author": "Zuzeng Lin <zuzeng@kth.se>",
+  "homepage": "http://timetag.github.io",
+  "version": "0.0.23",
+  "scripts": {
+    "dev": "electron .",
+    "dist": "electron-builder",
+    "dist:dir": "yarn dist --dir -c.compression=store -c.mac.identity=null"
+  },
+  "main": "src/main/index.js",
+  "build": {
+    "appId": "com.eta.client",
+    "productName": "ETA",
+    "copyright": "Copyright (C) 2018 Zuzeng Lin",
+    "mac": {
+      "category": "your.app.category.type",
+      "publish": [
+        "github"
+      ]
+    },
+    "win": {
+      "publish": [
+        "github"
+      ]
+    }
+  },
+  "dependencies": {
+    "electron-log": "^2.2.14",
+    "electron-updater": "^2.20.1"
+  },
+  "devDependencies": {
+    "electron": "1.8.3",
+    "electron-builder": "^20.0.6"
+  },
+  "resolutions": {}
+}
