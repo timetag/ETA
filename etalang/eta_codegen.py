@@ -65,7 +65,7 @@ def compile_eta(jsobj, print):
             elif isinstance(config, list):
                 thiscount = config[0]
             real_chns_per_rslots.append(thiscount)
-            each["info"] = "OutCHN " + json.dumps([i for i in range(num_rchns, num_rchns + thiscount)])
+            each["info"] = "📤 " + json.dumps([i for i in range(num_rchns, num_rchns + thiscount)])
 
             num_rchns += thiscount
             num_rslot += 1
@@ -115,7 +115,7 @@ def compile_eta(jsobj, print):
             for a in list(each.output_chn.keys()):
                 if num_vslot < int(a):
                     num_vslot = int(a)
-            select_by_name(vis, each.name)["info"] = "InCHN {}, OutCHN {}, Tables {} ".format(
+            select_by_name(vis, each.name)["info"] = '📥 {}, 📤 {}, 📊 {} '.format(
                 str(list(each.input_chn.keys())),
                 str(list(each.output_chn.keys())),
                 str(list(each.external_table_symbols.keys()))

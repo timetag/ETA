@@ -5,13 +5,13 @@
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
     <link rel="stylesheet" type="text/css" href="css/main.css">
      <link rel="stylesheet" type="text/css" href="css/designer.css">
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     <link rel="stylesheet" href="css/bootstrap.min.css">
-
     <script>
         if (typeof module === 'object') {
             window.module = module;
@@ -53,6 +53,7 @@
 </head>
 <body id="body">
 <script type="text/javascript" src="js/layout.js"></script>
+
 <!-- manually attach allowOverflow method to pane -->
 
 <div class="ui-layout-north" style="overflow: hidden;">
@@ -266,7 +267,7 @@
                     <div class="row">
                         <div class="col-sm-4">
                             <div class="card">
-                                <img class="card-img-top" src="img/draw_blob.gif">
+                                <img class="card-img-top gif" src="img/draw_blob.png">
                                 <div class="card-body">
                                     <h5 class="card-title"><a href="#" id="btn_create_graph">TRANSITION</a></h5>
                                     <p class="card-text">Draw the transition graph on the right side of the window.</p>
@@ -276,7 +277,7 @@
                         </div>
                         <div class="col-sm-4">
                             <div class="card">
-                                <img class="card-img-top" src="img/draw_trigger.gif">
+                                <img class="card-img-top gif" src="img/draw_trigger.png">
                                 <div class="card-body">
                                     <h5 class="card-title"><a href="#" id="btn_create_act">ACTION</a></h5>
                                     <p class="card-text">Action allow you to perform analytical functions or emit signals on any event trigger.</p>
@@ -391,7 +392,7 @@
                     <div class="row">
 						<div class="col-sm-4">
                             <div class="card">
-                                <img class="card-img-top" src="img/draw_blob.gif">
+                                <img class="card-img-top gif" src="img/draw_blob.png">
                                 <div class="card-body">
                                     <p class="card-text">Draw the cricles for transition graph.</p>
                                 </div>
@@ -399,7 +400,7 @@
                         </div>
                         <div class="col-sm-4">
                             <div class="card">
-                                <img class="card-img-top" src="img/draw_arrow.gif">
+                                <img class="card-img-top gif" src="img/draw_arrow.png">
                                 <div class="card-body">
                                     <p class="card-text">Draw the arrows for transition graph.</p>
 
@@ -408,7 +409,7 @@
                         </div>
                         <div class="col-sm-4">
                             <div class="card">
-                                <img class="card-img-top" src="img/draw_init.gif">
+                                <img class="card-img-top gif" src="img/draw_init.png">
                                 <div class="card-body">
                                     <p class="card-text">Set one cricle as the initial cricle exclusively.</p>
                                 </div>
@@ -420,7 +421,7 @@
 
                         <div class="col-sm-4">
                             <div class="card">
-                                <img class="card-img-top" src="img/draw_name.gif">
+                                <img class="card-img-top gif" src="img/draw_name.png">
                                 <div class="card-body">
                                     <p class="card-text">Edit the symbol for cricles or conditions for arrows.</p>
 
@@ -429,7 +430,7 @@
                         </div>
                         <div class="col-sm-4">
                             <div class="card">
-                                <img class="card-img-top" src="img/draw_trigger.gif">
+                                <img class="card-img-top gif" src="img/draw_trigger.png">
                                 <div class="card-body">
                                     <p class="card-text">Create triggers on cricles or arrows.</p>
                                 </div>
@@ -437,7 +438,7 @@
                         </div>
                         <div class="col-sm-4">
                             <div class="card">
-                                 <img class="card-img-top" src="img/draw_del.gif">
+                                 <img class="card-img-top gif" src="img/draw_del.png">
                                 <div class="card-body">
                                     <p class="card-text">Delete cricles or arrows.</p>
                                 </div>
@@ -453,6 +454,24 @@
     
     <!-- application main script -->
     <script src="js/design.js"></script>
+    <script type="text/javascript">
+ 	$(".gif").each(function () {
 
+     $(this).hover(
+        function()
+        {
+            var originalSrc = $(this).attr("src");
+            $(this).attr("src", originalSrc.replace(".png", ".gif"));
+        },
+        function()
+        {
+            var originalSrc = $(this).attr("src");
+            $(this).attr("src", originalSrc.replace(".gif", ".png"));  
+        }
+     );
+
+  });
+		  
+    </script>
 </body>
 </html>

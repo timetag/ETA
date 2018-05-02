@@ -1,12 +1,14 @@
 def get_onefile_loop(tables, init, looping, globals_init, num_rslot, num_rchns, num_vslot):
     table_list = "{"
+    table_para = ""
     for each in tables:
         table_list += '"' + each + '":' + each + ","
+        table_para += each + ","
     table_list += "}"
-    print(table_list)
+
     text = """
 @jit(nopython=True, parallel=True, nogil=True)
-def mainloop({tables}, filename1, fseekpoint, fendpoint, BytesofRecords, TTRes_pspr, SYNCRate_pspr, DTRes_pspr,RecordType):
+def mainloop({tables} filename1, fseekpoint, fendpoint, BytesofRecords, TTRes_pspr, SYNCRate_pspr, DTRes_pspr,RecordType):
     link_libs()
     chn=np.zeros(1, dtype=np.int8)
     Channel = ffi.from_buffer(chn)
@@ -39,11 +41,12 @@ def mainloop({tables}, filename1, fseekpoint, fendpoint, BytesofRecords, TTRes_p
 def sp_core(caller_parms,mainloop):
     {globals_init}
     filename = caller_parms.pop()
-    print(mainloop( {tables},  bytearray(filename, "ascii"), *caller_parms))
+    print(mainloop( {tables}  bytearray(filename, "ascii"), *caller_parms))
 
     return {table_list}
 
-""".format(init=init, looping=looping, globals_init=globals_init, tables=",".join(tables),table_list=table_list, num_rslot=num_rslot,
-           num_vslot=num_vslot, num_rchns=num_rchns)
+""".format(init=init, looping=looping, globals_init=globals_init,
+           tables=table_para, table_list=table_list,
+           num_rslot=num_rslot, num_vslot=num_vslot, num_rchns=num_rchns)
     # print(text)
     return text
