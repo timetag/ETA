@@ -140,10 +140,10 @@ class HISTOGRAM():
                 preact = diff
 
             hister = """
-                                  ssms_i = nb.int64((({preact}) + {bin_step}) / {bin_step})
+                                  ssms_i = nb.int64(({preact})  / {bin_step})
                                   if (ssms_i >= {bin_num}):
                                       break
-                                  if (ssms_i > 0):
+                                  if (ssms_i >= 0):
                                       {histogram}[ssms_i] += 1
                           """.format(histogram=histogram, buffer_name=buffer_name,
                                      preact=preact, bin_step=bin_step,
