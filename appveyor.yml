@@ -94,6 +94,7 @@ build_script:
     --exclude-module bokeh
     --exclude-module scipy
     --exclude-module flask
+    --hidden-import Tkinter
     --hidden-import timeit
     --hidden-import http
     --hidden-import http.cookies

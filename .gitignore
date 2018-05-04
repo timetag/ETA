@@ -1,17 +1,17 @@
-
+.*
 depends
 dist
-# Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
 *.exe
 *.tensor
 *.sh
-etaserver*
 *.ipynb
-.*
 llvm.txt
 *.ptu
 *.bin
 *.txt
-server.eta
+*.png
+*.eps
+*.eta
+etaserver*
