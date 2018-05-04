@@ -41,6 +41,8 @@ install:
 
     python -m pip install pypiwin32 --upgrade
     
+    python -m pip install matplotlib --upgrade 
+
     python -m pip install pyinstaller --upgrade 
     
     python -m pip install cffi --upgrade
