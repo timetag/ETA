@@ -222,6 +222,7 @@ d3.select('#btn_connect').on('click', function() {
         }
     }else{
         ws.close();
+        ws=null;
     }
 });
 
@@ -244,7 +245,6 @@ d3.select('#btn_compile').on('click', function() {
  function run_dpp(id,group) {
     if (ws==null){
         d3.select('#btn_connect').on('click')();
-        
     }
     $("#remoteLOG").html("");// clear log
     $("#exampleModalLabel").html('<div class="loader d-inline-block"></div> <div class="d-inline-block">ETA Running...</div>');
