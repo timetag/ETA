@@ -71,6 +71,8 @@ install:
     
     python -m pip install numba --upgrade
     
+    python -m pip install pandas --upgrade
+
     cd gui
 
     yarn
