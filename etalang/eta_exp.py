@@ -140,7 +140,7 @@ class HISTOGRAM():
                 preact = diff
 
             hister = """
-                                  ssms_i = nb.int64(({preact})  / {bin_step})
+                                  ssms_i = ({preact})  // {bin_step}
                                   if (ssms_i >= {bin_num}):
                                       break
                                   if (ssms_i >= 0):
@@ -188,7 +188,7 @@ class HISTOGRAM():
 
                 boundry_checker.append(" (histdim_{i} >= 0 and histdim_{i} < {bin_num}) ".
                                        format(i=i, bin_num=bin_num))
-                self.EMIT_LINE(triggers, """histdim_{i} = nb.int64((({preact})) / {bin_step})""".
+                self.EMIT_LINE(triggers, """histdim_{i} = ({preact}) // ({bin_step})""".
                                format(i=i, preact=preact, bin_step=bin_step))
 
             else:
