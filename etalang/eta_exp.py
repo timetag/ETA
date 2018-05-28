@@ -41,51 +41,70 @@ class TABLE():
             self.define_syms(name, "table", internal=False)
 
 
-class BUFFER():
-    def buffer_init(self, sym, type, internal=False):
+### premitive types ###
+class RECORDER():
+    def recorder_init(self, sym, type, internal=False):
         if internal:
             trigger = "uettp_initial"
         else:
-            raise ValueError("BUFFER symbol can not be global.")
+            raise ValueError("RECORDER symbol can not be global.")
         self.EMIT_LINE(trigger, """
-               {buffer}_head=nb.int32(0)
-               {buffer}_tail=nb.int32(0)
-               {buffer}_size=nb.int32({buflen})
-               """.format(buffer=sym, buflen=type[1]))
+               {recorder}_head=nb.int32(0)
+               {recorder}_tail=nb.int32(0)
+               {recorder}_size=nb.int32({buflen})
+               """.format(recorder=sym, buflen=type[1]))
 
-    def BUFFER(self, triggers, name):
-        self.define_syms(name, "buffer", internal=True)
-        self.define_syms(name + "_tab", "table", internal=True)
+    def RECORDER(self, triggers, name, size="0"):
+        size = int(ast.literal_eval(size))
+        if size > 1:
+            self.define_syms(name + "_tab", ["table", "sum", size], internal=True)
+            self.define_syms(name, ["recorder", size], internal=True)
+        elif size == 1:
+            self.define_syms(name + "_rec", "integer", internal=True)
+            self.define_syms(name, ["recorder", size], internal=True)
+        elif size == 0:
+            self.define_syms(name + "_tab", "table", internal=True)
+            self.define_syms(name, "recorder", internal=True)
 
-    def buffer_put(self, triggers, name, num):
-        name = self.assert_syms(name, "buffer")
-        table = self.define_syms(name + "_tab", "table", internal=True)
+
+    def recorder_record(self, triggers, name, num):
+        name = self.assert_syms(name, "recorder")
+        recorder_info = self.get_type_of_syms(name, internal=True, fulltype=True)
+
+        if isinstance(recorder_info, str) or recorder_info[1] > 1:
+            table = self.assert_syms(name + "_tab", "table", internal=True)
+            self.EMIT_LINE(triggers, """
+                    {table}[{recorder}_head] = {num}
+                    {recorder}_head = ({recorder}_head + 1) % {recorder}_size
+                    if ({recorder}_head == {recorder}_tail): 
+                        #if overflowed, force pop
+                        {recorder}_tail = ({recorder}_tail + 1) % {recorder}_size
+                """.format(table=table, recorder=name, num=num))
+        else:
+            self.EMIT_LINE(triggers, """{recorder}_rec = {num}""".format(recorder=name, num=num))
+
+
+def recorder_cond_pop(self, triggers, name, cond):
+    name = self.assert_syms(name, "recorder")
+    recorder_info = self.get_type_of_syms(name, internal=True, fulltype=True)
+    if recorder_info[1] > 1:
+        table = self.assert_syms(name + "_tab", "table", internal=True)
         self.EMIT_LINE(triggers, """
-            {table}[{buffer}_head] = {num}
-            {buffer}_head = ({buffer}_head + 1) % {buffer}_size
-            if ({buffer}_head == {buffer}_tail): 
-                #if overflowed, force pop
-                {buffer}_tail = ({buffer}_tail + 1) % {buffer}_size
-        """.format(table=table, buffer=name, num=num))
-
-    def buffer_cond_pop(self, triggers, name, cond):
-        name = self.assert_syms(name, "buffer")
-        table = self.define_syms(name + "_tab", "table", internal=True)
-        self.EMIT_LINE(triggers, """
-        while True:
-            if not({buffer}_head == {buffer}_tail):
-                if not({table}[{buffer}_tail] {cond}):
-                    #print("buffer tail",{table}[{buffer}_tail])
+            while True:
+                if not({recorder}_head == {recorder}_tail):
+                    if not({table}[{recorder}_tail] {cond}):
+                        #print("recorder tail",{table}[{recorder}_tail])
+                        break
+    
+                    {recorder}_tail = ({recorder}_tail + 1) % {recorder}_size
+                else:
                     break
-
-                {buffer}_tail = ({buffer}_tail + 1) % {buffer}_size
-            else:
-                break
-        #print("buffersize",{buffer}_head , {buffer}_tail)
-        """.format(table=table, buffer=name, cond=cond))
+            #print("recorder size",{recorder}_head , {recorder}_tail)
+            """.format(table=table, recorder=name, cond=cond))
+    else:
+        self.EMIT_LINE(triggers, """{recorder}_rec = 0""".format(recorder=name, num=num))
 
 
-### other thingys#####
 class HISTOGRAM():
     def histogram_init(self, sym, type, internal=False):
         pass
@@ -123,15 +142,23 @@ class HISTOGRAM():
             bin_step = dims[0][1]
             integrate_time = bin_num * bin_step
             if clock_fulltype[1] > 1:
-                buffer_name = self.define_syms(clock_name + "_starts", ["buffer", integrate_time])
-                table_buffer_name = self.define_syms(buffer_name + "_tab", ["table", "buffer", integrate_time])
-                diff = "({clock_name}_stop - {table_buffer_name}[i])".format(clock_name=clock_name,
-                                                                             table_buffer_name=table_buffer_name)
+                if clock_fulltype[2] == 0:
+                    buffer_name = self.define_syms(clock_name + "_start", ["recorder", integrate_time])
+                    table_buffer_name = self.define_syms(buffer_name + "_tab", ["table", "sum", integrate_time])
+                else:
+                    buffer_name = self.assert_syms(clock_name + "_start", "recorder")
+                    table_buffer_name = self.assert_syms(buffer_name + "_tab", "table")
+                diff = "({clock_name}_stop_rec - {table_buffer_name}[i])".format(clock_name=clock_name,
+                                                                                 table_buffer_name=table_buffer_name)
             elif clock_fulltype[2] > 1:
-                buffer_name = self.define_syms(clock_name + "_stops", ["buffer", integrate_time])
-                table_buffer_name = self.define_syms(buffer_name + "_tab", ["table", "buffer", integrate_time])
-                diff = "({table_buffer_name}[i] - {clock_name}_start )".format(clock_name=clock_name,
-                                                                               table_buffer_name=table_buffer_name)
+                if clock_fulltype[1] == 0:
+                    buffer_name = self.define_syms(clock_name + "_stop", ["recorder", integrate_time])
+                    table_buffer_name = self.define_syms(buffer_name + "_tab", ["table", "sum", integrate_time])
+                else:
+                    buffer_name = self.assert_syms(clock_name + "_stop", "recorder")
+                    table_buffer_name = self.assert_syms(buffer_name + "_tab", "table")
+                diff = "({table_buffer_name}[i] - {clock_name}_start_rec )".format(clock_name=clock_name,
+                                                                                   table_buffer_name=table_buffer_name)
             # time difference preparing stage
             if len(dims[0]) > 2:
                 preact = dims[0][2]
@@ -178,7 +205,7 @@ class HISTOGRAM():
             if clock_type == "clock":
                 bin_num = dims[i][0]
                 bin_step = dims[i][1]
-                diff = "({clock}_stop - {clock}_start)".format(clock=clock_name)
+                diff = "({clock}_stop_rec - {clock}_start_rec)".format(clock=clock_name)
                 # time difference preparing stage
                 if len(dims[i]) > 2:
                     preact = dims[i][2]
@@ -211,36 +238,19 @@ class CLOCK():
     def CLOCK(self, triggers, name, starttimes="1", stoptimes="1"):
         starttimes = int(ast.literal_eval(starttimes))
         stoptimes = int(ast.literal_eval(stoptimes))
-        if starttimes > 1 and stoptimes > 1:
-            raise ValueError("General type of clock is not currenctly supported.")
-        else:
-            self.define_syms(name, ["clock", starttimes, stoptimes])
-        if starttimes > 1:
-            self.BUFFER(triggers, name + "_starts")
-        else:
-            self.INTEGER(triggers, name + "_start")
-        if stoptimes > 1:
-            self.BUFFER(triggers, name + "_stopss")
-        else:
-            self.INTEGER(triggers, name + "_stop")
+        self.define_syms(name, ["clock", starttimes, stoptimes])
+        self.RECORDER(triggers, name + "_start", str(starttimes))
+        self.RECORDER(triggers, name + "_stop", str(stoptimes))
 
     def clock_start(self, triggers, clock_name, obj="AbsTime_ps"):
         clock_name = self.assert_syms(clock_name, "clock")
-        fulltype = self.get_type_of_syms(clock_name, internal=True, fulltype=True)
-        if fulltype[1] == 1:
-            self.EMIT_LINE(triggers, "{}_start={}".format(clock_name, obj))
-        else:
-            buffer_name = self.assert_syms(clock_name + "_starts", "buffer")
-            self.buffer_put(triggers, buffer_name, obj)
+        recorder_name = self.assert_syms(clock_name + "_start", "recorder")
+        self.recorder_record(triggers, recorder_name, obj)
 
     def clock_stop(self, triggers, clock_name, obj="AbsTime_ps"):
         clock_name = self.assert_syms(clock_name, "clock")
-        fulltype = self.get_type_of_syms(clock_name, internal=True, fulltype=True)
-        if fulltype[2] == 1:
-            self.EMIT_LINE(triggers, "{}_stop={}".format(clock_name, obj))
-        else:
-            buffer_name = self.assert_syms(clock_name + "_stops", "buffer")
-            self.buffer_put(triggers, buffer_name, obj)
+        recorder_name = self.assert_syms(clock_name + "_stop", "recorder")
+        self.recorder_record(triggers, recorder_name, obj)
 
 
 class COINCIDENCE():
@@ -278,7 +288,7 @@ class COINCIDENCE():
         self.EMIT_LINE(trigger, code)
 
 
-class Graph(INTEGER, TABLE, CLOCK, BUFFER, HISTOGRAM, COINCIDENCE):
+class Graph(INTEGER, TABLE,RECORDER, CLOCK,  HISTOGRAM, COINCIDENCE):
     def __init__(self, name="NONAME-GRAPH", gid=0):
         self.name = name
         self.graphid = gid
@@ -565,7 +575,7 @@ class Graph(INTEGER, TABLE, CLOCK, BUFFER, HISTOGRAM, COINCIDENCE):
         clock_names = self.parse_multi_object(clock_names_orig)
         clock_stops = []
         for each in clock_names:
-            clock_stops.append(each + "_stop")
+            clock_stops.append(each + "_stop_rec")
         self.INTEGER(triggers, "common_start")
         if len(clock_stops) > 1:
             self.EMIT_LINE(triggers, """common_start=min({})""".format(",".join(clock_stops)))
