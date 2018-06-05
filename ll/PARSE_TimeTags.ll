@@ -3,7 +3,7 @@ source_filename = "TimeTag/PARSE_TimeTags.cpp"
 target datalayout = "e-m:w-i64:64-f80:128-n8:16:32:64-S128"
 target triple = "x86_64-pc-windows-msvc19.11.25547"
 
-%struct.ttf_reader = type { i64, i64, i8*, i64, i64, i64, i32, i64, i64, i64, i32, %struct._iobuf* }
+%struct.ttf_reader = type { i64, i64, i8*, i64, i64, i64, i32, i64, i64, i64, i32, i64, i64, %struct._iobuf* }
 %struct._iobuf = type { i8* }
 %union.anon = type { i32 }
 %struct.anon = type { i32 }
@@ -52,8 +52,6 @@ $"\01?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA" = comdat any
 @"\01??_C@_0BO@LNBDDACF@?6?5?$FLERROR?$FN?5Illegal?5Chan?3?5?5?$CF1u?6?$AA@" = linkonce_odr unnamed_addr constant [30 x i8] c"\0A [ERROR] Illegal Chan:  %1u\0A\00", comdat, align 1
 @"\01??_C@_0CI@OJHAHNJJ@?6?5?$FLERROR?$FN?6Illegal?5virtual_channe@" = linkonce_odr unnamed_addr constant [40 x i8] c"\0A [ERROR]\0AIllegal virtual_channel:  %1u\00", comdat, align 1
 @"\01??_C@_0CF@MGLGLMDJ@?6Reaching?5end?5at?5?$CFlld?5?0?5?$FL?$CFlld?5?$CFl@" = linkonce_odr unnamed_addr constant [37 x i8] c"\0AReaching end at %lld , [%lld %lld ]\00", comdat, align 1
-@"\01?overflowcorrection@?1??pop_signal_from_file@@9@4_JA" = internal global i64 0, align 8
-@"\01?syncsbeforenow@?1??pop_signal_from_file@@9@4_JA" = internal global i64 0, align 8
 @"\01??_C@_0CM@DODOIIB@?6?5?$FLERROR?$FNERROR?3?5Unsupported?5time@" = linkonce_odr unnamed_addr constant [44 x i8] c"\0A [ERROR]ERROR: Unsupported timetag format.\00", comdat, align 1
 @"\01??_C@_0CM@LHOLBNIE@?6?6Thread?5assigned?5to?5file?5part?5?$FL@" = linkonce_odr unnamed_addr constant [44 x i8] c"\0A\0AThread assigned to file part [%lld,%lld]\0A\00", comdat, align 1
 @"\01??_C@_02JDPG@rb?$AA@" = linkonce_odr unnamed_addr constant [3 x i8] c"rb\00", comdat, align 1
@@ -94,6 +92,10 @@ define linkonce_odr %struct.ttf_reader* @"\01??0ttf_reader@@QEAA@XZ"(%struct.ttf
   store i32 0, i32* %8, align 8
   %9 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %3, i32 0, i32 10
   store i32 0, i32* %9, align 8
+  %10 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %3, i32 0, i32 11
+  store i64 0, i64* %10, align 8
+  %11 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %3, i32 0, i32 12
+  store i64 0, i64* %11, align 8
   ret %struct.ttf_reader* %3
 }
 
@@ -768,7 +770,7 @@ define i32 @read_next_minibatch() #2 {
   br label %21
 
 ; <label>:21:                                     ; preds = %11, %0
-  %22 = load %struct._iobuf*, %struct._iobuf** getelementptr inbounds ([8 x %struct.ttf_reader], [8 x %struct.ttf_reader]* @READERs, i64 0, i64 0, i32 11), align 8
+  %22 = load %struct._iobuf*, %struct._iobuf** getelementptr inbounds ([8 x %struct.ttf_reader], [8 x %struct.ttf_reader]* @READERs, i64 0, i64 0, i32 13), align 8
   %23 = load i32, i32* %2, align 4
   %24 = sext i32 %23 to i64
   %25 = load i8*, i8** getelementptr inbounds ([8 x %struct.ttf_reader], [8 x %struct.ttf_reader]* @READERs, i64 0, i64 0, i32 2), align 16
@@ -902,7 +904,7 @@ define i64 @pop_signal_from_file(i8*) #2 {
   br label %87
 
 ; <label>:87:                                     ; preds = %77, %68
-  %88 = load %struct._iobuf*, %struct._iobuf** getelementptr inbounds ([8 x %struct.ttf_reader], [8 x %struct.ttf_reader]* @READERs, i64 0, i64 0, i32 11), align 8
+  %88 = load %struct._iobuf*, %struct._iobuf** getelementptr inbounds ([8 x %struct.ttf_reader], [8 x %struct.ttf_reader]* @READERs, i64 0, i64 0, i32 13), align 8
   %89 = load i32, i32* %53, align 4
   %90 = sext i32 %89 to i64
   %91 = load i8*, i8** getelementptr inbounds ([8 x %struct.ttf_reader], [8 x %struct.ttf_reader]* @READERs, i64 0, i64 0, i32 2), align 16
@@ -975,7 +977,7 @@ define i64 @pop_signal_from_file(i8*) #2 {
 
 ; <label>:119:                                    ; preds = %112
   %120 = load i32, i32* %59, align 4
-  store i64* @"\01?overflowcorrection@?1??pop_signal_from_file@@9@4_JA", i64** %44, align 8
+  store i64* getelementptr inbounds ([8 x %struct.ttf_reader], [8 x %struct.ttf_reader]* @READERs, i64 0, i64 0, i32 11), i64** %44, align 8
   store i8* %58, i8** %45, align 8
   store i64* %57, i64** %46, align 8
   store i32 %120, i32* %47, align 4
@@ -1083,8 +1085,8 @@ define i64 @pop_signal_from_file(i8*) #2 {
 
 ; <label>:192:                                    ; preds = %112
   %193 = load i32, i32* %59, align 4
-  store i64* @"\01?syncsbeforenow@?1??pop_signal_from_file@@9@4_JA", i64** %36, align 8
-  store i64* @"\01?overflowcorrection@?1??pop_signal_from_file@@9@4_JA", i64** %37, align 8
+  store i64* getelementptr inbounds ([8 x %struct.ttf_reader], [8 x %struct.ttf_reader]* @READERs, i64 0, i64 0, i32 12), i64** %36, align 8
+  store i64* getelementptr inbounds ([8 x %struct.ttf_reader], [8 x %struct.ttf_reader]* @READERs, i64 0, i64 0, i32 11), i64** %37, align 8
   store i8* %58, i8** %38, align 8
   store i64* %57, i64** %39, align 8
   store i32 %193, i32* %40, align 4
@@ -1209,7 +1211,7 @@ define i64 @pop_signal_from_file(i8*) #2 {
 
 ; <label>:283:                                    ; preds = %112
   %284 = load i32, i32* %59, align 4
-  store i64* @"\01?overflowcorrection@?1??pop_signal_from_file@@9@4_JA", i64** %27, align 8
+  store i64* getelementptr inbounds ([8 x %struct.ttf_reader], [8 x %struct.ttf_reader]* @READERs, i64 0, i64 0, i32 11), i64** %27, align 8
   store i8* %58, i8** %28, align 8
   store i64* %57, i64** %29, align 8
   store i32 1, i32* %30, align 4
@@ -1387,8 +1389,8 @@ define i64 @pop_signal_from_file(i8*) #2 {
 
 ; <label>:407:                                    ; preds = %112
   %408 = load i32, i32* %59, align 4
-  store i64* @"\01?syncsbeforenow@?1??pop_signal_from_file@@9@4_JA", i64** %19, align 8
-  store i64* @"\01?overflowcorrection@?1??pop_signal_from_file@@9@4_JA", i64** %20, align 8
+  store i64* getelementptr inbounds ([8 x %struct.ttf_reader], [8 x %struct.ttf_reader]* @READERs, i64 0, i64 0, i32 12), i64** %19, align 8
+  store i64* getelementptr inbounds ([8 x %struct.ttf_reader], [8 x %struct.ttf_reader]* @READERs, i64 0, i64 0, i32 11), i64** %20, align 8
   store i8* %58, i8** %21, align 8
   store i64* %57, i64** %22, align 8
   store i32 1, i32* %23, align 4
@@ -1556,7 +1558,7 @@ define i64 @pop_signal_from_file(i8*) #2 {
 
 ; <label>:528:                                    ; preds = %112, %112, %112
   %529 = load i32, i32* %59, align 4
-  store i64* @"\01?overflowcorrection@?1??pop_signal_from_file@@9@4_JA", i64** %10, align 8
+  store i64* getelementptr inbounds ([8 x %struct.ttf_reader], [8 x %struct.ttf_reader]* @READERs, i64 0, i64 0, i32 11), i64** %10, align 8
   store i8* %58, i8** %11, align 8
   store i64* %57, i64** %12, align 8
   store i32 2, i32* %13, align 4
@@ -1734,8 +1736,8 @@ define i64 @pop_signal_from_file(i8*) #2 {
 
 ; <label>:652:                                    ; preds = %112, %112, %112
   %653 = load i32, i32* %59, align 4
-  store i64* @"\01?syncsbeforenow@?1??pop_signal_from_file@@9@4_JA", i64** %2, align 8
-  store i64* @"\01?overflowcorrection@?1??pop_signal_from_file@@9@4_JA", i64** %3, align 8
+  store i64* getelementptr inbounds ([8 x %struct.ttf_reader], [8 x %struct.ttf_reader]* @READERs, i64 0, i64 0, i32 12), i64** %2, align 8
+  store i64* getelementptr inbounds ([8 x %struct.ttf_reader], [8 x %struct.ttf_reader]* @READERs, i64 0, i64 0, i32 11), i64** %3, align 8
   store i8* %58, i8** %4, align 8
   store i64* %57, i64** %5, align 8
   store i32 2, i32* %6, align 4
@@ -2012,6 +2014,8 @@ define i32 @FileReader_init(i8*, i64, i64, i64, i64, i64, i64, i64) #2 {
   %25 = load i64, i64* %10, align 8
   %26 = trunc i64 %25 to i32
   store i32 %26, i32* getelementptr inbounds ([8 x %struct.ttf_reader], [8 x %struct.ttf_reader]* @READERs, i64 0, i64 0, i32 10), align 16
+  store i64 0, i64* getelementptr inbounds ([8 x %struct.ttf_reader], [8 x %struct.ttf_reader]* @READERs, i64 0, i64 0, i32 11), align 8
+  store i64 0, i64* getelementptr inbounds ([8 x %struct.ttf_reader], [8 x %struct.ttf_reader]* @READERs, i64 0, i64 0, i32 12), align 16
   %27 = load i64, i64* getelementptr inbounds ([8 x %struct.ttf_reader], [8 x %struct.ttf_reader]* @READERs, i64 0, i64 0, i32 4), align 16
   %28 = load i64, i64* getelementptr inbounds ([8 x %struct.ttf_reader], [8 x %struct.ttf_reader]* @READERs, i64 0, i64 0, i32 3), align 8
   %29 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([44 x i8], [44 x i8]* @"\01??_C@_0CM@LHOLBNIE@?6?6Thread?5assigned?5to?5file?5part?5?$FL@", i32 0, i32 0), i64 %28, i64 %27)
@@ -2019,7 +2023,7 @@ define i32 @FileReader_init(i8*, i64, i64, i64, i64, i64, i64, i64) #2 {
   store i64 %30, i64* @order_gurantee3, align 8
   %31 = load i8*, i8** %17, align 8
   %32 = call %struct._iobuf* @fopen(i8* %31, i8* getelementptr inbounds ([3 x i8], [3 x i8]* @"\01??_C@_02JDPG@rb?$AA@", i32 0, i32 0))
-  store %struct._iobuf* %32, %struct._iobuf** getelementptr inbounds ([8 x %struct.ttf_reader], [8 x %struct.ttf_reader]* @READERs, i64 0, i64 0, i32 11), align 8
+  store %struct._iobuf* %32, %struct._iobuf** getelementptr inbounds ([8 x %struct.ttf_reader], [8 x %struct.ttf_reader]* @READERs, i64 0, i64 0, i32 13), align 8
   %33 = icmp eq %struct._iobuf* %32, null
   br i1 %33, label %34, label %37
 
@@ -2032,7 +2036,7 @@ define i32 @FileReader_init(i8*, i64, i64, i64, i64, i64, i64, i64) #2 {
 
 ; <label>:37:                                     ; preds = %8
   %38 = load i64, i64* getelementptr inbounds ([8 x %struct.ttf_reader], [8 x %struct.ttf_reader]* @READERs, i64 0, i64 0, i32 3), align 8
-  %39 = load %struct._iobuf*, %struct._iobuf** getelementptr inbounds ([8 x %struct.ttf_reader], [8 x %struct.ttf_reader]* @READERs, i64 0, i64 0, i32 11), align 8
+  %39 = load %struct._iobuf*, %struct._iobuf** getelementptr inbounds ([8 x %struct.ttf_reader], [8 x %struct.ttf_reader]* @READERs, i64 0, i64 0, i32 13), align 8
   %40 = call i32 @_fseeki64(%struct._iobuf* %39, i64 %38, i32 0)
   %41 = load i64, i64* getelementptr inbounds ([8 x %struct.ttf_reader], [8 x %struct.ttf_reader]* @READERs, i64 0, i64 0, i32 3), align 8
   store i64 %41, i64* getelementptr inbounds ([8 x %struct.ttf_reader], [8 x %struct.ttf_reader]* @READERs, i64 0, i64 0, i32 0), align 16
