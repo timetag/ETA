@@ -782,7 +782,7 @@ define i32 @read_next_minibatch() #2 {
   store i64 %29, i64* getelementptr inbounds ([8 x %struct.ttf_reader], [8 x %struct.ttf_reader]* @READERs, i64 0, i64 0, i32 0), align 16
   store i64 0, i64* getelementptr inbounds ([8 x %struct.ttf_reader], [8 x %struct.ttf_reader]* @READERs, i64 0, i64 0, i32 5), align 8
   %30 = load i64, i64* getelementptr inbounds ([8 x %struct.ttf_reader], [8 x %struct.ttf_reader]* @READERs, i64 0, i64 0, i32 1), align 8
-  %31 = icmp eq i64 %30, 0
+  %31 = icmp sle i64 %30, 0
   br i1 %31, label %32, label %38
 
 ; <label>:32:                                     ; preds = %21
@@ -916,7 +916,7 @@ define i64 @pop_signal_from_file(i8*) #2 {
   store i64 %95, i64* getelementptr inbounds ([8 x %struct.ttf_reader], [8 x %struct.ttf_reader]* @READERs, i64 0, i64 0, i32 0), align 16
   store i64 0, i64* getelementptr inbounds ([8 x %struct.ttf_reader], [8 x %struct.ttf_reader]* @READERs, i64 0, i64 0, i32 5), align 8
   %96 = load i64, i64* getelementptr inbounds ([8 x %struct.ttf_reader], [8 x %struct.ttf_reader]* @READERs, i64 0, i64 0, i32 1), align 8
-  %97 = icmp eq i64 %96, 0
+  %97 = icmp sle i64 %96, 0
   br i1 %97, label %98, label %104
 
 ; <label>:98:                                     ; preds = %87
