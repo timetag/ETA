@@ -1,9 +1,9 @@
-import multiprocessing, time, threading, json, sys, logging
-# multiprocessing.log_to_stderr(logging.DEBUG)
+import multiprocessing, time, threading, json, sys\
+#import logging
+#multiprocessing.log_to_stderr(logging.DEBUG)
 from jit_linker import link_jit_code
 from parser_header import parse_header
 from etalang import eta_codegen
-
 
 def external_wrpper(param):
     eta_compiled_code = param.pop()
