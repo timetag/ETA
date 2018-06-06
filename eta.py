@@ -13,16 +13,18 @@ while True:
         break
     else:
         print("ETA_LIB is not found.")
-        print("Please use a full path like: 'C:/.../site-packages'.")
+        print("Please use a full path like: 'C:\\...\\site-packages'.")
         os.environ["ETA_LIB"] = input("Specify the path to ETA_LIB:")
         os.system('setx ETA_LIB "' + os.environ["ETA_LIB"] + '"')
 
 try:
+    if env_dist.count("\\")<6:
+        raise ValueError("Path should contain more than 6 slashes.")
     from eta_runtime import *
 except Exception as e:
     print(str(e))
     print("ETA_LIB is found, but it seems there is an unknown error that prevents ETA to load the packages, \n"
-          "please try to put ETA_LIB in another path that contains more than 6 slashes (C:/f1/f2/f3/f4/f5/site-packages).")
+          "please try to put ETA_LIB in another path that contains more than 6 slashes (C:\\f1\\f2\\f3\\f4\\f5\\site-packages).")
     os.environ["ETA_LIB"] = input("Specify the path to ETA_LIB:")
     os.system('setx ETA_LIB "' + os.environ["ETA_LIB"] + '"')
 
