@@ -10,7 +10,7 @@ ETA
 Installation
 ---------
 1. [Download](https://github.com/timetag/ETA/releases) and run [ETA-Setup-*.*.*.exe] to install the GUI.
-2. Download and unzip [ETA_LIB.zip] to a path.
+2. Download and unzip [ETA_LIB.zip] to a path that contains more than 6 slashes (C:/f1/f2/f3/f4/f5/site-packages).
 3. Download and run [ETABackend.exe].
 4. Input the path to ETA_LIB and your IP address (type "127.0.0.1" or "localhost" if you want to use 
 ETA locally) in the ETA Backend.
