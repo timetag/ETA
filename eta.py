@@ -8,11 +8,8 @@ import ws_broadcast
 while True:
     env_dist = os.environ.get('ETA_LIB')
     if env_dist is not None:
-        if getattr(sys, 'frozen', False):
-            sys.path.insert(0, env_dist)
-        else:
-            sys.path.append(env_dist)
-
+        #if getattr(sys, 'frozen', False):
+        sys.path.insert(0, env_dist)
         break
     else:
         print("ETA_LIB is not found.")
@@ -80,5 +77,5 @@ if __name__ == '__main__':
                           
 ==============================
 """)
-    print("Using Python libraries from ", env_dist)
+    print("Using Python libraries from ", sys.path)
     ws = WSSERVER(5678)
