@@ -1,7 +1,13 @@
-def get_onefile_loop(tables, init, looping, globals_init, num_rslot, num_rchns, num_vslot):
+import textwrap
+def get_onefile_loop(histograms, mainloop, init_code, deinit_code, global_init_code, num_rslot, num_rchns, num_vslot):
+    init_code=textwrap.indent(init_code, "    ")
+    deinit_code=textwrap.indent(deinit_code, "    ")
+    mainloop=textwrap.indent(mainloop, "        ")
+    global_init_code=textwrap.indent(global_init_code, "    ")
+
     table_list = "{"
     table_para = ""
-    for each in tables:
+    for each in histograms:
         table_list += '"' + each + '":' + each + ","
         table_para += each + ","
     table_list += "}"
@@ -35,7 +41,7 @@ def mainloop({tables} filename1, fseekpoint, fendpoint, BytesofRecords, TTRes_ps
             chn[0]=chn_next[0]
             eta_ret += POOL_update(pop_signal_from_file(Channel_next),nb.int8(0))
         {looping}
-        
+    {deinit}
     return eta_ret
 
 def sp_core(caller_parms,mainloop):
@@ -45,8 +51,8 @@ def sp_core(caller_parms,mainloop):
 
     return {table_list}
 
-""".format(init=init, looping=looping, globals_init=globals_init,
+""".format(init=init_code, deinit=deinit_code, looping=mainloop, globals_init=global_init_code,
            tables=table_para, table_list=table_list,
            num_rslot=num_rslot, num_vslot=num_vslot, num_rchns=num_rchns)
-
+    print(text)
     return text

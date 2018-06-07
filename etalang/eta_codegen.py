@@ -1,7 +1,7 @@
 from . import eta_vm
 from . import etacode_parser
 from . import graph_parser
-from . import mainloop
+from . import code_template
 import textwrap
 import json, copy
 
@@ -110,6 +110,10 @@ def compile_eta(jsobj, print):
             # print(each)
             etavm.exec_eta(each)
 
+
+
+
+        # generates infos
         num_vslot = 0
         for each in etavm.graphs:
             for a in list(each.output_chn.keys()):
@@ -126,19 +130,12 @@ def compile_eta(jsobj, print):
         num_vslot += 1
         num_vslot = max(num_vslot, 0)
 
-        # defines for tables
-        etavm.check_output()
-        defines = etavm.check_defines()
-        tables = []
-        for each in defines:
-            if isinstance(defines[each], list) and defines[each][0] == "table":
-                tables.append(each)
 
-        code, init_code, global_init_code = etavm.dump_code()
-        onefile = mainloop.get_onefile_loop(tables,
-                                            textwrap.indent(init_code, "    "),
-                                            textwrap.indent(code, "        "),
-                                            textwrap.indent(global_init_code, "    "),
+        etavm.check_output()
+        defines = etavm.check_defines() # defines external states for systems
+        mainloop, init_code, deinit_code, global_init_code = etavm.dump_code()
+        onefile = code_template.get_onefile_loop(defines,
+                                            mainloop, init_code, deinit_code, global_init_code,
                                             num_rslot=1, num_rchns=num_rchns, num_vslot=num_vslot)
         code_per_groupings[instgroup] = onefile
 

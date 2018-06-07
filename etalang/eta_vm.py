@@ -73,18 +73,27 @@ class ETA_VM():
     def check_defines(self):
         defines_used_by_which_graph = {}
         for graph in self.graphs:
-            for each in graph.external_table_symbols:
+            for eachname in graph.internal_symbols:
+
+                if graph.internal_symbols[eachname][0] == "table":
+                    each = eachname
+                else:
+                    each = "scalar_" + eachname
+
                 if each in defines_used_by_which_graph:
-                    print(
-                        "Table {} is used by more than one graph, it could be dangerous if you dont mean to do that.".format(
+                    raise ValueError(
+                        "Symbol {} is used by more than one graph.".format(
                             each))
-                defines_used_by_which_graph[each] = graph.external_table_symbols[each]
+                defines_used_by_which_graph[each] = graph.internal_symbols[eachname]
         return defines_used_by_which_graph
 
     def dump_code(self, max_chn=255):
         init_code = ""
         for each in self.graphs:
             init_code += "\n" + each.init_section
+        deinit_code = ""
+        for each in self.graphs:
+            deinit_code += "\n" + each.deinit_section
         global_init_code = ""
         for each in self.graphs:
             global_init_code += "\n" + each.global_init_section
@@ -135,4 +144,4 @@ class ETA_VM():
                 if mainloop_el == "":
                     mainloop_el = "el"
                 mainloop += chn_stanza
-        return mainloop, init_code, global_init_code
+        return mainloop, init_code, deinit_code, global_init_code
