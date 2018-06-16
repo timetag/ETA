@@ -180,7 +180,7 @@ class HISTOGRAM():
 
     def record(self, triggers, histogram, *therest):
         histogram = self.assert_syms(histogram, "histogram")
-        histogram_info = self.get_type_of_syms(histogram, internal=True, fulltype=True)
+        histogram_info = self.get_type_of_syms(histogram, internal=False, fulltype=True)
         dims = histogram_info[1]
         boundry_checker = []
         for i in range(len(dims)):
@@ -189,7 +189,7 @@ class HISTOGRAM():
                     "Dimension mismatch. {i}th dimension is not found when recording to histogram.".format(i=i))
             # clock_preparing stage
             clock_name = therest[i]
-            clock_type = self.get_type_of_syms(clock_name, internal=True, fulltype=False)
+            clock_type = self.get_type_of_syms(clock_name, fulltype=False)
             if clock_type == "clock":
                 bin_num = dims[i][0]
                 bin_step = dims[i][1]
@@ -240,12 +240,8 @@ class CLOCK():
 
 class COINCIDENCE():
     def coincidence_init(self, sym, type):
-        if internal:
-            trigger = "uettp_initial"
-        else:
-            raise ValueError("COINCIDENCE symbol can not be global.")
         sym = self.assert_syms(sym, "coincidence")
-        self.EMIT_LINE(trigger, "{sym}=nb.int64(0)".format(sym=sym))
+        self.INTEGER("uettp_initial",sym, initvalue=0);
 
     def COINCIDENCE(self, triggers, name, num, chn):
         num = int(ast.literal_eval(num))
@@ -261,7 +257,7 @@ class COINCIDENCE():
         self.EMIT_LINE(trigger, "{sym}=nb.int64(0)".format(sym=sym))
 
     def coincidence_fill(self, trigger, sym, thisnum):
-        fulltype = self.get_type_of_syms(sym, internal=True, fulltype=True)
+        fulltype = self.get_type_of_syms(sym, fulltype=True)
         fullint = (1 << fulltype[1]) - 1
         chn = fulltype[2]
         thisnum = int(ast.literal_eval(thisnum))
