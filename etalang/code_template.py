@@ -28,13 +28,13 @@ def mainloop({tables} filename1, fseekpoint, fendpoint, BytesofRecords, TTRes_ps
     print("TTRes_pspr", TTRes_pspr)
     print("SYNCRate_pspr", SYNCRate_pspr)
     print("DTRes_pspr",DTRes_pspr)
-    eta_ret += POOL_init({num_rslot},{num_rchns}, {num_vslot})
+    eta_ret += VCHN_init({num_rslot},{num_rchns}, {num_vslot})
     AbsTime_ps = nb.int64(0)
     {init}
     #get first photon
     eta_ret += POOL_update(nb.int64(pop_signal_from_file(Channel_next)),nb.int8(0))
     while True:
-        AbsTime_ps = POOL_next(Channel)
+        AbsTime_ps = VCHN_next(Channel)
         if AbsTime_ps == 9223372036854775807:
             break
         if chn[0]<{num_rchns}:
@@ -54,5 +54,5 @@ def sp_core(caller_parms,mainloop):
 """.format(init=init_code, deinit=deinit_code, looping=mainloop, globals_init=global_init_code,
            tables=table_para, table_list=table_list,
            num_rslot=num_rslot, num_vslot=num_vslot, num_rchns=num_rchns)
-    print(text)
+    #print(text)
     return text

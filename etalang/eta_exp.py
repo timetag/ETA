@@ -514,18 +514,18 @@ class Graph(INTEGER, TABLE, RECORDER, CLOCK, HISTOGRAM, COINCIDENCE):
         if repeat > 1:
             code = """
                 for emit_times in range(0,{repeat}):
-                    eta_ret+=VSLOT_put({phase}+{period}*(emit_times),nb.int8({chn}))
+                    eta_ret+=VCHN_put({phase}+{period}*(emit_times),nb.int8({chn}))
                 """.format(phase=phase,
                            chn=chn, waittime=int(waittime), repeat=repeat, period=period)
         else:
-            code = """eta_ret+=VSLOT_put(AbsTime_ps+{waittime},nb.int8({chn}))""".format(phase=phase,
+            code = """eta_ret+=VCHN_put(AbsTime_ps+{waittime},nb.int8({chn}))""".format(phase=phase,
                                                                                          chn=chn,
                                                                                          waittime=int(waittime))
         self.EMIT_LINE(triggers, code)
 
     def cancel_emit(self, triggers, chn):
         chn = int(chn)
-        self.EMIT_LINE(triggers, """eta_ret+=VSLOT_put(nb.int64(9223372036854775807),nb.int8({chn}))""".format(chn=chn))
+        self.EMIT_LINE(triggers, """eta_ret+=VCHN_put(nb.int64(9223372036854775807),nb.int8({chn}))""".format(chn=chn))
 
     def parse_multi_object(self, names):
         names = names.strip()

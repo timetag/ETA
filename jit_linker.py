@@ -138,22 +138,24 @@ def ARB_PARAM_MAKER():
 
 def link_jit_code(code):
     FileReader_init = link_function("FileReader_init", 8)
-    POOL_init = link_function("POOL_init", 3)
-    POOL_next = link_function("POOL_next", 1, i64=True)
+    VCHN_init = link_function("VCHN_init", 3)
+    VCHN_next = link_function("VCHN_next", 1, i64=True)
+    VCHN_put = link_function("VCHN_put", 2)
     POOL_update = link_function("POOL_update", 2, i64=False)
     pop_signal_from_file = link_function("pop_signal_from_file", 1, i64=True)
     READER_BytesofRecords_get = link_global("READER_BytesofRecords")
-    VSLOT_put = link_function("VSLOT_put", 2)
+
     glb = {
         "jit": jit, "ffi": ffi, "nb": nb, "np": np,
         "link_libs": link_libs,
-        "VSLOT_put": VSLOT_put,
         "FileReader_init": FileReader_init,
-        "POOL_init": POOL_init,
-        "POOL_next": POOL_next,
         "pop_signal_from_file": pop_signal_from_file,
-        "POOL_update": POOL_update,
+
         "READER_BytesofRecords_get": READER_BytesofRecords_get,
+        "POOL_update": POOL_update,
+        "VCHN_init": VCHN_init,
+        "VCHN_next": VCHN_next,
+        "VCHN_put": VCHN_put,
     }
     loc = {}
 

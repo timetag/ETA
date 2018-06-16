@@ -355,7 +355,7 @@ define i32 @POOL_update(i64, i8) #0 {
 }
 
 ; Function Attrs: alwaysinline uwtable
-define i32 @POOL_init(i64, i64, i64) #1 {
+define i32 @VCHN_init(i64, i64, i64) #1 {
   %4 = alloca %struct.circular_buf_t*, align 8
   %5 = alloca i32, align 4
   %6 = alloca i32, align 4
@@ -592,7 +592,7 @@ define linkonce_odr i32 @printf(i8*, ...) #3 comdat {
 declare noalias i8* @malloc(i64) #4
 
 ; Function Attrs: alwaysinline uwtable
-define i32 @VSLOT_put(i64, i8) #1 {
+define i32 @VCHN_put(i64, i8) #1 {
   %3 = alloca i8, align 1
   %4 = alloca i64, align 8
   %5 = alloca i8, align 1
@@ -1014,7 +1014,7 @@ define i32 @VSLOT_put(i64, i8) #1 {
 }
 
 ; Function Attrs: alwaysinline uwtable
-define i64 @POOL_next(i8*) #1 {
+define i64 @VCHN_next(i8*) #1 {
   %2 = alloca i8, align 1
   %3 = alloca i64, align 8
   %4 = alloca i8, align 1
