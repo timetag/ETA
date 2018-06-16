@@ -185,8 +185,16 @@ d3.select('#btn_connect').on('click', function() {
                 load_table(ret[1]);
                 update_to_ls();
             }
+            if (ret[0]=="running"){
+                $("#exampleModalLabel").html('<div class="loader d-inline-block"></div> <div class="d-inline-block">ETA Running...</div>');
+                $("#btn_viewresult").toggleClass( "d-none",true );
+                $("#remoteLOG").html($("#remoteLOG").html()+"<br/>"+ret[1]);
+            }
+            if (ret[0]=="stopped"){
+                $("#exampleModalLabel").html('<img src="favicon.ico" style="width: 2em;"/> ETA Results');
+            	$("#remoteLOG").html($("#remoteLOG").html()+"<br/>"+ret[1]);
+            }
             if (ret[0]=="dash"){
-               $("#exampleModalLabel").html('<img src="favicon.ico" style="width: 2em;"/> ETA Results');
                if (ret[1]=="none"){
                    $("#btn_viewresult").toggleClass( "d-none",true );
                    $("#btn_viewresult").unbind( "click" );
@@ -248,8 +256,6 @@ d3.select('#btn_compile').on('click', function() {
         alert("Backend is reconnecting...");
     }
     $("#remoteLOG").html("");// clear log
-    $("#exampleModalLabel").html('<div class="loader d-inline-block"></div> <div class="d-inline-block">ETA Running...</div>');
-    $("#btn_viewresult").toggleClass( "d-none",true )
     eta_linker_result=export_localstorage();
     if (eta_linker_result){
         var rpcobj={'method':"process_eta",'args':[eta_linker_result,id,group]};

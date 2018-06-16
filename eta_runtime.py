@@ -1,9 +1,10 @@
-import multiprocessing, time, threading, json, sys\
-#import logging
-#multiprocessing.log_to_stderr(logging.DEBUG)
+import multiprocessing, time, threading, json, sys \
+    # import logging
+# multiprocessing.log_to_stderr(logging.DEBUG)
 from jit_linker import link_jit_code
 from parser_header import parse_header
 from etalang import eta_codegen
+
 
 def external_wrpper(param):
     eta_compiled_code = param.pop()
@@ -35,15 +36,15 @@ class ETA():
                 info_emitter = self.send
             else:
                 info_emitter = print
-            code,vars, metadata = eta_codegen.compile_eta(etaobj, info_emitter)
+            code, vars, metadata = eta_codegen.compile_eta(etaobj, info_emitter)
             self.send(metadata, "table")
-            return code,vars
+            return code, vars
         except Exception as e:
             self.send('[' + str(type(e).__name__) + ']' + str(e), "err")
             self.send("Compilation failed.")
             self.logger.error(str(e), exc_info=True)
 
-    def process_eta(self, etaobj=None, id="code",group="grp"):
+    def process_eta(self, etaobj=None, id="code", group="grp"):
         if self.displaying:
             self.send("Display is running at http://{}:5000.".format(self.hostip))
             self.send(
@@ -55,7 +56,7 @@ class ETA():
             servercode = etaobj[id]
 
             self.send("ETA Backend starting with id {}.".format(id))
-            self.eta_compiled_code,vars = self.compile_eta(etaobj, verbose=True)
+            self.eta_compiled_code, vars = self.compile_eta(etaobj, verbose=True)
             if self.eta_compiled_code is not None:
                 self.send("Compiling success.")
                 self.send("Starting user-code in data processing panel...")
@@ -170,7 +171,7 @@ class ETA():
         cores = min(len(caller_parms), multiprocessing.cpu_count())
         self.send(
             "ETA.run([...], group='{}') started with {} threads using {} cores.".format(group, len(caller_parms),
-                                                                                        cores))
+                                                                                        cores), "running")
         # print(caller_parms)
 
         # assign code
@@ -181,7 +182,7 @@ class ETA():
                 self.send("Try to eta.run() on a non-existing group {}.".format(group), "err")
                 return None
         ts = time.time()
-        #map
+        # map
         if cores == 1:
             rets = [external_wrpper(caller_parms[0])]
         else:
@@ -190,12 +191,12 @@ class ETA():
             self.pool.close()
             self.pool.join()
         te = time.time()
-        #reduce
+        # reduce
         for each in range(1, len(rets)):
             for each_graph in rets[0].keys():
                 rets[0][each_graph] += rets[each][each_graph]
         result = rets[0]
-        self.send('ETA.run() finished in {} ms.'.format((te - ts) * 1000))
+        self.send('ETA.run() finished in {} ms.'.format((te - ts) * 1000), "stopped")
         self.send("none", "dash")
         if isinstance(result, list) and len(result) == 1:
             return result[0]
