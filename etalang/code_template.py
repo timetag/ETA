@@ -54,5 +54,5 @@ def sp_core(caller_parms,mainloop):
 """.format(init=init_code, deinit=deinit_code, looping=mainloop, globals_init=global_init_code,
            tables=table_para, table_list=table_list,
            num_rslot=num_rslot, num_vslot=num_vslot, num_rchns=num_rchns)
-    #print(text)
+    print(text)
     return text

@@ -122,7 +122,7 @@ def compile_eta(jsobj, print):
             select_by_name(vis, each.name)["info"] = '📥 {}, 📤 {}, 📊 {} '.format(
                 str(list(each.input_chn.keys())),
                 str(list(each.output_chn.keys())),
-                str(list(each.external_table_symbols.keys()))
+                str("???")
             )
 
             select_by_name(vis, each.name)["config"] = ""
