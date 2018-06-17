@@ -18,10 +18,10 @@ def parse_header(filename1,filetype=-1):
     return (ret1,[
             TTF_header_offset_get(),
             TTF_filesize_get(),
-            BytesofRecords_get(),
             TTRes_pspr_get(),
-            SYNCRate_pspr_get(),
             DTRes_pspr_get(),
+            SYNCRate_pspr_get(),
+            BytesofRecords_get(),
             RecordType_get(),
             NumRecords_get()  # not including
             ])
