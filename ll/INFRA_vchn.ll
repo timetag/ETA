@@ -15,11 +15,19 @@ $_vfprintf_l = comdat any
 
 $__local_stdio_printf_options = comdat any
 
-$"\01??_C@_0CF@BDINJJIB@?6?5?$FLERROR?$FNMemalloc?5failed?0?5aborti@" = comdat any
+$"\01??_C@_0CG@LCFPJNEI@?6?5?$FLERROR?$FNMem?9alloc?5failed?0?5abort@" = comdat any
+
+$"\01??_C@_0DF@IJHOIBMK@?6?5?$FLERROR?$FNMem?9alloc?5access?5is?5not@" = comdat any
 
 $"\01??_C@_0CK@BGFEBEKM@?6Creating?5ring?5buffer?5?$CFd?5with?5si@" = comdat any
 
 $"\01??_C@_0CL@ODCDEHFM@?6Resetting?5ring?5buffer?5?$CFd?5with?5s@" = comdat any
+
+$"\01??_C@_0CF@BDINJJIB@?6?5?$FLERROR?$FNMemalloc?5failed?0?5aborti@" = comdat any
+
+$"\01??_C@_0EG@OMIKLEJH@?6?5?$FLERROR?$FNMem?9alloc?5access?5is?5not@" = comdat any
+
+$"\01??_C@_0EF@PNFBBAEN@?6?5?$FLERROR?$FNMem?9alloc?5access?5is?5not@" = comdat any
 
 $"\01??_C@_0O@HDHCNGNA@?6POOL_init?5?$CFd?$AA@" = comdat any
 
@@ -35,12 +43,16 @@ $"\01?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA" = comdat any
 
 @order_gurantee2 = global i64 0, align 8
 @VFILES = global %struct.circular_buf_t* null, align 8
-@"\01??_C@_0CF@BDINJJIB@?6?5?$FLERROR?$FNMemalloc?5failed?0?5aborti@" = linkonce_odr unnamed_addr constant [37 x i8] c"\0A [ERROR]Memalloc failed, aborting.\0A\00", comdat, align 1
+@"\01??_C@_0CG@LCFPJNEI@?6?5?$FLERROR?$FNMem?9alloc?5failed?0?5abort@" = linkonce_odr unnamed_addr constant [38 x i8] c"\0A [ERROR]Mem-alloc failed, aborting.\0A\00", comdat, align 1
+@"\01??_C@_0DF@IJHOIBMK@?6?5?$FLERROR?$FNMem?9alloc?5access?5is?5not@" = linkonce_odr unnamed_addr constant [53 x i8] c"\0A [ERROR]Mem-alloc access is not granted, aborting.\0A\00", comdat, align 1
 @"\01??_C@_0CK@BGFEBEKM@?6Creating?5ring?5buffer?5?$CFd?5with?5si@" = linkonce_odr unnamed_addr constant [42 x i8] c"\0ACreating ring buffer %d with size %lld. \00", comdat, align 1
 @"\01??_C@_0CL@ODCDEHFM@?6Resetting?5ring?5buffer?5?$CFd?5with?5s@" = linkonce_odr unnamed_addr constant [43 x i8] c"\0AResetting ring buffer %d with size %lld. \00", comdat, align 1
+@"\01??_C@_0CF@BDINJJIB@?6?5?$FLERROR?$FNMemalloc?5failed?0?5aborti@" = linkonce_odr unnamed_addr constant [37 x i8] c"\0A [ERROR]Memalloc failed, aborting.\0A\00", comdat, align 1
 @POOL_FILES = global i8 0, align 1
 @POOL_timetag = global i64* null, align 8
 @POOL_fileid = global i8* null, align 8
+@"\01??_C@_0EG@OMIKLEJH@?6?5?$FLERROR?$FNMem?9alloc?5access?5is?5not@" = linkonce_odr unnamed_addr constant [70 x i8] c"\0A [ERROR]Mem-alloc access is not granted for POOL_timetag, aborting.\0A\00", comdat, align 1
+@"\01??_C@_0EF@PNFBBAEN@?6?5?$FLERROR?$FNMem?9alloc?5access?5is?5not@" = linkonce_odr unnamed_addr constant [69 x i8] c"\0A [ERROR]Mem-alloc access is not granted for POOL_fileid, aborting.\0A\00", comdat, align 1
 @"\01??_C@_0O@HDHCNGNA@?6POOL_init?5?$CFd?$AA@" = linkonce_odr unnamed_addr constant [14 x i8] c"\0APOOL_init %d\00", comdat, align 1
 @"\01??_C@_0BG@OEIAFCBM@?6POOL_init?5resumed?5?$CFd?$AA@" = linkonce_odr unnamed_addr constant [22 x i8] c"\0APOOL_init resumed %d\00", comdat, align 1
 @VCHN_VFILES_offset = global i8 0, align 1
@@ -247,91 +259,132 @@ define i32 @VFILE_init(i64, i64, i8*, i64) #1 {
   %9 = alloca i8*, align 8
   %10 = alloca i64, align 8
   %11 = alloca i64, align 8
+  %12 = alloca i32, align 4
   store i64 %3, i64* %8, align 8
   store i8* %2, i8** %9, align 8
   store i64 %1, i64* %10, align 8
   store i64 %0, i64* %11, align 8
-  %12 = load i8*, i8** %9, align 8
-  %13 = icmp eq i8* %12, null
-  br i1 %13, label %14, label %17
+  %13 = load i8*, i8** %9, align 8
+  %14 = icmp eq i8* %13, null
+  br i1 %14, label %15, label %18
 
-; <label>:14:                                     ; preds = %4
-  %15 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([37 x i8], [37 x i8]* @"\01??_C@_0CF@BDINJJIB@?6?5?$FLERROR?$FNMemalloc?5failed?0?5aborti@", i32 0, i32 0))
-  %16 = sext i32 %15 to i64
-  store i64 %16, i64* @order_gurantee2, align 8
+; <label>:15:                                     ; preds = %4
+  %16 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([38 x i8], [38 x i8]* @"\01??_C@_0CG@LCFPJNEI@?6?5?$FLERROR?$FNMem?9alloc?5failed?0?5abort@", i32 0, i32 0))
+  %17 = sext i32 %16 to i64
+  store i64 %17, i64* @order_gurantee2, align 8
   store i32 -1, i32* %7, align 4
-  br label %62
+  br label %87
 
-; <label>:17:                                     ; preds = %4
-  %18 = load i8*, i8** %9, align 8
-  %19 = bitcast i8* %18 to i64*
-  %20 = load %struct.circular_buf_t*, %struct.circular_buf_t** @VFILES, align 8
-  %21 = load i64, i64* %11, align 8
-  %22 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %20, i64 %21
-  %23 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %22, i32 0, i32 0
-  store i64* %19, i64** %23, align 8
-  %24 = load i64, i64* %8, align 8
-  %25 = icmp eq i64 %24, 1
-  br i1 %25, label %26, label %52
+; <label>:18:                                     ; preds = %4
+  %19 = load i8*, i8** %9, align 8
+  %20 = bitcast i8* %19 to i64*
+  %21 = load %struct.circular_buf_t*, %struct.circular_buf_t** @VFILES, align 8
+  %22 = load i64, i64* %11, align 8
+  %23 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %21, i64 %22
+  %24 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %23, i32 0, i32 0
+  store i64* %20, i64** %24, align 8
+  store i32 0, i32* %12, align 4
+  br label %25
 
-; <label>:26:                                     ; preds = %17
-  %27 = load i64, i64* %10, align 8
-  %28 = load %struct.circular_buf_t*, %struct.circular_buf_t** @VFILES, align 8
-  %29 = load i64, i64* %11, align 8
-  %30 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %28, i64 %29
-  %31 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %30, i32 0, i32 3
-  store i64 %27, i64* %31, align 8
-  %32 = load %struct.circular_buf_t*, %struct.circular_buf_t** @VFILES, align 8
-  %33 = load i64, i64* %11, align 8
-  %34 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %32, i64 %33
-  store %struct.circular_buf_t* %34, %struct.circular_buf_t** %5, align 8
-  store i32 -1, i32* %6, align 4
-  %35 = load %struct.circular_buf_t*, %struct.circular_buf_t** %5, align 8
-  %36 = icmp ne %struct.circular_buf_t* %35, null
-  br i1 %36, label %37, label %42
+; <label>:25:                                     ; preds = %45, %18
+  %26 = load i32, i32* %12, align 4
+  %27 = sext i32 %26 to i64
+  %28 = load i64, i64* %10, align 8
+  %29 = icmp slt i64 %27, %28
+  br i1 %29, label %30, label %48
 
-; <label>:37:                                     ; preds = %26
-  %38 = load %struct.circular_buf_t*, %struct.circular_buf_t** %5, align 8
-  %39 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %38, i32 0, i32 1
-  store i64 0, i64* %39, align 8
-  %40 = load %struct.circular_buf_t*, %struct.circular_buf_t** %5, align 8
-  %41 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %40, i32 0, i32 2
-  store i64 0, i64* %41, align 8
-  store i32 0, i32* %6, align 4
-  br label %42
+; <label>:30:                                     ; preds = %25
+  %31 = load %struct.circular_buf_t*, %struct.circular_buf_t** @VFILES, align 8
+  %32 = load i64, i64* %11, align 8
+  %33 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %31, i64 %32
+  %34 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %33, i32 0, i32 0
+  %35 = load i64*, i64** %34, align 8
+  %36 = load i32, i32* %12, align 4
+  %37 = sext i32 %36 to i64
+  %38 = getelementptr inbounds i64, i64* %35, i64 %37
+  %39 = load i64, i64* %38, align 8
+  %40 = icmp ne i64 %39, 0
+  br i1 %40, label %41, label %44
 
-; <label>:42:                                     ; preds = %26, %37
-  %43 = load i32, i32* %6, align 4
-  %44 = load %struct.circular_buf_t*, %struct.circular_buf_t** @VFILES, align 8
-  %45 = load i64, i64* %11, align 8
-  %46 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %44, i64 %45
-  %47 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %46, i32 0, i32 3
-  %48 = load i64, i64* %47, align 8
-  %49 = load i64, i64* %11, align 8
-  %50 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([42 x i8], [42 x i8]* @"\01??_C@_0CK@BGFEBEKM@?6Creating?5ring?5buffer?5?$CFd?5with?5si@", i32 0, i32 0), i64 %49, i64 %48)
-  %51 = sext i32 %50 to i64
-  store i64 %51, i64* @order_gurantee2, align 8
-  br label %61
+; <label>:41:                                     ; preds = %30
+  %42 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([53 x i8], [53 x i8]* @"\01??_C@_0DF@IJHOIBMK@?6?5?$FLERROR?$FNMem?9alloc?5access?5is?5not@", i32 0, i32 0))
+  %43 = sext i32 %42 to i64
+  store i64 %43, i64* @order_gurantee2, align 8
+  store i32 -1, i32* %7, align 4
+  br label %87
 
-; <label>:52:                                     ; preds = %17
+; <label>:44:                                     ; preds = %30
+  br label %45
+
+; <label>:45:                                     ; preds = %44
+  %46 = load i32, i32* %12, align 4
+  %47 = add nsw i32 %46, 1
+  store i32 %47, i32* %12, align 4
+  br label %25
+
+; <label>:48:                                     ; preds = %25
+  %49 = load i64, i64* %8, align 8
+  %50 = icmp eq i64 %49, 1
+  br i1 %50, label %51, label %77
+
+; <label>:51:                                     ; preds = %48
+  %52 = load i64, i64* %10, align 8
   %53 = load %struct.circular_buf_t*, %struct.circular_buf_t** @VFILES, align 8
   %54 = load i64, i64* %11, align 8
   %55 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %53, i64 %54
   %56 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %55, i32 0, i32 3
-  %57 = load i64, i64* %56, align 8
+  store i64 %52, i64* %56, align 8
+  %57 = load %struct.circular_buf_t*, %struct.circular_buf_t** @VFILES, align 8
   %58 = load i64, i64* %11, align 8
-  %59 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([43 x i8], [43 x i8]* @"\01??_C@_0CL@ODCDEHFM@?6Resetting?5ring?5buffer?5?$CFd?5with?5s@", i32 0, i32 0), i64 %58, i64 %57)
-  %60 = sext i32 %59 to i64
-  store i64 %60, i64* @order_gurantee2, align 8
-  br label %61
+  %59 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %57, i64 %58
+  store %struct.circular_buf_t* %59, %struct.circular_buf_t** %5, align 8
+  store i32 -1, i32* %6, align 4
+  %60 = load %struct.circular_buf_t*, %struct.circular_buf_t** %5, align 8
+  %61 = icmp ne %struct.circular_buf_t* %60, null
+  br i1 %61, label %62, label %67
 
-; <label>:61:                                     ; preds = %52, %42
+; <label>:62:                                     ; preds = %51
+  %63 = load %struct.circular_buf_t*, %struct.circular_buf_t** %5, align 8
+  %64 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %63, i32 0, i32 1
+  store i64 0, i64* %64, align 8
+  %65 = load %struct.circular_buf_t*, %struct.circular_buf_t** %5, align 8
+  %66 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %65, i32 0, i32 2
+  store i64 0, i64* %66, align 8
+  store i32 0, i32* %6, align 4
+  br label %67
+
+; <label>:67:                                     ; preds = %51, %62
+  %68 = load i32, i32* %6, align 4
+  %69 = load %struct.circular_buf_t*, %struct.circular_buf_t** @VFILES, align 8
+  %70 = load i64, i64* %11, align 8
+  %71 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %69, i64 %70
+  %72 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %71, i32 0, i32 3
+  %73 = load i64, i64* %72, align 8
+  %74 = load i64, i64* %11, align 8
+  %75 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([42 x i8], [42 x i8]* @"\01??_C@_0CK@BGFEBEKM@?6Creating?5ring?5buffer?5?$CFd?5with?5si@", i32 0, i32 0), i64 %74, i64 %73)
+  %76 = sext i32 %75 to i64
+  store i64 %76, i64* @order_gurantee2, align 8
+  br label %86
+
+; <label>:77:                                     ; preds = %48
+  %78 = load %struct.circular_buf_t*, %struct.circular_buf_t** @VFILES, align 8
+  %79 = load i64, i64* %11, align 8
+  %80 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %78, i64 %79
+  %81 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %80, i32 0, i32 3
+  %82 = load i64, i64* %81, align 8
+  %83 = load i64, i64* %11, align 8
+  %84 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([43 x i8], [43 x i8]* @"\01??_C@_0CL@ODCDEHFM@?6Resetting?5ring?5buffer?5?$CFd?5with?5s@", i32 0, i32 0), i64 %83, i64 %82)
+  %85 = sext i32 %84 to i64
+  store i64 %85, i64* @order_gurantee2, align 8
+  br label %86
+
+; <label>:86:                                     ; preds = %77, %67
   store i32 0, i32* %7, align 4
-  br label %62
+  br label %87
 
-; <label>:62:                                     ; preds = %61, %14
-  %63 = load i32, i32* %7, align 4
-  ret i32 %63
+; <label>:87:                                     ; preds = %86, %41, %15
+  %88 = load i32, i32* %7, align 4
+  ret i32 %88
 }
 
 ; Function Attrs: noinline optnone uwtable
@@ -515,130 +568,207 @@ define i32 @POOL_init(i64, i8*, i8*, i64) #1 {
   %9 = alloca i64, align 8
   %10 = alloca i32, align 4
   %11 = alloca i32, align 4
+  %12 = alloca i32, align 4
+  %13 = alloca i32, align 4
   store i64 %3, i64* %6, align 8
   store i8* %2, i8** %7, align 8
   store i8* %1, i8** %8, align 8
   store i64 %0, i64* %9, align 8
-  %12 = load i64, i64* %9, align 8
-  %13 = trunc i64 %12 to i8
-  store i8 %13, i8* @POOL_FILES, align 1
-  %14 = load i8*, i8** %8, align 8
-  %15 = bitcast i8* %14 to i64*
-  store i64* %15, i64** @POOL_timetag, align 8
-  %16 = load i64*, i64** @POOL_timetag, align 8
-  %17 = icmp eq i64* %16, null
-  br i1 %17, label %18, label %21
+  %14 = load i64, i64* %9, align 8
+  %15 = trunc i64 %14 to i8
+  store i8 %15, i8* @POOL_FILES, align 1
+  %16 = load i8*, i8** %8, align 8
+  %17 = bitcast i8* %16 to i64*
+  store i64* %17, i64** @POOL_timetag, align 8
+  %18 = load i64*, i64** @POOL_timetag, align 8
+  %19 = icmp eq i64* %18, null
+  br i1 %19, label %20, label %23
 
-; <label>:18:                                     ; preds = %4
-  %19 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([37 x i8], [37 x i8]* @"\01??_C@_0CF@BDINJJIB@?6?5?$FLERROR?$FNMemalloc?5failed?0?5aborti@", i32 0, i32 0))
-  %20 = sext i32 %19 to i64
-  store i64 %20, i64* @order_gurantee2, align 8
+; <label>:20:                                     ; preds = %4
+  %21 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([37 x i8], [37 x i8]* @"\01??_C@_0CF@BDINJJIB@?6?5?$FLERROR?$FNMemalloc?5failed?0?5aborti@", i32 0, i32 0))
+  %22 = sext i32 %21 to i64
+  store i64 %22, i64* @order_gurantee2, align 8
   store i32 -1, i32* %5, align 4
-  br label %80
+  br label %125
 
-; <label>:21:                                     ; preds = %4
-  %22 = load i8*, i8** %7, align 8
-  store i8* %22, i8** @POOL_fileid, align 8
-  %23 = load i8*, i8** @POOL_fileid, align 8
-  %24 = icmp eq i8* %23, null
-  br i1 %24, label %25, label %28
-
-; <label>:25:                                     ; preds = %21
-  %26 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([37 x i8], [37 x i8]* @"\01??_C@_0CF@BDINJJIB@?6?5?$FLERROR?$FNMemalloc?5failed?0?5aborti@", i32 0, i32 0))
-  %27 = sext i32 %26 to i64
-  store i64 %27, i64* @order_gurantee2, align 8
-  store i32 -1, i32* %5, align 4
-  br label %80
-
-; <label>:28:                                     ; preds = %21
-  %29 = load i64, i64* %6, align 8
-  %30 = icmp eq i64 %29, 1
-  br i1 %30, label %31, label %74
-
-; <label>:31:                                     ; preds = %28
-  %32 = load i8, i8* @POOL_FILES, align 1
-  %33 = zext i8 %32 to i32
-  %34 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([14 x i8], [14 x i8]* @"\01??_C@_0O@HDHCNGNA@?6POOL_init?5?$CFd?$AA@", i32 0, i32 0), i32 %33)
-  %35 = sext i32 %34 to i64
-  store i64 %35, i64* @order_gurantee2, align 8
+; <label>:23:                                     ; preds = %4
   store i32 0, i32* %10, align 4
-  br label %36
+  br label %24
 
-; <label>:36:                                     ; preds = %51, %31
-  %37 = load i32, i32* %10, align 4
-  %38 = load i8, i8* @POOL_FILES, align 1
-  %39 = zext i8 %38 to i32
-  %40 = mul nsw i32 %39, 2
-  %41 = icmp slt i32 %37, %40
-  br i1 %41, label %42, label %54
+; <label>:24:                                     ; preds = %41, %23
+  %25 = load i32, i32* %10, align 4
+  %26 = load i8, i8* @POOL_FILES, align 1
+  %27 = zext i8 %26 to i32
+  %28 = mul nsw i32 %27, 2
+  %29 = icmp slt i32 %25, %28
+  br i1 %29, label %30, label %44
 
-; <label>:42:                                     ; preds = %36
-  %43 = load i64*, i64** @POOL_timetag, align 8
-  %44 = load i32, i32* %10, align 4
-  %45 = sext i32 %44 to i64
-  %46 = getelementptr inbounds i64, i64* %43, i64 %45
-  store i64 9223372036854775807, i64* %46, align 8
-  %47 = load i8*, i8** @POOL_fileid, align 8
-  %48 = load i32, i32* %10, align 4
-  %49 = sext i32 %48 to i64
-  %50 = getelementptr inbounds i8, i8* %47, i64 %49
-  store i8 0, i8* %50, align 1
-  br label %51
+; <label>:30:                                     ; preds = %24
+  %31 = load i64*, i64** @POOL_timetag, align 8
+  %32 = load i32, i32* %10, align 4
+  %33 = sext i32 %32 to i64
+  %34 = getelementptr inbounds i64, i64* %31, i64 %33
+  %35 = load i64, i64* %34, align 8
+  %36 = icmp ne i64 %35, 0
+  br i1 %36, label %37, label %40
 
-; <label>:51:                                     ; preds = %42
-  %52 = load i32, i32* %10, align 4
-  %53 = add nsw i32 %52, 1
-  store i32 %53, i32* %10, align 4
-  br label %36
+; <label>:37:                                     ; preds = %30
+  %38 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([70 x i8], [70 x i8]* @"\01??_C@_0EG@OMIKLEJH@?6?5?$FLERROR?$FNMem?9alloc?5access?5is?5not@", i32 0, i32 0))
+  %39 = sext i32 %38 to i64
+  store i64 %39, i64* @order_gurantee2, align 8
+  store i32 -1, i32* %5, align 4
+  br label %125
 
-; <label>:54:                                     ; preds = %36
+; <label>:40:                                     ; preds = %30
+  br label %41
+
+; <label>:41:                                     ; preds = %40
+  %42 = load i32, i32* %10, align 4
+  %43 = add nsw i32 %42, 1
+  store i32 %43, i32* %10, align 4
+  br label %24
+
+; <label>:44:                                     ; preds = %24
+  %45 = load i8*, i8** %7, align 8
+  store i8* %45, i8** @POOL_fileid, align 8
+  %46 = load i8*, i8** @POOL_fileid, align 8
+  %47 = icmp eq i8* %46, null
+  br i1 %47, label %48, label %51
+
+; <label>:48:                                     ; preds = %44
+  %49 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([37 x i8], [37 x i8]* @"\01??_C@_0CF@BDINJJIB@?6?5?$FLERROR?$FNMemalloc?5failed?0?5aborti@", i32 0, i32 0))
+  %50 = sext i32 %49 to i64
+  store i64 %50, i64* @order_gurantee2, align 8
+  store i32 -1, i32* %5, align 4
+  br label %125
+
+; <label>:51:                                     ; preds = %44
   store i32 0, i32* %11, align 4
-  br label %55
+  br label %52
 
-; <label>:55:                                     ; preds = %70, %54
-  %56 = load i32, i32* %11, align 4
-  %57 = load i8, i8* @POOL_FILES, align 1
-  %58 = zext i8 %57 to i32
-  %59 = icmp slt i32 %56, %58
-  br i1 %59, label %60, label %73
+; <label>:52:                                     ; preds = %70, %51
+  %53 = load i32, i32* %11, align 4
+  %54 = load i8, i8* @POOL_FILES, align 1
+  %55 = zext i8 %54 to i32
+  %56 = mul nsw i32 %55, 2
+  %57 = icmp slt i32 %53, %56
+  br i1 %57, label %58, label %73
 
-; <label>:60:                                     ; preds = %55
-  %61 = load i32, i32* %11, align 4
-  %62 = trunc i32 %61 to i8
-  %63 = load i8*, i8** @POOL_fileid, align 8
-  %64 = load i8, i8* @POOL_FILES, align 1
-  %65 = zext i8 %64 to i32
-  %66 = load i32, i32* %11, align 4
-  %67 = add nsw i32 %65, %66
+; <label>:58:                                     ; preds = %52
+  %59 = load i8*, i8** @POOL_fileid, align 8
+  %60 = load i32, i32* %11, align 4
+  %61 = sext i32 %60 to i64
+  %62 = getelementptr inbounds i8, i8* %59, i64 %61
+  %63 = load i8, i8* %62, align 1
+  %64 = zext i8 %63 to i32
+  %65 = icmp ne i32 %64, 0
+  br i1 %65, label %66, label %69
+
+; <label>:66:                                     ; preds = %58
+  %67 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([69 x i8], [69 x i8]* @"\01??_C@_0EF@PNFBBAEN@?6?5?$FLERROR?$FNMem?9alloc?5access?5is?5not@", i32 0, i32 0))
   %68 = sext i32 %67 to i64
-  %69 = getelementptr inbounds i8, i8* %63, i64 %68
-  store i8 %62, i8* %69, align 1
+  store i64 %68, i64* @order_gurantee2, align 8
+  store i32 -1, i32* %5, align 4
+  br label %125
+
+; <label>:69:                                     ; preds = %58
   br label %70
 
-; <label>:70:                                     ; preds = %60
+; <label>:70:                                     ; preds = %69
   %71 = load i32, i32* %11, align 4
   %72 = add nsw i32 %71, 1
   store i32 %72, i32* %11, align 4
-  br label %55
+  br label %52
 
-; <label>:73:                                     ; preds = %55
-  br label %79
+; <label>:73:                                     ; preds = %52
+  %74 = load i64, i64* %6, align 8
+  %75 = icmp eq i64 %74, 1
+  br i1 %75, label %76, label %119
 
-; <label>:74:                                     ; preds = %28
-  %75 = load i8, i8* @POOL_FILES, align 1
-  %76 = zext i8 %75 to i32
-  %77 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([22 x i8], [22 x i8]* @"\01??_C@_0BG@OEIAFCBM@?6POOL_init?5resumed?5?$CFd?$AA@", i32 0, i32 0), i32 %76)
-  %78 = sext i32 %77 to i64
-  store i64 %78, i64* @order_gurantee2, align 8
-  br label %79
+; <label>:76:                                     ; preds = %73
+  %77 = load i8, i8* @POOL_FILES, align 1
+  %78 = zext i8 %77 to i32
+  %79 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([14 x i8], [14 x i8]* @"\01??_C@_0O@HDHCNGNA@?6POOL_init?5?$CFd?$AA@", i32 0, i32 0), i32 %78)
+  %80 = sext i32 %79 to i64
+  store i64 %80, i64* @order_gurantee2, align 8
+  store i32 0, i32* %12, align 4
+  br label %81
 
-; <label>:79:                                     ; preds = %74, %73
+; <label>:81:                                     ; preds = %96, %76
+  %82 = load i32, i32* %12, align 4
+  %83 = load i8, i8* @POOL_FILES, align 1
+  %84 = zext i8 %83 to i32
+  %85 = mul nsw i32 %84, 2
+  %86 = icmp slt i32 %82, %85
+  br i1 %86, label %87, label %99
+
+; <label>:87:                                     ; preds = %81
+  %88 = load i64*, i64** @POOL_timetag, align 8
+  %89 = load i32, i32* %12, align 4
+  %90 = sext i32 %89 to i64
+  %91 = getelementptr inbounds i64, i64* %88, i64 %90
+  store i64 9223372036854775807, i64* %91, align 8
+  %92 = load i8*, i8** @POOL_fileid, align 8
+  %93 = load i32, i32* %12, align 4
+  %94 = sext i32 %93 to i64
+  %95 = getelementptr inbounds i8, i8* %92, i64 %94
+  store i8 0, i8* %95, align 1
+  br label %96
+
+; <label>:96:                                     ; preds = %87
+  %97 = load i32, i32* %12, align 4
+  %98 = add nsw i32 %97, 1
+  store i32 %98, i32* %12, align 4
+  br label %81
+
+; <label>:99:                                     ; preds = %81
+  store i32 0, i32* %13, align 4
+  br label %100
+
+; <label>:100:                                    ; preds = %115, %99
+  %101 = load i32, i32* %13, align 4
+  %102 = load i8, i8* @POOL_FILES, align 1
+  %103 = zext i8 %102 to i32
+  %104 = icmp slt i32 %101, %103
+  br i1 %104, label %105, label %118
+
+; <label>:105:                                    ; preds = %100
+  %106 = load i32, i32* %13, align 4
+  %107 = trunc i32 %106 to i8
+  %108 = load i8*, i8** @POOL_fileid, align 8
+  %109 = load i8, i8* @POOL_FILES, align 1
+  %110 = zext i8 %109 to i32
+  %111 = load i32, i32* %13, align 4
+  %112 = add nsw i32 %110, %111
+  %113 = sext i32 %112 to i64
+  %114 = getelementptr inbounds i8, i8* %108, i64 %113
+  store i8 %107, i8* %114, align 1
+  br label %115
+
+; <label>:115:                                    ; preds = %105
+  %116 = load i32, i32* %13, align 4
+  %117 = add nsw i32 %116, 1
+  store i32 %117, i32* %13, align 4
+  br label %100
+
+; <label>:118:                                    ; preds = %100
+  br label %124
+
+; <label>:119:                                    ; preds = %73
+  %120 = load i8, i8* @POOL_FILES, align 1
+  %121 = zext i8 %120 to i32
+  %122 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([22 x i8], [22 x i8]* @"\01??_C@_0BG@OEIAFCBM@?6POOL_init?5resumed?5?$CFd?$AA@", i32 0, i32 0), i32 %121)
+  %123 = sext i32 %122 to i64
+  store i64 %123, i64* @order_gurantee2, align 8
+  br label %124
+
+; <label>:124:                                    ; preds = %119, %118
   store i32 0, i32* %5, align 4
-  br label %80
+  br label %125
 
-; <label>:80:                                     ; preds = %79, %25, %18
-  %81 = load i32, i32* %5, align 4
-  ret i32 %81
+; <label>:125:                                    ; preds = %124, %66, %48, %37, %20
+  %126 = load i32, i32* %5, align 4
+  ret i32 %126
 }
 
 ; Function Attrs: alwaysinline uwtable
@@ -688,401 +818,407 @@ define i32 @VCHN_put(i64, i8) #1 {
   %23 = alloca i32, align 4
   %24 = alloca i32, align 4
   %25 = alloca i8, align 1
-  %26 = alloca %struct.circular_buf_t, align 8
+  %26 = alloca i32, align 4
+  %27 = alloca %struct.circular_buf_t, align 8
+  %28 = alloca i32, align 4
   store i8 %1, i8* %21, align 1
   store i64 %0, i64* %22, align 8
-  %27 = load i8, i8* %21, align 1
-  %28 = zext i8 %27 to i32
-  %29 = load i8, i8* @VCHN_VFILES_offset, align 1
+  %29 = load i8, i8* %21, align 1
   %30 = zext i8 %29 to i32
-  %31 = sub nsw i32 %28, %30
-  store i32 %31, i32* %23, align 4
-  %32 = load i32, i32* %23, align 4
-  %33 = load i8, i8* @VCHN_RFILES, align 1
-  %34 = zext i8 %33 to i32
-  %35 = add nsw i32 %32, %34
-  store i32 %35, i32* %24, align 4
-  %36 = load i64, i64* %22, align 8
-  %37 = icmp eq i64 %36, 9223372036854775807
-  br i1 %37, label %38, label %146
+  %31 = load i8, i8* @VCHN_VFILES_offset, align 1
+  %32 = zext i8 %31 to i32
+  %33 = sub nsw i32 %30, %32
+  store i32 %33, i32* %23, align 4
+  %34 = load i32, i32* %23, align 4
+  %35 = load i8, i8* @VCHN_RFILES, align 1
+  %36 = zext i8 %35 to i32
+  %37 = add nsw i32 %34, %36
+  store i32 %37, i32* %24, align 4
+  %38 = load i64, i64* %22, align 8
+  %39 = icmp eq i64 %38, 9223372036854775807
+  br i1 %39, label %40, label %148
 
-; <label>:38:                                     ; preds = %2
-  %39 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([15 x i8], [15 x i8]* @"\01??_C@_0P@GKADCDB@?6clear?5future?6?$AA@", i32 0, i32 0))
-  %40 = sext i32 %39 to i64
-  store i64 %40, i64* @order_gurantee2, align 8
-  %41 = load i32, i32* %24, align 4
-  %42 = trunc i32 %41 to i8
-  %43 = load i64, i64* %22, align 8
-  store i8 %42, i8* %14, align 1
-  store i64 %43, i64* %15, align 8
-  %44 = load i8, i8* @POOL_FILES, align 1
-  %45 = zext i8 %44 to i32
-  %46 = load i8, i8* %14, align 1
+; <label>:40:                                     ; preds = %2
+  %41 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([15 x i8], [15 x i8]* @"\01??_C@_0P@GKADCDB@?6clear?5future?6?$AA@", i32 0, i32 0))
+  %42 = sext i32 %41 to i64
+  store i64 %42, i64* @order_gurantee2, align 8
+  %43 = load i32, i32* %24, align 4
+  %44 = trunc i32 %43 to i8
+  %45 = load i64, i64* %22, align 8
+  store i8 %44, i8* %14, align 1
+  store i64 %45, i64* %15, align 8
+  %46 = load i8, i8* @POOL_FILES, align 1
   %47 = zext i8 %46 to i32
-  %48 = add nsw i32 %45, %47
-  %49 = trunc i32 %48 to i8
-  store i8 %49, i8* %16, align 1
-  %50 = load i64, i64* %15, align 8
-  %51 = load i64*, i64** @POOL_timetag, align 8
-  %52 = load i8, i8* %16, align 1
-  %53 = zext i8 %52 to i64
-  %54 = getelementptr inbounds i64, i64* %51, i64 %53
-  store i64 %50, i64* %54, align 8
-  %55 = load i8, i8* %14, align 1
-  %56 = load i8*, i8** @POOL_fileid, align 8
-  %57 = load i8, i8* %16, align 1
-  %58 = zext i8 %57 to i64
-  %59 = getelementptr inbounds i8, i8* %56, i64 %58
-  store i8 %55, i8* %59, align 1
-  br label %60
+  %48 = load i8, i8* %14, align 1
+  %49 = zext i8 %48 to i32
+  %50 = add nsw i32 %47, %49
+  %51 = trunc i32 %50 to i8
+  store i8 %51, i8* %16, align 1
+  %52 = load i64, i64* %15, align 8
+  %53 = load i64*, i64** @POOL_timetag, align 8
+  %54 = load i8, i8* %16, align 1
+  %55 = zext i8 %54 to i64
+  %56 = getelementptr inbounds i64, i64* %53, i64 %55
+  store i64 %52, i64* %56, align 8
+  %57 = load i8, i8* %14, align 1
+  %58 = load i8*, i8** @POOL_fileid, align 8
+  %59 = load i8, i8* %16, align 1
+  %60 = zext i8 %59 to i64
+  %61 = getelementptr inbounds i8, i8* %58, i64 %60
+  store i8 %57, i8* %61, align 1
+  br label %62
 
-; <label>:60:                                     ; preds = %127, %38
-  %61 = load i8, i8* %16, align 1
-  %62 = zext i8 %61 to i32
-  %63 = icmp sgt i32 %62, 1
-  br i1 %63, label %64, label %132
+; <label>:62:                                     ; preds = %129, %40
+  %63 = load i8, i8* %16, align 1
+  %64 = zext i8 %63 to i32
+  %65 = icmp sgt i32 %64, 1
+  br i1 %65, label %66, label %134
 
-; <label>:64:                                     ; preds = %60
-  %65 = load i8, i8* %16, align 1
-  %66 = zext i8 %65 to i32
-  %67 = sdiv i32 %66, 2
-  %68 = trunc i32 %67 to i8
-  store i8 %68, i8* %17, align 1
-  %69 = load i8, i8* %17, align 1
-  %70 = zext i8 %69 to i32
-  %71 = mul nsw i32 %70, 2
-  %72 = trunc i32 %71 to i8
-  store i8 %72, i8* %18, align 1
-  %73 = load i8, i8* %17, align 1
-  %74 = zext i8 %73 to i32
-  %75 = mul nsw i32 %74, 2
-  %76 = add nsw i32 %75, 1
-  %77 = trunc i32 %76 to i8
-  store i8 %77, i8* %19, align 1
-  %78 = load i64*, i64** @POOL_timetag, align 8
-  %79 = load i8, i8* %18, align 1
-  %80 = zext i8 %79 to i64
-  %81 = getelementptr inbounds i64, i64* %78, i64 %80
-  %82 = load i64, i64* %81, align 8
-  %83 = load i64*, i64** @POOL_timetag, align 8
-  %84 = load i8, i8* %19, align 1
-  %85 = zext i8 %84 to i64
-  %86 = getelementptr inbounds i64, i64* %83, i64 %85
-  %87 = load i64, i64* %86, align 8
-  %88 = icmp slt i64 %82, %87
-  br i1 %88, label %89, label %108
+; <label>:66:                                     ; preds = %62
+  %67 = load i8, i8* %16, align 1
+  %68 = zext i8 %67 to i32
+  %69 = sdiv i32 %68, 2
+  %70 = trunc i32 %69 to i8
+  store i8 %70, i8* %17, align 1
+  %71 = load i8, i8* %17, align 1
+  %72 = zext i8 %71 to i32
+  %73 = mul nsw i32 %72, 2
+  %74 = trunc i32 %73 to i8
+  store i8 %74, i8* %18, align 1
+  %75 = load i8, i8* %17, align 1
+  %76 = zext i8 %75 to i32
+  %77 = mul nsw i32 %76, 2
+  %78 = add nsw i32 %77, 1
+  %79 = trunc i32 %78 to i8
+  store i8 %79, i8* %19, align 1
+  %80 = load i64*, i64** @POOL_timetag, align 8
+  %81 = load i8, i8* %18, align 1
+  %82 = zext i8 %81 to i64
+  %83 = getelementptr inbounds i64, i64* %80, i64 %82
+  %84 = load i64, i64* %83, align 8
+  %85 = load i64*, i64** @POOL_timetag, align 8
+  %86 = load i8, i8* %19, align 1
+  %87 = zext i8 %86 to i64
+  %88 = getelementptr inbounds i64, i64* %85, i64 %87
+  %89 = load i64, i64* %88, align 8
+  %90 = icmp slt i64 %84, %89
+  br i1 %90, label %91, label %110
 
-; <label>:89:                                     ; preds = %64
-  %90 = load i64*, i64** @POOL_timetag, align 8
-  %91 = load i8, i8* %18, align 1
-  %92 = zext i8 %91 to i64
-  %93 = getelementptr inbounds i64, i64* %90, i64 %92
-  %94 = load i64, i64* %93, align 8
-  %95 = load i64*, i64** @POOL_timetag, align 8
-  %96 = load i8, i8* %17, align 1
-  %97 = zext i8 %96 to i64
-  %98 = getelementptr inbounds i64, i64* %95, i64 %97
-  store i64 %94, i64* %98, align 8
-  %99 = load i8*, i8** @POOL_fileid, align 8
-  %100 = load i8, i8* %18, align 1
-  %101 = zext i8 %100 to i64
-  %102 = getelementptr inbounds i8, i8* %99, i64 %101
-  %103 = load i8, i8* %102, align 1
-  %104 = load i8*, i8** @POOL_fileid, align 8
-  %105 = load i8, i8* %17, align 1
-  %106 = zext i8 %105 to i64
-  %107 = getelementptr inbounds i8, i8* %104, i64 %106
-  store i8 %103, i8* %107, align 1
-  br label %127
+; <label>:91:                                     ; preds = %66
+  %92 = load i64*, i64** @POOL_timetag, align 8
+  %93 = load i8, i8* %18, align 1
+  %94 = zext i8 %93 to i64
+  %95 = getelementptr inbounds i64, i64* %92, i64 %94
+  %96 = load i64, i64* %95, align 8
+  %97 = load i64*, i64** @POOL_timetag, align 8
+  %98 = load i8, i8* %17, align 1
+  %99 = zext i8 %98 to i64
+  %100 = getelementptr inbounds i64, i64* %97, i64 %99
+  store i64 %96, i64* %100, align 8
+  %101 = load i8*, i8** @POOL_fileid, align 8
+  %102 = load i8, i8* %18, align 1
+  %103 = zext i8 %102 to i64
+  %104 = getelementptr inbounds i8, i8* %101, i64 %103
+  %105 = load i8, i8* %104, align 1
+  %106 = load i8*, i8** @POOL_fileid, align 8
+  %107 = load i8, i8* %17, align 1
+  %108 = zext i8 %107 to i64
+  %109 = getelementptr inbounds i8, i8* %106, i64 %108
+  store i8 %105, i8* %109, align 1
+  br label %129
 
-; <label>:108:                                    ; preds = %64
-  %109 = load i64*, i64** @POOL_timetag, align 8
-  %110 = load i8, i8* %19, align 1
-  %111 = zext i8 %110 to i64
-  %112 = getelementptr inbounds i64, i64* %109, i64 %111
-  %113 = load i64, i64* %112, align 8
-  %114 = load i64*, i64** @POOL_timetag, align 8
-  %115 = load i8, i8* %17, align 1
-  %116 = zext i8 %115 to i64
-  %117 = getelementptr inbounds i64, i64* %114, i64 %116
-  store i64 %113, i64* %117, align 8
-  %118 = load i8*, i8** @POOL_fileid, align 8
-  %119 = load i8, i8* %19, align 1
-  %120 = zext i8 %119 to i64
-  %121 = getelementptr inbounds i8, i8* %118, i64 %120
-  %122 = load i8, i8* %121, align 1
-  %123 = load i8*, i8** @POOL_fileid, align 8
-  %124 = load i8, i8* %17, align 1
-  %125 = zext i8 %124 to i64
-  %126 = getelementptr inbounds i8, i8* %123, i64 %125
-  store i8 %122, i8* %126, align 1
-  br label %127
+; <label>:110:                                    ; preds = %66
+  %111 = load i64*, i64** @POOL_timetag, align 8
+  %112 = load i8, i8* %19, align 1
+  %113 = zext i8 %112 to i64
+  %114 = getelementptr inbounds i64, i64* %111, i64 %113
+  %115 = load i64, i64* %114, align 8
+  %116 = load i64*, i64** @POOL_timetag, align 8
+  %117 = load i8, i8* %17, align 1
+  %118 = zext i8 %117 to i64
+  %119 = getelementptr inbounds i64, i64* %116, i64 %118
+  store i64 %115, i64* %119, align 8
+  %120 = load i8*, i8** @POOL_fileid, align 8
+  %121 = load i8, i8* %19, align 1
+  %122 = zext i8 %121 to i64
+  %123 = getelementptr inbounds i8, i8* %120, i64 %122
+  %124 = load i8, i8* %123, align 1
+  %125 = load i8*, i8** @POOL_fileid, align 8
+  %126 = load i8, i8* %17, align 1
+  %127 = zext i8 %126 to i64
+  %128 = getelementptr inbounds i8, i8* %125, i64 %127
+  store i8 %124, i8* %128, align 1
+  br label %129
 
-; <label>:127:                                    ; preds = %108, %89
-  %128 = load i8, i8* %16, align 1
-  %129 = zext i8 %128 to i32
-  %130 = sdiv i32 %129, 2
-  %131 = trunc i32 %130 to i8
-  store i8 %131, i8* %16, align 1
-  br label %60
+; <label>:129:                                    ; preds = %110, %91
+  %130 = load i8, i8* %16, align 1
+  %131 = zext i8 %130 to i32
+  %132 = sdiv i32 %131, 2
+  %133 = trunc i32 %132 to i8
+  store i8 %133, i8* %16, align 1
+  br label %62
 
-; <label>:132:                                    ; preds = %60
-  %133 = load %struct.circular_buf_t*, %struct.circular_buf_t** @VFILES, align 8
-  %134 = load i32, i32* %23, align 4
-  %135 = sext i32 %134 to i64
-  %136 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %133, i64 %135
-  store %struct.circular_buf_t* %136, %struct.circular_buf_t** %9, align 8
+; <label>:134:                                    ; preds = %62
+  %135 = load %struct.circular_buf_t*, %struct.circular_buf_t** @VFILES, align 8
+  %136 = load i32, i32* %23, align 4
+  %137 = sext i32 %136 to i64
+  %138 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %135, i64 %137
+  store %struct.circular_buf_t* %138, %struct.circular_buf_t** %9, align 8
   store i32 -1, i32* %10, align 4
-  %137 = load %struct.circular_buf_t*, %struct.circular_buf_t** %9, align 8
-  %138 = icmp ne %struct.circular_buf_t* %137, null
-  br i1 %138, label %139, label %144
+  %139 = load %struct.circular_buf_t*, %struct.circular_buf_t** %9, align 8
+  %140 = icmp ne %struct.circular_buf_t* %139, null
+  br i1 %140, label %141, label %146
 
-; <label>:139:                                    ; preds = %132
-  %140 = load %struct.circular_buf_t*, %struct.circular_buf_t** %9, align 8
-  %141 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %140, i32 0, i32 1
-  store i64 0, i64* %141, align 8
+; <label>:141:                                    ; preds = %134
   %142 = load %struct.circular_buf_t*, %struct.circular_buf_t** %9, align 8
-  %143 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %142, i32 0, i32 2
+  %143 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %142, i32 0, i32 1
   store i64 0, i64* %143, align 8
+  %144 = load %struct.circular_buf_t*, %struct.circular_buf_t** %9, align 8
+  %145 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %144, i32 0, i32 2
+  store i64 0, i64* %145, align 8
   store i32 0, i32* %10, align 4
-  br label %144
+  br label %146
 
-; <label>:144:                                    ; preds = %132, %139
-  %145 = load i32, i32* %10, align 4
+; <label>:146:                                    ; preds = %134, %141
+  %147 = load i32, i32* %10, align 4
   store i32 -1, i32* %20, align 4
-  br label %318
+  br label %322
 
-; <label>:146:                                    ; preds = %2
-  %147 = load i8, i8* @POOL_FILES, align 1
-  %148 = zext i8 %147 to i32
-  %149 = load i32, i32* %24, align 4
-  %150 = add nsw i32 %148, %149
-  %151 = trunc i32 %150 to i8
-  store i8 %151, i8* %25, align 1
-  %152 = load i64*, i64** @POOL_timetag, align 8
-  %153 = load i8, i8* %25, align 1
-  %154 = zext i8 %153 to i64
-  %155 = getelementptr inbounds i64, i64* %152, i64 %154
-  %156 = load i64, i64* %155, align 8
-  %157 = icmp eq i64 %156, 9223372036854775807
-  br i1 %157, label %158, label %251
+; <label>:148:                                    ; preds = %2
+  %149 = load i8, i8* @POOL_FILES, align 1
+  %150 = zext i8 %149 to i32
+  %151 = load i32, i32* %24, align 4
+  %152 = add nsw i32 %150, %151
+  %153 = trunc i32 %152 to i8
+  store i8 %153, i8* %25, align 1
+  %154 = load i64*, i64** @POOL_timetag, align 8
+  %155 = load i8, i8* %25, align 1
+  %156 = zext i8 %155 to i64
+  %157 = getelementptr inbounds i64, i64* %154, i64 %156
+  %158 = load i64, i64* %157, align 8
+  %159 = icmp eq i64 %158, 9223372036854775807
+  br i1 %159, label %160, label %254
 
-; <label>:158:                                    ; preds = %146
-  %159 = load i32, i32* %24, align 4
-  %160 = trunc i32 %159 to i8
-  %161 = load i64, i64* %22, align 8
-  store i8 %160, i8* %3, align 1
-  store i64 %161, i64* %4, align 8
-  %162 = load i8, i8* @POOL_FILES, align 1
-  %163 = zext i8 %162 to i32
-  %164 = load i8, i8* %3, align 1
+; <label>:160:                                    ; preds = %148
+  %161 = load i32, i32* %24, align 4
+  %162 = trunc i32 %161 to i8
+  %163 = load i64, i64* %22, align 8
+  store i8 %162, i8* %3, align 1
+  store i64 %163, i64* %4, align 8
+  %164 = load i8, i8* @POOL_FILES, align 1
   %165 = zext i8 %164 to i32
-  %166 = add nsw i32 %163, %165
-  %167 = trunc i32 %166 to i8
-  store i8 %167, i8* %5, align 1
-  %168 = load i64, i64* %4, align 8
-  %169 = load i64*, i64** @POOL_timetag, align 8
-  %170 = load i8, i8* %5, align 1
-  %171 = zext i8 %170 to i64
-  %172 = getelementptr inbounds i64, i64* %169, i64 %171
-  store i64 %168, i64* %172, align 8
-  %173 = load i8, i8* %3, align 1
-  %174 = load i8*, i8** @POOL_fileid, align 8
-  %175 = load i8, i8* %5, align 1
-  %176 = zext i8 %175 to i64
-  %177 = getelementptr inbounds i8, i8* %174, i64 %176
-  store i8 %173, i8* %177, align 1
-  br label %178
+  %166 = load i8, i8* %3, align 1
+  %167 = zext i8 %166 to i32
+  %168 = add nsw i32 %165, %167
+  %169 = trunc i32 %168 to i8
+  store i8 %169, i8* %5, align 1
+  %170 = load i64, i64* %4, align 8
+  %171 = load i64*, i64** @POOL_timetag, align 8
+  %172 = load i8, i8* %5, align 1
+  %173 = zext i8 %172 to i64
+  %174 = getelementptr inbounds i64, i64* %171, i64 %173
+  store i64 %170, i64* %174, align 8
+  %175 = load i8, i8* %3, align 1
+  %176 = load i8*, i8** @POOL_fileid, align 8
+  %177 = load i8, i8* %5, align 1
+  %178 = zext i8 %177 to i64
+  %179 = getelementptr inbounds i8, i8* %176, i64 %178
+  store i8 %175, i8* %179, align 1
+  br label %180
 
-; <label>:178:                                    ; preds = %245, %158
-  %179 = load i8, i8* %5, align 1
-  %180 = zext i8 %179 to i32
-  %181 = icmp sgt i32 %180, 1
-  br i1 %181, label %182, label %250
+; <label>:180:                                    ; preds = %247, %160
+  %181 = load i8, i8* %5, align 1
+  %182 = zext i8 %181 to i32
+  %183 = icmp sgt i32 %182, 1
+  br i1 %183, label %184, label %252
 
-; <label>:182:                                    ; preds = %178
-  %183 = load i8, i8* %5, align 1
-  %184 = zext i8 %183 to i32
-  %185 = sdiv i32 %184, 2
-  %186 = trunc i32 %185 to i8
-  store i8 %186, i8* %6, align 1
-  %187 = load i8, i8* %6, align 1
-  %188 = zext i8 %187 to i32
-  %189 = mul nsw i32 %188, 2
-  %190 = trunc i32 %189 to i8
-  store i8 %190, i8* %7, align 1
-  %191 = load i8, i8* %6, align 1
-  %192 = zext i8 %191 to i32
-  %193 = mul nsw i32 %192, 2
-  %194 = add nsw i32 %193, 1
-  %195 = trunc i32 %194 to i8
-  store i8 %195, i8* %8, align 1
-  %196 = load i64*, i64** @POOL_timetag, align 8
-  %197 = load i8, i8* %7, align 1
-  %198 = zext i8 %197 to i64
-  %199 = getelementptr inbounds i64, i64* %196, i64 %198
-  %200 = load i64, i64* %199, align 8
-  %201 = load i64*, i64** @POOL_timetag, align 8
-  %202 = load i8, i8* %8, align 1
-  %203 = zext i8 %202 to i64
-  %204 = getelementptr inbounds i64, i64* %201, i64 %203
-  %205 = load i64, i64* %204, align 8
-  %206 = icmp slt i64 %200, %205
-  br i1 %206, label %207, label %226
+; <label>:184:                                    ; preds = %180
+  %185 = load i8, i8* %5, align 1
+  %186 = zext i8 %185 to i32
+  %187 = sdiv i32 %186, 2
+  %188 = trunc i32 %187 to i8
+  store i8 %188, i8* %6, align 1
+  %189 = load i8, i8* %6, align 1
+  %190 = zext i8 %189 to i32
+  %191 = mul nsw i32 %190, 2
+  %192 = trunc i32 %191 to i8
+  store i8 %192, i8* %7, align 1
+  %193 = load i8, i8* %6, align 1
+  %194 = zext i8 %193 to i32
+  %195 = mul nsw i32 %194, 2
+  %196 = add nsw i32 %195, 1
+  %197 = trunc i32 %196 to i8
+  store i8 %197, i8* %8, align 1
+  %198 = load i64*, i64** @POOL_timetag, align 8
+  %199 = load i8, i8* %7, align 1
+  %200 = zext i8 %199 to i64
+  %201 = getelementptr inbounds i64, i64* %198, i64 %200
+  %202 = load i64, i64* %201, align 8
+  %203 = load i64*, i64** @POOL_timetag, align 8
+  %204 = load i8, i8* %8, align 1
+  %205 = zext i8 %204 to i64
+  %206 = getelementptr inbounds i64, i64* %203, i64 %205
+  %207 = load i64, i64* %206, align 8
+  %208 = icmp slt i64 %202, %207
+  br i1 %208, label %209, label %228
 
-; <label>:207:                                    ; preds = %182
-  %208 = load i64*, i64** @POOL_timetag, align 8
-  %209 = load i8, i8* %7, align 1
-  %210 = zext i8 %209 to i64
-  %211 = getelementptr inbounds i64, i64* %208, i64 %210
-  %212 = load i64, i64* %211, align 8
-  %213 = load i64*, i64** @POOL_timetag, align 8
-  %214 = load i8, i8* %6, align 1
-  %215 = zext i8 %214 to i64
-  %216 = getelementptr inbounds i64, i64* %213, i64 %215
-  store i64 %212, i64* %216, align 8
-  %217 = load i8*, i8** @POOL_fileid, align 8
-  %218 = load i8, i8* %7, align 1
-  %219 = zext i8 %218 to i64
-  %220 = getelementptr inbounds i8, i8* %217, i64 %219
-  %221 = load i8, i8* %220, align 1
-  %222 = load i8*, i8** @POOL_fileid, align 8
-  %223 = load i8, i8* %6, align 1
-  %224 = zext i8 %223 to i64
-  %225 = getelementptr inbounds i8, i8* %222, i64 %224
-  store i8 %221, i8* %225, align 1
-  br label %245
+; <label>:209:                                    ; preds = %184
+  %210 = load i64*, i64** @POOL_timetag, align 8
+  %211 = load i8, i8* %7, align 1
+  %212 = zext i8 %211 to i64
+  %213 = getelementptr inbounds i64, i64* %210, i64 %212
+  %214 = load i64, i64* %213, align 8
+  %215 = load i64*, i64** @POOL_timetag, align 8
+  %216 = load i8, i8* %6, align 1
+  %217 = zext i8 %216 to i64
+  %218 = getelementptr inbounds i64, i64* %215, i64 %217
+  store i64 %214, i64* %218, align 8
+  %219 = load i8*, i8** @POOL_fileid, align 8
+  %220 = load i8, i8* %7, align 1
+  %221 = zext i8 %220 to i64
+  %222 = getelementptr inbounds i8, i8* %219, i64 %221
+  %223 = load i8, i8* %222, align 1
+  %224 = load i8*, i8** @POOL_fileid, align 8
+  %225 = load i8, i8* %6, align 1
+  %226 = zext i8 %225 to i64
+  %227 = getelementptr inbounds i8, i8* %224, i64 %226
+  store i8 %223, i8* %227, align 1
+  br label %247
 
-; <label>:226:                                    ; preds = %182
-  %227 = load i64*, i64** @POOL_timetag, align 8
-  %228 = load i8, i8* %8, align 1
-  %229 = zext i8 %228 to i64
-  %230 = getelementptr inbounds i64, i64* %227, i64 %229
-  %231 = load i64, i64* %230, align 8
-  %232 = load i64*, i64** @POOL_timetag, align 8
-  %233 = load i8, i8* %6, align 1
-  %234 = zext i8 %233 to i64
-  %235 = getelementptr inbounds i64, i64* %232, i64 %234
-  store i64 %231, i64* %235, align 8
-  %236 = load i8*, i8** @POOL_fileid, align 8
-  %237 = load i8, i8* %8, align 1
-  %238 = zext i8 %237 to i64
-  %239 = getelementptr inbounds i8, i8* %236, i64 %238
-  %240 = load i8, i8* %239, align 1
-  %241 = load i8*, i8** @POOL_fileid, align 8
-  %242 = load i8, i8* %6, align 1
-  %243 = zext i8 %242 to i64
-  %244 = getelementptr inbounds i8, i8* %241, i64 %243
-  store i8 %240, i8* %244, align 1
-  br label %245
+; <label>:228:                                    ; preds = %184
+  %229 = load i64*, i64** @POOL_timetag, align 8
+  %230 = load i8, i8* %8, align 1
+  %231 = zext i8 %230 to i64
+  %232 = getelementptr inbounds i64, i64* %229, i64 %231
+  %233 = load i64, i64* %232, align 8
+  %234 = load i64*, i64** @POOL_timetag, align 8
+  %235 = load i8, i8* %6, align 1
+  %236 = zext i8 %235 to i64
+  %237 = getelementptr inbounds i64, i64* %234, i64 %236
+  store i64 %233, i64* %237, align 8
+  %238 = load i8*, i8** @POOL_fileid, align 8
+  %239 = load i8, i8* %8, align 1
+  %240 = zext i8 %239 to i64
+  %241 = getelementptr inbounds i8, i8* %238, i64 %240
+  %242 = load i8, i8* %241, align 1
+  %243 = load i8*, i8** @POOL_fileid, align 8
+  %244 = load i8, i8* %6, align 1
+  %245 = zext i8 %244 to i64
+  %246 = getelementptr inbounds i8, i8* %243, i64 %245
+  store i8 %242, i8* %246, align 1
+  br label %247
 
-; <label>:245:                                    ; preds = %226, %207
-  %246 = load i8, i8* %5, align 1
-  %247 = zext i8 %246 to i32
-  %248 = sdiv i32 %247, 2
-  %249 = trunc i32 %248 to i8
-  store i8 %249, i8* %5, align 1
-  br label %178
+; <label>:247:                                    ; preds = %228, %209
+  %248 = load i8, i8* %5, align 1
+  %249 = zext i8 %248 to i32
+  %250 = sdiv i32 %249, 2
+  %251 = trunc i32 %250 to i8
+  store i8 %251, i8* %5, align 1
+  br label %180
 
-; <label>:250:                                    ; preds = %178
-  store i32 0, i32* %20, align 4
-  br label %318
+; <label>:252:                                    ; preds = %180
+  store i32 0, i32* %26, align 4
+  %253 = load i32, i32* %26, align 4
+  store i32 %253, i32* %20, align 4
+  br label %322
 
-; <label>:251:                                    ; preds = %146
-  %252 = load %struct.circular_buf_t*, %struct.circular_buf_t** @VFILES, align 8
-  %253 = load i32, i32* %23, align 4
-  %254 = sext i32 %253 to i64
-  %255 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %252, i64 %254
-  %256 = bitcast %struct.circular_buf_t* %26 to i8*
-  %257 = bitcast %struct.circular_buf_t* %255 to i8*
-  call void @llvm.memcpy.p0i8.p0i8.i64(i8* %256, i8* %257, i64 32, i32 8, i1 false)
-  %258 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %26, i32 0, i32 1
-  %259 = load i64, i64* %258, align 8
-  %260 = add i64 %259, 1
-  %261 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %26, i32 0, i32 3
+; <label>:254:                                    ; preds = %148
+  %255 = load %struct.circular_buf_t*, %struct.circular_buf_t** @VFILES, align 8
+  %256 = load i32, i32* %23, align 4
+  %257 = sext i32 %256 to i64
+  %258 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %255, i64 %257
+  %259 = bitcast %struct.circular_buf_t* %27 to i8*
+  %260 = bitcast %struct.circular_buf_t* %258 to i8*
+  call void @llvm.memcpy.p0i8.p0i8.i64(i8* %259, i8* %260, i64 32, i32 8, i1 false)
+  %261 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %27, i32 0, i32 1
   %262 = load i64, i64* %261, align 8
-  %263 = urem i64 %260, %262
-  %264 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %26, i32 0, i32 2
+  %263 = add i64 %262, 1
+  %264 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %27, i32 0, i32 3
   %265 = load i64, i64* %264, align 8
-  %266 = icmp eq i64 %263, %265
-  br i1 %266, label %267, label %270
+  %266 = urem i64 %263, %265
+  %267 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %27, i32 0, i32 2
+  %268 = load i64, i64* %267, align 8
+  %269 = icmp eq i64 %266, %268
+  br i1 %269, label %270, label %273
 
-; <label>:267:                                    ; preds = %251
-  %268 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([26 x i8], [26 x i8]* @"\01??_C@_0BK@OGCGHAOO@?6?5?$FLERROR?$FNBuffer?5overflow?$CB?$AA@", i32 0, i32 0))
-  %269 = sext i32 %268 to i64
-  store i64 %269, i64* @order_gurantee2, align 8
+; <label>:270:                                    ; preds = %254
+  %271 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([26 x i8], [26 x i8]* @"\01??_C@_0BK@OGCGHAOO@?6?5?$FLERROR?$FNBuffer?5overflow?$CB?$AA@", i32 0, i32 0))
+  %272 = sext i32 %271 to i64
+  store i64 %272, i64* @order_gurantee2, align 8
   store i32 -1, i32* %20, align 4
-  br label %318
+  br label %322
 
-; <label>:270:                                    ; preds = %251
-  %271 = load i64, i64* %22, align 8
-  %272 = load %struct.circular_buf_t*, %struct.circular_buf_t** @VFILES, align 8
-  %273 = load i32, i32* %23, align 4
-  %274 = sext i32 %273 to i64
-  %275 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %272, i64 %274
-  store i64 %271, i64* %11, align 8
-  store %struct.circular_buf_t* %275, %struct.circular_buf_t** %12, align 8
+; <label>:273:                                    ; preds = %254
+  %274 = load i64, i64* %22, align 8
+  %275 = load %struct.circular_buf_t*, %struct.circular_buf_t** @VFILES, align 8
+  %276 = load i32, i32* %23, align 4
+  %277 = sext i32 %276 to i64
+  %278 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %275, i64 %277
+  store i64 %274, i64* %11, align 8
+  store %struct.circular_buf_t* %278, %struct.circular_buf_t** %12, align 8
   store i32 -1, i32* %13, align 4
-  %276 = load %struct.circular_buf_t*, %struct.circular_buf_t** %12, align 8
-  %277 = icmp ne %struct.circular_buf_t* %276, null
-  br i1 %277, label %278, label %316
+  %279 = load %struct.circular_buf_t*, %struct.circular_buf_t** %12, align 8
+  %280 = icmp ne %struct.circular_buf_t* %279, null
+  br i1 %280, label %281, label %319
 
-; <label>:278:                                    ; preds = %270
-  %279 = load i64, i64* %11, align 8
-  %280 = load %struct.circular_buf_t*, %struct.circular_buf_t** %12, align 8
-  %281 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %280, i32 0, i32 0
-  %282 = load i64*, i64** %281, align 8
+; <label>:281:                                    ; preds = %273
+  %282 = load i64, i64* %11, align 8
   %283 = load %struct.circular_buf_t*, %struct.circular_buf_t** %12, align 8
-  %284 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %283, i32 0, i32 1
-  %285 = load i64, i64* %284, align 8
-  %286 = getelementptr inbounds i64, i64* %282, i64 %285
-  store i64 %279, i64* %286, align 8
-  %287 = load %struct.circular_buf_t*, %struct.circular_buf_t** %12, align 8
-  %288 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %287, i32 0, i32 1
-  %289 = load i64, i64* %288, align 8
-  %290 = add i64 %289, 1
-  %291 = load %struct.circular_buf_t*, %struct.circular_buf_t** %12, align 8
-  %292 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %291, i32 0, i32 3
-  %293 = load i64, i64* %292, align 8
-  %294 = urem i64 %290, %293
-  %295 = load %struct.circular_buf_t*, %struct.circular_buf_t** %12, align 8
-  %296 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %295, i32 0, i32 1
-  store i64 %294, i64* %296, align 8
-  %297 = load %struct.circular_buf_t*, %struct.circular_buf_t** %12, align 8
-  %298 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %297, i32 0, i32 1
-  %299 = load i64, i64* %298, align 8
+  %284 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %283, i32 0, i32 0
+  %285 = load i64*, i64** %284, align 8
+  %286 = load %struct.circular_buf_t*, %struct.circular_buf_t** %12, align 8
+  %287 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %286, i32 0, i32 1
+  %288 = load i64, i64* %287, align 8
+  %289 = getelementptr inbounds i64, i64* %285, i64 %288
+  store i64 %282, i64* %289, align 8
+  %290 = load %struct.circular_buf_t*, %struct.circular_buf_t** %12, align 8
+  %291 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %290, i32 0, i32 1
+  %292 = load i64, i64* %291, align 8
+  %293 = add i64 %292, 1
+  %294 = load %struct.circular_buf_t*, %struct.circular_buf_t** %12, align 8
+  %295 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %294, i32 0, i32 3
+  %296 = load i64, i64* %295, align 8
+  %297 = urem i64 %293, %296
+  %298 = load %struct.circular_buf_t*, %struct.circular_buf_t** %12, align 8
+  %299 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %298, i32 0, i32 1
+  store i64 %297, i64* %299, align 8
   %300 = load %struct.circular_buf_t*, %struct.circular_buf_t** %12, align 8
-  %301 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %300, i32 0, i32 2
+  %301 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %300, i32 0, i32 1
   %302 = load i64, i64* %301, align 8
-  %303 = icmp eq i64 %299, %302
-  br i1 %303, label %304, label %315
+  %303 = load %struct.circular_buf_t*, %struct.circular_buf_t** %12, align 8
+  %304 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %303, i32 0, i32 2
+  %305 = load i64, i64* %304, align 8
+  %306 = icmp eq i64 %302, %305
+  br i1 %306, label %307, label %318
 
-; <label>:304:                                    ; preds = %278
-  %305 = load %struct.circular_buf_t*, %struct.circular_buf_t** %12, align 8
-  %306 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %305, i32 0, i32 2
-  %307 = load i64, i64* %306, align 8
-  %308 = add i64 %307, 1
-  %309 = load %struct.circular_buf_t*, %struct.circular_buf_t** %12, align 8
-  %310 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %309, i32 0, i32 3
-  %311 = load i64, i64* %310, align 8
-  %312 = urem i64 %308, %311
-  %313 = load %struct.circular_buf_t*, %struct.circular_buf_t** %12, align 8
-  %314 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %313, i32 0, i32 2
-  store i64 %312, i64* %314, align 8
-  br label %315
-
-; <label>:315:                                    ; preds = %304, %278
-  store i32 0, i32* %13, align 4
-  br label %316
-
-; <label>:316:                                    ; preds = %270, %315
-  %317 = load i32, i32* %13, align 4
-  store i32 %317, i32* %20, align 4
+; <label>:307:                                    ; preds = %281
+  %308 = load %struct.circular_buf_t*, %struct.circular_buf_t** %12, align 8
+  %309 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %308, i32 0, i32 2
+  %310 = load i64, i64* %309, align 8
+  %311 = add i64 %310, 1
+  %312 = load %struct.circular_buf_t*, %struct.circular_buf_t** %12, align 8
+  %313 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %312, i32 0, i32 3
+  %314 = load i64, i64* %313, align 8
+  %315 = urem i64 %311, %314
+  %316 = load %struct.circular_buf_t*, %struct.circular_buf_t** %12, align 8
+  %317 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %316, i32 0, i32 2
+  store i64 %315, i64* %317, align 8
   br label %318
 
-; <label>:318:                                    ; preds = %316, %267, %250, %144
-  %319 = load i32, i32* %20, align 4
-  ret i32 %319
+; <label>:318:                                    ; preds = %307, %281
+  store i32 0, i32* %13, align 4
+  br label %319
+
+; <label>:319:                                    ; preds = %273, %318
+  %320 = load i32, i32* %13, align 4
+  store i32 %320, i32* %28, align 4
+  %321 = load i32, i32* %28, align 4
+  store i32 %321, i32* %20, align 4
+  br label %322
+
+; <label>:322:                                    ; preds = %319, %270, %252, %146
+  %323 = load i32, i32* %20, align 4
+  ret i32 %323
 }
 
 ; Function Attrs: alwaysinline uwtable
