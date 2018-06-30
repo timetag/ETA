@@ -103,11 +103,11 @@ define i32 @circular_buf_put(%struct.circular_buf_t*, i64) #0 {
   %17 = load %struct.circular_buf_t*, %struct.circular_buf_t** %4, align 8
   %18 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %17, i32 0, i32 1
   %19 = load i64, i64* %18, align 8
-  %20 = add i64 %19, 1
+  %20 = add nsw i64 %19, 1
   %21 = load %struct.circular_buf_t*, %struct.circular_buf_t** %4, align 8
   %22 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %21, i32 0, i32 3
   %23 = load i64, i64* %22, align 8
-  %24 = urem i64 %20, %23
+  %24 = srem i64 %20, %23
   %25 = load %struct.circular_buf_t*, %struct.circular_buf_t** %4, align 8
   %26 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %25, i32 0, i32 1
   store i64 %24, i64* %26, align 8
@@ -124,11 +124,11 @@ define i32 @circular_buf_put(%struct.circular_buf_t*, i64) #0 {
   %35 = load %struct.circular_buf_t*, %struct.circular_buf_t** %4, align 8
   %36 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %35, i32 0, i32 2
   %37 = load i64, i64* %36, align 8
-  %38 = add i64 %37, 1
+  %38 = add nsw i64 %37, 1
   %39 = load %struct.circular_buf_t*, %struct.circular_buf_t** %4, align 8
   %40 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %39, i32 0, i32 3
   %41 = load i64, i64* %40, align 8
-  %42 = urem i64 %38, %41
+  %42 = srem i64 %38, %41
   %43 = load %struct.circular_buf_t*, %struct.circular_buf_t** %4, align 8
   %44 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %43, i32 0, i32 2
   store i64 %42, i64* %44, align 8
@@ -195,11 +195,11 @@ define i32 @circular_buf_get(%struct.circular_buf_t*, i64*, i1 zeroext) #1 {
   %37 = load %struct.circular_buf_t*, %struct.circular_buf_t** %6, align 8
   %38 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %37, i32 0, i32 2
   %39 = load i64, i64* %38, align 8
-  %40 = add i64 %39, 1
+  %40 = add nsw i64 %39, 1
   %41 = load %struct.circular_buf_t*, %struct.circular_buf_t** %6, align 8
   %42 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %41, i32 0, i32 3
   %43 = load i64, i64* %42, align 8
-  %44 = urem i64 %40, %43
+  %44 = srem i64 %40, %43
   %45 = load %struct.circular_buf_t*, %struct.circular_buf_t** %6, align 8
   %46 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %45, i32 0, i32 2
   store i64 %44, i64* %46, align 8
@@ -231,10 +231,10 @@ declare void @llvm.memcpy.p0i8.p0i8.i64(i8* nocapture writeonly, i8* nocapture r
 define zeroext i1 @circular_buf_full(%struct.circular_buf_t*) #0 {
   %2 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %0, i32 0, i32 1
   %3 = load i64, i64* %2, align 8
-  %4 = add i64 %3, 1
+  %4 = add nsw i64 %3, 1
   %5 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %0, i32 0, i32 3
   %6 = load i64, i64* %5, align 8
-  %7 = urem i64 %4, %6
+  %7 = srem i64 %4, %6
   %8 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %0, i32 0, i32 2
   %9 = load i64, i64* %8, align 8
   %10 = icmp eq i64 %7, %9
@@ -1045,10 +1045,10 @@ define i32 @VCHN_put(i64, i8) #1 {
   call void @llvm.memcpy.p0i8.p0i8.i64(i8* %259, i8* %260, i64 32, i32 8, i1 false)
   %261 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %27, i32 0, i32 1
   %262 = load i64, i64* %261, align 8
-  %263 = add i64 %262, 1
+  %263 = add nsw i64 %262, 1
   %264 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %27, i32 0, i32 3
   %265 = load i64, i64* %264, align 8
-  %266 = urem i64 %263, %265
+  %266 = srem i64 %263, %265
   %267 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %27, i32 0, i32 2
   %268 = load i64, i64* %267, align 8
   %269 = icmp eq i64 %266, %268
@@ -1087,11 +1087,11 @@ define i32 @VCHN_put(i64, i8) #1 {
   %290 = load %struct.circular_buf_t*, %struct.circular_buf_t** %12, align 8
   %291 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %290, i32 0, i32 1
   %292 = load i64, i64* %291, align 8
-  %293 = add i64 %292, 1
+  %293 = add nsw i64 %292, 1
   %294 = load %struct.circular_buf_t*, %struct.circular_buf_t** %12, align 8
   %295 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %294, i32 0, i32 3
   %296 = load i64, i64* %295, align 8
-  %297 = urem i64 %293, %296
+  %297 = srem i64 %293, %296
   %298 = load %struct.circular_buf_t*, %struct.circular_buf_t** %12, align 8
   %299 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %298, i32 0, i32 1
   store i64 %297, i64* %299, align 8
@@ -1108,11 +1108,11 @@ define i32 @VCHN_put(i64, i8) #1 {
   %308 = load %struct.circular_buf_t*, %struct.circular_buf_t** %12, align 8
   %309 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %308, i32 0, i32 2
   %310 = load i64, i64* %309, align 8
-  %311 = add i64 %310, 1
+  %311 = add nsw i64 %310, 1
   %312 = load %struct.circular_buf_t*, %struct.circular_buf_t** %12, align 8
   %313 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %312, i32 0, i32 3
   %314 = load i64, i64* %313, align 8
-  %315 = urem i64 %311, %314
+  %315 = srem i64 %311, %314
   %316 = load %struct.circular_buf_t*, %struct.circular_buf_t** %12, align 8
   %317 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %316, i32 0, i32 2
   store i64 %315, i64* %317, align 8
@@ -1372,11 +1372,11 @@ define i64 @VCHN_next(i8*) #1 {
   %182 = load %struct.circular_buf_t*, %struct.circular_buf_t** %10, align 8
   %183 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %182, i32 0, i32 2
   %184 = load i64, i64* %183, align 8
-  %185 = add i64 %184, 1
+  %185 = add nsw i64 %184, 1
   %186 = load %struct.circular_buf_t*, %struct.circular_buf_t** %10, align 8
   %187 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %186, i32 0, i32 3
   %188 = load i64, i64* %187, align 8
-  %189 = urem i64 %185, %188
+  %189 = srem i64 %185, %188
   %190 = load %struct.circular_buf_t*, %struct.circular_buf_t** %10, align 8
   %191 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %190, i32 0, i32 2
   store i64 %189, i64* %191, align 8

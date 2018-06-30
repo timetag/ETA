@@ -4,11 +4,11 @@ multiprocessing.freeze_support()
 
 import os, sys
 import ws_broadcast
-
+#if getattr(sys, 'frozen', False):
 while True:
     env_dist = os.environ.get('ETA_LIB')
     if env_dist is not None:
-        #if getattr(sys, 'frozen', False):
+
         sys.path.insert(0, env_dist)
         break
     else:
