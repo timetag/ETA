@@ -156,6 +156,6 @@ def link_jit_code(code):
 
     exec(code, glb, loc)
     mainloop = loc["mainloop"]
-    wrapper = loc["sp_core"]
+    wrapper = loc["wrapper"]
 
     return wrapper, mainloop
