@@ -1,5 +1,5 @@
 import multiprocessing, time, threading, json, sys
-    # import logging
+# import logging
 # multiprocessing.log_to_stderr(logging.DEBUG)
 from jit_linker import link_jit_code
 from parser_header import parse_header
@@ -9,12 +9,13 @@ from etalang import eta_codegen
 def external_wrpper(param):
     eta_compiled_code = param.pop()
     wrapper, mainloop = link_jit_code(eta_compiled_code)
-    #old = sys.stdout
-    #sys.stdout = open("log.txt", 'w')
+    # old = sys.stdout
+    # sys.stdout = open("log.txt", 'w')
     ret = wrapper(param, mainloop)
-    #sys.stdout = old
+    # sys.stdout = old
+    """
     print("out puted!!")
-    """with open("llvm.txt", "w") as writeto:
+    with open("llvm.txt", "w") as writeto:
         codelist = mainloop.inspect_llvm()
         for each in codelist:
             writeto.write(codelist[each])
