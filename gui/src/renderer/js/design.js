@@ -181,7 +181,7 @@ state1, state2->state3: #TRIGGERS
                 type: 'image/svg+xml'
             }
         );
-        saveAs(blob, editing_graph + '.svg');
+        saveAs(blob, editing_graph_name + '.svg');
 
         // Delete the copy of SVG
         svg.parentNode.removeChild(svg);
