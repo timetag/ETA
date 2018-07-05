@@ -13,7 +13,9 @@ class INTEGER():
         self.EMIT_LINE("uettp_initial", "{symbol}=nb.int64(0);{symbol}=scalar_{symbol}[0]".format(symbol=sym))
         self.EMIT_LINE("uettp_deinit", "scalar_{symbol}[0]={symbol}".format(symbol=sym))
         self.EMIT_LINE("global_initial",
-                       "scalar_{symbol}=np.zeros((1), dtype=np.int64);scalar_{symbol}[0]={initvale}".format(symbol=sym,initvale=type[2]))
+                       "scalar_{symbol}=np.zeros((1), dtype=np.int64);scalar_{symbol}[0]={initvale}".format(symbol=sym,
+                                                                                                            initvale=
+                                                                                                            type[2]))
 
     def INTEGER(self, triggers, name, initvalue=0):
         self.define_syms(name, ["integer", "sum", initvalue], register=True)
@@ -36,6 +38,19 @@ class TABLE():
 
 
 ### built-in types ###
+class VFILE():
+    def vfile_init(self, sym, type):
+        self.EMIT_LINE("uettp_initial", """
+        eta_ret += VFILE_init(nb.int64(vfile_counter),nb.int64({buffer_size}),ffi.from_buffer({vfile2}),nb.int64(1))
+        vfile_counter+=1
+        """.format(vfile2=sym + "_vfile", buffer_size=type[1]))
+
+    def VFILE(self, triggers, name, size="800000"):
+        size = int(ast.literal_eval(size))
+        self.define_syms(name + "_vfile", ["table", "sum", size], register=True)
+        self.define_syms(name, ["vfile", size])
+
+
 class RECORDER():
     def recorder_init(self, sym, type):
         self.EMIT_LINE("uettp_initial", """{recorder}_size={buflen}""".format(recorder=sym, buflen=type[1]))
@@ -46,15 +61,15 @@ class RECORDER():
             self.define_syms(name + "_tab", ["table", "sum", size], register=True)
             self.define_syms(name, ["recorder", size])
         elif size == 1:
-            self.INTEGER(triggers,name + "_rec",0)
+            self.INTEGER(triggers, name + "_rec", 0)
             self.define_syms(name, ["recorder", size])
         elif size == 0:
             self.define_syms(name + "_tab", "table", register=True)
             self.define_syms(name, "recorder")
-        self.INTEGER(triggers,name + "_head", 0)
-        self.INTEGER(triggers,name + "_tail", 0)
+        self.INTEGER(triggers, name + "_head", 0)
+        self.INTEGER(triggers, name + "_tail", 0)
 
-        self.INTEGER(triggers,name + "_size", 0)
+        self.INTEGER(triggers, name + "_size", 0)
 
     def recorder_record(self, triggers, name, num):
         name = self.assert_syms(name, "recorder")
@@ -83,7 +98,7 @@ class RECORDER():
                         if not({table}[{recorder}_tail] {cond}):
                             #print("recorder tail",{table}[{recorder}_tail])
                             break
-        
+
                         {recorder}_tail = ({recorder}_tail + 1) % {recorder}_size
                     else:
                         break
@@ -241,9 +256,10 @@ class CLOCK():
 class COINCIDENCE():
     def coincidence_init(self, sym, type):
         sym = self.assert_syms(sym, "coincidence")
-        self.INTEGER("uettp_initial",sym, initvalue=0);
+
 
     def COINCIDENCE(self, triggers, name, num, chn):
+        self.INTEGER("uettp_initial", name, initvalue=0);
         num = int(ast.literal_eval(num))
         chn = int(ast.literal_eval(chn))
         if num <= 1:
@@ -264,12 +280,12 @@ class COINCIDENCE():
         code = """
         {sym}|=nb.int64(1<<{thisnum})
         if {sym}== {fullint}:
-            eta_ret+=VSLOT_put(AbsTime_ps,nb.int8({chn}))
+            eta_ret+=VCHN_put(nb.int64(AbsTime_ps),nb.int8({chn}))
         """.format(sym=sym, thisnum=thisnum, fullint=fullint, chn=chn)
         self.EMIT_LINE(trigger, code)
 
 
-class Graph(INTEGER, TABLE, RECORDER, CLOCK, HISTOGRAM, COINCIDENCE):
+class Graph(INTEGER, TABLE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENCE):
     def __init__(self, name="NONAME-GRAPH", gid=0):
         self.name = name
         self.graphid = gid
@@ -499,6 +515,7 @@ class Graph(INTEGER, TABLE, RECORDER, CLOCK, HISTOGRAM, COINCIDENCE):
 
     def emit(self, triggers, chn, waittime=0, period=0, repeat=1):
         chn = int(chn)
+        self.VFILE(triggers, "vchn{}".format(chn))
         repeat = int(repeat)
         waittime = int(waittime)
         period = int(period)
@@ -514,9 +531,9 @@ class Graph(INTEGER, TABLE, RECORDER, CLOCK, HISTOGRAM, COINCIDENCE):
                 """.format(phase=phase,
                            chn=chn, waittime=int(waittime), repeat=repeat, period=period)
         else:
-            code = """eta_ret+=VCHN_put(AbsTime_ps+{waittime},nb.int8({chn}))""".format(phase=phase,
-                                                                                         chn=chn,
-                                                                                         waittime=int(waittime))
+            code = """eta_ret+=VCHN_put(nb.int64(AbsTime_ps+{waittime}),nb.int8({chn}))""".format(phase=phase,
+                                                                                        chn=chn,
+                                                                                        waittime=int(waittime))
         self.EMIT_LINE(triggers, code)
 
     def cancel_emit(self, triggers, chn):

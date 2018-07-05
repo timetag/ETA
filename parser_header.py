@@ -22,8 +22,7 @@ def parse_header(filename1,filetype=-1):
             DTRes_pspr_get(),
             SYNCRate_pspr_get(),
             BytesofRecords_get(),
-            RecordType_get(),
-            NumRecords_get()  # not including
+            RecordType_get()
             ])
 if __name__ == "__main__":
     out = parse_header(bytearray("HHT2.ptu", "ascii"))

@@ -72,9 +72,15 @@ class ETA():
                         loc = {}
                     exec(servercode, glob, loc)
                 except Exception as e:
-                    self.send('[' + str(type(e).__name__) + ']' + str(e), "err")
-                    self.logger.error(str(e), exc_info=True)
-                    self.send("This error comes from user-code in the display panel.")
+                    if (type(e).__name__=="TypingError"):
+                        self.logger.error(str(e), exc_info=True)
+                        self.send("There is an internal ETA error when compiling the file.","err")
+                        self.send("Send your recipe to Github Issues.")
+                    else:
+
+                        self.send('[' + str(type(e).__name__) + ']' + str(e), "err")
+                        self.logger.error(str(e), exc_info=True)
+                        self.send("This error comes from user-code in the display panel.")
                     return
                 self.send("Timetag analysis is finished.")
                 self.send("Don't forget to save the recipe and SHARE it on ETAHub!")
@@ -145,15 +151,14 @@ class ETA():
             raise ValueError("File {} is not found or incorrect, err code {}.".format(filename, ret1))
         TTF_header_offset = out[0]
         TTF_filesize = out[1]
-        BytesofRecords = out[2]
-        NumRecords = out[-1]
+        BytesofRecords = out[-2]
+        NumRecords = (TTF_filesize - TTF_header_offset) // BytesofRecords
+        Chunck_size = (NumRecords // cuts) * BytesofRecords
         caller_parms = []
         for i in range(cuts):
             # fine-cutter
-            start_point = int(NumRecords / cuts) * \
-                          BytesofRecords * i + TTF_header_offset
-            stop_point = int(NumRecords / cuts) * \
-                         BytesofRecords * (i + 1) + TTF_header_offset
+            start_point = Chunck_size * i + TTF_header_offset
+            stop_point = Chunck_size * (i + 1) + TTF_header_offset
             if (stop_point > TTF_filesize):
                 stop_point = TTF_filesize
             if (stop_point - start_point > BytesofRecords):
@@ -162,16 +167,17 @@ class ETA():
                 # print(start_point, stop_point)
         if trunc > 0:
             caller_parms = caller_parms[:trunc]
+
         return caller_parms
 
-    def run(self, filenames, group="compile"):
+    def run(self, filenames, group="compile", cores=multiprocessing.cpu_count()):
         if isinstance(filenames, str):
 
             caller_parms = self.simple_cut(filenames)
         else:
             caller_parms = filenames
 
-        cores = min(len(caller_parms), multiprocessing.cpu_count())
+        cores = min(len(caller_parms), cores)
         self.send(
             "ETA.run([...], group='{}') started with {} threads using {} cores.".format(group, len(caller_parms),
                                                                                         cores), "running")
