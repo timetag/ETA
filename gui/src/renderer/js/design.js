@@ -201,7 +201,7 @@ state1, state2->state3: #TRIGGERS
                 type: 'application/json'
             }
         );
-        saveAs(blob, editing_graph + '.etainst');
+        saveAs(blob, editing_graph_name + '.etainst');
     });
 
 
