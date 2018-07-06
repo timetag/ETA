@@ -6,7 +6,7 @@ from etalang import eta_codegen
 
 
 class ETAThread(threading.Thread):
-    def __init__(self, func, args, code):
+    def __init__(self, func, args, code=None):
         super(ETAThread, self).__init__()
         self.func = func
         self.args = copy.deepcopy(args)
@@ -14,7 +14,10 @@ class ETAThread(threading.Thread):
         self.result = None
 
     def run(self):
-        self.result = self.func(self.args, self.code)
+        if self.code:
+            self.result = self.func(self.args, self.code)
+        else:
+            self.result = self.func(self.args)
 
     def get_result(self):
         return self.result
@@ -184,25 +187,20 @@ class ETA():
 
         return caller_parms
 
-    def run(self, filenames, group="compile", cores=multiprocessing.cpu_count(), multiprocess=False):
+    def run(self, filenames, group="compile", multiprocess=0):
         if isinstance(filenames, str):
-
             caller_parms = self.simple_cut(filenames)
         else:
             caller_parms = filenames
 
-        cores = min(len(caller_parms), cores)
         self.send(
-            "ETA.run([...], group='{}') started with {} threads using {} cores.".format(group, len(caller_parms),
-                                                                                        cores), "running")
-        # print(caller_parms)
+            "ETA.run([...], group='{}') started with {} threads.".format(group, len(caller_parms)), "running")
 
         ts = time.time()
         # map
-        if multiprocess is True:
+        if multiprocess == 1:
             print("run with threading")
-            threads = []
-            rets = []
+
             if group in self.eta_compiled_code:
                 eta_compiled_code = self.eta_compiled_code[group]
                 wrapper, mainloop = link_jit_code(eta_compiled_code)
@@ -215,6 +213,8 @@ class ETA():
             print(first)
             wrapper(first, mainloop)
             print("starting...")
+            threads = []
+            rets = []
             for each_caller_parms in caller_parms:
                 thread1 = ETAThread(func=wrapper, args=each_caller_parms, code=mainloop)
                 threads.append(thread1)
@@ -232,17 +232,29 @@ class ETA():
                 else:
                     self.send("Try to eta.run() on a non-existing group {}.".format(group), "err")
                     return None
-            self.pool = multiprocessing.Pool(cores)
-            rets = self.pool.map(external_wrpper, caller_parms)
-            self.pool.close()
-            self.pool.join()
+            if multiprocess == 2:
+                threads = []
+                rets = []
+                for each_caller_parms in caller_parms:
+                    thread1 = ETAThread(func=external_wrpper, args=each_caller_parms)
+                    threads.append(thread1)
+                    thread1.start()
+                for thread2 in threads:
+                    thread2.join()
+                    rets.append(thread2.get_result())
+            else:
+                cores = min(len(caller_parms), multiprocessing.cpu_count())
+                self.pool = multiprocessing.Pool(cores)
+                rets = self.pool.map(external_wrpper, caller_parms)
+                self.pool.close()
+                self.pool.join()
         te = time.time()
         # reduce
         for each in range(1, len(rets)):
             for each_graph in rets[0].keys():
                 rets[0][each_graph] += rets[each][each_graph]
         result = rets[0]
-        self.send('ETA.run() finished in {} ms.'.format((te - ts) * 1000), "stopped")
+        self.send('ETA.run(...) finished in {} ms.'.format((te - ts) * 1000), "stopped")
         self.send("none", "dash")
         if isinstance(result, list) and len(result) == 1:
             return result[0]
