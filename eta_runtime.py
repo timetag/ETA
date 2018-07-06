@@ -1,9 +1,23 @@
-import multiprocessing, time, threading, json, sys
-# import logging
+import multiprocessing, time, threading, json, sys, logging, copy
 # multiprocessing.log_to_stderr(logging.DEBUG)
 from jit_linker import link_jit_code
 from parser_header import parse_header
 from etalang import eta_codegen
+
+
+class ETAThread(threading.Thread):
+    def __init__(self, func, args, code):
+        super(ETAThread, self).__init__()
+        self.func = func
+        self.args = copy.deepcopy(args)
+        self.code = code
+        self.result = None
+
+    def run(self):
+        self.result = self.func(self.args, self.code)
+
+    def get_result(self):
+        return self.result
 
 
 def external_wrpper(param):
@@ -72,9 +86,9 @@ class ETA():
                         loc = {}
                     exec(servercode, glob, loc)
                 except Exception as e:
-                    if (type(e).__name__=="TypingError"):
+                    if (type(e).__name__ == "TypingError"):
                         self.logger.error(str(e), exc_info=True)
-                        self.send("There is an internal ETA error when compiling the file.","err")
+                        self.send("There is an internal ETA error when compiling the file.", "err")
                         self.send("Send your recipe to Github Issues.")
                     else:
 
@@ -170,7 +184,7 @@ class ETA():
 
         return caller_parms
 
-    def run(self, filenames, group="compile", cores=multiprocessing.cpu_count()):
+    def run(self, filenames, group="compile", cores=multiprocessing.cpu_count(), multiprocess=False):
         if isinstance(filenames, str):
 
             caller_parms = self.simple_cut(filenames)
@@ -183,19 +197,41 @@ class ETA():
                                                                                         cores), "running")
         # print(caller_parms)
 
-        # assign code
-        for each in caller_parms:
+        ts = time.time()
+        # map
+        if multiprocess is True:
+            print("run with threading")
+            threads = []
+            rets = []
             if group in self.eta_compiled_code:
-                each.append(self.eta_compiled_code[group])
+                eta_compiled_code = self.eta_compiled_code[group]
+                wrapper, mainloop = link_jit_code(eta_compiled_code)
             else:
                 self.send("Try to eta.run() on a non-existing group {}.".format(group), "err")
                 return None
-        ts = time.time()
-        # map
-        if cores == 1:
-            print("run locally")
-            rets = [external_wrpper(caller_parms[0])]
+            print("warming up...")
+            first = copy.deepcopy(caller_parms[0])
+            first[1] = first[0] + 40
+            print(first)
+            wrapper(first, mainloop)
+            print("starting...")
+            for each_caller_parms in caller_parms:
+                thread1 = ETAThread(func=wrapper, args=each_caller_parms, code=mainloop)
+                threads.append(thread1)
+                thread1.start()
+            for thread2 in threads:
+                thread2.join()
+                rets.append(thread2.get_result())
+
+            # rets = [external_wrpper(caller_parms[0])]
         else:
+            # assign code
+            for each in caller_parms:
+                if group in self.eta_compiled_code:
+                    each.append(self.eta_compiled_code[group])
+                else:
+                    self.send("Try to eta.run() on a non-existing group {}.".format(group), "err")
+                    return None
             self.pool = multiprocessing.Pool(cores)
             rets = self.pool.map(external_wrpper, caller_parms)
             self.pool.close()
