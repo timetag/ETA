@@ -6,18 +6,14 @@ from etalang import eta_codegen
 
 
 class ETAThread(threading.Thread):
-    def __init__(self, func, args, code=None):
+    def __init__(self, func, args):
         super(ETAThread, self).__init__()
         self.func = func
-        self.args = copy.deepcopy(args)
-        self.code = code
+        self.args = args
         self.result = None
 
     def run(self):
-        if self.code:
-            self.result = self.func(self.args, self.code)
-        else:
-            self.result = self.func(self.args)
+        self.result = self.func( *self.args)
 
     def get_result(self):
         return self.result
@@ -25,19 +21,18 @@ class ETAThread(threading.Thread):
 
 def external_wrpper(param):
     eta_compiled_code = param.pop()
-    wrapper, mainloop = link_jit_code(eta_compiled_code)
+
+    loc = link_jit_code(eta_compiled_code)
+    mainloop = loc["mainloop"]
+    thin_wrapper = loc["thin_wrapper"]
+    initializer = loc["initializer"]
+    storage = initializer(param)
     # old = sys.stdout
     # sys.stdout = open("log.txt", 'w')
-    ret = wrapper(param, mainloop)
+    mainloop(*storage)
     # sys.stdout = old
-    """
-    print("out puted!!")
-    with open("llvm.txt", "w") as writeto:
-        codelist = mainloop.inspect_llvm()
-        for each in codelist:
-            writeto.write(codelist[each])
-            break
-    """
+    ret = thin_wrapper(*storage)
+
     return ret
 
 
@@ -203,29 +198,42 @@ class ETA():
 
             if group in self.eta_compiled_code:
                 eta_compiled_code = self.eta_compiled_code[group]
-                wrapper, mainloop = link_jit_code(eta_compiled_code)
+                loc = link_jit_code(eta_compiled_code)
+                mainloop = loc["mainloop"]
+                thin_wrapper = loc["thin_wrapper"]
+                initializer = loc["initializer"]
             else:
                 self.send("Try to eta.run() on a non-existing group {}.".format(group), "err")
                 return None
             print("warming up...")
             first = copy.deepcopy(caller_parms[0])
             first[1] = first[0] + 40
-
-            ret = wrapper(first, mainloop)
-            print(mainloop.inspect_llvm())
+            storage = initializer(first)
+            mainloop(*storage)
+            ret = thin_wrapper(*storage)
+            with open("llvm.txt", "w") as writeto:
+                codelist = mainloop.inspect_llvm()
+                for each in codelist:
+                    writeto.write(codelist[each])
+                    break
 
             print("starting...")
             threads = []
+            vals = []
             rets = []
             for each_caller_parms in caller_parms:
-                thread1 = ETAThread(func=wrapper, args=each_caller_parms, code=mainloop)
+                vals.append(initializer(each_caller_parms))
+
+            for val in vals:
+                thread1 = ETAThread(func=mainloop, args=val)
                 threads.append(thread1)
                 thread1.start()
             for thread2 in threads:
                 thread2.join()
-                rets.append(thread2.get_result())
+                print(thread2.get_result())
+            for val in vals:
+                rets.append(thin_wrapper(*val))
 
-            # rets = [external_wrpper(caller_parms[0])]
         else:
             # assign code
             for each in caller_parms:
@@ -234,17 +242,7 @@ class ETA():
                 else:
                     self.send("Try to eta.run() on a non-existing group {}.".format(group), "err")
                     return None
-            if multiprocess == 2:
-                threads = []
-                rets = []
-                for each_caller_parms in caller_parms:
-                    thread1 = ETAThread(func=external_wrpper, args=each_caller_parms)
-                    threads.append(thread1)
-                    thread1.start()
-                for thread2 in threads:
-                    thread2.join()
-                    rets.append(thread2.get_result())
-            else:
+            if True:
                 cores = min(len(caller_parms), multiprocessing.cpu_count())
                 self.pool = multiprocessing.Pool(cores)
                 rets = self.pool.map(external_wrpper, caller_parms)
@@ -256,7 +254,7 @@ class ETA():
             for each_graph in rets[0].keys():
                 rets[0][each_graph] += rets[each][each_graph]
         result = rets[0]
-        self.send('ETA.run(...) finished in {} ms.'.format((te - ts) * 1000), "stopped")
+        self.send('ETA.run(...) finished in {} ms, yielding {} results.'.format((te - ts) * 1000, len(rets)), "stopped")
         self.send("none", "dash")
         if isinstance(result, list) and len(result) == 1:
             return result[0]

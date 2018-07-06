@@ -1,4 +1,4 @@
-import textwrap,sys
+import textwrap, sys
 
 
 def get_onefile_loop(histograms, mainloop, init_code, deinit_code, global_init_code, num_rslot, num_rchns, num_vslot):
@@ -43,9 +43,9 @@ def mainloop({tables} filename1, ReaderPTR1,vfiles,POOL_timetag1,POOL_fileid1,ch
         {looping}
     {deinit}
     return eta_ret
-
-def wrapper(caller_parms,mainloop):
-    filename = caller_parms[-1]
+    
+def initializer(caller_parms):
+    filename = bytearray(caller_parms[-1], "ascii")
     ReaderPTR1=np.zeros((15*1), dtype=np.int64)
     ReaderPTR1[0:7]=np.array(caller_parms[0:7],  dtype=np.int64)[0:7]
     vfiles = np.zeros(({num_vslot}*4), dtype=np.int64) 
@@ -55,7 +55,9 @@ def wrapper(caller_parms,mainloop):
     POOL_fileid1=np.zeros((({num_rslot} + {num_vslot}) * 2) , dtype=np.int8)
     chn = np.zeros((1), dtype=np.int8)
     chn_next = np.zeros((1), dtype=np.int8)
-    ret = mainloop({tables} bytearray(filename, "ascii"), ReaderPTR1,vfiles,POOL_timetag1,POOL_fileid1,chn,chn_next)
+    return ({tables} filename, ReaderPTR1,vfiles,POOL_timetag1,POOL_fileid1,chn,chn_next)
+    
+def thin_wrapper({tables} filename, ReaderPTR1,vfiles,POOL_timetag1,POOL_fileid1,chn,chn_next):
     status= {{ {table_list}
         "ReaderPTR1":ReaderPTR1,
         "vfiles":vfiles,
@@ -64,6 +66,7 @@ def wrapper(caller_parms,mainloop):
         "chn":chn,
         "chn_next":chn_next }}
     return status
+
 """.format(uettp_initial=init_code, deinit=deinit_code, looping=mainloop, global_initial=global_init_code,
            tables=table_para, table_list=table_list,
            num_rslot=num_rslot, num_vslot=num_vslot, num_rchns=num_rchns)

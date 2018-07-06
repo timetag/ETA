@@ -155,7 +155,5 @@ def link_jit_code(code):
     loc = {}
 
     exec(code, glb, loc)
-    mainloop = loc["mainloop"]
-    wrapper = loc["wrapper"]
 
-    return wrapper, mainloop
+    return loc
