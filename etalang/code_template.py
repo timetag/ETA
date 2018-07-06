@@ -45,9 +45,9 @@ def mainloop({tables} filename1, ReaderPTR1,vfiles,POOL_timetag1,POOL_fileid1,ch
     return eta_ret
 
 def wrapper(caller_parms,mainloop):
-    filename = caller_parms.pop()
+    filename = caller_parms[-1]
     ReaderPTR1=np.zeros((15*1), dtype=np.int64)
-    ReaderPTR1[0:7]=np.array(caller_parms,  dtype=np.int64)[0:7]
+    ReaderPTR1[0:7]=np.array(caller_parms[0:7],  dtype=np.int64)[0:7]
     vfiles = np.zeros(({num_vslot}*4), dtype=np.int64) 
     {global_initial}
 
