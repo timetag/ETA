@@ -210,8 +210,10 @@ class ETA():
             print("warming up...")
             first = copy.deepcopy(caller_parms[0])
             first[1] = first[0] + 40
-            print(first)
-            wrapper(first, mainloop)
+
+            ret = wrapper(first, mainloop)
+            print(mainloop.inspect_llvm())
+
             print("starting...")
             threads = []
             rets = []
