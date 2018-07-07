@@ -547,143 +547,118 @@ define i32 @POOL_init(i64, i8*, i8*, i64) #1 {
   store i64* %15, i64** @POOL_timetag, align 8
   %16 = load i64*, i64** @POOL_timetag, align 8
   %17 = icmp eq i64* %16, null
-  br i1 %17, label %28, label %18
+  br i1 %17, label %18, label %21
 
 ; <label>:18:                                     ; preds = %4
-  %19 = load i64*, i64** @POOL_timetag, align 8
-  %20 = load i8, i8* @POOL_FILES, align 1
-  %21 = zext i8 %20 to i32
-  %22 = mul nsw i32 %21, 2
-  %23 = sub nsw i32 %22, 1
-  %24 = sext i32 %23 to i64
-  %25 = getelementptr inbounds i64, i64* %19, i64 %24
-  %26 = load i64, i64* %25, align 8
-  %27 = icmp ne i64 %26, 0
-  br i1 %27, label %28, label %31
-
-; <label>:28:                                     ; preds = %18, %4
-  %29 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([37 x i8], [37 x i8]* @"\01??_C@_0CF@BDINJJIB@?6?5?$FLERROR?$FNMemalloc?5failed?0?5aborti@", i32 0, i32 0))
-  %30 = sext i32 %29 to i64
-  store i64 %30, i64* @order_gurantee2, align 8
+  %19 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([37 x i8], [37 x i8]* @"\01??_C@_0CF@BDINJJIB@?6?5?$FLERROR?$FNMemalloc?5failed?0?5aborti@", i32 0, i32 0))
+  %20 = sext i32 %19 to i64
+  store i64 %20, i64* @order_gurantee2, align 8
   store i32 -1, i32* %5, align 4
-  br label %101
+  br label %80
 
-; <label>:31:                                     ; preds = %18
-  %32 = load i8*, i8** %7, align 8
-  store i8* %32, i8** @POOL_fileid, align 8
-  %33 = load i8*, i8** @POOL_fileid, align 8
-  %34 = icmp eq i8* %33, null
-  br i1 %34, label %46, label %35
+; <label>:21:                                     ; preds = %4
+  %22 = load i8*, i8** %7, align 8
+  store i8* %22, i8** @POOL_fileid, align 8
+  %23 = load i8*, i8** @POOL_fileid, align 8
+  %24 = icmp eq i8* %23, null
+  br i1 %24, label %25, label %28
 
-; <label>:35:                                     ; preds = %31
-  %36 = load i8*, i8** @POOL_fileid, align 8
-  %37 = load i8, i8* @POOL_FILES, align 1
-  %38 = zext i8 %37 to i32
-  %39 = mul nsw i32 %38, 2
-  %40 = sub nsw i32 %39, 1
-  %41 = sext i32 %40 to i64
-  %42 = getelementptr inbounds i8, i8* %36, i64 %41
-  %43 = load i8, i8* %42, align 1
-  %44 = zext i8 %43 to i32
-  %45 = icmp ne i32 %44, 0
-  br i1 %45, label %46, label %49
-
-; <label>:46:                                     ; preds = %35, %31
-  %47 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([37 x i8], [37 x i8]* @"\01??_C@_0CF@BDINJJIB@?6?5?$FLERROR?$FNMemalloc?5failed?0?5aborti@", i32 0, i32 0))
-  %48 = sext i32 %47 to i64
-  store i64 %48, i64* @order_gurantee2, align 8
+; <label>:25:                                     ; preds = %21
+  %26 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([37 x i8], [37 x i8]* @"\01??_C@_0CF@BDINJJIB@?6?5?$FLERROR?$FNMemalloc?5failed?0?5aborti@", i32 0, i32 0))
+  %27 = sext i32 %26 to i64
+  store i64 %27, i64* @order_gurantee2, align 8
   store i32 -1, i32* %5, align 4
-  br label %101
+  br label %80
 
-; <label>:49:                                     ; preds = %35
-  %50 = load i64, i64* %6, align 8
-  %51 = icmp eq i64 %50, 1
-  br i1 %51, label %52, label %95
+; <label>:28:                                     ; preds = %21
+  %29 = load i64, i64* %6, align 8
+  %30 = icmp eq i64 %29, 1
+  br i1 %30, label %31, label %74
 
-; <label>:52:                                     ; preds = %49
-  %53 = load i8, i8* @POOL_FILES, align 1
-  %54 = zext i8 %53 to i32
-  %55 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([14 x i8], [14 x i8]* @"\01??_C@_0O@HDHCNGNA@?6POOL_init?5?$CFd?$AA@", i32 0, i32 0), i32 %54)
-  %56 = sext i32 %55 to i64
-  store i64 %56, i64* @order_gurantee2, align 8
+; <label>:31:                                     ; preds = %28
+  %32 = load i8, i8* @POOL_FILES, align 1
+  %33 = zext i8 %32 to i32
+  %34 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([14 x i8], [14 x i8]* @"\01??_C@_0O@HDHCNGNA@?6POOL_init?5?$CFd?$AA@", i32 0, i32 0), i32 %33)
+  %35 = sext i32 %34 to i64
+  store i64 %35, i64* @order_gurantee2, align 8
   store i32 0, i32* %10, align 4
-  br label %57
+  br label %36
 
-; <label>:57:                                     ; preds = %72, %52
-  %58 = load i32, i32* %10, align 4
-  %59 = load i8, i8* @POOL_FILES, align 1
-  %60 = zext i8 %59 to i32
-  %61 = mul nsw i32 %60, 2
-  %62 = icmp slt i32 %58, %61
-  br i1 %62, label %63, label %75
+; <label>:36:                                     ; preds = %51, %31
+  %37 = load i32, i32* %10, align 4
+  %38 = load i8, i8* @POOL_FILES, align 1
+  %39 = zext i8 %38 to i32
+  %40 = mul nsw i32 %39, 2
+  %41 = icmp slt i32 %37, %40
+  br i1 %41, label %42, label %54
 
-; <label>:63:                                     ; preds = %57
-  %64 = load i64*, i64** @POOL_timetag, align 8
-  %65 = load i32, i32* %10, align 4
-  %66 = sext i32 %65 to i64
-  %67 = getelementptr inbounds i64, i64* %64, i64 %66
-  store i64 9223372036854775807, i64* %67, align 8
-  %68 = load i8*, i8** @POOL_fileid, align 8
-  %69 = load i32, i32* %10, align 4
-  %70 = sext i32 %69 to i64
-  %71 = getelementptr inbounds i8, i8* %68, i64 %70
-  store i8 0, i8* %71, align 1
-  br label %72
+; <label>:42:                                     ; preds = %36
+  %43 = load i64*, i64** @POOL_timetag, align 8
+  %44 = load i32, i32* %10, align 4
+  %45 = sext i32 %44 to i64
+  %46 = getelementptr inbounds i64, i64* %43, i64 %45
+  store i64 9223372036854775807, i64* %46, align 8
+  %47 = load i8*, i8** @POOL_fileid, align 8
+  %48 = load i32, i32* %10, align 4
+  %49 = sext i32 %48 to i64
+  %50 = getelementptr inbounds i8, i8* %47, i64 %49
+  store i8 0, i8* %50, align 1
+  br label %51
 
-; <label>:72:                                     ; preds = %63
-  %73 = load i32, i32* %10, align 4
-  %74 = add nsw i32 %73, 1
-  store i32 %74, i32* %10, align 4
-  br label %57
+; <label>:51:                                     ; preds = %42
+  %52 = load i32, i32* %10, align 4
+  %53 = add nsw i32 %52, 1
+  store i32 %53, i32* %10, align 4
+  br label %36
 
-; <label>:75:                                     ; preds = %57
+; <label>:54:                                     ; preds = %36
   store i32 0, i32* %11, align 4
-  br label %76
+  br label %55
 
-; <label>:76:                                     ; preds = %91, %75
-  %77 = load i32, i32* %11, align 4
-  %78 = load i8, i8* @POOL_FILES, align 1
-  %79 = zext i8 %78 to i32
-  %80 = icmp slt i32 %77, %79
-  br i1 %80, label %81, label %94
+; <label>:55:                                     ; preds = %70, %54
+  %56 = load i32, i32* %11, align 4
+  %57 = load i8, i8* @POOL_FILES, align 1
+  %58 = zext i8 %57 to i32
+  %59 = icmp slt i32 %56, %58
+  br i1 %59, label %60, label %73
 
-; <label>:81:                                     ; preds = %76
-  %82 = load i32, i32* %11, align 4
-  %83 = trunc i32 %82 to i8
-  %84 = load i8*, i8** @POOL_fileid, align 8
-  %85 = load i8, i8* @POOL_FILES, align 1
-  %86 = zext i8 %85 to i32
-  %87 = load i32, i32* %11, align 4
-  %88 = add nsw i32 %86, %87
-  %89 = sext i32 %88 to i64
-  %90 = getelementptr inbounds i8, i8* %84, i64 %89
-  store i8 %83, i8* %90, align 1
-  br label %91
+; <label>:60:                                     ; preds = %55
+  %61 = load i32, i32* %11, align 4
+  %62 = trunc i32 %61 to i8
+  %63 = load i8*, i8** @POOL_fileid, align 8
+  %64 = load i8, i8* @POOL_FILES, align 1
+  %65 = zext i8 %64 to i32
+  %66 = load i32, i32* %11, align 4
+  %67 = add nsw i32 %65, %66
+  %68 = sext i32 %67 to i64
+  %69 = getelementptr inbounds i8, i8* %63, i64 %68
+  store i8 %62, i8* %69, align 1
+  br label %70
 
-; <label>:91:                                     ; preds = %81
-  %92 = load i32, i32* %11, align 4
-  %93 = add nsw i32 %92, 1
-  store i32 %93, i32* %11, align 4
-  br label %76
+; <label>:70:                                     ; preds = %60
+  %71 = load i32, i32* %11, align 4
+  %72 = add nsw i32 %71, 1
+  store i32 %72, i32* %11, align 4
+  br label %55
 
-; <label>:94:                                     ; preds = %76
-  br label %100
+; <label>:73:                                     ; preds = %55
+  br label %79
 
-; <label>:95:                                     ; preds = %49
-  %96 = load i8, i8* @POOL_FILES, align 1
-  %97 = zext i8 %96 to i32
-  %98 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([22 x i8], [22 x i8]* @"\01??_C@_0BG@OEIAFCBM@?6POOL_init?5resumed?5?$CFd?$AA@", i32 0, i32 0), i32 %97)
-  %99 = sext i32 %98 to i64
-  store i64 %99, i64* @order_gurantee2, align 8
-  br label %100
+; <label>:74:                                     ; preds = %28
+  %75 = load i8, i8* @POOL_FILES, align 1
+  %76 = zext i8 %75 to i32
+  %77 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([22 x i8], [22 x i8]* @"\01??_C@_0BG@OEIAFCBM@?6POOL_init?5resumed?5?$CFd?$AA@", i32 0, i32 0), i32 %76)
+  %78 = sext i32 %77 to i64
+  store i64 %78, i64* @order_gurantee2, align 8
+  br label %79
 
-; <label>:100:                                    ; preds = %95, %94
+; <label>:79:                                     ; preds = %74, %73
   store i32 0, i32* %5, align 4
-  br label %101
+  br label %80
 
-; <label>:101:                                    ; preds = %100, %46, %28
-  %102 = load i32, i32* %5, align 4
-  ret i32 %102
+; <label>:80:                                     ; preds = %79, %25, %18
+  %81 = load i32, i32* %5, align 4
+  ret i32 %81
 }
 
 ; Function Attrs: alwaysinline uwtable

@@ -3,7 +3,7 @@ import multiprocessing, time, threading, json, sys, logging, copy
 import jit_linker
 from parser_header import parse_header
 from etalang import eta_codegen
-
+import numpy as np
 
 class ETAThread(threading.Thread):
     def __init__(self, func, args):
@@ -39,6 +39,7 @@ class ETA():
     def __init__(self):
         self.eta_compiled_code = None
         self.usercode_vars = None
+
     def frontend_version(self, frontend_version):
         if frontend_version > self.max_frontend:
             self.send("Please update your ETA backend via <a href='http://timetag.github.io/'>timetag.github.io</a>",
@@ -54,7 +55,7 @@ class ETA():
             self.send(metadata, "table")
             self.eta_compiled_code = code
             self.usercode_vars = vars
-            #clear cache
+            # clear cache
             self.mainloop = {}
             self.thin_wrapper = {}
             self.initializer = {}
@@ -74,7 +75,7 @@ class ETA():
             with open("server.eta", 'w') as file:
                 file.write(json.dumps(etaobj))
 
-            self.eta_compiled_code=None
+            self.eta_compiled_code = None
             self.compile_eta(etaobj, verbose=True)
             if self.eta_compiled_code is not None:
                 self.send("Executing code in Display Panel of group {}...".format(group))
@@ -156,7 +157,9 @@ class ETA():
                 self.logger.error(str(e), exc_info=True)
 
     def simple_cut(self, filename, cuts=1, trunc=-1, format=0):
-        self.send("ETA.SIMPLE_CUT: The file '{filename}' is cut into {cuts} equal size sections. ".format(filename=filename, cuts=cuts))
+        self.send(
+            "ETA.SIMPLE_CUT: The file '{filename}' is cut into {cuts} equal size sections. ".format(filename=filename,
+                                                                                                    cuts=cuts))
         if cuts == 1:
             self.send("ETA.SIMPLE_CUT: You can increase the cuts to enable multi-threading.")
 
@@ -184,7 +187,7 @@ class ETA():
 
         return caller_parms
 
-    def run(self, cuts_params, last_ctxs=None, iterate_ctxs=False, sum_results=True, group="main"):
+    def run(self, cuts_params, ctxs=None, sum_results=True, iterate_ctxs=False, group="main"):
         # support legacy API
         if isinstance(cuts_params, str):
             cuts_params = self.simple_cut(cuts_params)
@@ -192,41 +195,54 @@ class ETA():
         self.send(
             "ETA.RUN: Instrument group {} will now run with {} threads.".format(group, len(cuts_params)), "running")
         ts = time.time()
+        vals = []
+        rets = []
         # multi-threading or single-threading
         if len(cuts_params) == 1:
-            print("Compiling...")
 
             if not (group in self.eta_compiled_code):
                 self.send("Try to eta.run() on a non-existing group {}.".format(group), "err")
                 return None
             if not (group in self.mainloop):
+                print("\nCompiling...\n")
                 loc = jit_linker.link_jit_code(self.eta_compiled_code[group])
                 self.mainloop[group] = loc["mainloop"]
                 self.thin_wrapper[group] = loc["thin_wrapper"]
                 self.initializer[group] = loc["initializer"]
+
+                initializer = self.initializer[group]
+                mainloop = self.mainloop[group]
+                thin_wrapper = self.thin_wrapper[group]
+                print("\nWarming up...\n")
+                first = copy.deepcopy(cuts_params[0])
+                first[1] = first[0] + 40
+                storage = initializer(first)
+                mainloop(*storage)
+                thin_wrapper(*storage)
+                with open("llvm.txt", "w") as writeto:
+                    codelist = mainloop.inspect_llvm()
+                    for each in codelist:
+                        writeto.write(codelist[each])
+                        break
+
             initializer = self.initializer[group]
             mainloop = self.mainloop[group]
             thin_wrapper = self.thin_wrapper[group]
 
-            print("warming up...")
-            first = copy.deepcopy(cuts_params[0])
-            first[1] = first[0] + 40
-            storage = initializer(first)
-            mainloop(*storage)
-            thin_wrapper(*storage)
-            with open("llvm.txt", "w") as writeto:
-                codelist = mainloop.inspect_llvm()
-                for each in codelist:
-                    writeto.write(codelist[each])
-                    break
-
-            print("starting...")
             threads = []
-            vals = []
-            rets = []
-            for each_caller_parms in cuts_params:
-                vals.append(initializer(each_caller_parms))
 
+            if ctxs is None:
+                print("\nInitializing context.\n")
+                for each_caller_parms in cuts_params:
+                    vals.append(initializer(each_caller_parms))
+            else:
+                print("\nUpdating context from last_ctxs.\n")
+                vals = ctxs
+                for each_caller_parms_id in range(len(cuts_params)):
+                    vals[each_caller_parms_id][1][0:7] = cuts_params[each_caller_parms_id][0:7]
+                    vals[each_caller_parms_id][1][7:18] = 0
+                print(vals[each_caller_parms_id][1])
+            print("\nExecuting analysis program...\n")
             for val in vals:
                 thread1 = ETAThread(func=mainloop, args=val)
                 threads.append(thread1)
@@ -234,6 +250,7 @@ class ETA():
             for thread2 in threads:
                 thread2.join()
                 print(thread2.get_result())
+
             for val in vals:
                 rets.append(thin_wrapper(*val))
 
@@ -258,7 +275,7 @@ class ETA():
                   "stopped")
 
         if sum_results:
-
+            print("\nAggregating results.\n")
             # reduce
             for each in range(1, len(rets)):
                 for each_graph in rets[0].keys():
@@ -266,9 +283,10 @@ class ETA():
             result = rets[0]
             self.send('ETA.RUN: Aggregating {} results.'.format(len(rets)), "stopped")
         else:
+            print("\nForwarding results.\n")
             result = rets
         self.send("none", "dash")
         if iterate_ctxs:
-            return result, last_ctxs
+            return result, vals
         else:
             return result
