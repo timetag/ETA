@@ -11,11 +11,11 @@ def get_onefile_loop(histograms, mainloop, init_code, deinit_code, global_init_c
     table_para = ""
     for each in histograms:
         table_list += '"' + each + '":' + each + ","
-        table_para += each + ","
+        table_para += "," + each
 
     text = """
 @jit(nopython=True, nogil=True)#parallel=True, 
-def mainloop({tables} filename1, ReaderPTR1,vfiles,POOL_timetag1,POOL_fileid1,chn,chn_next):
+def mainloop(filename1, ReaderPTR1, vfiles, POOL_timetag1, POOL_fileid1, chn, chn_next {tables}):
     link_libs()
     eta_ret = 0
     vfile_counter=0
@@ -50,14 +50,13 @@ def initializer(caller_parms):
     ReaderPTR1[0:7]=caller_parms[0:7]
     vfiles = np.zeros(({num_vslot}*4), dtype=np.int64) 
     {global_initial}
-
     POOL_timetag1=np.zeros((({num_rslot} + {num_vslot}) * 2) , dtype=np.int64)
     POOL_fileid1=np.zeros((({num_rslot} + {num_vslot}) * 2) , dtype=np.int8)
     chn = np.zeros((1), dtype=np.int8)
     chn_next = np.zeros((1), dtype=np.int8)
-    return ({tables} filename, ReaderPTR1,vfiles,POOL_timetag1,POOL_fileid1,chn,chn_next)
+    return (filename, ReaderPTR1, vfiles, POOL_timetag1, POOL_fileid1, chn, chn_next {tables} )
     
-def thin_wrapper({tables} filename, ReaderPTR1,vfiles,POOL_timetag1,POOL_fileid1,chn,chn_next):
+def thin_wrapper(filename, ReaderPTR1,vfiles,POOL_timetag1,POOL_fileid1,chn,chn_next {tables} ):
     status= {{ {table_list}
         "ReaderPTR1":ReaderPTR1,
         "vfiles":vfiles,
