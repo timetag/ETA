@@ -38,9 +38,6 @@ def external_wrpper(param):
 class ETA():
     def __init__(self):
         self.eta_compiled_code = None
-        self.mainloop = []
-        self.thin_wrapper = []
-        self.initializer = []
         self.usercode_vars = None
     def frontend_version(self, frontend_version):
         if frontend_version > self.max_frontend:
@@ -56,10 +53,11 @@ class ETA():
             code, vars, metadata = eta_codegen.compile_eta(etaobj, info_emitter)
             self.send(metadata, "table")
             self.eta_compiled_code = code
-            self.mainloop = []
-            self.thin_wrapper = []
-            self.initializer = []
             self.usercode_vars = vars
+            #clear cache
+            self.mainloop = {}
+            self.thin_wrapper = {}
+            self.initializer = {}
 
         except Exception as e:
             self.send('[' + str(type(e).__name__) + ']' + str(e), "err")
@@ -107,7 +105,7 @@ class ETA():
         if app is None:
             self.send("No display dashboard crated. Use 'app = dash.Dash() to create a Dash graph.' .", "err")
         else:
-            self.send("Starting display.")
+            self.send("ETA.DISPLAY: Starting Display Panel.")
             try:
                 if str(type(app)) == "<class 'dash.dash.Dash'>":
                     from flask import request
@@ -149,7 +147,7 @@ class ETA():
                     thread3.daemon = True
                     thread3.start()
 
-                self.send("Display is running at http://{}:5000.".format(self.hostip))
+                self.send("ETA.DISPLAY: Display Panel is running at http://{}:5000.".format(self.hostip))
                 self.send("http://{}:5000".format(self.hostip), "dash")
                 self.displaying = True
             except Exception as e:
@@ -158,7 +156,7 @@ class ETA():
                 self.logger.error(str(e), exc_info=True)
 
     def simple_cut(self, filename, cuts=1, trunc=-1, format=0):
-        self.send("ETA.SIMPLE_CUT: The file '{filename}' is cut into {cuts} equal size section. ".format(filename=filename, cuts=cuts))
+        self.send("ETA.SIMPLE_CUT: The file '{filename}' is cut into {cuts} equal size sections. ".format(filename=filename, cuts=cuts))
         if cuts == 1:
             self.send("ETA.SIMPLE_CUT: You can increase the cuts to enable multi-threading.")
 
@@ -227,19 +225,20 @@ class ETA():
             vals = []
             rets = []
             for each_caller_parms in cuts_params:
-                vals.append(self.initializer(each_caller_parms))
+                vals.append(initializer(each_caller_parms))
 
             for val in vals:
-                thread1 = ETAThread(func=self.mainloop, args=val)
+                thread1 = ETAThread(func=mainloop, args=val)
                 threads.append(thread1)
                 thread1.start()
             for thread2 in threads:
                 thread2.join()
                 print(thread2.get_result())
             for val in vals:
-                rets.append(self.thin_wrapper(*val))
+                rets.append(thin_wrapper(*val))
 
         else:
+
             # assign code
             for each in cuts_params:
                 if group in self.eta_compiled_code:
@@ -248,13 +247,14 @@ class ETA():
                     self.send("Try to eta.run() on a non-existing group {}.".format(group), "err")
                     return None
             if True:
+                self.send("WARNING: Context or program caching are not yet supported in multi-threading mode.")
                 cores = min(len(cuts_params), multiprocessing.cpu_count())
                 self.pool = multiprocessing.Pool(cores)
                 rets = self.pool.map(external_wrpper, cuts_params)
                 self.pool.close()
                 self.pool.join()
         te = time.time()
-        self.send('ETA.RUN: Analysis is finished in {} seconds.'.format((te - ts)),
+        self.send('ETA.RUN: Analysis is finished in {0:.2f} seconds.'.format((te - ts)),
                   "stopped")
 
         if sum_results:
@@ -264,7 +264,7 @@ class ETA():
                 for each_graph in rets[0].keys():
                     rets[0][each_graph] += rets[each][each_graph]
             result = rets[0]
-            self.send('The sum of {} results is generated.'.format(len(rets)), "stopped")
+            self.send('ETA.RUN: Aggregating {} results.'.format(len(rets)), "stopped")
         else:
             result = rets
         self.send("none", "dash")
