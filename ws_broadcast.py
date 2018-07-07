@@ -92,7 +92,7 @@ class API():
 
 # ------------------------- Implementation -----------------------------
 
-class WebsocketServer(ThreadingMixIn, TCPServer, API):
+class WebsocketServer( TCPServer, API): #ThreadingMixIn,
     """
     A websocket server waiting for clients to connect.
 
