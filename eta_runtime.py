@@ -240,7 +240,7 @@ class ETA():
                 vals = ctxs
                 for each_caller_parms_id in range(len(cuts_params)):
                     vals[each_caller_parms_id][1][0:7] = cuts_params[each_caller_parms_id][0:7]
-                    vals[each_caller_parms_id][1][7:18] = 0
+                    vals[each_caller_parms_id][1][11:14] = 0#clear the buffer ptr
                 print(vals[each_caller_parms_id][1])
             print("\nExecuting analysis program...\n")
             for val in vals:
