@@ -176,7 +176,7 @@ class ETA():
             # fine-cutter
             start_point = Chunck_size * i + TTF_header_offset
             stop_point = Chunck_size * (i + 1) + TTF_header_offset
-            if (stop_point > TTF_filesize):
+            if (TTF_filesize-stop_point < Chunck_size):
                 stop_point = TTF_filesize
             if (stop_point - start_point > BytesofRecords):
                 caller_parms.append(
@@ -240,7 +240,9 @@ class ETA():
                 vals = ctxs
                 for each_caller_parms_id in range(len(cuts_params)):
                     vals[each_caller_parms_id][1][0:7] = cuts_params[each_caller_parms_id][0:7]
-                    vals[each_caller_parms_id][1][11:14] = 0#clear the buffer ptr
+
+                    vals[each_caller_parms_id][1][11] = 1  # resuming
+
                 print(vals[each_caller_parms_id][1])
             print("\nExecuting analysis program...\n")
             for val in vals:

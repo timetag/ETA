@@ -561,7 +561,7 @@ define i32 @POOL_init(i64, i8*, i8*, i64) #1 {
 
 ; <label>:28:                                     ; preds = %21
   %29 = load i64, i64* %6, align 8
-  %30 = icmp eq i64 %29, 1
+  %30 = icmp eq i64 %29, 0
   br i1 %30, label %31, label %74
 
 ; <label>:31:                                     ; preds = %28
