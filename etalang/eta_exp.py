@@ -493,7 +493,7 @@ class Graph(INTEGER, TABLE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENCE):
             self.INTEGER("uettp_initial", "now_{graphid}".format(graphid=self.graphid), initvalue=self.init_now);
             self.INTEGER("uettp_initial", "last_{graphid}".format(graphid=self.graphid), initvalue=self.init_now);
         else:
-            raise ValueError("Init blob is not defined.")
+            raise ValueError("Init blob is not defined in graph {}.".format(self.graphid))
 
         # make registers
         for each in self.register_symbols:

@@ -14,7 +14,7 @@ def get_onefile_loop(histograms, mainloop, init_code, deinit_code, global_init_c
         table_para += each + ","
 
     text = """
-@jit(nopython=True, parallel=True, nogil=True)
+@jit(nopython=True, nogil=True)#parallel=True, 
 def mainloop({tables} filename1, ReaderPTR1,vfiles,POOL_timetag1,POOL_fileid1,chn,chn_next):
     link_libs()
     eta_ret = 0
@@ -46,8 +46,8 @@ def mainloop({tables} filename1, ReaderPTR1,vfiles,POOL_timetag1,POOL_fileid1,ch
     
 def initializer(caller_parms):
     filename = bytearray(caller_parms[-1], "ascii")
-    ReaderPTR1=np.zeros((15*1), dtype=np.int64)
-    ReaderPTR1[0:7]=np.array(caller_parms[0:7],  dtype=np.int64)[0:7]
+    ReaderPTR1=np.zeros((18*1), dtype=np.int64)
+    ReaderPTR1[0:7]=caller_parms[0:7]
     vfiles = np.zeros(({num_vslot}*4), dtype=np.int64) 
     {global_initial}
 
