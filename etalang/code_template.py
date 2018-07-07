@@ -19,28 +19,32 @@ def mainloop(filename1, ReaderPTR1, vfiles, POOL_timetag1, POOL_fileid1, chn, ch
     link_libs()
     eta_ret = 0
     vfile_counter=0
-    SYNCRate_pspr=ReaderPTR1[4]
+    SYNCRate_pspr = ReaderPTR1[4]
+    RESUMING = ReaderPTR1[11]
     Channel = ffi.from_buffer(chn)
     Channel_next = ffi.from_buffer(chn_next)
     eta_ret += FileReader_init(ffi.from_buffer(filename1), ffi.from_buffer(ReaderPTR1))
     eta_ret += VFILES_init(ffi.from_buffer(vfiles))
     {uettp_initial}
-    eta_ret += POOL_init({num_rslot} + {num_vslot}, ffi.from_buffer(POOL_timetag1), ffi.from_buffer(POOL_fileid1) ,nb.int64(1))
     eta_ret += VCHN_init({num_rslot},{num_rchns}, {num_vslot})
-
+    eta_ret += POOL_init({num_rslot} + {num_vslot}, ffi.from_buffer(POOL_timetag1), ffi.from_buffer(POOL_fileid1) ,nb.int64(RESUMING))
     AbsTime_ps = nb.int64(0)
+
     #get first photon
     eta_ret += POOL_update(nb.int64(pop_signal_from_file(Channel_next)),nb.int8(0))
     while True:
         AbsTime_ps = VCHN_next(Channel)
-
+        RETRIVE_FROM_FILE=0
         if chn[0]<{num_rchns}:
             chn[0] = chn_next[0]
-            eta_ret += POOL_update(nb.int64(pop_signal_from_file(Channel_next)),nb.int8(0))
-        if AbsTime_ps == 9223372036854775807:
-            break
-        
+            RETRIVE_FROM_FILE=1
         {looping}
+        if RETRIVE_FROM_FILE==1:
+            controller_file_time = pop_signal_from_file(Channel_next)
+            if controller_file_time == 9223372036854775807:
+                break
+            else:
+                eta_ret += POOL_update(nb.int64(controller_file_time),nb.int8(0))
     {deinit}
     return eta_ret
     
