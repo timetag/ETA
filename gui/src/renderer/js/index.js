@@ -157,9 +157,8 @@ d3.select('#btn_connect').on('click', function() {
             d3.select('#btn_connect').text("Disconnect");
             d3.select('#ws').classed("is-valid", true);
             d3.select('#ws').classed("is-invalid", false);
-            //VERSION
-            var rpcobj={'method':"frontend_version",'args':[23]};
-            ws.send(JSON.stringify(rpcobj));
+            //Hide the modal
+            $("#connectModal").modal('hide');
         }
         ws.onclose=function(t){
             d3.select('#ws').classed("is-valid", false);

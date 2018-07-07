@@ -1,6 +1,6 @@
 import multiprocessing, time, threading, json, sys, logging, copy
 # multiprocessing.log_to_stderr(logging.DEBUG)
-from jit_linker import link_jit_code
+import jit_linker
 from parser_header import parse_header
 from etalang import eta_codegen
 
@@ -13,7 +13,7 @@ class ETAThread(threading.Thread):
         self.result = None
 
     def run(self):
-        self.result = self.func( *self.args)
+        self.result = self.func(*self.args)
 
     def get_result(self):
         return self.result
@@ -21,8 +21,7 @@ class ETAThread(threading.Thread):
 
 def external_wrpper(param):
     eta_compiled_code = param.pop()
-
-    loc = link_jit_code(eta_compiled_code)
+    loc = jit_linker.link_jit_code(eta_compiled_code)
     mainloop = loc["mainloop"]
     thin_wrapper = loc["thin_wrapper"]
     initializer = loc["initializer"]
@@ -39,7 +38,10 @@ def external_wrpper(param):
 class ETA():
     def __init__(self):
         self.eta_compiled_code = None
-
+        self.mainloop = []
+        self.thin_wrapper = []
+        self.initializer = []
+        self.usercode_vars = None
     def frontend_version(self, frontend_version):
         if frontend_version > self.max_frontend:
             self.send("Please update your ETA backend via <a href='http://timetag.github.io/'>timetag.github.io</a>",
@@ -53,7 +55,12 @@ class ETA():
                 info_emitter = print
             code, vars, metadata = eta_codegen.compile_eta(etaobj, info_emitter)
             self.send(metadata, "table")
-            return code, vars
+            self.eta_compiled_code = code
+            self.mainloop = []
+            self.thin_wrapper = []
+            self.initializer = []
+            self.usercode_vars = vars
+
         except Exception as e:
             self.send('[' + str(type(e).__name__) + ']' + str(e), "err")
             self.send("Compilation failed.")
@@ -68,25 +75,23 @@ class ETA():
         else:
             with open("server.eta", 'w') as file:
                 file.write(json.dumps(etaobj))
-            servercode = etaobj[id]
 
-            self.send("ETA Backend starting with id {}.".format(id))
-            self.eta_compiled_code, vars = self.compile_eta(etaobj, verbose=True)
+            self.eta_compiled_code=None
+            self.compile_eta(etaobj, verbose=True)
             if self.eta_compiled_code is not None:
-                self.send("Compiling success.")
-                self.send("Starting user-code in data processing panel...")
+                self.send("Executing code in Display Panel of group {}...".format(group))
                 try:
                     glob = {"eta": self}
                     # side configuration panel
-                    if group in vars:
-                        loc = vars[group]
+                    if group in self.usercode_vars:
+                        loc = self.usercode_vars[group]
                     else:
                         loc = {}
-                    exec(servercode, glob, loc)
+                    exec(etaobj[id], glob, loc)
                 except Exception as e:
                     if (type(e).__name__ == "TypingError"):
                         self.logger.error(str(e), exc_info=True)
-                        self.send("There is an internal ETA error when compiling the file.", "err")
+                        self.send("An internal ETA error has occurred when JIT linking the program.", "err")
                         self.send("Send your recipe to Github Issues.")
                     else:
 
@@ -94,7 +99,7 @@ class ETA():
                         self.logger.error(str(e), exc_info=True)
                         self.send("This error comes from user-code in the display panel.")
                     return
-                self.send("Timetag analysis is finished.")
+                self.send("\n")
                 self.send("Don't forget to save the recipe and SHARE it on ETAHub!")
 
     # user code API
@@ -153,14 +158,13 @@ class ETA():
                 self.logger.error(str(e), exc_info=True)
 
     def simple_cut(self, filename, cuts=1, trunc=-1, format=0):
-        self.send("ETA.simple_cut('{filename}',cuts={cuts}):"
-                  " cuts the file into {cuts} equal size section. ".format(filename=filename, cuts=cuts))
+        self.send("ETA.SIMPLE_CUT: The file '{filename}' is cut into {cuts} equal size section. ".format(filename=filename, cuts=cuts))
         if cuts == 1:
-            self.send("SIMPLE_CUT: You can increase the cuts to enable multi-threading.")
+            self.send("ETA.SIMPLE_CUT: You can increase the cuts to enable multi-threading.")
 
         ret1, out = parse_header(bytearray(filename, "ascii"), format)
         if ret1 is not 0:
-            raise ValueError("File {} is not found or incorrect, err code {}.".format(filename, ret1))
+            raise ValueError("ETA.SIMPLE_CUT: File {} is not found or incorrect, err code {}.".format(filename, ret1))
         TTF_header_offset = out[0]
         TTF_filesize = out[1]
         BytesofRecords = out[-2]
@@ -182,35 +186,36 @@ class ETA():
 
         return caller_parms
 
-    def run(self, filenames, group="compile", multiprocess=0):
-        if isinstance(filenames, str):
-            caller_parms = self.simple_cut(filenames)
-        else:
-            caller_parms = filenames
-
+    def run(self, cuts_params, last_ctxs=None, iterate_ctxs=False, sum_results=True, group="main"):
+        # support legacy API
+        if isinstance(cuts_params, str):
+            cuts_params = self.simple_cut(cuts_params)
+        # start timeing
         self.send(
-            "ETA.run([...], group='{}') started with {} threads.".format(group, len(caller_parms)), "running")
-
+            "ETA.RUN: Instrument group {} will now run with {} threads.".format(group, len(cuts_params)), "running")
         ts = time.time()
-        # map
-        if multiprocess == 1:
-            print("run with threading")
+        # multi-threading or single-threading
+        if len(cuts_params) == 1:
+            print("Compiling...")
 
-            if group in self.eta_compiled_code:
-                eta_compiled_code = self.eta_compiled_code[group]
-                loc = link_jit_code(eta_compiled_code)
-                mainloop = loc["mainloop"]
-                thin_wrapper = loc["thin_wrapper"]
-                initializer = loc["initializer"]
-            else:
+            if not (group in self.eta_compiled_code):
                 self.send("Try to eta.run() on a non-existing group {}.".format(group), "err")
                 return None
+            if not (group in self.mainloop):
+                loc = jit_linker.link_jit_code(self.eta_compiled_code[group])
+                self.mainloop[group] = loc["mainloop"]
+                self.thin_wrapper[group] = loc["thin_wrapper"]
+                self.initializer[group] = loc["initializer"]
+            initializer = self.initializer[group]
+            mainloop = self.mainloop[group]
+            thin_wrapper = self.thin_wrapper[group]
+
             print("warming up...")
-            first = copy.deepcopy(caller_parms[0])
+            first = copy.deepcopy(cuts_params[0])
             first[1] = first[0] + 40
             storage = initializer(first)
             mainloop(*storage)
-            ret = thin_wrapper(*storage)
+            thin_wrapper(*storage)
             with open("llvm.txt", "w") as writeto:
                 codelist = mainloop.inspect_llvm()
                 for each in codelist:
@@ -221,42 +226,49 @@ class ETA():
             threads = []
             vals = []
             rets = []
-            for each_caller_parms in caller_parms:
-                vals.append(initializer(each_caller_parms))
+            for each_caller_parms in cuts_params:
+                vals.append(self.initializer(each_caller_parms))
 
             for val in vals:
-                thread1 = ETAThread(func=mainloop, args=val)
+                thread1 = ETAThread(func=self.mainloop, args=val)
                 threads.append(thread1)
                 thread1.start()
             for thread2 in threads:
                 thread2.join()
                 print(thread2.get_result())
             for val in vals:
-                rets.append(thin_wrapper(*val))
+                rets.append(self.thin_wrapper(*val))
 
         else:
             # assign code
-            for each in caller_parms:
+            for each in cuts_params:
                 if group in self.eta_compiled_code:
                     each.append(self.eta_compiled_code[group])
                 else:
                     self.send("Try to eta.run() on a non-existing group {}.".format(group), "err")
                     return None
             if True:
-                cores = min(len(caller_parms), multiprocessing.cpu_count())
+                cores = min(len(cuts_params), multiprocessing.cpu_count())
                 self.pool = multiprocessing.Pool(cores)
-                rets = self.pool.map(external_wrpper, caller_parms)
+                rets = self.pool.map(external_wrpper, cuts_params)
                 self.pool.close()
                 self.pool.join()
         te = time.time()
-        # reduce
-        for each in range(1, len(rets)):
-            for each_graph in rets[0].keys():
-                rets[0][each_graph] += rets[each][each_graph]
-        result = rets[0]
-        self.send('ETA.run(...) finished in {} ms, yielding {} results.'.format((te - ts) * 1000, len(rets)), "stopped")
+        self.send('ETA.RUN: Analysis is finished in {} seconds.'.format((te - ts)),
+                  "stopped")
+
+        if sum_results:
+
+            # reduce
+            for each in range(1, len(rets)):
+                for each_graph in rets[0].keys():
+                    rets[0][each_graph] += rets[each][each_graph]
+            result = rets[0]
+            self.send('The sum of {} results is generated.'.format(len(rets)), "stopped")
+        else:
+            result = rets
         self.send("none", "dash")
-        if isinstance(result, list) and len(result) == 1:
-            return result[0]
+        if iterate_ctxs:
+            return result, last_ctxs
         else:
             return result

@@ -53,6 +53,8 @@ def compile_eta(jsobj, print):
     code_per_groupings = {}
     for instgroup in vi_groupings:
         # compile ri
+        if not(instgroup in ri_groupings):
+            raise ValueError("Instrument group {} doesn't have any real instruments. Create an accusition device.".format(instgroup))
         ris = ri_groupings[instgroup]
 
         num_rslot = 0
@@ -74,7 +76,7 @@ def compile_eta(jsobj, print):
         vis = vi_groupings[instgroup]
         vi_code_list = []
         graphnames = []
-        print("Compiling ETA recipie group {}...".format(instgroup))
+        print("Compiling instrument group {}...".format(instgroup))
         for each in range(len(vis)):
 
             instname = vis[each]["name"]
@@ -146,4 +148,6 @@ def compile_eta(jsobj, print):
     metadata += ris_all
     metadata += vis_all
     metadata = json.dumps(metadata)
+    print("Compilation succeeded.\n")
+    print("\n")
     return code_per_groupings, var_per_groupings, metadata
