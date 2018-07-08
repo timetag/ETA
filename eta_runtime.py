@@ -1,9 +1,10 @@
-import multiprocessing, time, threading, json, sys, logging, copy
+import multiprocessing, time, threading, json, sys, os, logging, copy
 # multiprocessing.log_to_stderr(logging.DEBUG)
 import jit_linker
 from parser_header import parse_header
 from etalang import eta_codegen
 import numpy as np
+
 
 class ETAThread(threading.Thread):
     def __init__(self, func, args):
@@ -39,11 +40,6 @@ class ETA():
     def __init__(self):
         self.eta_compiled_code = None
         self.usercode_vars = None
-
-    def frontend_version(self, frontend_version):
-        if frontend_version > self.max_frontend:
-            self.send("Please update your ETA backend via <a href='http://timetag.github.io/'>timetag.github.io</a>",
-                      "err")
 
     def compile_eta(self, etaobj=None, verbose=False):
         try:
@@ -176,7 +172,7 @@ class ETA():
             # fine-cutter
             start_point = Chunck_size * i + TTF_header_offset
             stop_point = Chunck_size * (i + 1) + TTF_header_offset
-            if (TTF_filesize-stop_point < Chunck_size):
+            if (TTF_filesize - stop_point < Chunck_size):
                 stop_point = TTF_filesize
             if (stop_point - start_point > BytesofRecords):
                 caller_parms.append(
@@ -187,13 +183,53 @@ class ETA():
 
         return caller_parms
 
-    def run(self, cuts_params, ctxs=None, sum_results=True, iterate_ctxs=False, group="main"):
+    def incremental_cut(self, filename, cut=None, rec_per_cut=1000000, format=0, verbose=True):
+        if cut == None:
+            ret1, out = parse_header(bytearray(filename, "ascii"), format)
+            if ret1 is not 0:
+                raise ValueError(
+                    "ETA.SIMPLE_CUT: File {} is not found or incorrect, err code {}.".format(filename, ret1))
+            cut = [[out[0], out[0], out[2], out[3], out[4], out[5], out[6], filename]]
+        if len(cut) != 1:
+            raise ValueError("Incremental cut must take a list with only one cut in it.")
+
+        cut[0][0] = cut[0][1]
+        BytesofRecords = cut[0][-3]
+        cut[0][1] = cut[0][0] + BytesofRecords * rec_per_cut
+        if verbose:
+            self.send(
+                "ETA.incremental_cut: The file '{}' cut into section [{},{}). ".format(filename, cut[0][0], cut[0][1]))
+        return cut
+
+    def validate_cut(self, each_caller_parms):
+        fileactualsize = os.path.getsize(each_caller_parms[-1])
+        return (fileactualsize >= each_caller_parms[1])
+
+    def wait_till_presnese(self, caller_parms, timeout=3, raiseerr=False):
+        for each_caller_parms in caller_parms:
+            fileactualsize = os.path.getsize(each_caller_parms[-1])
+            watied_for = 0
+            while not self.validate_cut(each_caller_parms):
+                print("Waiting for file {} to grow from {} to {} bytes.".format(each_caller_parms[-1],
+                                                                                fileactualsize,
+                                                                                each_caller_parms[1]))
+                time.sleep(0.1)
+                watied_for += 0.1
+                if watied_for > timeout:
+                    if raiseerr:
+                        raise ValueError("Timeout when wating for the next cut.")
+                    return False
+        return True
+
+    def run(self, cuts_params, ctxs=None, sum_results=True, iterate_ctxs=False, group="main",
+            verbose=True):
         # support legacy API
         if isinstance(cuts_params, str):
             cuts_params = self.simple_cut(cuts_params)
         # start timeing
-        self.send(
-            "ETA.RUN: Instrument group {} will now run with {} threads.".format(group, len(cuts_params)), "running")
+        if verbose:
+            self.send(
+                "ETA.RUN: Instrument group {} will now run with {} threads.".format(group, len(cuts_params)), "running")
         ts = time.time()
         vals = []
         rets = []
@@ -234,11 +270,16 @@ class ETA():
             if ctxs is None:
                 print("\nInitializing context.\n")
                 for each_caller_parms in cuts_params:
+                    if not self.validate_cut(each_caller_parms):
+                        raise ValueError("Invalid section for cut." + str(each_caller_parms))
                     vals.append(initializer(each_caller_parms))
             else:
                 print("\nUpdating context from last_ctxs.\n")
                 vals = ctxs
                 for each_caller_parms_id in range(len(cuts_params)):
+                    each_caller_parms = cuts_params[each_caller_parms_id]
+                    if not self.validate_cut(each_caller_parms):
+                        raise ValueError("Invalid section for cut." + str(each_caller_parms))
                     vals[each_caller_parms_id][1][0:7] = cuts_params[each_caller_parms_id][0:7]
 
                     vals[each_caller_parms_id][1][11] = 1  # resuming
@@ -273,8 +314,9 @@ class ETA():
                 self.pool.close()
                 self.pool.join()
         te = time.time()
-        self.send('ETA.RUN: Analysis is finished in {0:.2f} seconds.'.format((te - ts)),
-                  "stopped")
+        if verbose:
+            self.send('ETA.RUN: Analysis is finished in {0:.2f} seconds.'.format((te - ts)),
+                      "stopped")
 
         if sum_results:
             print("\nAggregating results.\n")
@@ -283,11 +325,12 @@ class ETA():
                 for each_graph in rets[0].keys():
                     rets[0][each_graph] += rets[each][each_graph]
             result = rets[0]
-            self.send('ETA.RUN: Aggregating {} results.'.format(len(rets)), "stopped")
+            if verbose:
+                self.send('ETA.RUN: Aggregating {} results.'.format(len(rets)), "stopped")
         else:
             print("\nForwarding results.\n")
             result = rets
-        self.send("none", "dash")
+
         if iterate_ctxs:
             return result, vals
         else:
