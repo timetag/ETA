@@ -6,6 +6,9 @@ ETA
 [![DOI](https://zenodo.org/badge/125106142.svg)](https://zenodo.org/badge/latestdoi/125106142)
 
 [ETA Web GUI](https://timetag.github.io/ETA/gui/src/renderer/)
+## ETA for realtime analysis! (NEW with RC4.10)
+
+[![ETA for realtime analysis!](https://img.youtube.com/vi/EtHMVqtiPIA/0.jpg)](https://www.youtube.com/watch?v=EtHMVqtiPIA")
 
 Installation
 ---------
