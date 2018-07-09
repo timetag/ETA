@@ -137,15 +137,15 @@ def ARB_PARAM_MAKER():
 
 
 def link_jit_code(code):
-
     glb = {
         "jit": jit, "ffi": ffi, "nb": nb, "np": np,
         "link_libs": link_libs,
         "FileReader_init": link_function("FileReader_init", 2),
+        "FileReader_close": link_function("FileReader_close", 1),
         "pop_signal_from_file": link_function("pop_signal_from_file", 1, i64=True),
         "VFILES_init": link_function("VFILES_init", 1),
         "VFILE_init": link_function("VFILE_init", 4),
-        "POOL_init":link_function("POOL_init",4),
+        "POOL_init": link_function("POOL_init", 4),
         "READER_BytesofRecords_get": link_global("READER_BytesofRecords"),
         "POOL_update": link_function("POOL_update", 2, i64=False),
         "VCHN_init": link_function("VCHN_init", 3),

@@ -205,7 +205,7 @@ class ETA():
         fileactualsize = os.path.getsize(each_caller_parms[-1])
         return (fileactualsize >= each_caller_parms[1])
 
-    def wait_till_presnese(self, caller_parms, timeout=3, raiseerr=False):
+    def wait_till_presnese(self, caller_parms, timeout=1, raiseerr=False):
         for each_caller_parms in caller_parms:
             fileactualsize = os.path.getsize(each_caller_parms[-1])
             watied_for = 0
@@ -240,7 +240,7 @@ class ETA():
                 self.send("Try to eta.run() on a non-existing group {}.".format(group), "err")
                 return None
             if not (group in self.mainloop):
-                print("\nCompiling...\n")
+                print("Compiling...")
                 loc = jit_linker.link_jit_code(self.eta_compiled_code[group])
                 self.mainloop[group] = loc["mainloop"]
                 self.thin_wrapper[group] = loc["thin_wrapper"]
@@ -249,7 +249,7 @@ class ETA():
                 initializer = self.initializer[group]
                 mainloop = self.mainloop[group]
                 thin_wrapper = self.thin_wrapper[group]
-                print("\nWarming up...\n")
+                print("Warming up...")
                 first = copy.deepcopy(cuts_params[0])
                 first[1] = first[0] + 40
                 storage = initializer(first)
@@ -268,13 +268,13 @@ class ETA():
             threads = []
 
             if ctxs is None:
-                print("\nInitializing context.\n")
+                print("\nInitializing context.")
                 for each_caller_parms in cuts_params:
                     if not self.validate_cut(each_caller_parms):
                         raise ValueError("Invalid section for cut." + str(each_caller_parms))
                     vals.append(initializer(each_caller_parms))
             else:
-                print("\nUpdating context from last_ctxs.\n")
+                print("\nUpdating context from last_ctxs.")
                 vals = ctxs
                 for each_caller_parms_id in range(len(cuts_params)):
                     each_caller_parms = cuts_params[each_caller_parms_id]
@@ -284,8 +284,8 @@ class ETA():
 
                     vals[each_caller_parms_id][1][11] = 1  # resuming
 
-                print(vals[each_caller_parms_id][1])
-            print("\nExecuting analysis program...\n")
+                #print(vals[each_caller_parms_id][1])
+            print("Executing analysis program...")
             for val in vals:
                 thread1 = ETAThread(func=mainloop, args=val)
                 threads.append(thread1)
@@ -319,7 +319,7 @@ class ETA():
                       "stopped")
 
         if sum_results:
-            print("\nAggregating results.\n")
+            print("Aggregating results.")
             # reduce
             for each in range(1, len(rets)):
                 for each_graph in rets[0].keys():
@@ -328,7 +328,7 @@ class ETA():
             if verbose:
                 self.send('ETA.RUN: Aggregating {} results.'.format(len(rets)), "stopped")
         else:
-            print("\nForwarding results.\n")
+            print("Forwarding results.")
             result = rets
 
         if iterate_ctxs:

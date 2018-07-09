@@ -46,6 +46,7 @@ def mainloop(filename1, ReaderPTR1, vfiles, POOL_timetag1, POOL_fileid1, chn, ch
             else:
                 eta_ret += POOL_update(nb.int64(controller_file_time),nb.int8(0))
     {deinit}
+    eta_ret += FileReader_close(ffi.from_buffer(ReaderPTR1))
     return eta_ret
     
 def initializer(caller_parms):
