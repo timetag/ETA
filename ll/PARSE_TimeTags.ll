@@ -47,6 +47,10 @@ $"\01??_C@_0EP@PGBLNION@?6?5?$FLERROR?$FNReading?5buffer?5for?5Time@" = comdat a
 
 $"\01??_C@_0DF@ILBDPEJO@?6?6Reader?5?$CFx?5is?5assigned?5to?5a?5sec@" = comdat any
 
+$"\01??_C@_0DE@PEIEGMHF@?6?5?$FLERROR?$FNTime?9tag?5file?5cannot?5be@" = comdat any
+
+$"\01??_C@_0BF@FHCCBLNF@?6?6Reader?5is?5closing?4?$AA@" = comdat any
+
 $"\01?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA" = comdat any
 
 @order_gurantee3 = global i64 0, align 8
@@ -61,6 +65,8 @@ $"\01?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA" = comdat any
 @"\01??_C@_0CP@EMJMNIIB@?6?5?$FLERROR?$FNTime?9tag?5file?5cannot?5se@" = linkonce_odr unnamed_addr constant [47 x i8] c"\0A [ERROR]Time-tag file cannot seek, aborting.\0A\00", comdat, align 1
 @"\01??_C@_0EP@PGBLNION@?6?5?$FLERROR?$FNReading?5buffer?5for?5Time@" = linkonce_odr unnamed_addr constant [79 x i8] c"\0A [ERROR]Reading buffer for Time-tag file is not assgined properly, aborting.\0A\00", comdat, align 1
 @"\01??_C@_0DF@ILBDPEJO@?6?6Reader?5?$CFx?5is?5assigned?5to?5a?5sec@" = linkonce_odr unnamed_addr constant [53 x i8] c"\0A\0AReader %x is assigned to a section of [%lld,%lld)\0A\00", comdat, align 1
+@"\01??_C@_0DE@PEIEGMHF@?6?5?$FLERROR?$FNTime?9tag?5file?5cannot?5be@" = linkonce_odr unnamed_addr constant [52 x i8] c"\0A [ERROR]Time-tag file cannot be closed, aborting.\0A\00", comdat, align 1
+@"\01??_C@_0BF@FHCCBLNF@?6?6Reader?5is?5closing?4?$AA@" = linkonce_odr unnamed_addr constant [21 x i8] c"\0A\0AReader is closing.\00", comdat, align 1
 @"\01?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA" = linkonce_odr global i64 0, comdat, align 8
 
 ; Function Attrs: alwaysinline uwtable
@@ -2131,6 +2137,50 @@ declare %struct._iobuf* @fopen(i8*, i8*) #3
 declare i32 @_fseeki64(%struct._iobuf*, i64, i32) #3
 
 declare noalias i8* @malloc(i64) #3
+
+; Function Attrs: alwaysinline uwtable
+define i32 @FileReader_close(i8*) #0 {
+  %2 = alloca i32, align 4
+  %3 = alloca i8*, align 8
+  store i8* %0, i8** %3, align 8
+  %4 = load i8*, i8** %3, align 8
+  %5 = bitcast i8* %4 to %struct.ttf_reader*
+  store %struct.ttf_reader* %5, %struct.ttf_reader** @READERs, align 8
+  %6 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %7 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %6, i64 0
+  %8 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %7, i32 0, i32 13
+  %9 = load %struct._iobuf*, %struct._iobuf** %8, align 8
+  %10 = call i32 @fclose(%struct._iobuf* %9)
+  %11 = icmp ne i32 %10, 0
+  br i1 %11, label %12, label %15
+
+; <label>:12:                                     ; preds = %1
+  %13 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([52 x i8], [52 x i8]* @"\01??_C@_0DE@PEIEGMHF@?6?5?$FLERROR?$FNTime?9tag?5file?5cannot?5be@", i32 0, i32 0))
+  %14 = sext i32 %13 to i64
+  store i64 %14, i64* @order_gurantee3, align 8
+  store i32 -1, i32* %2, align 4
+  br label %22
+
+; <label>:15:                                     ; preds = %1
+  %16 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %17 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %16, i64 0
+  %18 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %17, i32 0, i32 12
+  %19 = load i8*, i8** %18, align 8
+  call void @free(i8* %19)
+  %20 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([21 x i8], [21 x i8]* @"\01??_C@_0BF@FHCCBLNF@?6?6Reader?5is?5closing?4?$AA@", i32 0, i32 0))
+  %21 = sext i32 %20 to i64
+  store i64 %21, i64* @order_gurantee3, align 8
+  store i32 0, i32* %2, align 4
+  br label %22
+
+; <label>:22:                                     ; preds = %15, %12
+  %23 = load i32, i32* %2, align 4
+  ret i32 %23
+}
+
+declare i32 @fclose(%struct._iobuf*) #3
+
+declare void @free(i8*) #3
 
 ; Function Attrs: nounwind
 declare void @llvm.va_start(i8*) #4
