@@ -138,23 +138,7 @@ ws=null;
 
 d3.select('#btn_connect').on('click', function() {
     if (ws==null){
-        var err_handler = function(t){
-            d3.select('#btn_settings').on('click')();
-            d3.select('#ws').classed("is-valid", false);
-            d3.select('#ws').classed("is-invalid", true);
-            d3.select('#btn_connect').text("Connect");
-            ws=null;
-        }
-        try
-        {
-         ws = new ReconnectingWebSocket(d3.select('#ws').property("value"))
-        }
-        catch(err)
-        {
-            err_handler(err)
-            return;
-         }
-        
+        ws = new ReconnectingWebSocket(d3.select('#ws').property("value"))
         ws.onopen=function(t){
             d3.select('#btn_connect').text("Disconnect");
             d3.select('#ws').classed("is-valid", true);
@@ -162,13 +146,12 @@ d3.select('#btn_connect').on('click', function() {
             //Hide the modal
             $("#connectModal").modal('hide');
         }
+    
         ws.onclose=function(t){
             d3.select('#ws').classed("is-valid", false);
             d3.select('#ws').classed("is-invalid", true);
             d3.select('#btn_connect').text("Connect");
-            ws=null;
-        }
-        ws.onerror=err_handler;
+        };
         ws.onmessage=function(t){
             var ret=JSON.parse(t.data);
             if (ret[0]=="err"){
@@ -237,30 +220,41 @@ d3.select('#btn_connect').on('click', function() {
 
 // run
 d3.select('#btn_compile').on('click', function() {
-    if (ws==null){
-        d3.select('#btn_connect').on('click')();
-        alert("Backend is reconnecting...");
-    }
-    $("#remoteLOG").html("");// clear log
-    eta_linker_result=export_localstorage();
-    
-    if (eta_linker_result){
-        var rpcobj={'method':"compile_eta",'args':[eta_linker_result]};
-        ws.send(JSON.stringify(rpcobj));
+    if (check_connectivity()){
+        $("#remoteLOG").html("");// clear log
+        eta_linker_result=export_localstorage();
+        
+        if (eta_linker_result){
+            var rpcobj={'method':"compile_eta",'args':[eta_linker_result]};
+            ws.send(JSON.stringify(rpcobj));
+        }
     }
 });
 
 // run
- function run_dpp(id,group) {
-    if (ws==null){
-        d3.select('#btn_connect').on('click')();
-        alert("Backend is reconnecting...");
+function run_dpp(id,group) {
+    if (check_connectivity()){
+        $("#remoteLOG").html("");// clear log
+        eta_linker_result=export_localstorage();
+        if (eta_linker_result){
+            var rpcobj={'method':"process_eta",'args':[eta_linker_result,id,group]};
+            ws.send(JSON.stringify(rpcobj));
+        }
     }
-    $("#remoteLOG").html("");// clear log
-    eta_linker_result=export_localstorage();
-    if (eta_linker_result){
-        var rpcobj={'method':"process_eta",'args':[eta_linker_result,id,group]};
-        ws.send(JSON.stringify(rpcobj));
-    }
+    
 };
-d3.select('#btn_connect').on('click')();
+function check_connectivity(){
+    if (d3.select('#btn_connect').text()!="Connect"){ 
+        return true;
+    }
+    if (ws!=null){
+        console.log("Backend is reconnecting...");
+        d3.select('#btn_settings').on('click')();
+    }else{
+        console.log("Backend is connecting...");
+        d3.select('#btn_connect').on('click')();
+    }
+   
+    return false;
+}
+check_connectivity();
