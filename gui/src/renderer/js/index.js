@@ -1,4 +1,6 @@
 GUIBIND("#expcfg");
+zoom_helper_enable=true;
+
 //load or save the table
 //table system
 TABLEBIND("eta_index_table");
@@ -149,8 +151,8 @@ d3.select('#btn_connect').on('click', function() {
         }
         catch(err)
         {
-         err_handler(err)
-         return;
+            err_handler(err)
+            return;
          }
         
         ws.onopen=function(t){

@@ -1,3 +1,30 @@
+
+//run on ready
+
+$(document).ready(function (){
+  var dropArea = new jsondrop('body', {
+    onEachFile: function(file) {
+
+      on_file_loaded(file["name"],file["data"]);
+    }
+  });
+
+  var zoom_helper_level = 1.0;
+
+  document.addEventListener('mousewheel', function(e) {
+    if(e.ctrlKey && (typeof zoom_helper_enable !== 'undefined') ) {
+      zoom_helper_level+=e.deltaY/1000;
+
+      document.body.style.zoom = zoom_helper_level;
+      console.log("zoom level=",document.body.style.zoom );
+      e.preventDefault();
+    }
+  });
+
+})
+
+
+
 window.set_localstorage= function (key,value){
   if ($ && $.jStorage && $.jStorage.storageAvailable()) 
     $.jStorage.set(key,value);
@@ -31,15 +58,6 @@ window.export_localstorage= function (){
     return obj;
    
 }
-$(document).ready(function (){
-  var dropArea = new jsondrop('body', {
-    onEachFile: function(file) {
-
-      on_file_loaded(file["name"],file["data"]);
-    }
-  });
-
-})
 
 function on_file_loaded(name,obj) {
 	
