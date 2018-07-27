@@ -32,9 +32,9 @@ class TABLE():
             dimension = ast.literal_eval(dimension)
             for each in dimension:
                 base.append(str(each))
-            self.define_syms(name, base)
+            self.define_syms(name, base, register=True)
         else:
-            self.define_syms(name, "table")
+            raise ValueError("The dimension for table should be defined.")
 
 
 ### built-in types ###
