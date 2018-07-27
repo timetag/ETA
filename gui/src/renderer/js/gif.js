@@ -12,6 +12,4 @@ $(".gif").each(function () {
             $(this).attr("src", originalSrc.replace(".gif", ".png"));  
         }
      );
-
   });
-  zoom_helper_enable="acecode";

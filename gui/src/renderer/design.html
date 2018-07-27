@@ -19,21 +19,26 @@
             module = undefined;
         }
     </script>
+    
     <script src='js/lib/jquery.min.js'></script>
     <!-- Helper libraries -->
     <script src="js/lib/bootstrap.min.js"></script>
-    <!-- Helper libraries -->
-    <script src="js/lib/d3.min.js"></script>
-    <!-- Resize detection -->
-    <script src="js/lib/ResizeSensor/ResizeSensor.js"></script>
-    <script src="js/lib/ResizeSensor/ElementQueries.js"></script>
+    
     <!-- SaveAs -->
     <script src="js/lib/Blob.js"></script>
     <script src="js/lib/FileSaver.min.js"></script>
+      <!-- Helper libraries -->
+      <script src="js/lib/d3.min.js"></script>
+      
+    <!-- Resize detection -->
+    <script src="js/lib/ResizeSensor/ResizeSensor.js"></script>
+    <script src="js/lib/ResizeSensor/ElementQueries.js"></script>
     <!-- Local storage -->
 	 <script src="js/jsondrop.js"></script>
     <script src="js/lib/jstorage.js"></script>
     <script src="js/helper.js"></script>
+   
+  
     <!-- jas.editor -->
     <script src="js/jas.editor.js"></script>
     <script src="js/ace/ace.js" type="text/javascript" charset="utf-8"></script>
@@ -43,7 +48,7 @@
     <!-- Layout system -->
 	<script type="text/javascript" src="js/lib/jquery-ui-latest.js"></script>
 	<script type="text/javascript" src="js/lib/jquery.layout-1.3.0.rc30.80.js"></script>
-
+    
     <script>
         if (window.module) module = window.module;
     </script>
@@ -52,114 +57,33 @@
 	
 </head>
 <body id="body">
-<script type="text/javascript" src="js/layout.js"></script>
+    <script type="text/javascript" src="js/layout.js"></script>
 
-<!-- manually attach allowOverflow method to pane -->
+    <!-- manually attach allowOverflow method to pane -->
 
-<div class="ui-layout-north" >
-	 <div id="top_panel" >
-	 <span class="caption" id="main_caption">Instrument Designer</span>
-        <a href="#" class="menu-link" id="btn_create">Create</a>
-        <!--a href="#" class="menu-link" id="btn_save">Save as Image</a-->
-        <a href="#" class="menu-link" id="btn_undo">Undo</a>
-        <a href="#" class="menu-link" id="btn_redo">Redo</a>
-        <a href="#" class="menu-link" id="btn_load_json">Load</a>
-        <a href="#" class="menu-link" id="btn_save_json">Export</a>
-        <a href="#" class="menu-link" id="btn_save_localstorage">Exit</a>
-</div>
-</div>
+    <div class="ui-layout-north" >
+        <div id="top_panel" >
+            <span class="caption" id="main_caption">Instrument Designer</span>
+            <a href="#" class="menu-link" id="btn_create">Create</a>
+            <!--a href="#" class="menu-link" id="btn_save">Save as Image</a-->
+            <a href="#" class="menu-link" id="btn_undo">Undo</a>
+            <a href="#" class="menu-link" id="btn_redo">Redo</a>
+            <a href="#" class="menu-link" id="btn_load_json">Load</a>
+            <a href="#" class="menu-link" id="btn_save_json">Export</a>
+            <a href="#" class="menu-link" id="btn_save_localstorage">Exit</a>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="js/design.js"></script>
 
 
+    <div class="ui-layout-east">
+        <pre id="acecode"></pre>
+    </div>
 
-<div class="ui-layout-east">
-	 <pre id="acecode"></pre>
-</div>
+    <div class="ui-layout-center"  id="svg_container">
 
-<div class="ui-layout-center"  id="svg_container">
-	
-        <style>
-            
-            .selection {
-                fill: none;
-                stroke: black;
-                stroke-dasharray: 0.5em, 0.3em;
-                stroke-dasharray: 0.6em, 0.2em;
-            }
-
-            .selected path.edge, .selected circle{
-                stroke: #333;
-                stroke-width: 0.09em;
-                stroke-dasharray: 0.5em, 0.3em;
-                stroke-dasharray: 0.6em, 0.2em;
-            }
-         
-            g.nodes rect {
-                fill: rgb(0, 0, 255);
-                fill-opacity: 0.1;
-                stroke-width: 3;
-                stroke: rgb(0, 0, 0)
-            }
-            
-            g.nodes circle {
-                fill: dodgerblue;
-                stroke: #555;
-                stroke-width: 0.09em;
-                fill-opacity: 0.5;
-            }
-            
-            path.edge {
-                fill: none;
-                stroke: #333;
-                stroke-width: 0.09em;
-            }
-            
-            path.catch {
-                  fill: none;
-                  stroke: yellow;
-                  stroke-width: 1.2em;
-                  
-                  cursor: pointer;
-
-                  stroke-opacity: 0.0;
-            }
-            
-            .nodes text{
-                font-size: small;
-                font-family: Verdana, sans-serif;
-                pointer-events: none;
-                text-anchor: middle;
-                dominant-baseline: central;
-               
-            }
-            .edges text {
-                font-size: small;
-                font-family: Verdana, sans-serif;
-                pointer-events: none;
-  
-                text-shadow: 2px 2px .5px white, -2px -2px .5px white, 2px -2px .5px white, -2px 2px .5px white;
-            }
-            
-            .selected text
-            {
-                stroke: red;
-                stroke-dasharray: none;
-                text-shadow: 2px 2px .5px white, -2px -2px .5px white, 2px -2px .5px white, -2px 2px .5px white;
-            }
-            
-            *.unselectable {
-               -moz-user-select: -moz-none;
-               -khtml-user-select: none;
-               -webkit-user-select: none;
-
-               /*
-                 Introduced in IE 10.
-                 See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/
-               */
-               -ms-user-select: none;
-               user-select: none;
-                }
-        </style>
-</div>
+    </div>
 
 
 
@@ -452,11 +376,8 @@
     </div>
     
     <!-- application main script -->
-    <script type="text/javascript" src="js/design.js"></script>
+    <script type="text/javascript" src="js/draw.js"></script>
     <script type="text/javascript" src="js/gif.js"></script>
-    <script>
-   
-  
-    </script>
+
 </body>
 </html>

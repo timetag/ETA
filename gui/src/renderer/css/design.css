@@ -52,3 +52,86 @@ body {
      text-shadow: 2px 2px .5px white, -2px -2px .5px white, 2px -2px .5px white, -2px 2px .5px white;
    }
    
+
+   /****/
+
+   
+   .selection {
+    fill: none;
+    stroke: black;
+    stroke-dasharray: 0.5em, 0.3em;
+    stroke-dasharray: 0.6em, 0.2em;
+}
+
+.selected path.edge, .selected circle{
+    stroke: #333;
+    stroke-width: 0.09em;
+    stroke-dasharray: 0.5em, 0.3em;
+    stroke-dasharray: 0.6em, 0.2em;
+}
+
+g.nodes rect {
+    fill: rgb(0, 0, 255);
+    fill-opacity: 0.1;
+    stroke-width: 3;
+    stroke: rgb(0, 0, 0)
+}
+
+g.nodes circle {
+    fill: dodgerblue;
+    stroke: #555;
+    stroke-width: 0.09em;
+    fill-opacity: 0.5;
+}
+
+path.edge {
+    fill: none;
+    stroke: #333;
+    stroke-width: 0.09em;
+}
+
+path.catch {
+      fill: none;
+      stroke: yellow;
+      stroke-width: 1.2em;
+      
+      cursor: pointer;
+
+      stroke-opacity: 0.0;
+}
+
+.nodes text{
+    font-size: small;
+    font-family: Verdana, sans-serif;
+    pointer-events: none;
+    text-anchor: middle;
+    dominant-baseline: central;
+   
+}
+.edges text {
+    font-size: small;
+    font-family: Verdana, sans-serif;
+    pointer-events: none;
+
+    text-shadow: 2px 2px .5px white, -2px -2px .5px white, 2px -2px .5px white, -2px 2px .5px white;
+}
+
+.selected text
+{
+    stroke: red;
+    stroke-dasharray: none;
+    text-shadow: 2px 2px .5px white, -2px -2px .5px white, 2px -2px .5px white, -2px 2px .5px white;
+}
+
+*.unselectable {
+   -moz-user-select: -moz-none;
+   -khtml-user-select: none;
+   -webkit-user-select: none;
+
+   /*
+     Introduced in IE 10.
+     See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/
+   */
+   -ms-user-select: none;
+   user-select: none;
+    }
