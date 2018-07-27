@@ -145,7 +145,7 @@ d3.select('#btn_connect').on('click', function() {
         }
         try
         {
-         ws = new WebSocket(d3.select('#ws').property("value"))
+         ws = new ReconnectingWebSocket(d3.select('#ws').property("value"))
         }
         catch(err)
         {
