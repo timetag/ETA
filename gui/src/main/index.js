@@ -25,8 +25,8 @@ if (shouldQuit) {
 }
 function createMainWindow() {
   let {width, height} = electron.screen.getPrimaryDisplay().workAreaSize;
-  var width1 = width * 0.8 | 0;
-  var height1 = height * 0.8 | 0;
+  var width1 = width * 0.9 | 0;
+  var height1 = height * 0.9 | 0;
   const window = new BrowserWindow({width: width1, height: height1,show:false})//
 
   window.once('ready-to-show', () => {
