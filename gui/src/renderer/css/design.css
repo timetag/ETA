@@ -1,0 +1,54 @@
+body {
+    border: solid 2px black;
+}
+.ui-layout-north,.ui-layout-east{
+  overflow: hidden;
+}
+   *.unselectable {
+      -moz-user-select: -moz-none;
+      -khtml-user-select: none;
+      -webkit-user-select: none;
+   
+      /*
+        Introduced in IE 10.
+        See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/
+      */
+      -ms-user-select: none;
+      user-select: none;
+   }
+   
+   
+   /* SVG */
+   g.nodes circle { 
+     stroke-width: 0.09em;
+   }
+   
+   
+   g.nodes circle.marked {
+   
+     fill: none;
+   }
+   
+   
+   rect.selection {
+     shape-rendering : crispEdges;
+   }
+   
+   
+   /* Edge of graph */
+   
+   path.edge {
+   }
+   
+   path.catch {
+     fill: none;
+     stroke: yellow;
+     stroke-width: 0.8em;
+     stroke-opacity: 0.0;
+     /*cursor: pointer;*/
+   }
+   
+   .edges text {
+     text-shadow: 2px 2px .5px white, -2px -2px .5px white, 2px -2px .5px white, -2px 2px .5px white;
+   }
+   

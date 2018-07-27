@@ -1,0 +1,10 @@
+@charset 'UTF-8';
+
+html { overflow: hidden;}
+
+body {
+    border: solid 2px black;
+}
+.ui-layout-north{
+    overflow: hidden;
+}

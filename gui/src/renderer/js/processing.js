@@ -3,7 +3,7 @@ d3.select('#btn_exit').on('click', function() {
     //window.location.replace("./index.html?");
     window.close()
 });
-zoom_helper_enable=true;
+zoom_helper_enable="acecode";
 
 var  aceeditor = ace.edit("acecode");
 aceeditor.getSession().setMode("ace/mode/python");

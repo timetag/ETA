@@ -8,21 +8,17 @@ $(document).ready(function (){
       on_file_loaded(file["name"],file["data"]);
     }
   });
-
+});
   var zoom_helper_level = 1.0;
-
   document.addEventListener('mousewheel', function(e) {
-    if(e.ctrlKey && (typeof zoom_helper_enable !== 'undefined') ) {
-      zoom_helper_level+=e.deltaY/1000;
-
-      document.body.style.zoom = zoom_helper_level;
-      console.log("zoom level=",document.body.style.zoom );
-      e.preventDefault();
-    }
+      if(e.ctrlKey  && (typeof zoom_helper_enable !== 'undefined') ) {
+        zoom_helper_level-=e.deltaY/1000;
+        
+        document.getElementById(zoom_helper_enable).style.zoom = zoom_helper_level;
+        console.log("zoom level=",document.getElementById(zoom_helper_enable).style.zoom );
+        e.preventDefault();
+      }
   });
-
-})
-
 
 
 window.set_localstorage= function (key,value){

@@ -5,9 +5,10 @@
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-
-    <link rel="stylesheet" type="text/css" href="css/main.css">
-     <link rel="stylesheet" type="text/css" href="css/designer.css">
+    <link rel="stylesheet" type="text/css" href="css/code.css">
+    <link rel="stylesheet" type="text/css" href="css/frame.css">
+    <link rel="stylesheet" type="text/css" href="css/layout.css">
+    <link rel="stylesheet" type="text/css" href="css/design.css">
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
@@ -39,8 +40,7 @@
     <script src="js/ace/ext-language_tools.js" type="text/javascript" charset="utf-8"></script>
     <script src="js/ace/mode-python.js" type="text/javascript" charset="utf-8"></script>
     <script src="js/ace/snippets/python.js" type="text/javascript" charset="utf-8"></script>
-
-
+    <!-- Layout system -->
 	<script type="text/javascript" src="js/lib/jquery-ui-latest.js"></script>
 	<script type="text/javascript" src="js/lib/jquery.layout-1.3.0.rc30.80.js"></script>
 
@@ -56,7 +56,7 @@
 
 <!-- manually attach allowOverflow method to pane -->
 
-<div class="ui-layout-north" style="overflow: hidden;">
+<div class="ui-layout-north" >
 	 <div id="top_panel" >
 	 <span class="caption" id="main_caption">Instrument Designer</span>
         <a href="#" class="menu-link" id="btn_create">Create</a>
@@ -72,8 +72,7 @@
 
 
 <div class="ui-layout-east">
-	 <pre id="acecode">
-        </pre>
+	 <pre id="acecode"></pre>
 </div>
 
 <div class="ui-layout-center"  id="svg_container">
@@ -453,25 +452,11 @@
     </div>
     
     <!-- application main script -->
-    <script src="js/design.js"></script>
-    <script type="text/javascript">
- 	$(".gif").each(function () {
-
-     $(this).hover(
-        function()
-        {
-            var originalSrc = $(this).attr("src");
-            $(this).attr("src", originalSrc.replace(".png", ".gif"));
-        },
-        function()
-        {
-            var originalSrc = $(this).attr("src");
-            $(this).attr("src", originalSrc.replace(".gif", ".png"));  
-        }
-     );
-
-  });
-		  
+    <script type="text/javascript" src="js/design.js"></script>
+    <script type="text/javascript" src="js/gif.js"></script>
+    <script>
+   
+  
     </script>
 </body>
 </html>

@@ -37,11 +37,16 @@ function createMainWindow() {
   })
 
   window.webContents.on('new-window', function (evt, url, frameName, disposition, options, additionalFeatures) {
-        options.width = width1*0.9 | 0;
-        options.height = height1*0.9 | 0;
+ 
+    if (url.indexOf("http")<0){
+        options.width = width1*0.8 | 0;
+        options.height = height1*0.8 | 0;
         options.parent = window;
         options.resizable= true;
         options.frame= false;
+        options.backgroundColor='#000000'
+      }
+
     }
   );
 
@@ -80,9 +85,9 @@ autoUpdater.on('update-downloaded', (info) => {
 
 });
 
-
 // create main BrowserWindow when electron is ready
 app.on('ready', () => {
 	autoUpdater.checkForUpdatesAndNotify()
   mainWindow = createMainWindow()
+
 })

@@ -1,0 +1,21 @@
+pre#acecode{
+    background: transparent;
+    border: 0 none;
+    width: 100%;
+    height:100%;
+  
+}
+  /* Textarea */
+  #c88d9c30-5871-11e4-8ed6-0800200c9a66 {
+    font-size: small;
+    font-family: Verdana, sans-serif;
+    border: solid 1px gray;
+    /*border: 0 none white;*/
+    overflow: hidden;
+    padding: 0;
+    outline: none;
+    resize: none;
+    background-color: white;
+    background: rgba(255, 255, 255, 0.6);
+    background: transparent;
+  }
