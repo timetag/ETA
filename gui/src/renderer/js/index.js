@@ -1,5 +1,5 @@
 GUIBIND("#expcfg");
-zoom_helper_enable=true;
+zoom_helper_enable="svg_container";
 
 //load or save the table
 //table system
@@ -146,7 +146,14 @@ d3.select('#btn_connect').on('click', function() {
     if (d3.select('#btn_connect').text()=="Disconnect"){
         return;
     }
+    try {
         ws = new ReconnectingWebSocket(d3.select('#ws').property("value"))
+    } catch (error) {
+        d3.select('#ws').classed("is-valid", false);
+        d3.select('#ws').classed("is-invalid", true);
+        return;
+    }
+       
         ws.onopen=function(t){
             d3.select('#btn_connect').text("Disconnect");
             d3.select('#ws').classed("is-valid", true);

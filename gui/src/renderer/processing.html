@@ -5,10 +5,11 @@
       <meta http-equiv="X-UA-Compatible" content="chrome=1">
       <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
       <link rel="shortcut icon" href="favicon.ico" />
-      <link rel="stylesheet" type="text/css" href="css/index.css">
-      <link rel="stylesheet" type="text/css" href="css/main.css">
-      <link href="css/fontawesome/css/fontawesome-all.min.css" rel="stylesheet">
-      <link rel="stylesheet" href="css/table.css">
+      
+      <link rel="stylesheet" type="text/css" href="css/code.css">
+      <link rel="stylesheet" type="text/css" href="css/frame.css">
+      <link rel="stylesheet" type="text/css" href="css/processing.css">
+      <link rel="stylesheet" type="text/css" href="css/layout.css">
       <!--[if lt IE 9]>
       <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
       <![endif]-->
@@ -29,29 +30,32 @@
       <script src="js/jsondrop.js"></script>
       <script src="js/lib/jstorage.js"></script>
       <script src="js/helper.js"></script>
+
+      <!-- jas.editor -->
       <script src="js/ace/ace.js" type="text/javascript" charset="utf-8"></script>
       <script src="js/ace/ext-language_tools.js" type="text/javascript" charset="utf-8"></script>
+       <!-- Layout system -->
+        <script type="text/javascript" src="js/lib/jquery-ui-latest.js"></script>
+        <script type="text/javascript" src="js/lib/jquery.layout-1.3.0.rc30.80.js"></script>
+
       <script>
          if (window.module) module = window.module;
       </script>
-      <title>ETA</title>
+      <title>Display Panel Code</title>
    </head>
    <body id="body">
-      <div id="top_panel">
-         <span class="caption" id="main_caption">ETA</span>
-		  <a href="https://timetag.github.io/Post-processing" class="menu-link"  target="_blank" >Help</a>
-          <a href="#" class="menu-link" id="btn_exit">Exit</a>
-      </div>
-      <div id="svg_container" class="h-100">
-         <div class="container-fluid pt-2 pl-0 h-100 ">
-            <div class="row h-100">
-             
-               <div class="col">
-                  <div id="acecode" class="h-100 w-100"></div>
-               </div>
-            </div>
-         </div>
-      </div>
-      <script src="js/dpp.js"></script>
+    <script type="text/javascript" src="js/layout.js"></script>
+    <div class="ui-layout-north" >
+        <div id="top_panel">
+            <span class="caption" id="main_caption">ETA</span>
+            <a href="https://timetag.github.io/Post-processing" class="menu-link"  target="_blank" >Help</a>
+            <a href="#" class="menu-link" id="btn_exit">Exit</a>
+        </div>
+    </div>
+    <div class="ui-layout-center"  id="svg_container">
+        <div id="acecode" class="h-100 w-100"></div>
+    </div>
+    <!-- application main script -->
+    <script src="js/processing.js"></script>
    </body>
 </html>

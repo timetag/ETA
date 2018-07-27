@@ -1,0 +1,40 @@
+body {
+    -webkit-user-select:none;
+}
+#top_panel {
+    display: block;
+    position: absolute;
+
+    width: 100%;
+    background: #333333;
+    box-shadow: 0 0.2em 0.3em #888;
+    /*color: white;*/
+    padding: 0.5em;
+    padding-left: 2em;
+    -webkit-app-region: drag;
+    cursor:default;
+}
+#top_panel .caption {
+    color: #ffffff; /*Ubuntu orange*/
+    display: block;
+    float: left;
+    font: bold 0.9em Ubuntu, Verdana, sans-serif;
+    padding-right: 2em;
+    border-right: 1px solid #909090;
+    cursor:default;
+}
+#top_panel a {
+    display: block;
+    float: left;
+    padding: 0 1.375em;
+    line-height: 50px;
+    text-decoration: none;
+    font: 0.8em Ubuntu, Verdana, sans-serif;
+    color: #c0c0c0;
+    border-right: 1px solid #909090;
+    -webkit-app-region: no-drag;
+    
+}
+#top_panel a:hover {
+    color: white;
+}
