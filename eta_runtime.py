@@ -162,9 +162,10 @@ class ETA():
         ret1, out = parse_header(bytearray(filename, "ascii"), format)
         if ret1 is not 0:
             raise ValueError("ETA.SIMPLE_CUT: File {} is not found or incorrect, err code {}.".format(filename, ret1))
-        TTF_header_offset = out[0]
-        TTF_filesize = out[1]
         BytesofRecords = out[-2]
+        TTF_header_offset = out[0]-BytesofRecords-BytesofRecords
+        TTF_filesize = out[1]
+
         NumRecords = (TTF_filesize - TTF_header_offset) // BytesofRecords
         Chunck_size = (NumRecords // cuts) * BytesofRecords
         caller_parms = []
