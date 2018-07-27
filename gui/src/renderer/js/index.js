@@ -137,7 +137,13 @@ d3.select('#btn_settings').on('click',function(){
 ws=null;
 
 d3.select('#btn_connect').on('click', function() {
-    if (ws==null){
+    if (ws!=null){
+        ws.close();
+        ws=null;
+    }
+    if (d3.select('#btn_connect').text()=="Disconnect"){
+        return;
+    }
         ws = new ReconnectingWebSocket(d3.select('#ws').property("value"))
         ws.onopen=function(t){
             d3.select('#btn_connect').text("Disconnect");
@@ -212,10 +218,7 @@ d3.select('#btn_connect').on('click', function() {
                 $("#remoteModal").modal('hide');
             }
         }
-    }else{
-        ws.close();
-        ws=null;
-    }
+   
 });
 
 // run
