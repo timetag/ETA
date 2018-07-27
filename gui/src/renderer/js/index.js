@@ -85,12 +85,12 @@ d3.select('body').on('keydown', function() {
 $('.table-design').click(function () {
   var $row = $(this).parents('tr');
   var $td = $row.find('td');
-  window.location.replace("./design.html?edit="+$td.eq(0).text()+"&name="+$td.eq(1).text())
+  window.open("./design.html?edit="+$td.eq(0).text()+"&name="+$td.eq(1).text())
 });
 $('.table-dpp').click(function () {
   var $row = $(this).parents('tr');
   var $td = $row.find('td');
-  window.location.replace("./processing.html?edit="+$td.eq(0).text()+"&name="+$td.eq(1).text())
+  window.open("./processing.html?edit="+$td.eq(0).text()+"&name="+$td.eq(1).text())
 });
 $('.table-run').click(function () {
   var $row = $(this).parents('tr');
@@ -98,7 +98,7 @@ $('.table-run').click(function () {
   run_dpp($td.eq(0).text(),$td.eq(2).text());
 });
 d3.select('#btn_backend').on('click', function() {
-    window.location.replace("./processing.html");
+    window.open("./processing.html");
 });
 
 $('#add-ri').click(function(){

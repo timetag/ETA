@@ -10,28 +10,32 @@ const {autoUpdater} = require("electron-updater");
 autoUpdater.logger = require("electron-log")
 autoUpdater.logger.transports.file.level = "info"
 
-const isDevelopment = false;
 
 // global reference to mainWindow (necessary to prevent window from being garbage collected)
 let mainWindow
 
 function createMainWindow() {
-  const window = new BrowserWindow({width: 1000, height: 700})
+  let {width, height} = electron.screen.getPrimaryDisplay().workAreaSize;
+  var width1 = width * 0.8 | 0;
+  var height1 = height * 0.8 | 0;
+  const window = new BrowserWindow({width: width1, height: height1,show:false})//
 
-  if (isDevelopment) {
-    window.webContents.openDevTools()
-  }
-
-  
-    window.loadURL(formatUrl({
-      pathname: path.join(__dirname, '/../renderer/index.html'),
-      protocol: 'file',
-      slashes: true
-    }))
-  
+  window.once('ready-to-show', () => {
+    window.show()
+  })
   window.on('closed', () => {
     mainWindow = null
   })
+
+  window.webContents.on('new-window', function (evt, url, frameName, disposition, options, additionalFeatures) {
+        options.width = width1*0.9 | 0;
+        options.height = height1*0.9 | 0;
+        options.parent = window;
+        options.resizable= true;
+        options.frame= false;
+    }
+  );
+
 
   window.webContents.on('devtools-opened', () => {
     window.focus()
@@ -39,6 +43,12 @@ function createMainWindow() {
       window.focus()
     })
   })
+  
+  window.loadURL(formatUrl({
+    pathname: path.join(__dirname, '/../renderer/index.html'),
+    protocol: 'file',
+    slashes: true
+  }))
 
   return window
 }
