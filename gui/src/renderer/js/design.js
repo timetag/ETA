@@ -187,10 +187,15 @@ state1, state2->state3: #TRIGGERS
         svg.parentNode.removeChild(svg);
     });
 
+    window.onbeforeunload = function() {
+        save_graph_localstorage(editor.graph.get_json(), 'graph');
+        //window.location.replace("./index.html");
+    }
 
     d3.select('#btn_save_localstorage').on('click', function() {
         save_graph_localstorage(editor.graph.get_json(), 'graph');
-        window.location.replace("./index.html");
+        //window.location.replace("./index.html");
+        window.close()
     });
 
 
