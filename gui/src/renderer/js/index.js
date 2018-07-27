@@ -139,6 +139,8 @@ ws=null;
 d3.select('#btn_connect').on('click', function() {
     if (ws!=null){
         ws.close();
+        d3.select('#ws').classed("is-valid", false);
+        d3.select('#ws').classed("is-invalid", false);
         ws=null;
     }
     if (d3.select('#btn_connect').text()=="Disconnect"){
@@ -152,12 +154,14 @@ d3.select('#btn_connect').on('click', function() {
             //Hide the modal
             $("#connectModal").modal('hide');
         }
-    
-        ws.onclose=function(t){
+        ws.onerror=function(t){
             d3.select('#ws').classed("is-valid", false);
             d3.select('#ws').classed("is-invalid", true);
+        };
+        ws.onclose=function(t){
             d3.select('#btn_connect').text("Connect");
         };
+
         ws.onmessage=function(t){
             var ret=JSON.parse(t.data);
             if (ret[0]=="err"){
@@ -250,14 +254,12 @@ function check_connectivity(){
     if (d3.select('#btn_connect').text()!="Connect"){ 
         return true;
     }
-    if (ws!=null){
-        console.log("Backend is reconnecting...");
-        d3.select('#btn_settings').on('click')();
-    }else{
+    d3.select('#btn_settings').on('click')();
+    if (ws==null){
         console.log("Backend is connecting...");
         d3.select('#btn_connect').on('click')();
     }
-   
+    
     return false;
 }
-check_connectivity();
+d3.select('#btn_connect').on('click')();
