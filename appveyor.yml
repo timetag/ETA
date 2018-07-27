@@ -6,7 +6,7 @@ environment:
   PYTHON: C:\Python36-x64
   PYTHON_VERSION: 3.6
   PYTHON_ARCH: 64
-  ETA_VER: v0.0.49
+  ETA_VER: v0.5.0
   GITHUB_TOKEN:
     secure: IdgCOIno/YfkZynVnR2pBSjpkNG+4+XZneFXnqBVvxwX3MYX0EKqdzIUVPxQrkJu
   GOPATH: c:\gopath
