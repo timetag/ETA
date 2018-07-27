@@ -10,10 +10,19 @@ const {autoUpdater} = require("electron-updater");
 autoUpdater.logger = require("electron-log")
 autoUpdater.logger.transports.file.level = "info"
 
-
 // global reference to mainWindow (necessary to prevent window from being garbage collected)
 let mainWindow
-
+// Someone tried to run a second instance, we should focus our window.
+ var shouldQuit = app.makeSingleInstance(function(commandLine, workingDirectory) {
+  if (mainWindow) {
+    if (mainWindow.isMinimized()) mainWindow.restore();
+    mainWindow.focus();
+  }
+});
+if (shouldQuit) {
+  app.quit();
+  return;
+}
 function createMainWindow() {
   let {width, height} = electron.screen.getPrimaryDisplay().workAreaSize;
   var width1 = width * 0.8 | 0;
@@ -70,8 +79,10 @@ app.on('activate', () => {
 autoUpdater.on('update-downloaded', (info) => {
 
 });
+
+
 // create main BrowserWindow when electron is ready
 app.on('ready', () => {
 	autoUpdater.checkForUpdatesAndNotify()
-	mainWindow = createMainWindow()
+  mainWindow = createMainWindow()
 })
