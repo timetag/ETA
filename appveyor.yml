@@ -110,28 +110,26 @@ build_script:
     -i icon.ico  
     ETA.py
 
+    cd gui
+
+    yarn dist
+
+    cd ..
+
     ls %APPVEYOR_BUILD_FOLDER%\gui\dist\
 
     move %APPVEYOR_BUILD_FOLDER%\gui\dist\*.exe %APPVEYOR_BUILD_FOLDER%\
 
     move %APPVEYOR_BUILD_FOLDER%\dist\ETA.exe %APPVEYOR_BUILD_FOLDER%\ETA-Backend.exe
 
+test_script:
+- cmd: >-
     7z a ETA_LIB.zip "c:\python36-x64\lib\site-packages"
 
     7z a ETA_QuickStart.zip %APPVEYOR_BUILD_FOLDER%\*.exe
 
-    
-test_script:
-- cmd: >-
+    gothub upload -u timetag -r ETA -t "%ETA_VER%" -f "ETA-Backend.exe" -n "ETA-Backend.exe" --replace
 
-     cd gui
-
-     yarn dist
-
-     cd ..
-
-     gothub upload -u timetag -r ETA -t "%ETA_VER%" -f "ETA-Backend.exe" -n "ETA-Backend.exe" --replace
-
-     gothub upload -u timetag -r ETA -t "%ETA_VER%" -f "ETA_LIB.zip"  -n "ETA_LIB.zip" --replace
+    gothub upload -u timetag -r ETA -t "%ETA_VER%" -f "ETA_LIB.zip"  -n "ETA_LIB.zip" --replace
      
-     gothub upload -u timetag -r ETA -t "%ETA_VER%" -f "ETA_QuickStart.zip"  -n "ETA_QuickStart.zip" --replace
+    gothub upload -u timetag -r ETA -t "%ETA_VER%" -f "ETA_QuickStart.zip"  -n "ETA_QuickStart.zip" --replace
