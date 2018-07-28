@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" type="text/css" href="css/code.css">
+    <link rel="stylesheet" type="text/css" href="css/frame.css">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script>
+        if (typeof module === 'object') {
+            window.module = module;
+            module = undefined;
+        }
+    </script>
+    
+    <script src='js/lib/jquery.min.js'></script>
+    <!-- Helper libraries -->
+    <script src="js/lib/bootstrap.min.js"></script>
+    
+    <!-- Local storage -->
+	 <script src="js/jsondrop.js"></script>
+    <script src="js/lib/jstorage.js"></script>
+    <script src="js/helper.js"></script>
+   
+    <!-- Layout system -->
+	<script type="text/javascript" src="js/lib/jquery-ui-latest.js"></script>
+	<script type="text/javascript" src="js/lib/jquery.layout-1.3.0.rc30.80.js"></script>
+    
+    <script>
+        if (window.module) module = window.module;
+    </script>
+    <title>Help - Instrument Designer</title>
+
+	
+</head>
+<body id="body">
+    <script type="text/javascript" src="js/layout.js"></script>
+
+    <!-- manually attach allowOverflow method to pane -->
+
+    <div class="ui-layout-north" >
+        <div id="top_panel" >
+            <span class="caption" id="main_caption">Help - Instrument Designer</span>
+
+            <a href="#" class="menu-link" id="btn_close">Exit</a>
+        </div>
+    </div>
+
+    <div class="ui-layout-center" >
+        <div class="container-fluid" style="padding-top: 1rem;">
+            <div class="row">
+                    <div class="col-sm-4">
+                        <div class="card">
+                            <img class="card-img-top gif" src="img/draw_blob.png">
+                            <div class="card-body">
+                                <h5 class="card-title"><a href="#" id="btn_create_graph">TRANSITION</a></h5>
+                                <p class="card-text">Draw the transition graph on the right side of the window.</p>
+
+                            </div>
+                        </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="card">
+                        <img class="card-img-top gif" src="img/draw_trigger.png">
+                        <div class="card-body">
+                            <h5 class="card-title"><a href="#" id="btn_create_act">ACTION</a></h5>
+                            <p class="card-text">Action allow you to perform analytical functions or emit signals on any event trigger.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                        <div class="card">
+                            <img class="card-img-top gif" src="img/shortcuts.jpg">
+                            <div class="card-body">
+                                <h5 class="card-title"><a href="#" id="btn_create_shortcuts">SHORTCUTS</a></h5>
+                                <p class="card-text">A combination of keystrokes that provides easier access to a command or operation.</p>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+           
+        </div>
+    </div>
+
+
+
+    <div class="modal fade" id="histogramModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create Histogram</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form class="needs-validation" novalidate id="hist_table">
+                    <div class="modal-body">
+                        <label for="hist1">Name</label>
+                        <input type="text" class="form-control" id="hist1" required>
+                        <div class="invalid-feedback">
+                            Please provide a valid name.
+                        </div>
+                        <label for="hist2">Histogram Dimension</label>
+                        <input type="text" class="form-control" id="hist2" required>
+                        <small id="hist_range" class="form-text text-muted">[ (BinNum,BinSize,Eval()) ,...]</small>
+                        <label for="hist2">Extra Dimension (optional)</label>
+                        <input type="text" class="form-control" id="hist2" >
+                        <small id="hist_range" class="form-text text-muted">[ 2,2 ]</small>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-outline-dark" id="hist_create">Create</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="integerModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create Table</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form class="needs-validation" novalidate id="int_table">
+                    <div class="modal-body">
+                        <label for="int1">Name</label>
+                        <input type="text" class="form-control" id="int1" required>
+                        <div class="invalid-feedback">
+                            Please provide a valid name.
+                        </div>
+                        <label for="int2">Dimension</label>
+                        <input type="text" class="form-control" id="int2" required>
+                       
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-outline-dark" id="int_create">Create</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="clockModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create Clcok</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form class="needs-validation" novalidate id="clock_table">
+                    <div class="modal-body">
+                        <label for="clock1">Name</label>
+                        <input type="text" class="form-control" id="clock1" required>
+                        <div class="invalid-feedback">
+                            Please provide a valid name.
+                        </div>
+                        <label for="clock2">Max Start times</label>
+                        <input type="number" class="form-control" id="clock2" required>
+                        <label for="clock3">Max Stop times</label>
+                        <input type="number" class="form-control" id="clock3" required>
+                       
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-outline-dark" id="clock_create">Create</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="createModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog  " style="max-width: 80%" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="card">
+                                <img class="card-img-top gif" src="img/draw_blob.png">
+                                <div class="card-body">
+                                    <h5 class="card-title"><a href="#" id="btn_create_graph">TRANSITION</a></h5>
+                                    <p class="card-text">Draw the transition graph on the right side of the window.</p>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="card">
+                                <img class="card-img-top gif" src="img/draw_trigger.png">
+                                <div class="card-body">
+                                    <h5 class="card-title"><a href="#" id="btn_create_act">ACTION</a></h5>
+                                    <p class="card-text">Action allow you to perform analytical functions or emit signals on any event trigger.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="card">
+                                <img class="card-img-top" src="img/histograms.jpg">
+                                <div class="card-body">
+                                    <h5 class="card-title"><a href="#" id="btn_create_hist">HISTOGRAM</a></h5>
+                                    <p class="card-text">Histogram allows you to do statistics on time intervals or an arbitray INTEGER.</p>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" style="padding-top: 1rem;">
+
+                        <div class="col-sm-4">
+                            <div class="card">
+                                <img class="card-img-top" src="img/integer.jpg">
+                                <div class="card-body">
+                                    <h5 class="card-title"><a href="#" id="btn_create_int">TABLE</a></h5>
+                                    <p class="card-text">Table is a general integer stroage for scalar, vectors, matrix, or tensors.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="card">
+                                <img class="card-img-top" src="img/clock.png">
+                                <div class="card-body">
+                                    <h5 class="card-title"><a href="#" id="btn_create_clock">CLOCK</a></h5>
+                                    <p class="card-text">Clock is a time recorder with two buttons, start and stop. Each clock has a maximum limitation for how many times you can press the buttons.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="actionModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog " style="max-width: 80%" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Actions</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <input class="form-control" id="actionSearch" type="text" placeholder="Search..">
+                    <br>
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Action</th>
+                                <th>Useage</th>
+                                <th>Example</th>
+                            </tr>
+                        </thead>
+                        <tbody id="actionTable">
+                            <tr>
+                                <td>start(clockname)</td>
+                                <td>Start clock.</td>
+                                <td>start(c1) will start a clock labeled c1, which can be used together with record(h1,c1) to record to a histogram h1 with time interval recorded on the clock c1.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>stop(clockname)</td>
+                                <td>Stop the clock.</td>
+                                <td>stop(c1)</td>
+                            </tr>
+                            <tr>
+                                <td>emit(channel,waittime_ps,period_ps,repeat)</td>
+                                <td>Emit signal to a channel.</td>
+                                <td>emit(2,0,10,3)</td>
+                            </tr>
+                            <tr>
+                                <td>record(histogram,clockname)</td>
+                                <td>Record the time interval on some clock to histogram.</td>
+                                <td>record(h1,c1)</td>
+                            </tr>
+                            <tr>
+                                <td>record_all(histogram,clockname)</td>
+                                <td>Record the time interval on some clock to histogram.</td>
+                                <td>record(h1,c1)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+  <div class="modal fade" id="graphModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog " style="max-width: 80%" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Transition Graph</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="row">
+						<div class="col-sm-4">
+                            <div class="card">
+                                <img class="card-img-top gif" src="img/draw_blob.png">
+                                <div class="card-body">
+                                    <p class="card-text">Draw the cricles for transition graph.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="card">
+                                <img class="card-img-top gif" src="img/draw_arrow.png">
+                                <div class="card-body">
+                                    <p class="card-text">Draw the arrows for transition graph.</p>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="card">
+                                <img class="card-img-top gif" src="img/draw_init.png">
+                                <div class="card-body">
+                                    <p class="card-text">Set one cricle as the initial cricle exclusively.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class="row">
+
+                        <div class="col-sm-4">
+                            <div class="card">
+                                <img class="card-img-top gif" src="img/draw_name.png">
+                                <div class="card-body">
+                                    <p class="card-text">Edit the symbol for cricles or conditions for arrows.</p>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="card">
+                                <img class="card-img-top gif" src="img/draw_trigger.png">
+                                <div class="card-body">
+                                    <p class="card-text">Create triggers on cricles or arrows.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="card">
+                                 <img class="card-img-top gif" src="img/draw_del.png">
+                                <div class="card-body">
+                                    <p class="card-text">Delete cricles or arrows.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                   
+                </div>
+
+            </div>
+        </div>
+    </div>
+    
+    <!-- application main script -->
+    <script type="text/javascript" src="js/help.js"></script>
+    <script type="text/javascript" src="js/gif.js"></script>
+
+</body>
+</html>

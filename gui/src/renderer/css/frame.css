@@ -22,6 +22,7 @@ body {
     padding-right: 2em;
     border-right: 1px solid #909090;
     cursor:default;
+
 }
 #top_panel a {
     display: block;
@@ -33,7 +34,7 @@ body {
     color: #c0c0c0;
     border-right: 1px solid #909090;
     -webkit-app-region: no-drag;
-    
+ 
 }
 #top_panel a:hover {
     color: white;
