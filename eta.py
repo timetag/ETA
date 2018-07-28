@@ -13,8 +13,9 @@ while True:
         break
     else:
         print("ETA_LIB is not found.")
+        default_folder = os.path.dirname(sys.executable)+"\\site-packages"
         print("Please use a full path like: 'C:\\...\\site-packages'.")
-        os.environ["ETA_LIB"] = input("Specify the path to ETA_LIB:")
+        os.environ["ETA_LIB"] = input("Specify the path to ETA_LIB ({}):".format(default_folder)) or default_folder
         os.system('setx ETA_LIB "' + os.environ["ETA_LIB"] + '"')
 
 try:
@@ -31,19 +32,27 @@ except Exception as e:
 
 class WSSERVER(ETA):
 
-    def __init__(self, port):
+    def __init__(self, ):
         import logging
         self.max_frontend = 23
         self.logger = logging.getLogger(__name__)
         logging.basicConfig()
         self.hostip = None
+        self.hostport = None
         while True:
             self.hostip = os.environ.get('ETA_HOST')
             if self.hostip is not None:
                 break
             else:
-                os.environ["ETA_HOST"] = input("Specify the IP address of this computer:")
+                os.environ["ETA_HOST"] = input("Specify the IP address of this computer (localhost):") or "localhost"
                 os.system('setx ETA_HOST "' + os.environ["ETA_HOST"] + '"')
+        while True:
+            self.hostport = os.environ.get('ETA_PORT')
+            if self.hostport is not None:
+                break
+            else:
+                os.environ["ETA_PORT"] = str(int(input("Specify the port to be used by ETA Backend (5678):")or "5678"))
+                os.system('setx ETA_PORT "' + os.environ["ETA_PORT"] + '"')
 
         self.displaying = False
 
@@ -55,11 +64,11 @@ class WSSERVER(ETA):
 
         def new_client(client, server):
             print("New client " + str(client["address"]) +
-                  " connected to port " + str(port) + ". ")
+                  " connected to port " + str(self.hostport) + ". ")
 
         self.server = ws_broadcast.WebsocketServer(
-            port, host='0.0.0.0')
-        print("ETA Server URL: ws://{}:{}".format(self.hostip, port))
+            int(self.hostport), host='0.0.0.0')
+        print("ETA Server URL: ws://{}:{}".format(self.hostip, self.hostport))
         self.server.set_fn_new_client(new_client)
         self.server.set_fn_message_received(new_message)
         self.server.run_forever()
@@ -80,4 +89,4 @@ if __name__ == '__main__':
 ==============================
 """)
     print("Using Python libraries from ", sys.path)
-    ws = WSSERVER(5678)
+    ws = WSSERVER()
