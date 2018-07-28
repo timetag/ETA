@@ -130,4 +130,4 @@ test_script:
 
      gothub upload -u timetag -r ETA -t "%ETA_VER%" -f "ETA_LIB.zip"  -n "ETA_LIB.zip" --replace
      
-     gothub upload -u timetag -r ETA -t "%ETA_VER%" -f "ETA_LIB.zip"  -n "ETA_QuickStart.zip" --replace
+     gothub upload -u timetag -r ETA -t "%ETA_VER%" -f "ETA_QuickStart.zip"  -n "ETA_QuickStart.zip" --replace
