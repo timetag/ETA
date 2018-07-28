@@ -4,6 +4,7 @@ const electron = require('electron')
 const app = electron.app
 const BrowserWindow = electron.BrowserWindow
 const url = require('url')
+const shell = require('electron').shell;
 const formatUrl = url.format
 const path = require('path')
 const {autoUpdater} = require("electron-updater");
@@ -23,46 +24,58 @@ if (shouldQuit) {
   app.quit();
   return;
 }
+
 function createMainWindow() {
-  let {width, height} = electron.screen.getPrimaryDisplay().workAreaSize;
-  var width1 = width * 0.9 | 0;
-  var height1 = height * 0.9 | 0;
-  const window = new BrowserWindow({width: width1, height: height1,show:false})//
+      let {width, height} = electron.screen.getPrimaryDisplay().workAreaSize;
+      var width1 = width * 0.9 | 0;
+      var height1 = height * 0.9 | 0;
+      const window = new BrowserWindow({width: width1, height: height1,show:false})//
 
-  window.once('ready-to-show', () => {
-    window.show()
-  })
-  window.on('closed', () => {
-    mainWindow = null
-  })
+      window.once('ready-to-show', () => {
+        window.show()
+      })
+      window.on('closed', () => {
+        mainWindow = null
+      })
 
-  window.webContents.on('new-window', function (evt, url, frameName, disposition, options, additionalFeatures) {
- 
-    if (url.indexOf("http")<0){
-        options.width = width1*0.8 | 0;
-        options.height = height1*0.8 | 0;
-        options.parent = window;
-        options.resizable= true;
-        options.frame= false;
-        options.backgroundColor='#000000'
+      // general callback
+      const onWindowOpen = (event, url, frameName) => {
+        event.preventDefault()
+        if  (url.indexOf("http")>=0)
+        {
+          shell.openExternal(url);
+        }else{
+            const win = new BrowserWindow({
+            resizable: true,
+            backgroundColor:'#000000',
+            width : width1 * 0.8 | 0,
+            height : height1 * 0.8 | 0,
+            parent : window,
+            frame: false ,
+            resizable: true,
+            title: frameName
+        })
+        win.loadURL(url)
+        win.webContents.on('new-window', onWindowOpen)
+        event.newGuest = win
+        }
+       
       }
 
-    }
-  );
-
-
-  window.webContents.on('devtools-opened', () => {
-    window.focus()
-    setImmediate(() => {
-      window.focus()
-    })
-  })
-  
-  window.loadURL(formatUrl({
-    pathname: path.join(__dirname, '/../renderer/index.html'),
-    protocol: 'file',
-    slashes: true
-  }))
+      window.webContents.on('new-window', onWindowOpen);
+      /*
+      window.webContents.on('devtools-opened', () => {
+        window.focus()
+        setImmediate(() => {
+          window.focus()
+        })
+      })
+      */
+      window.loadURL(formatUrl({
+        pathname: path.join(__dirname, '/../renderer/index.html'),
+        protocol: 'file',
+        slashes: true
+      }))
 
   return window
 }

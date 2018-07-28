@@ -70,6 +70,8 @@
             <a href="#" class="menu-link" id="btn_redo">Redo</a>
             <a href="#" class="menu-link" id="btn_load_json">Load</a>
             <a href="#" class="menu-link" id="btn_save_json">Export</a>
+            <a href="help.html" class="menu-link"  target="_blank" >Help</a>
+            
             <a href="#" class="menu-link" id="btn_save_localstorage">Exit</a>
         </div>
     </div>
@@ -91,24 +93,23 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Create Histogram</h5>
+                    <h5 class="modal-title">Create 1-D Histogram</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <form class="needs-validation" novalidate id="hist_table">
                     <div class="modal-body">
-                        <label for="hist1">Name</label>
+                        <label for="hist1">Histogram Name</label>
                         <input type="text" class="form-control" id="hist1" required>
                         <div class="invalid-feedback">
                             Please provide a valid name.
                         </div>
-                        <label for="hist2">Histogram Dimension</label>
+                        <label for="hist2">Number of bins</label>
                         <input type="text" class="form-control" id="hist2" required>
-                        <small id="hist_range" class="form-text text-muted">[ (BinNum,BinSize,Eval()) ,...]</small>
-                        <label for="hist2">Extra Dimension (optional)</label>
-                        <input type="text" class="form-control" id="hist2" >
-                        <small id="hist_range" class="form-text text-muted">[ 2,2 ]</small>
+                        <label for="hist3">Width (in ps) of bins</label>
+                        <input type="text" class="form-control" id="hist3" required>
+                        <small id="hist_range" class="form-text text-muted">For higher dimensional histograms, plese refer to the mannual.</small>
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-outline-dark" id="hist_create">Create</button>
@@ -179,7 +180,7 @@
         <div class="modal-dialog  " style="max-width: 80%" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Create</h5>
+                    <h5 class="modal-title">Create Tools</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -188,45 +189,14 @@
                 <div class="modal-body">
 
                     <div class="row">
-                        <div class="col-sm-4">
-                            <div class="card">
-                                <img class="card-img-top gif" src="img/draw_blob.png">
-                                <div class="card-body">
-                                    <h5 class="card-title"><a href="#" id="btn_create_graph">TRANSITION</a></h5>
-                                    <p class="card-text">Draw the transition graph on the right side of the window.</p>
-
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="card">
-                                <img class="card-img-top gif" src="img/draw_trigger.png">
-                                <div class="card-body">
-                                    <h5 class="card-title"><a href="#" id="btn_create_act">ACTION</a></h5>
-                                    <p class="card-text">Action allow you to perform analytical functions or emit signals on any event trigger.</p>
-                                </div>
-                            </div>
-                        </div>
+                       
                         <div class="col-sm-4">
                             <div class="card">
                                 <img class="card-img-top" src="img/histograms.jpg">
                                 <div class="card-body">
                                     <h5 class="card-title"><a href="#" id="btn_create_hist">HISTOGRAM</a></h5>
-                                    <p class="card-text">Histogram allows you to do statistics on time intervals or an arbitray INTEGER.</p>
+                                    <p class="card-text">Histogram stores statistics with time intervals or an arbitray INTEGER.</p>
 
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row" style="padding-top: 1rem;">
-
-                        <div class="col-sm-4">
-                            <div class="card">
-                                <img class="card-img-top" src="img/integer.jpg">
-                                <div class="card-body">
-                                    <h5 class="card-title"><a href="#" id="btn_create_int">TABLE</a></h5>
-                                    <p class="card-text">Table is a general integer stroage for scalar, vectors, matrix, or tensors.</p>
                                 </div>
                             </div>
                         </div>
@@ -235,7 +205,37 @@
                                 <img class="card-img-top" src="img/clock.png">
                                 <div class="card-body">
                                     <h5 class="card-title"><a href="#" id="btn_create_clock">CLOCK</a></h5>
-                                    <p class="card-text">Clock is a time recorder with two buttons, start and stop. Each clock has a maximum limitation for how many times you can press the buttons.</p>
+                                    <p class="card-text">Clock is a time interval recorder with a start button and a stop button. </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="card">
+                                <img class="card-img-top" src="img/coincidence.jpg">
+                                <div class="card-body">
+                                    <h5 class="card-title"><a href="#" id="btn_create_int">COINCIDENCE</a></h5>
+                                    <p class="card-text">Coincidence is a tool that emits a signal when all of its slots are fulfilled.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" style="padding-top: 1rem;">
+                        <div class="col-sm-4">
+                            <div class="card">
+                                <img class="card-img-top" src="img/integer.png">
+                                <div class="card-body">
+                                    <h5 class="card-title"><a href="#" id="btn_create_int">INTEGER</a></h5>
+                                    <p class="card-text">Integer is a fast stroage for scalar that supports up to 64 unsigned bits.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="card">
+                                <img class="card-img-top" src="img/table.jpg">
+                                <div class="card-body">
+                                    <h5 class="card-title"><a href="#" id="btn_create_int">TABLE</a></h5>
+                                    <p class="card-text">Table is a general integer stroage for vectors, matrix, or tensors.</p>
                                 </div>
                             </div>
                         </div>
@@ -244,140 +244,8 @@
             </div>
         </div>
     </div>
-
-    <div class="modal fade" id="actionModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog " style="max-width: 80%" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Actions</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-
-                <div class="modal-body">
-                    <input class="form-control" id="actionSearch" type="text" placeholder="Search..">
-                    <br>
-                    <table class="table table-bordered table-striped">
-                        <thead>
-                            <tr>
-                                <th>Action</th>
-                                <th>Useage</th>
-                                <th>Example</th>
-                            </tr>
-                        </thead>
-                        <tbody id="actionTable">
-                            <tr>
-                                <td>start(clockname)</td>
-                                <td>Start clock.</td>
-                                <td>start(c1) will start a clock labeled c1, which can be used together with record(h1,c1) to record to a histogram h1 with time interval recorded on the clock c1.
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>stop(clockname)</td>
-                                <td>Stop the clock.</td>
-                                <td>stop(c1)</td>
-                            </tr>
-                            <tr>
-                                <td>emit(channel,waittime_ps,period_ps,repeat)</td>
-                                <td>Emit signal to a channel.</td>
-                                <td>emit(2,0,10,3)</td>
-                            </tr>
-                            <tr>
-                                <td>record(histogram,clockname)</td>
-                                <td>Record the time interval on some clock to histogram.</td>
-                                <td>record(h1,c1)</td>
-                            </tr>
-                            <tr>
-                                <td>record_all(histogram,clockname)</td>
-                                <td>Record the time interval on some clock to histogram.</td>
-                                <td>record(h1,c1)</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-            </div>
-        </div>
-    </div>
-  <div class="modal fade" id="graphModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog " style="max-width: 80%" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Transition Graph</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-
-                <div class="modal-body">
-
-                    <div class="row">
-						<div class="col-sm-4">
-                            <div class="card">
-                                <img class="card-img-top gif" src="img/draw_blob.png">
-                                <div class="card-body">
-                                    <p class="card-text">Draw the cricles for transition graph.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="card">
-                                <img class="card-img-top gif" src="img/draw_arrow.png">
-                                <div class="card-body">
-                                    <p class="card-text">Draw the arrows for transition graph.</p>
-
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="card">
-                                <img class="card-img-top gif" src="img/draw_init.png">
-                                <div class="card-body">
-                                    <p class="card-text">Set one cricle as the initial cricle exclusively.</p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                    </div>
-                    <div class="row">
-
-                        <div class="col-sm-4">
-                            <div class="card">
-                                <img class="card-img-top gif" src="img/draw_name.png">
-                                <div class="card-body">
-                                    <p class="card-text">Edit the symbol for cricles or conditions for arrows.</p>
-
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="card">
-                                <img class="card-img-top gif" src="img/draw_trigger.png">
-                                <div class="card-body">
-                                    <p class="card-text">Create triggers on cricles or arrows.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="card">
-                                 <img class="card-img-top gif" src="img/draw_del.png">
-                                <div class="card-body">
-                                    <p class="card-text">Delete cricles or arrows.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                   
-                </div>
-
-            </div>
-        </div>
-    </div>
-    
     <!-- application main script -->
     <script type="text/javascript" src="js/draw.js"></script>
-    <script type="text/javascript" src="js/gif.js"></script>
 
 </body>
 </html>
