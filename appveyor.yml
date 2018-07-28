@@ -110,6 +110,10 @@ build_script:
     -i icon.ico  
     ETA.py
 
+    ls %APPVEYOR_BUILD_FOLDER%\gui\dist\
+
+    move %APPVEYOR_BUILD_FOLDER%\gui\dist\*.exe %APPVEYOR_BUILD_FOLDER%\
+
     move %APPVEYOR_BUILD_FOLDER%\dist\ETA.exe %APPVEYOR_BUILD_FOLDER%\ETA-Backend.exe
 
     7z a ETA_LIB.zip "c:\python36-x64\lib\site-packages"
