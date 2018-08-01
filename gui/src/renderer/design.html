@@ -98,7 +98,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form class="needs-validation" novalidate id="hist_table">
+                <form class="needs-validation" novalidate id="histogram_table">
                     <div class="modal-body">
                         <label for="hist1">Histogram Name</label>
                         <input type="text" class="form-control" id="hist1" required>
@@ -106,13 +106,19 @@
                             Please provide a valid name.
                         </div>
                         <label for="hist2">Number of bins</label>
-                        <input type="text" class="form-control" id="hist2" required>
+                        <input type="number" class="form-control" id="hist2" required>
+                        <div class="invalid-feedback">
+                            Please provide a valid value.
+                        </div>
                         <label for="hist3">Width (in ps) of bins</label>
-                        <input type="text" class="form-control" id="hist3" required>
-                        <small id="hist_range" class="form-text text-muted">For higher dimensional histograms, plese refer to the mannual.</small>
+                        <input type="number" class="form-control" id="hist3" required>
+                        <div class="invalid-feedback">
+                            Please provide a valid value.
+                        </div>
+                        <small  class="form-text text-muted">For higher dimensional histograms, plese refer to the mannual.</small>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-outline-dark" id="hist_create">Create</button>
+                        <button type="submit" class="btn btn-outline-dark" id="histogram_create">Create</button>
                     </div>
                 </form>
             </div>
@@ -123,24 +129,53 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
+                    <h5 class="modal-title">Create Integer</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form class="needs-validation" novalidate id="integer_table">
+                    <div class="modal-body">
+                        <label for="integer1">Name</label>
+                        <input type="text" class="form-control" id="integer1" required>
+                        <div class="invalid-feedback">
+                            Please provide a valid value.
+                        </div>
+                      
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-outline-dark" id="integer_create">Create</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="tableModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
                     <h5 class="modal-title">Create Table</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form class="needs-validation" novalidate id="int_table">
+                <form class="needs-validation" novalidate id="table_table">
                     <div class="modal-body">
-                        <label for="int1">Name</label>
-                        <input type="text" class="form-control" id="int1" required>
+                        <label for="table1">Name</label>
+                        <input type="text" class="form-control" id="table1" required>
                         <div class="invalid-feedback">
-                            Please provide a valid name.
+                            Please provide a valid value.
                         </div>
-                        <label for="int2">Dimension</label>
-                        <input type="text" class="form-control" id="int2" required>
-                       
+                        <label for="table2">Dimension</label>
+                        <input type="text" class="form-control" id="table2" required>
+                        <div class="invalid-feedback">
+                            Please provide a valid value.
+                        </div>
+                        <small class="form-text text-muted">For higher dimensional table, plese refer to the mannual.</small>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-outline-dark" id="int_create">Create</button>
+                        <button type="submit" class="btn btn-outline-dark" id="table_create">Create</button>
                     </div>
                 </form>
             </div>
@@ -176,6 +211,36 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="coincidenceModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create Coincidence</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form class="needs-validation" novalidate id="coincidence_table">
+                    <div class="modal-body">
+                        <label for="coincidence1">Name</label>
+                        <input type="text" class="form-control" id="coincidence1" required>
+                        <div class="invalid-feedback">
+                            Please provide a valid name.
+                        </div>
+                        <label for="coincidence2">Coincidence Slots</label>
+                        <input type="number" class="form-control" id="coincidence2" required>
+                        <label for="coincidence3">Emit to this channel# when fulfilled</label>
+                        <input type="number" class="form-control" id="coincidence3" required>
+                       
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-outline-dark" id="clock_create">Create</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade" id="createModal" tabindex="-1" role="dialog">
         <div class="modal-dialog  " style="max-width: 80%" role="document">
             <div class="modal-content">
@@ -194,7 +259,7 @@
                             <div class="card">
                                 <img class="card-img-top" src="img/histograms.jpg">
                                 <div class="card-body">
-                                    <h5 class="card-title"><a href="#" id="btn_create_hist">HISTOGRAM</a></h5>
+                                    <h5 class="card-title"><a href="#" id="btn_create_histogram">HISTOGRAM</a></h5>
                                     <p class="card-text">Histogram stores statistics with time intervals or an arbitray INTEGER.</p>
 
                                 </div>
@@ -213,7 +278,7 @@
                             <div class="card">
                                 <img class="card-img-top" src="img/coincidence.jpg">
                                 <div class="card-body">
-                                    <h5 class="card-title"><a href="#" id="btn_create_int">COINCIDENCE</a></h5>
+                                    <h5 class="card-title"><a href="#" id="btn_create_coincidence">COINCIDENCE</a></h5>
                                     <p class="card-text">Coincidence is a tool that emits a signal when all of its slots are fulfilled.</p>
                                 </div>
                             </div>
@@ -225,7 +290,7 @@
                             <div class="card">
                                 <img class="card-img-top" src="img/integer.png">
                                 <div class="card-body">
-                                    <h5 class="card-title"><a href="#" id="btn_create_int">INTEGER</a></h5>
+                                    <h5 class="card-title"><a href="#" id="btn_create_integer">INTEGER</a></h5>
                                     <p class="card-text">Integer is a fast stroage for scalar that supports up to 64 unsigned bits.</p>
                                 </div>
                             </div>
@@ -234,7 +299,7 @@
                             <div class="card">
                                 <img class="card-img-top" src="img/table.jpg">
                                 <div class="card-body">
-                                    <h5 class="card-title"><a href="#" id="btn_create_int">TABLE</a></h5>
+                                    <h5 class="card-title"><a href="#" id="btn_create_table">TABLE</a></h5>
                                     <p class="card-text">Table is a general integer stroage for vectors, matrix, or tensors.</p>
                                 </div>
                             </div>
