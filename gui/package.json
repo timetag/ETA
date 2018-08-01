@@ -24,6 +24,9 @@
       "extraResources": [
         "ETA-Backend.exe"
       ],
+      "extraFiles": [
+        "ETA-Backend.exe"
+      ],
       "publish": [
         "github"
       ]
