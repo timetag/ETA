@@ -102,27 +102,8 @@
             editor.graph.set_json(graph);
         } else {
             editor.graph.set_json({
-                "usercode": `#Instrument Design Guide
-#Imagine a virtual instrument called ETA box, where there are some inputs
-#for different signals, and a big screen showing a graph with circles and
-#arrows, the graph defines what the instrument it is.
-#There is one and only one active circle, which indicates the current state
-#of your physical system.
-#The arrow represents a conditional transition from one state to another. 
-#The condition is written next to the arrow and can be an input signal from
-#your physical system or, more generally, a virtual signal created by another
-#ETA box.
-#Next to the graph there is a instruction panel, where TRIGGERS and ACTIONS 
-#can be used to do analytical instructions when a transition is made:
-#state1, state2->state3: #TRIGGERS
-#    start(clock1) #ACTIONS
-#The example above will start clock1 whenever state1 becomes active or 
-#a transition from state2 to state3 is made.
-
-#########  click the Create button on the top to to start! #########
-
-#To learn more about the ETA analytical instructions, please refer to  
-#https://timetag.github.io or the ETAhub.
+                "usercode": `
+########## click Help on the menu to get started! ##########
 `
             });
         }
@@ -263,6 +244,79 @@
         editor.view.unselect();
     });
 
+///////////////////////////
+  function BIND_table(name) {
+    var form =document.getElementById(name.toLowerCase()+'_table');
+    console.log(name.toLowerCase()+'_table');
+    form.addEventListener('submit', function(event) {
+      if (form.checkValidity() === false) {
+         form.classList.add('was-validated');
+      }else{
+          form.classList.remove('was-validated');
+          switch (name) {
+            case "COINCIDENCE":
+                codegen=`COINCIDENCE(${$('#coincidence1').val()},${$('#coincidence2').val()},${$('#coincidence3').val()}) #COINCIDENCE(name,slots,chn)\n`+aceeditor.getValue();
+            break;
+            case "CLOCK":
+                if (($('#clock2').val()==1) && ($('#clock3').val()==1)){
+                    codegen=`CLOCK(${$('#clock1').val()})\n`+aceeditor.getValue();
+                }else{
+                    codegen=`CLOCK(${$('#clock1').val()},${$('#clock2').val()},${$('#clock3').val()}) #CLOCK(name,start_times,stop_times)\n`+aceeditor.getValue();
+                }
+                break;
+            case "TABLE":
+                codegen=`TABLE(${$('#int1').val()},${$('#int2').val()}) #TABLE(name,[size_dim1,size_dim2,...])\n`+aceeditor.getValue();
+                break;
+            case "HISTOGRAM":
+                codegen=`HISTOGRAM(${$('#hist1').val()},(${$('#hist2').val()},${$('#hist3').val()})) #HISTOGRAM(name,[(binnum,binsize),...],extradimension)\n`+aceeditor.getValue();
+                break;
+            case "INTEGER":
+                codegen=`INTEGER(${$('#integer1').val()}) \n`+aceeditor.getValue();
+                break;
+            default:
+                codegen=`#ERROR\n`+aceeditor.getValue();
+                break;
+          }
+          
+          
+          editor.graph.set_usercode(codegen);
+          aceeditor.setValue(codegen);
+          aceeditor.clearSelection();
+          $("#"+name.toLowerCase()+"Modal").modal('hide');
+      }
+      event.preventDefault();
+      event.stopPropagation();
+    }, false);
+  }
+  BIND_table("COINCIDENCE" );
+  BIND_table("CLOCK" );
+  BIND_table("TABLE" );
+  BIND_table("INTEGER" );
+  BIND_table("HISTOGRAM" );
+  $('.modal').on('hidden.bs.modal', function(){
+      $(this).find('input[type=text], input[type=password], input[type=number], input[type=email], textarea').val('');
+  });
+  $('#btn_create').on('click', function() {
+      $("#createModal").modal({backdrop: 'static', keyboard: false});
+  });
 
+  function BIND_btn_create(btn_for1){
+     
+    console.log('#btn_create_'+btn_for1);
+    $('#btn_create_'+btn_for1).on('click', (function(bth_for){
+        //closure
+        return function() {
+            $("#createModal").modal('hide');
+            $("#"+bth_for+"Modal").modal({backdrop: 'static', keyboard: false});
+        }
+    })(btn_for1));
+  }
+  BIND_btn_create("histogram");
+  BIND_btn_create("clock");
+  BIND_btn_create("coincidence");
+  BIND_btn_create("table");
+  BIND_btn_create("integer");
+  
+/////////////////////////
      
 }());
