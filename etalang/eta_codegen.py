@@ -147,7 +147,7 @@ def compile_eta(jsobj, print):
     metadata += dpps_all
     metadata += ris_all
     metadata += vis_all
-    metadata = json.dumps(metadata)
+    
     print("Compilation succeeded.\n")
     print("\n")
     return code_per_groupings, var_per_groupings, metadata

@@ -40,6 +40,24 @@ class ETA():
     def __init__(self):
         self.eta_compiled_code = None
         self.usercode_vars = None
+        self.recipe_metadata = None
+    def recipe_update(self):
+        self.send(json.dumps(self.recipe_metadata), "table")
+    def recipe_set_parameter(self,key,value):
+        create=True
+        for each in self.recipe_metadata:
+            if each["name"].strip()==key:
+                each["config"]=value
+                create=False
+        
+        if create:
+            self.recipe_metadata.append({"id":"var_template"+str(int(time.time()) ),"name":key,"config":value,"group":"main","info":""})
+        self.recipe_update()
+
+    def recipe_get_parameter(self,key):
+        for each in self.recipe_metadata:
+            if each["name"].strip()==key:
+                return each["config"]
 
     def compile_eta(self, etaobj=None, verbose=False):
         try:
@@ -47,10 +65,8 @@ class ETA():
                 info_emitter = self.send
             else:
                 info_emitter = print
-            code, vars, metadata = eta_codegen.compile_eta(etaobj, info_emitter)
-            self.send(metadata, "table")
-            self.eta_compiled_code = code
-            self.usercode_vars = vars
+            self.eta_compiled_code, self.usercode_vars, self.recipe_metadata = eta_codegen.compile_eta(etaobj, info_emitter)
+            self.recipe_update()
             # clear cache
             self.mainloop = {}
             self.thin_wrapper = {}
