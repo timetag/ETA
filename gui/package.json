@@ -21,6 +21,9 @@
       ]
     },
     "win": {
+      "extraFiles": [
+        "ETA-Backend.zip"
+      ]
       "publish": [
         "github"
       ]
