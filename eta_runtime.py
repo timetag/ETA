@@ -51,7 +51,7 @@ class ETA():
                 create=False
         
         if create:
-            self.recipe_metadata.append({"id":"var_template"+str(int(time.time()) ),"name":key,"config":value,"group":"main","info":""})
+            self.recipe_metadata.append({"id":"var_template"+str(int(time.time()) ),"name":key,"group":"main","config":value,"info":""})
         self.recipe_update()
 
     def recipe_get_parameter(self,key):
