@@ -97,6 +97,7 @@ build_script:
     --exclude-module scipy
     --exclude-module flask
     --hidden-import tkinter 
+    --hidden-import tkinter.filedialog
     --hidden-import timeit
     --hidden-import http
     --hidden-import http.cookies
