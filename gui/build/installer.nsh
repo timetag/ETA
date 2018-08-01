@@ -1,6 +1,6 @@
-!macro customInit
-   StrCpy $0 "ETA-Backend.exe"
-   KillProc::KillProcesses
+!macro customRemoveFiles
+   ExecWait "taskkill /f /im ETA-Backend.exe"
+   Delete "$instdir\ETA-Backend.exe"
 !macroend
 
 !macro customInstall
