@@ -1,4 +1,8 @@
- !macro customInstall
+!macro customInstall
    !system "echo '' > ${BUILD_RESOURCES_DIR}/customInstall"
-   CreateShortcut "$desktop\ETA-Backend.lnk" "$instdir\resources\ETA-Backend.exe"
- !macroend
+   CreateShortcut "$desktop\ETABackend.lnk" "$instdir\resources\ETA-Backend.exe"
+!macroend
+
+!macro customUnInstall
+   Delete "$desktop\ETABackend.lnk"
+!macroend
