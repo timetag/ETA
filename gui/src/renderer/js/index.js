@@ -20,14 +20,22 @@ d3.select('#btn_save_exp').on('click', function() {
     	d3.select('#btn_settings').on('click')();
 });
 
-d3.select('#btn_load_exp').on('click', function() {
+d3.select('#btn_new_exp').on('click', function() {
     // Invoked when a file is loaded
     
+    on_file_loaded("noname",default_new);
+
+});
+
+d3.select('#btn_load_exp').on('click', function() {
+
     // Invoked when a file is selected in dialog
     function on_file_selected() {
         var f = this.files[0];
         var reader = new FileReader();
         reader.onload = function(){
+            // Invoked when a file is loaded
+    
             on_file_loaded(f.name,JSON.parse(this.result));
         };
         reader.readAsText(f);
@@ -108,7 +116,7 @@ $('#add-vi').click(function() {
             create_item("vi_template")}
 );
 $('#add-var').click(function() {
-            create_item("var_template","NewVariable","main","value")}
+            create_item("var_template","NewParameter","main","value")}
 );
 $('#add-dpp').click(function() {
             create_item("dpp_template","NewPanel")}
