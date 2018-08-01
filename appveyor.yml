@@ -33,8 +33,6 @@ install:
     
     gothub info -u timetag -r ETA
 
-    Install-Product node 8 x64
-
     python -m pip install --disable-pip-version-check --upgrade pip
 
     python -m pip --version
@@ -73,6 +71,8 @@ install:
     
     python -m pip install pandas --upgrade
 
+    Install-Product node 8 x64
+    
     cd gui
 
     yarn
@@ -110,7 +110,7 @@ build_script:
     -i icon.ico  
     ETA.py
 
-    move %APPVEYOR_BUILD_FOLDER%\dist\ETA.exe %APPVEYOR_BUILD_FOLDER%\ETA-Backend-%ETA_VER%.exe
+    move %APPVEYOR_BUILD_FOLDER%\dist\ETA.exe %APPVEYOR_BUILD_FOLDER%\gui\ETA-Backend.exe
     
     echo building GUI
     
@@ -126,11 +126,11 @@ build_script:
 
 test_script:
 - cmd: >-
-    7z a ETA_Install-win64.zip "c:\python36-x64\lib\site-packages"
+    7z a ETA_LIB-win64.zip "c:\python36-x64\lib\site-packages"
     
     7z a ETA_Install-win64.zip %APPVEYOR_BUILD_FOLDER%\*.exe
 
-    gothub upload -u timetag -r ETA -t "%ETA_VER%" -f "ETA-Backend-%ETA_VER%.exe" -n "ETA-Backend-%ETA_VER%.exe" --replace
-
+    gothub upload -u timetag -r ETA -t "%ETA_VER%" -f "ETA_LIB-win64.zip"  -n "ETA_LIB-win64.zip" --replace
+     
     gothub upload -u timetag -r ETA -t "%ETA_VER%" -f "ETA_Install-win64.zip"  -n "ETA_Install-win64.zip" --replace
      
