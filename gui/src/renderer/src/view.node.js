@@ -15,7 +15,7 @@ View.prototype.node = (function () {
          * Default geometrical values
          * @type {Number}
          */
-        this.RADIUS = 16;
+        this.RADIUS = 30;
         this.MARKED_RADIUS = this.RADIUS - 3;
         this.INITIAL_LENGTH = this.RADIUS * 1.6;
 

@@ -277,8 +277,6 @@
                 codegen=`#ERROR\n`+aceeditor.getValue();
                 break;
           }
-          
-          
           editor.graph.set_usercode(codegen);
           aceeditor.setValue(codegen);
           aceeditor.clearSelection();
@@ -301,8 +299,6 @@
   });
 
   function BIND_btn_create(btn_for1){
-     
-    console.log('#btn_create_'+btn_for1);
     $('#btn_create_'+btn_for1).on('click', (function(bth_for){
         //closure
         return function() {
