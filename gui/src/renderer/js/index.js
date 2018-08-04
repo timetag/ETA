@@ -20,12 +20,6 @@ d3.select('#btn_save_exp').on('click', function() {
     	d3.select('#btn_settings').on('click')();
 });
 
-d3.select('#btn_new_exp').on('click', function() {
-    // Invoked when a file is loaded
-    
-    on_file_loaded("noname",default_new);
-
-});
 
 d3.select('#btn_load_exp').on('click', function() {
 
@@ -116,7 +110,7 @@ $('#add-vi').click(function() {
             create_item("vi_template")}
 );
 $('#add-var').click(function() {
-            create_item("var_template","NewParameter","main","value")}
+            create_item("var_template","NewParameter","main","","value")}
 );
 $('#add-dpp').click(function() {
             create_item("dpp_template","NewPanel")}
@@ -140,6 +134,16 @@ function ri_table(form) {
 d3.select('#btn_settings').on('click',function(){
     $("#connectModal").modal({backdrop: 'static', keyboard: false});
 });
+// create menu
+$('#btn_new_exp').on('click', function() {
+    $("#create_new_Modal").modal({backdrop: 'static', keyboard: false});
+});
+$('#btn_create_new').on('click', function() {
+   // Invoked when a file is loaded
+   $("#create_new_Modal").modal('hide');
+   on_file_loaded("noname",default_new);
+});
+ 
 
 // websocket
 ws=null;

@@ -17,7 +17,7 @@ td:focus {
   color: #f00;
 }
 
-.table-up, .table-down, .table-copy,.table-remove{
+.table-up, .table-down, .table-copy,.table-remove,.table-openfile{
   color: #343a40;
   cursor: pointer;
  
