@@ -8,7 +8,7 @@
     <link rel="shortcut icon" href="favicon.ico" />
 
     <link href="css/fontawesome/css/fontawesome-all.min.css" rel="stylesheet">
-    
+
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
@@ -50,10 +50,10 @@
         <a href="#" class="menu-link" id="btn_save_exp">Save As</a>
         <a href="#" class="menu-link" id="btn_settings">Settings</a>
         <a href="#" class="menu-link" id="btn_compile">VI Checking</a>
-        <a href="https://eta.readthedocs.io/en/latest/workflow.html" class="menu-link"  target="_blank" >Help</a>
+        <a href="https://eta.readthedocs.io/en/latest/workflow.html" class="menu-link" target="_blank">Help</a>
     </div>
     <div id="svg_container">
- 		<h2 id="exp_tilte" class="bd-text-purple-bright">Experiment Setup</h2>
+        <h2 id="exp_tilte" class="bd-text-purple-bright">Experiment Setup</h2>
         <div id="table" class="table-editable">
 
             <table class="table">
@@ -61,8 +61,8 @@
                     <th class="d-none">ID</th>
                     <th>Name</th>
                     <th>Group</th>
-                    <th>Config</th>
                     <th>Info</th>
+                    <th>Config</th>
                     <th width="230em"></th>
                     <th width="150em"></th>
                 </tr>
@@ -89,91 +89,97 @@
                     <td class="d-none inst_code">invalid</td>
                     <td class="inst_name save_trig_blur riicon" contenteditable="true"></td>
                     <td class="inst_comp save_trig_blur" contenteditable="true"></td>
-                 	<td class="inst_tables save_trig_blur" contenteditable="true">N/A</td>
-                 	<td class="inst_tables"></td>
+                    <td class="inst_tables"></td>
+                    <td class="inst_tables save_trig_blur" contenteditable="true">N/A</td>
+                    <td></td>
                     <td>
+                        <span class="table-remove fas fa-trash-alt save_trig_click"></span>
+                        <span class="table-copy fas fa-copy save_trig_click "></span>
+                        <span class="table-up  fas fa-arrow-up save_trig_click "></span>
+                        <span class="table-down  fas fa-arrow-down save_trig_click"></span>
                     </td>
-                        <td>
-                            <span class="table-remove fas fa-trash-alt save_trig_click"></span>
-                            <span class="table-copy fas fa-copy save_trig_click "></span>
-                            <span class="table-up  fas fa-arrow-up save_trig_click "></span>
-                            <span class="table-down  fas fa-arrow-down save_trig_click"></span>
-                        </td>
                 </tr>
 
                 <tr class="d-none dpp_template">
                     <td class="d-none inst_code">invalid</td>
                     <td class="inst_name save_trig_blur dppicon" contenteditable="true"></td>
                     <td class="inst_comp save_trig_blur" contenteditable="true"></td>
-                   
-                        <td class="inst_tables"></td>
-                        <td class="inst_tables"></td>
-                        <td>
-  						<button class=" btn-sm btn btn-outline-dark table-dpp ">Code</button>
-  						<button class=" btn-sm btn btn-outline-dark font-weight-bold table-run ">Run</button>
-                        </td>
-                        <td>
-                            <span class="table-remove fas fa-trash-alt save_trig_click"></span>
-                            <span class="table-copy fas fa-copy save_trig_click "></span>
-                            <span class="table-up  fas fa-arrow-up save_trig_click "></span>
-                            <span class="table-down  fas fa-arrow-down save_trig_click"></span>
-                        </td>
+
+                    <td class="inst_tables"></td>
+                    <td class="inst_tables"></td>
+                    <td>
+                        <button class=" btn-sm btn btn-outline-dark table-dpp ">Code</button>
+                        <button class=" btn-sm btn btn-outline-dark font-weight-bold table-run ">Run</button>
+                    </td>
+                    <td>
+                        <span class="table-remove fas fa-trash-alt save_trig_click"></span>
+                        <span class="table-copy fas fa-copy save_trig_click "></span>
+                        <span class="table-up  fas fa-arrow-up save_trig_click "></span>
+                        <span class="table-down  fas fa-arrow-down save_trig_click"></span>
+                    </td>
                 </tr>
                 <tr class="d-none var_template">
                     <td class="d-none inst_code">invalid</td>
                     <td class="inst_name save_trig_blur varicon" contenteditable="true"></td>
                     <td class="inst_comp save_trig_blur" contenteditable="true"></td>
+                    
+                    <td class="inst_tables">
                     <td class="inst_tables save_trig_blur" contenteditable="true"></td>
-                    <td class="inst_tables"></td>
-                        <td>
-
-                        </td>
-                        <td>
-                            <span class="table-remove fas fa-trash-alt save_trig_click"></span>
-                            <span class="table-copy fas fa-copy save_trig_click "></span>
-                            <span class="table-up  fas fa-arrow-up save_trig_click "></span>
-                            <span class="table-down  fas fa-arrow-down save_trig_click"></span>
-                        </td>
+                    </td>
+                    <td>
+                            <span class="table-openfile far  fa-folder-open save_trig_click"></span>
+                    </td>
+                    <td>
+                        <span class="table-remove fas fa-trash-alt save_trig_click"></span>
+                        <span class="table-copy fas fa-copy save_trig_click "></span>
+                        <span class="table-up  fas fa-arrow-up save_trig_click "></span>
+                        <span class="table-down  fas fa-arrow-down save_trig_click"></span>
+                    </td>
                 </tr>
             </table>
-       
+
 
         </div>
 
-            <div class="row" style="margin-right: 0px; margin-left: 0px; ">
-                <div class="px-2">
-                    <button id="add-vi" class="btn btn-outline-dark save_trig_click"> <i class="inst_name viicon"></i> Virtual Instrument</button>
+        <div class="row" style="margin-right: 0px; margin-left: 0px; ">
+            <div class="px-2">
+                <button id="add-vi" class="btn btn-outline-dark save_trig_click">
+                    <i class="inst_name viicon"></i> Virtual Instrument</button>
+            </div>
+            <div class="px-2">
+                <button id="add-ri" class="btn btn-outline-dark save_trig_click">
+                    <i class="inst_name riicon"></i> Acquisition Device</button>
+            </div>
+            <div class="px-2">
+                <button id="add-dpp" class="btn btn-outline-dark  save_trig_click">
+                    <i class="inst_name dppicon"></i> Display Panel</button>
+            </div>
+            <div class="px-2">
+                <button id="add-var" class="btn btn-outline-dark save_trig_click">
+                    <i class="inst_name varicon"></i> Parameter</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="remoteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">ETA Backend</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-                <div class="px-2">
-                    <button id="add-ri" class="btn btn-outline-dark save_trig_click"> <i class="inst_name riicon"></i> Acquisition Device</button>
-                </div>
-                <div class="px-2">
-                    <button id="add-dpp" class="btn btn-outline-dark  save_trig_click"> <i class="inst_name dppicon"></i>  Display Panel</button>
-                </div>
-                <div class="px-2">
-                    <button id="add-var" class="btn btn-outline-dark save_trig_click"> <i class="inst_name varicon"></i> Parameter</button>
+                <div class="modal-body" id="remoteLOG"> </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-dark btn_discard d-none" id="btn_discardresult">Discard</button>
+                    <button type="button" class="btn btn-outline-dark d-none font-weight-bold" id="btn_viewresult">View Result</button>
                 </div>
             </div>
+        </div>
     </div>
-<div class="modal fade" id="remoteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" >
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">ETA Backend</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body" id="remoteLOG">  </div>
-
-      <div class="modal-footer">
-        <button type="button" class="btn btn-outline-dark btn_discard d-none" id="btn_discardresult" >Discard</button>
-        <button type="button" class="btn btn-outline-dark d-none font-weight-bold" id="btn_viewresult">View Result</button>
-      </div>
-    </div>
-  </div>
-</div>
- <div class="modal fade" id="riModal" tabindex="-1" role="dialog">
+    <div class="modal fade" id="riModal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -192,8 +198,8 @@
                         <label for="ri2">Detector Channels</label>
                         <input type="number" class="form-control" id="ri2" required value="4">
                         <label for="ri3">Marker Channels</label>
-                        <input type="number" class="form-control" id="ri3" required  value="0">
-                       
+                        <input type="number" class="form-control" id="ri3" required value="0">
+
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-outline-dark" id="ri_create">Create</button>
@@ -203,7 +209,7 @@
         </div>
     </div>
 
-     <div class="modal fade" id="connectModal" tabindex="-1" role="dialog">
+    <div class="modal fade" id="connectModal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -212,29 +218,50 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                    <div class="modal-body" id="expcfg">
+                <div class="modal-body" id="expcfg">
 
-								    <label for="exp_name">Experiment Name</label>
-			                    	<input id="exp_name" class="form-control" type="text" value="noname" required>
-			                        <div class="invalid-feedback">
-			                            Please input experiment name.
-			                        </div>
-			                    
-			                    	<label for="ws">ETA Backend URL</label>
-			                    	
-			                        <input id="ws" class="form-control " type="url" value="ws://host[:port]" required>
-			                        <div class="invalid-feedback">
-			                            Connection to ETA backend is lost.
-			                        </div>
+                    <label for="exp_name">Experiment Name</label>
+                    <input id="exp_name" class="form-control" type="text" value="noname" required>
+                    <div class="invalid-feedback">
+                        Please input experiment name.
+                    </div>
 
+                    <label for="ws">ETA Backend URL</label>
+
+                    <input id="ws" class="form-control " type="url" value="ws://host[:port]" required>
+                    <div class="invalid-feedback">
+                        Connection to ETA backend is lost.
                     </div>
-                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-outline-dark" id="btn_connect">Connect</button>
-                    </div>
-                
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-outline-dark" id="btn_connect">Connect</button>
+                </div>
+
             </div>
         </div>
     </div>
+    <div class="modal fade" id="create_new_Modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">New Recipe</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" >
+                        <h5>Do you want to create a new recipe?</h5>
+                        <h>Save the current recipe before continue.</h> 
+    
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-outline-dark" id="btn_create_new">Create</button>
+                    </div>
+    
+                </div>
+            </div>
+        </div>
     <script src="js/default_new.js"></script>
     <script src="js/index.js"></script>
 </body>
