@@ -13,11 +13,6 @@ function TABLEBIND(eta_index_table) {
         return $td;
     }
 
-    $('.table-openfile').click(function() {
-        var $td = $(this).parents('tr').find('td');
-        $td.eq(3).text($td.eq(4).text());
-        
-    });
 
     $('.table-copy').click(function() {
         var $clone = $(this).parents('tr').clone(true);

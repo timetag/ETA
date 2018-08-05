@@ -41,8 +41,10 @@ class ETA():
         self.eta_compiled_code = None
         self.usercode_vars = None
         self.recipe_metadata = None
+
     def recipe_update(self):
         self.send(json.dumps(self.recipe_metadata), "table")
+
     def recipe_set_parameter(self,key,value):
         create=True
         for each in self.recipe_metadata:
@@ -51,13 +53,25 @@ class ETA():
                 create=False
         
         if create:
-            self.recipe_metadata.append({"id":"var_template"+str(int(time.time()) ),"name":key,"group":"main","config":value,"info":""})
+            self.recipe_metadata.append({"id":"var_template"+str(int(time.time()) ),"name":key,"group":"main","info":"","config":value})
         self.recipe_update()
 
     def recipe_get_parameter(self,key):
         for each in self.recipe_metadata:
             if each["name"].strip()==key:
                 return each["config"]
+    def recipe_set_filename(self,id,key):
+        import tkinter as tk
+        from tkinter.filedialog import askopenfilename
+        root = tk.Tk()
+        root.update()
+        root.withdraw()
+        root.attributes("-toolwindow", 1)
+        root.wm_attributes("-topmost", 1)
+        path = askopenfilename(filetypes=[("Time Tag File","*.*")])
+        root.destroy()
+        print(key)
+        self.recipe_set_parameter(key,path)
 
     def compile_eta(self, etaobj=None, verbose=False):
         try:
@@ -77,7 +91,7 @@ class ETA():
             self.send("Compilation failed.")
             self.logger.error(str(e), exc_info=True)
 
-    def process_eta(self, etaobj=None, id="code", group="grp"):
+    def process_eta(self, etaobj=None, id="code", group="main"):
         if self.displaying:
             self.send("Display is running at http://{}:5000.".format(self.hostip))
             self.send(
@@ -113,7 +127,6 @@ class ETA():
                 self.send("\n")
                 self.send("Don't forget to save the recipe and SHARE it on ETAHub!")
 
-    # user code API
     def display(self, app=None):
         if app is None:
             self.send("No display dashboard crated. Use 'app = dash.Dash() to create a Dash graph.' .", "err")
