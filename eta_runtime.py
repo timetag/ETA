@@ -1,4 +1,11 @@
-import multiprocessing, time, threading, json, sys, os, logging, copy
+import multiprocessing
+import time
+import threading
+import json
+import sys
+import os
+import logging
+import copy
 # multiprocessing.log_to_stderr(logging.DEBUG)
 import jit_linker
 from parser_header import parse_header
@@ -42,25 +49,30 @@ class ETA():
         self.usercode_vars = None
         self.recipe_metadata = None
 
+    def send(self, text, endpoint="log"):
+        self.server.send_message_to_all(json.dumps([endpoint, str(text)]))
+
     def recipe_update(self):
         self.send(json.dumps(self.recipe_metadata), "table")
 
-    def recipe_set_parameter(self,key,value):
-        create=True
+    def recipe_set_parameter(self, key, value):
+        create = True
         for each in self.recipe_metadata:
-            if each["name"].strip()==key:
-                each["config"]=value
-                create=False
-        
+            if each["name"].strip() == key:
+                each["config"] = value
+                create = False
+
         if create:
-            self.recipe_metadata.append({"id":"var_template"+str(int(time.time()) ),"name":key,"group":"main","info":"","config":value})
+            self.recipe_metadata.append({"id": "var_template"+str(
+                int(time.time())), "name": key, "group": "main", "info": "", "config": value})
         self.recipe_update()
 
-    def recipe_get_parameter(self,key):
+    def recipe_get_parameter(self, key):
         for each in self.recipe_metadata:
-            if each["name"].strip()==key:
+            if each["name"].strip() == key:
                 return each["config"]
-    def recipe_set_filename(self,id,key):
+
+    def recipe_set_filename(self, id, key):
         import tkinter as tk
         from tkinter.filedialog import askopenfilename
         root = tk.Tk()
@@ -68,10 +80,10 @@ class ETA():
         root.withdraw()
         root.attributes("-toolwindow", 1)
         root.wm_attributes("-topmost", 1)
-        path = askopenfilename(filetypes=[("Time Tag File","*.*")])
+        path = askopenfilename(filetypes=[("Time Tag File", "*.*")])
         root.destroy()
         print(key)
-        self.recipe_set_parameter(key,path)
+        self.recipe_set_parameter(key, path)
 
     def compile_eta(self, etaobj=None, verbose=False):
         try:
@@ -79,7 +91,8 @@ class ETA():
                 info_emitter = self.send
             else:
                 info_emitter = print
-            self.eta_compiled_code, self.usercode_vars, self.recipe_metadata = eta_codegen.compile_eta(etaobj, info_emitter)
+            self.eta_compiled_code, self.usercode_vars, self.recipe_metadata = eta_codegen.compile_eta(
+                etaobj, info_emitter)
             self.recipe_update()
             # clear cache
             self.mainloop = {}
@@ -104,7 +117,8 @@ class ETA():
             self.eta_compiled_code = None
             self.compile_eta(etaobj, verbose=True)
             if self.eta_compiled_code is not None:
-                self.send("Executing code in Display Panel of group {}...".format(group))
+                self.send(
+                    "Executing code in Display Panel of group {}...".format(group))
                 try:
                     glob = {"eta": self}
                     # side configuration panel
@@ -116,25 +130,31 @@ class ETA():
                 except Exception as e:
                     if (type(e).__name__ == "TypingError"):
                         self.logger.error(str(e), exc_info=True)
-                        self.send("An internal ETA error has occurred when JIT linking the program.", "err")
+                        self.send(
+                            "An internal ETA error has occurred when JIT linking the program.", "err")
                         self.send("Send your recipe to Github Issues.")
                     else:
 
-                        self.send('[' + str(type(e).__name__) + ']' + str(e), "err")
+                        self.send(
+                            '[' + str(type(e).__name__) + ']' + str(e), "err")
                         self.logger.error(str(e), exc_info=True)
-                        self.send("This error comes from user-code in the display panel.")
+                        self.send(
+                            "This error comes from user-code in the display panel.")
                     return
                 self.send("\n")
-                self.send("Don't forget to save the recipe and SHARE it on ETAHub!")
+                self.send(
+                    "Don't forget to save the recipe and SHARE it on ETAHub!")
 
     def display(self, app=None):
         if app is None:
-            self.send("No display dashboard crated. Use 'app = dash.Dash() to create a Dash graph.' .", "err")
+            self.send(
+                "No display dashboard crated. Use 'app = dash.Dash() to create a Dash graph.' .", "err")
         else:
             self.send("ETA.DISPLAY: Starting Display Panel.")
             try:
                 if str(type(app)) == "<class 'dash.dash.Dash'>":
                     from flask import request
+
                     @app.server.route('/shutdown', methods=['GET'])
                     def shutdown():
                         func = request.environ.get('werkzeug.server.shutdown')
@@ -150,7 +170,8 @@ class ETA():
                             'Access-Control-Allow-Origin', '*')
                         return response
 
-                    thread2 = threading.Thread(target=app.server.run, kwargs={'host': "0.0.0.0"})
+                    thread2 = threading.Thread(
+                        target=app.server.run, kwargs={'host': "0.0.0.0"})
                     thread2.daemon = True
                     thread2.start()
                 else:
@@ -167,13 +188,15 @@ class ETA():
                     import asyncio
                     asyncio.set_event_loop(asyncio.new_event_loop())
 
-                    bokserver = Server({"/": app, "/shutdown": shutdown}, address="0.0.0.0", port=5000)
+                    bokserver = Server(
+                        {"/": app, "/shutdown": shutdown}, address="0.0.0.0", port=5000)
                     bokserver.start()
                     thread3 = threading.Thread(target=bokserver.io_loop.start)
                     thread3.daemon = True
                     thread3.start()
 
-                self.send("ETA.DISPLAY: Display Panel is running at http://{}:5000.".format(self.hostip))
+                self.send(
+                    "ETA.DISPLAY: Display Panel is running at http://{}:5000.".format(self.hostip))
                 self.send("http://{}:5000".format(self.hostip), "dash")
                 self.displaying = True
             except Exception as e:
@@ -186,11 +209,13 @@ class ETA():
             "ETA.SIMPLE_CUT: The file '{filename}' is cut into {cuts} equal size sections. ".format(filename=filename,
                                                                                                     cuts=cuts))
         if cuts == 1:
-            self.send("ETA.SIMPLE_CUT: You can increase the cuts to enable multi-threading.")
+            self.send(
+                "ETA.SIMPLE_CUT: You can increase the cuts to enable multi-threading.")
 
         ret1, out = parse_header(bytearray(filename, "ascii"), format)
         if ret1 is not 0:
-            raise ValueError("ETA.SIMPLE_CUT: File {} is not found or incorrect, err code {}.".format(filename, ret1))
+            raise ValueError(
+                "ETA.SIMPLE_CUT: File {} is not found or incorrect, err code {}.".format(filename, ret1))
         BytesofRecords = out[-2]
         TTF_header_offset = out[0]-BytesofRecords-BytesofRecords
         TTF_filesize = out[1]
@@ -219,9 +244,11 @@ class ETA():
             if ret1 is not 0:
                 raise ValueError(
                     "ETA.SIMPLE_CUT: File {} is not found or incorrect, err code {}.".format(filename, ret1))
-            cut = [[out[0], out[0], out[2], out[3], out[4], out[5], out[6], filename]]
+            cut = [[out[0], out[0], out[2], out[3],
+                    out[4], out[5], out[6], filename]]
         if len(cut) != 1:
-            raise ValueError("Incremental cut must take a list with only one cut in it.")
+            raise ValueError(
+                "Incremental cut must take a list with only one cut in it.")
 
         cut[0][0] = cut[0][1]
         BytesofRecords = cut[0][-3]
@@ -247,7 +274,8 @@ class ETA():
                 watied_for += 0.1
                 if watied_for > timeout:
                     if raiseerr:
-                        raise ValueError("Timeout when wating for the next cut.")
+                        raise ValueError(
+                            "Timeout when wating for the next cut.")
                     return False
         return True
 
@@ -267,7 +295,8 @@ class ETA():
         if len(cuts_params) == 1:
 
             if not (group in self.eta_compiled_code):
-                self.send("Try to eta.run() on a non-existing group {}.".format(group), "err")
+                self.send(
+                    "Try to eta.run() on a non-existing group {}.".format(group), "err")
                 return None
             if not (group in self.mainloop):
                 print("Compiling...")
@@ -301,7 +330,8 @@ class ETA():
                 print("\nInitializing context.")
                 for each_caller_parms in cuts_params:
                     if not self.validate_cut(each_caller_parms):
-                        raise ValueError("Invalid section for cut." + str(each_caller_parms))
+                        raise ValueError(
+                            "Invalid section for cut." + str(each_caller_parms))
                     vals.append(initializer(each_caller_parms))
             else:
                 print("\nUpdating context from last_ctxs.")
@@ -309,12 +339,13 @@ class ETA():
                 for each_caller_parms_id in range(len(cuts_params)):
                     each_caller_parms = cuts_params[each_caller_parms_id]
                     if not self.validate_cut(each_caller_parms):
-                        raise ValueError("Invalid section for cut." + str(each_caller_parms))
+                        raise ValueError(
+                            "Invalid section for cut." + str(each_caller_parms))
                     vals[each_caller_parms_id][1][0:7] = cuts_params[each_caller_parms_id][0:7]
 
                     vals[each_caller_parms_id][1][11] = 1  # resuming
 
-                #print(vals[each_caller_parms_id][1])
+                # print(vals[each_caller_parms_id][1])
             print("Executing analysis program...")
             for val in vals:
                 thread1 = ETAThread(func=mainloop, args=val)
@@ -334,10 +365,12 @@ class ETA():
                 if group in self.eta_compiled_code:
                     each.append(self.eta_compiled_code[group])
                 else:
-                    self.send("Try to eta.run() on a non-existing group {}.".format(group), "err")
+                    self.send(
+                        "Try to eta.run() on a non-existing group {}.".format(group), "err")
                     return None
             if True:
-                self.send("WARNING: Context or program caching are not yet supported in multi-threading mode.")
+                self.send(
+                    "WARNING: Context or program caching are not yet supported in multi-threading mode.")
                 cores = min(len(cuts_params), multiprocessing.cpu_count())
                 self.pool = multiprocessing.Pool(cores)
                 rets = self.pool.map(external_wrpper, cuts_params)
@@ -356,7 +389,8 @@ class ETA():
                     rets[0][each_graph] += rets[each][each_graph]
             result = rets[0]
             if verbose:
-                self.send('ETA.RUN: Aggregating {} results.'.format(len(rets)), "stopped")
+                self.send('ETA.RUN: Aggregating {} results.'.format(
+                    len(rets)), "stopped")
         else:
             print("Forwarding results.")
             result = rets
