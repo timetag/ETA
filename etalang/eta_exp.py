@@ -210,7 +210,7 @@ class HISTOGRAM():
                     "single start mutiple stop is not currently supported.")
             self.EMIT_LINE(triggers, code)
 
-    def record_single(self, triggers, histogram, *therest):
+    def record_simple(self, triggers, histogram, *therest):
         histogram = self.assert_syms(histogram, "histogram")
         histogram_info = self.get_type_of_syms(
             histogram, register=False, fulltype=True)
@@ -256,14 +256,14 @@ class HISTOGRAM():
             histogram, register=False, fulltype=True)
         dims = histogram_info[1]
         if len(dims) != 1:
-            self.record_single(tirggers,histogram,*therest)
+            self.record_simple(tirggers,histogram,*therest)
         else:
             clock_name = self.assert_syms(therest[0], "clock")
             clock_fulltype = self.get_type_of_syms(clock_name, fulltype=True)
             if clock_fulltype[1] > 1 or  clock_fulltype[2] > 1:
                 self.record_all(tirggers,histogram,clock_name)
             else:
-                self.record_single(tirggers,histogram,clock_name)
+                self.record_simple(tirggers,histogram,clock_name)
 class CLOCK():
     def clock_init(self, sym, type):
         pass

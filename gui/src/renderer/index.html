@@ -245,24 +245,37 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">New Recipe</h5>
+                    <h5 class="modal-title">New Experiment</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    <h5>Do you want to create a new recipe?</h5>
-                    <h>Save the current recipe before continue.</h>
-
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-outline-dark" id="btn_create_new">Create</button>
-                </div>
-
+                <form id="create_new_form">
+                    <div class="modal-body">
+                        <h5>What do you want to start with?</h5>
+                        <h>Save the current recipe before continue.</h>
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" id="radio1" name="recipe" value="marker_counter.eta" checked /><label  class="custom-control-label" for="radio1">Count Markers</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" id="radio2" name="recipe" value="hist2d.eta" /><label  class="custom-control-label" for="radio2">Two-time Correlation</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" id="radio3" name="recipe" value="correlation.eta" /><label class="custom-control-label" for="radio3">Correlations</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                                <input class="custom-control-input" type="radio" id="radio3" name="recipe" value="realtime_improved.eta" /><label class="custom-control-label" for="radio3">Real-Time Analysis</label>
+                        </div>
+                        <h> <a href="https://eta.readthedocs.io/en/latest/recipes.html" target="_blank">Learn more about the pre-made recipies...</a></h>
+                        
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-outline-dark" id="btn_create_new">Create</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-    <script src="js/default_new.js"></script>
     <script src="js/index.js"></script>
 </body>
 
