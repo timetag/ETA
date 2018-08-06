@@ -4,14 +4,11 @@ dist
 __pycache__/
 *.pyc
 *.exe
-*.tensor
 *.sh
 *.ipynb
-llvm.txt
 *.ptu
 *.bin
 *.txt
-*.png
 *.eps
-*.eta
-etaserver*
+llvm.txt
+server.eta
