@@ -2,7 +2,8 @@ import multiprocessing
 
 multiprocessing.freeze_support()
 
-import os, sys
+import os
+import sys
 import ws_broadcast
 
 while True:
@@ -15,11 +16,12 @@ while True:
         print("ETA_LIB is not found.")
         default_folder = os.path.dirname(sys.executable)+"\\site-packages"
         print("Please use a full path like: 'C:\\...\\site-packages'.")
-        os.environ["ETA_LIB"] = input("Specify the path to ETA_LIB ({}):".format(default_folder)) or default_folder
+        os.environ["ETA_LIB"] = input(
+            "Specify the path to ETA_LIB ({}):".format(default_folder)) or default_folder
         os.system('setx ETA_LIB "' + os.environ["ETA_LIB"] + '"')
 
 try:
-    if env_dist.count("\\")<6:
+    if env_dist.count("\\") < 6:
         raise ValueError("Path should contain more than 6 slashes.")
     from eta_runtime import *
 except Exception as e:
@@ -32,7 +34,7 @@ except Exception as e:
 
 class WSSERVER(ETA):
 
-    def __init__(self, ):
+    def __init__(self):
         import logging
         self.max_frontend = 23
         self.logger = logging.getLogger(__name__)
@@ -44,14 +46,16 @@ class WSSERVER(ETA):
             if self.hostip is not None:
                 break
             else:
-                os.environ["ETA_HOST"] = input("Specify the IP address of this computer (localhost):") or "localhost"
+                os.environ["ETA_HOST"] = input(
+                    "Specify the IP address of this computer (localhost):") or "localhost"
                 os.system('setx ETA_HOST "' + os.environ["ETA_HOST"] + '"')
         while True:
             self.hostport = os.environ.get('ETA_PORT')
             if self.hostport is not None:
                 break
             else:
-                os.environ["ETA_PORT"] = str(int(input("Specify the port to be used by ETA Backend (5678):")or "5678"))
+                os.environ["ETA_PORT"] = str(
+                    int(input("Specify the port to be used by ETA Backend (5678):")or "5678"))
                 os.system('setx ETA_PORT "' + os.environ["ETA_PORT"] + '"')
 
         self.displaying = False
@@ -73,9 +77,6 @@ class WSSERVER(ETA):
         self.server.set_fn_message_received(new_message)
         self.server.run_forever()
         self.eta_compiled_code = None
-
-    def send(self, text, endpoint="log"):
-        self.server.send_message_to_all(json.dumps([endpoint, str(text)]))
 
 
 if __name__ == '__main__':

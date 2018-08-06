@@ -3,7 +3,8 @@ from . import etacode_parser
 from . import graph_parser
 from . import code_template
 import textwrap
-import json, copy
+import json
+import copy
 
 
 def compile_eta(jsobj, print):
@@ -54,7 +55,8 @@ def compile_eta(jsobj, print):
     for instgroup in vi_groupings:
         # compile ri
         if not(instgroup in ri_groupings):
-            raise ValueError("Instrument group {} doesn't have any real instruments. Create an accusition device.".format(instgroup))
+            raise ValueError(
+                "Instrument group {} doesn't have any real instruments. Create an accusition device.".format(instgroup))
         ris = ri_groupings[instgroup]
 
         num_rslot = 0
@@ -67,7 +69,9 @@ def compile_eta(jsobj, print):
             elif isinstance(config, list):
                 thiscount = config[0]
             real_chns_per_rslots.append(thiscount)
-            each["info"] = "📤 " + json.dumps([i for i in range(num_rchns, num_rchns + thiscount)])
+            each["info"] = "📤 " + \
+                json.dumps(
+                    [i for i in range(num_rchns, num_rchns + thiscount)])
 
             num_rchns += thiscount
             num_rslot += 1
@@ -92,7 +96,8 @@ def compile_eta(jsobj, print):
                 for eachvar in var_groupings[instgroup]:
                     varkey = eachvar["name"]
                     varvalue = eachvar["config"]
-                    usercode=usercode.replace("`{}`".format(varkey),varvalue)
+                    usercode = usercode.replace(
+                        "`{}`".format(varkey), varvalue)
             # parse user code
 
             intp = etacode_parser.Parser(usercode, [each])
@@ -112,9 +117,6 @@ def compile_eta(jsobj, print):
             # print(each)
             etavm.exec_eta(each)
 
-
-
-
         # generates infos
         num_vslot = 0
         for each in etavm.graphs:
@@ -132,13 +134,12 @@ def compile_eta(jsobj, print):
         num_vslot += 1
         num_vslot = max(num_vslot, 0)
 
-
         etavm.check_output()
-        defines = etavm.check_defines() # defines external states for systems
+        defines = etavm.check_defines()  # defines external states for systems
         mainloop, init_code, deinit_code, global_init_code = etavm.dump_code()
         onefile = code_template.get_onefile_loop(defines,
-                                            mainloop, init_code, deinit_code, global_init_code,
-                                            num_rslot=1, num_rchns=num_rchns, num_vslot=num_vslot)
+                                                 mainloop, init_code, deinit_code, global_init_code,
+                                                 num_rslot=1, num_rchns=num_rchns, num_vslot=num_vslot)
         code_per_groupings[instgroup] = onefile
 
     # update metadata
@@ -147,7 +148,7 @@ def compile_eta(jsobj, print):
     metadata += dpps_all
     metadata += ris_all
     metadata += vis_all
-    
+
     print("Compilation succeeded.\n")
     print("\n")
     return code_per_groupings, var_per_groupings, metadata
