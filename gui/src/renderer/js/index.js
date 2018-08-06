@@ -143,16 +143,25 @@ ri_table(document.getElementById('ri_table'))
 d3.select('#btn_settings').on('click', function () {
     $("#connectModal").modal({ backdrop: 'static', keyboard: false });
 });
-// create menu
+
+// new dialog
+
 $('#btn_new_exp').on('click', function () {
     $("#create_new_Modal").modal({ backdrop: 'static', keyboard: false });
 });
-$('#btn_create_new').on('click', function () {
-    // Invoked when a file is loaded
-    $("#create_new_Modal").modal('hide');
-    on_file_loaded("noname", default_new);
-});
 
+document.querySelector("#create_new_form").addEventListener("submit", function(event) {
+    $("#create_new_Modal").modal('hide');
+    var data = new FormData(document.querySelector("#create_new_form"));
+    for (const entry of data) {
+        $.getJSON('./js/recipes/'+entry[1], function(data) {
+                on_file_loaded("noname", data);
+        });
+        
+    };
+    event.preventDefault();
+    event.stopPropagation();
+}, false);
 
 // websocket
 ws = null;
