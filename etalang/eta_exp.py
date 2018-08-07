@@ -42,15 +42,15 @@ class TABLE():
 class VFILE():
     def vfile_init(self, sym, type):
         self.EMIT_LINE("uettp_initial", """
-        eta_ret += VFILE_init(nb.int64(vfile_counter),nb.int64({buffer_size}),ffi.from_buffer({vfile2}),nb.int64(1))
-        vfile_counter+=1
-        """.format(vfile2=sym + "_vfile", buffer_size=type[1]))
+        eta_ret += VFILE_init(nb.int64({chn}-eta_num_rchns),nb.int64({buffer_size}),ffi.from_buffer({vfile2}),nb.int64(1))
+        """.format(vfile2=type[1], buffer_size=type[2],chn=type[3]))
 
-    def VFILE(self, triggers, name, size="800000"):
+    def VFILE(self, triggers, chn, size="800000"):
         size = int(ast.literal_eval(size))
-        self.define_syms(
-            name + "_vfile", ["table", "sum", size], register=True)
-        self.define_syms(name, ["vfile", size])
+        name = "vchn"+str(chn)
+        tablename =  name + "_vfile"
+        self.define_syms(tablename, ["table", "sum", size], register=True)
+        self.define_syms(name, ["vfile",tablename,size,chn])
 
 
 class RECORDER():
@@ -558,7 +558,7 @@ class Graph(INTEGER, TABLE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENCE):
 
     def emit(self, triggers, chn, waittime=0, period=0, repeat=1):
         chn = int(chn)
-        self.VFILE(triggers, "vchn{}".format(chn))
+        self.VFILE(triggers, chn)
         repeat = int(repeat)
         waittime = int(waittime)
         period = int(period)
