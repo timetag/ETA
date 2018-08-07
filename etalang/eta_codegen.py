@@ -63,7 +63,11 @@ def compile_eta(jsobj, print):
         num_rchns = 0
         real_chns_per_rslots = []
         for each in ris:
-            config = json.loads(each["config"])
+            try:
+                config = json.loads(each["config"])
+            except Exception as ex:
+                raise ValueError("The recipe is corrupted or unsupported. \n\r If you are trying a recipe from a previous version of ETA,  please refer to the Download page for updating your recipe. \n\r "+str(ex))
+
             if isinstance(config, int):
                 thiscount = config
             elif isinstance(config, list):
