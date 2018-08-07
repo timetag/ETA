@@ -99,10 +99,10 @@ $('.table-run').click(function () {
     var $td = $row.find('td');
     process_eta($td.eq(0).text(), $td.eq(2).text());
 });
-$('.table-openfile').click(function() {
+$('.table-openfile').click(function () {
     var $td = $(this).parents('tr').find('td');
-    
-    recipe_set_filename($td.eq(0).text(),$td.eq(1).text())
+
+    recipe_set_filename($td.eq(0).text(), $td.eq(1).text())
 });
 // Tooltip and buttons
 d3.select('#btn_backend').on('click', function () {
@@ -150,14 +150,14 @@ $('#btn_new_exp').on('click', function () {
     $("#create_new_Modal").modal({ backdrop: 'static', keyboard: false });
 });
 
-document.querySelector("#create_new_form").addEventListener("submit", function(event) {
+document.querySelector("#create_new_form").addEventListener("submit", function (event) {
     $("#create_new_Modal").modal('hide');
     var data = new FormData(document.querySelector("#create_new_form"));
     for (const entry of data) {
-        $.getJSON('./js/recipes/'+entry[1]+".eta", function(data) {
-                on_file_loaded(entry[1], data);
+        $.getJSON('./js/recipes/' + entry[1] + ".eta", function (data) {
+            on_file_loaded(entry[1], data);
         });
-        
+
     };
     event.preventDefault();
     event.stopPropagation();
@@ -310,10 +310,9 @@ function process_eta(id, group) {
 // recipe_set_filename
 function recipe_set_filename(id, key) {
     if (check_connectivity()) {
-        d3.select('#btn_compile').on('click')();
         eta_linker_result = export_localstorage();
         if (eta_linker_result) {
-            var rpcobj = { 'method': "recipe_set_filename", 'args': [ id, key] };
+            var rpcobj = { 'method': "recipe_set_filename", 'args': [eta_linker_result, id, key] };
             ws.send(JSON.stringify(rpcobj));
         }
     }

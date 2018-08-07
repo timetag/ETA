@@ -72,18 +72,20 @@ class ETA():
             if each["name"].strip() == key:
                 return each["config"]
 
-    def recipe_set_filename(self, id, key):
-        import tkinter as tk
-        from tkinter.filedialog import askopenfilename
-        root = tk.Tk()
-        root.update()
-        root.withdraw()
-        root.attributes("-toolwindow", 1)
-        root.wm_attributes("-topmost", 1)
-        path = askopenfilename(filetypes=[("Time Tag File", "*.*")])
-        root.destroy()
-        print(key)
-        self.recipe_set_parameter(key, path)
+    def recipe_set_filename(self, etaobj, id, key):
+        self.compile_eta(etaobj, verbose=False)
+        if self.eta_compiled_code is not None:
+            import tkinter as tk
+            from tkinter.filedialog import askopenfilename
+            root = tk.Tk()
+            root.update()
+            root.withdraw()
+            root.attributes("-toolwindow", 1)
+            root.wm_attributes("-topmost", 1)
+            path = askopenfilename(filetypes=[("Time Tag File", "*.*")])
+            root.destroy()
+            print(key)
+            self.recipe_set_parameter(key, path)
 
     def compile_eta(self, etaobj=None, verbose=False):
         try:
@@ -91,6 +93,9 @@ class ETA():
                 info_emitter = self.send
             else:
                 info_emitter = print
+            self.eta_compiled_code=None
+            self.usercode_vars=None
+            self.recipe_metadata =None
             self.eta_compiled_code, self.usercode_vars, self.recipe_metadata = eta_codegen.compile_eta(
                 etaobj, info_emitter)
             self.recipe_update()
