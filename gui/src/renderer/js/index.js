@@ -132,7 +132,7 @@ function ri_table(form) {
             form.classList.remove('was-validated');
             codegen = `[${$('#ri2').val()},${$('#ri3').val()}]`;
             $("#riModal").modal('hide');
-            create_item("ri_template", $('#ri1').val(), "main", codegen);
+            create_item("ri_template", $('#ri1').val(), "main","", codegen);
         }
         event.preventDefault();
         event.stopPropagation();
