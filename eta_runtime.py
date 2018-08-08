@@ -84,8 +84,8 @@ class ETA():
             root.wm_attributes("-topmost", 1)
             path = askopenfilename(filetypes=[("Time Tag File", "*.*")])
             root.destroy()
-            print(key)
-            self.recipe_set_parameter(key, path)
+            if path is not "":
+                self.recipe_set_parameter(key, path)
 
     def compile_eta(self, etaobj=None, verbose=False):
         try:
