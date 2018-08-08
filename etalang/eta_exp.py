@@ -626,7 +626,7 @@ class Graph(INTEGER, TABLE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENCE):
             func = getattr(self, type + "_clear", None)
             func(triggers, clock_name)
 
-    def find_start(self, triggers, clock_names_orig, ref):
+    def infer_start_from_stop(self, triggers, clock_names_orig, ref):
         clock_names = self.parse_multi_object(clock_names_orig)
         clock_stops = []
         for each in clock_names:
