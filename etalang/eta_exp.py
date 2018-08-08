@@ -75,25 +75,33 @@ class RECORDER():
 
         self.INTEGER(triggers, name + "_size", 0)
 
-    def recorder_append(self, triggers, name, num):
+    def recorder_append(self, triggers, name, num="AbsTime_ps"):
         name = self.assert_syms(name, "recorder")
         recorder_info = self.get_type_of_syms(name, fulltype=True)
-
+        if (num =="LAST_SYNC"):
+            num = "AbsTime_ps - AbsTime_ps % SYNCRate_pspr"
         if isinstance(recorder_info, str) or recorder_info[1] > 1:
             table = self.assert_syms(name + "_tab", "table", register=True)
-            self.EMIT_LINE(triggers, """
+            if (num =="SYNCS"):
+                self.EMIT_LINE(triggers, """
+                    {recorder}_head = {recorder}_size - 1
+                    {recorder}_tail = {recorder}_head - 1
+                    eta_sync_filler = AbsTime_ps - AbsTime_ps % SYNCRate_pspr
+                    {table}[{recorder}_tail] = eta_sync_filler
+                    while eta_sync_filler >=SYNCRate_pspr and {recorder}_tail>0:
+                        {recorder}_tail-=1
+                        eta_sync_filler-=SYNCRate_pspr
+                        {table}[{recorder}_tail] = eta_sync_filler
+                """.format(table=table, recorder=name, num=num))
+            else:
+                self.EMIT_LINE(triggers, """
                     {table}[{recorder}_head] = {num}
                     {recorder}_head = ({recorder}_head + 1) % {recorder}_size
-                    if ({recorder}_head == {recorder}_tail): 
-                        #if overflowed, force pop
-                        {recorder}_tail = ({recorder}_tail + 1) % {recorder}_size
+                    if ({recorder}_head == {recorder}_tail):
+                        {recorder}_tail = ({recorder}_tail + 1) % {recorder}_size #force pop if overflow 
                 """.format(table=table, recorder=name, num=num))
         else:
-            if (num =="SYNC"):
-                num = "AbsTime_ps-AbsTime_ps%SYNCRate_pspr"
-            else:
-                num="AbsTime_ps"
-                self.EMIT_LINE(triggers, """{recorder}_rec = {num}""".format(
+            self.EMIT_LINE(triggers, """{recorder}_rec = {num}""".format(
                     recorder=name, num=num))
 
     def recorder_cond_pop(self, triggers, name, cond):
@@ -618,25 +626,25 @@ class Graph(INTEGER, TABLE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENCE):
             func = getattr(self, type + "_clear", None)
             func(triggers, clock_name)
 
-    # def find_start(self, triggers, clock_names_orig, ref):
-    #     clock_names = self.parse_multi_object(clock_names_orig)
-    #     clock_stops = []
-    #     for each in clock_names:
-    #         clock_stops.append(each + "_stop_rec")
-    #     self.INTEGER(triggers, "common_start")
-    #     if len(clock_stops) > 1:
-    #         self.EMIT_LINE(triggers, """common_start=min({})""".format(
-    #             ",".join(clock_stops)))
-    #     else:
-    #         self.EMIT_LINE(triggers, """common_start={}""".format(
-    #             ",".join(clock_stops)))
-    #     if ref == "SYNC":
-    #         self.EMIT_LINE(
-    #             triggers, """common_start-=common_start%SYNCRate_pspr""")
-    #     else:
-    #         raise ValueError(
-    #             "find start from anything other than the last sync is not yet implemented.")
-    #     self.start(triggers, clock_names_orig, "common_start")
+    def find_start(self, triggers, clock_names_orig, ref):
+        clock_names = self.parse_multi_object(clock_names_orig)
+        clock_stops = []
+        for each in clock_names:
+            clock_stops.append(each + "_stop_rec")
+        self.INTEGER(triggers, "common_start")
+        if len(clock_stops) > 1:
+            self.EMIT_LINE(triggers, """common_start=min({})""".format(
+                ",".join(clock_stops)))
+        else:
+            self.EMIT_LINE(triggers, """common_start={}""".format(
+                ",".join(clock_stops)))
+        if ref == "SYNC":
+            self.EMIT_LINE(
+                triggers, """common_start-=common_start%SYNCRate_pspr""")
+        else:
+            raise ValueError(
+                "find start from anything other than the last sync is not yet implemented.")
+        self.start(triggers, clock_names_orig, "common_start")
 
     def sort(self, triggers, based_on, *therest):
         if len(therest) == 1:
