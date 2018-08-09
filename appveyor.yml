@@ -3,7 +3,7 @@ skip_tags: true
 image: Visual Studio 2017
 environment:
   PIP_DISABLE_PIP_VERSION_CHECK: 1
-  PYTHON: C:\Python36-x64
+  PYTHON: C:\Python37-x64
   PYTHON_VERSION: 3.6
   PYTHON_ARCH: 64
   ETA_VER: v0.5.4
@@ -127,7 +127,7 @@ build_script:
 
 test_script:
 - cmd: >-
-    7z a ETA_LIB-win64.zip "c:\python36-x64\lib\site-packages"
+    7z a ETA_LIB-win64.zip "c:\python37-x64\lib\site-packages"
     
     7z a ETA_Install-win64.zip %APPVEYOR_BUILD_FOLDER%\*.exe
 
