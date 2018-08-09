@@ -2,7 +2,7 @@ import multiprocessing
 
 multiprocessing.freeze_support()
 
-import os
+import os,traceback
 import sys
 import ws_broadcast
 
@@ -26,6 +26,7 @@ try:
     from eta_runtime import *
 except Exception as e:
     print(str(e))
+    traceback.print_exc()
     print("ETA_LIB is found, but it seems there is an unknown error that prevents ETA to load the packages, \n"
           "please try to put ETA_LIB in another path that contains more than 6 slashes (C:\\f1\\f2\\f3\\f4\\f5\\site-packages).")
     os.environ["ETA_LIB"] = input("Specify the path to ETA_LIB:")
