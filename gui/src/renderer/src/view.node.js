@@ -58,12 +58,15 @@ View.prototype.node = (function () {
             if (marked.empty()) {
                 if (d.marked) {
 
-                    textbox.attr('transform',"translate(0,35)");
+                    //textbox.attr('transform',"translate(0,35)");
                     
-                   view.append('rect')
-                        .attr('width',100)
-                        .attr('height',20)
-                        .attr('transform',"translate(-50,25)")
+                   view.append('circle')
+                        .attr('r',30)
+                        .attr('transform',"translate(10,-10)")
+                        .classed('marked', true);
+                   view.append('circle')
+                        .attr('r',30)
+                        .attr('transform',"translate(5,-5)")
                         .classed('marked', true);
                    //view.append('text')
                     //    .classed('marked', true);
@@ -71,7 +74,7 @@ View.prototype.node = (function () {
             } else {
                 if (!d.marked) {
                     
-                    textbox.attr('transform',"none");
+                    //textbox.attr('transform',"none");
                     //    .classed('marked', false).text(d.text.split("(")[0] || '');
                     
                     marked.remove();
