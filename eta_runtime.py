@@ -48,7 +48,7 @@ class ETA():
         self.eta_compiled_code = None
         self.usercode_vars = None
         self.recipe_metadata = None
-
+        
     def send(self, text, endpoint="log"):
         self.server.send_message_to_all(json.dumps([endpoint, str(text)]))
 
@@ -125,7 +125,7 @@ class ETA():
                 self.send(
                     "Executing code in Display Panel of group {}...".format(group))
                 try:
-                    glob = {"eta": self}
+                    glob = {"eta": self,"FORMAT_SI":1 ,"FORMAT_quTAG" :0}
                     # side configuration panel
                     if group in self.usercode_vars:
                         loc = self.usercode_vars[group]
