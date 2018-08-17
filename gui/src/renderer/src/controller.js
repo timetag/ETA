@@ -420,25 +420,28 @@ var Controller = (function () {
                 case 84: // T
                     if (mode_move()) {
                         // Mark selected states
-                       
-                        var trigger="\n";
-                        var sep="";
-                         nodes = view.node.selected();
-                        for (var i=0;i<nodes.length;i++){
-                        	trigger+=sep+nodes[i].text;
-                        	sep=",";
-                        }
+
+                        nodes = view.node.selected();
                         edges = view.edge.selected();
-                        for (var i=0;i<edges.length;i++){
-                        	trigger+=sep+edges[i].source.text+"--"+edges[i].text+"-->"+edges[i].target.text;
-                        	sep=",";
+                        if (nodes.length==1 || edges.length==1){     
+                            var trigger="\n";
+                            var sep="";
+                            for (var i=0;i<nodes.length;i++){
+                                trigger+=sep+nodes[i].text;
+                                sep=",";
+                            }
+                           
+                            for (var i=0;i<edges.length;i++){
+                                trigger+=sep+edges[i].source.text+"--"+edges[i].text+"-->"+edges[i].target.text;
+                                sep=",";
+                            }
+                           trigger+=":";
+                           if (trigger.length<2)
+                                alert("Choose at least one blob or arrow to make triggers.");
+                           else
+                             commands.graph.usercodecb(commands.graph.usercode+trigger);
                         }
-                       trigger+=":";
-                       if (trigger.length<2){
-                       		alert("Choose at least one blob or arrow to make triggers.");
-                       }
-                       else
-                         commands.graph.usercodecb(commands.graph.usercode+trigger);
+                       
                     }
                     break;
                 case 77: // R

@@ -604,12 +604,15 @@ View.prototype.node = (function () {
             if (marked.empty()) {
                 if (d.marked) {
 
-                    textbox.attr('transform',"translate(0,35)");
+                    //textbox.attr('transform',"translate(0,35)");
                     
-                   view.append('rect')
-                        .attr('width',100)
-                        .attr('height',20)
-                        .attr('transform',"translate(-50,25)")
+                   view.append('circle')
+                        .attr('r',30)
+                        .attr('transform',"translate(10,-10)")
+                        .classed('marked', true);
+                   view.append('circle')
+                        .attr('r',30)
+                        .attr('transform',"translate(5,-5)")
                         .classed('marked', true);
                    //view.append('text')
                     //    .classed('marked', true);
@@ -617,7 +620,7 @@ View.prototype.node = (function () {
             } else {
                 if (!d.marked) {
                     
-                    textbox.attr('transform',"none");
+                    //textbox.attr('transform',"none");
                     //    .classed('marked', false).text(d.text.split("(")[0] || '');
                     
                     marked.remove();
@@ -1742,25 +1745,28 @@ var Controller = (function () {
                 case 84: // T
                     if (mode_move()) {
                         // Mark selected states
-                       
-                        var trigger="\n";
-                        var sep="";
-                         nodes = view.node.selected();
-                        for (var i=0;i<nodes.length;i++){
-                        	trigger+=sep+nodes[i].text;
-                        	sep=",";
-                        }
+
+                        nodes = view.node.selected();
                         edges = view.edge.selected();
-                        for (var i=0;i<edges.length;i++){
-                        	trigger+=sep+edges[i].source.text+"--"+edges[i].text+"-->"+edges[i].target.text;
-                        	sep=",";
+                        if (nodes.length==1 || edges.length==1){     
+                            var trigger="\n";
+                            var sep="";
+                            for (var i=0;i<nodes.length;i++){
+                                trigger+=sep+nodes[i].text;
+                                sep=",";
+                            }
+                           
+                            for (var i=0;i<edges.length;i++){
+                                trigger+=sep+edges[i].source.text+"--"+edges[i].text+"-->"+edges[i].target.text;
+                                sep=",";
+                            }
+                           trigger+=":";
+                           if (trigger.length<2)
+                                alert("Choose at least one blob or arrow to make triggers.");
+                           else
+                             commands.graph.usercodecb(commands.graph.usercode+trigger);
                         }
-                       trigger+=":";
-                       if (trigger.length<2){
-                       		alert("Choose at least one blob or arrow to make triggers.");
-                       }
-                       else
-                         commands.graph.usercodecb(commands.graph.usercode+trigger);
+                       
                     }
                     break;
                 case 77: // R
