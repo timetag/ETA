@@ -96,6 +96,7 @@ build_script:
     --exclude-module bokeh
     --exclude-module scipy
     --exclude-module flask
+    --hidden-import pathlib
     --hidden-import tkinter 
     --hidden-import tkinter.filedialog
     --hidden-import timeit
