@@ -35,7 +35,7 @@ $"\01??_C@_0CA@IELPLNGK@?6?5?$FLERROR?$FNBuffer?5overflow?$CB?5at?5?$CFx?$AA@" =
 
 $"\01?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA" = comdat any
 
-@order_gurantee2 = global i64 0, align 8
+@controlflow_guarantee = global i64 0, align 8
 @VFILES = global %struct.circular_buf_t* null, align 8
 @"\01??_C@_0DA@FDKMBOFF@?6?5?$FLERROR?$FNMemalloc?5failed?5for?5VFI@" = linkonce_odr unnamed_addr constant [48 x i8] c"\0A [ERROR]Memalloc failed for VFILES, aborting.\0A\00", comdat, align 1
 @"\01??_C@_0DA@NLDMGFAH@?6Creating?5ring?5buffer?5?$CFd?5at?5?$CFx?5w@" = linkonce_odr unnamed_addr constant [48 x i8] c"\0ACreating ring buffer %d at %x with size %lld. \00", comdat, align 1
@@ -272,7 +272,7 @@ define i32 @VFILE_init(i64, i64, i8*, i64) #1 {
 ; <label>:24:                                     ; preds = %4
   %25 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([48 x i8], [48 x i8]* @"\01??_C@_0DA@FDKMBOFF@?6?5?$FLERROR?$FNMemalloc?5failed?5for?5VFI@", i32 0, i32 0))
   %26 = sext i32 %25 to i64
-  store i64 %26, i64* @order_gurantee2, align 8
+  store i64 %26, i64* @controlflow_guarantee, align 8
   store i32 -1, i32* %7, align 4
   br label %68
 
@@ -318,7 +318,7 @@ define i32 @VFILE_init(i64, i64, i8*, i64) #1 {
   %54 = load i64, i64* %11, align 8
   %55 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([48 x i8], [48 x i8]* @"\01??_C@_0DA@NLDMGFAH@?6Creating?5ring?5buffer?5?$CFd?5at?5?$CFx?5w@", i32 0, i32 0), i64 %54, i8* %53, i64 %52)
   %56 = sext i32 %55 to i64
-  store i64 %56, i64* @order_gurantee2, align 8
+  store i64 %56, i64* @controlflow_guarantee, align 8
   br label %67
 
 ; <label>:57:                                     ; preds = %27
@@ -331,7 +331,7 @@ define i32 @VFILE_init(i64, i64, i8*, i64) #1 {
   %64 = load i64, i64* %11, align 8
   %65 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([49 x i8], [49 x i8]* @"\01??_C@_0DB@PEPKOABL@?6Resetting?5ring?5buffer?5?$CFd?5at?5?$CFx?5@", i32 0, i32 0), i64 %64, i8* %63, i64 %62)
   %66 = sext i32 %65 to i64
-  store i64 %66, i64* @order_gurantee2, align 8
+  store i64 %66, i64* @controlflow_guarantee, align 8
   br label %67
 
 ; <label>:67:                                     ; preds = %57, %46
@@ -377,7 +377,7 @@ define i32 @VFILES_init(i8*) #1 {
 ; <label>:8:                                      ; preds = %1
   %9 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([37 x i8], [37 x i8]* @"\01??_C@_0CF@BDINJJIB@?6?5?$FLERROR?$FNMemalloc?5failed?0?5aborti@", i32 0, i32 0))
   %10 = sext i32 %9 to i64
-  store i64 %10, i64* @order_gurantee2, align 8
+  store i64 %10, i64* @controlflow_guarantee, align 8
   store i32 -1, i32* %2, align 4
   br label %12
 
@@ -541,7 +541,7 @@ define i32 @POOL_init(i64, i8*, i8*, i64) #1 {
 ; <label>:18:                                     ; preds = %4
   %19 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([37 x i8], [37 x i8]* @"\01??_C@_0CF@BDINJJIB@?6?5?$FLERROR?$FNMemalloc?5failed?0?5aborti@", i32 0, i32 0))
   %20 = sext i32 %19 to i64
-  store i64 %20, i64* @order_gurantee2, align 8
+  store i64 %20, i64* @controlflow_guarantee, align 8
   store i32 -1, i32* %5, align 4
   br label %80
 
@@ -555,7 +555,7 @@ define i32 @POOL_init(i64, i8*, i8*, i64) #1 {
 ; <label>:25:                                     ; preds = %21
   %26 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([37 x i8], [37 x i8]* @"\01??_C@_0CF@BDINJJIB@?6?5?$FLERROR?$FNMemalloc?5failed?0?5aborti@", i32 0, i32 0))
   %27 = sext i32 %26 to i64
-  store i64 %27, i64* @order_gurantee2, align 8
+  store i64 %27, i64* @controlflow_guarantee, align 8
   store i32 -1, i32* %5, align 4
   br label %80
 
@@ -569,7 +569,7 @@ define i32 @POOL_init(i64, i8*, i8*, i64) #1 {
   %33 = zext i8 %32 to i32
   %34 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([14 x i8], [14 x i8]* @"\01??_C@_0O@HDHCNGNA@?6POOL_init?5?$CFd?$AA@", i32 0, i32 0), i32 %33)
   %35 = sext i32 %34 to i64
-  store i64 %35, i64* @order_gurantee2, align 8
+  store i64 %35, i64* @controlflow_guarantee, align 8
   store i32 0, i32* %10, align 4
   br label %36
 
@@ -638,7 +638,7 @@ define i32 @POOL_init(i64, i8*, i8*, i64) #1 {
   %76 = zext i8 %75 to i32
   %77 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([22 x i8], [22 x i8]* @"\01??_C@_0BG@OEIAFCBM@?6POOL_init?5resumed?5?$CFd?$AA@", i32 0, i32 0), i32 %76)
   %78 = sext i32 %77 to i64
-  store i64 %78, i64* @order_gurantee2, align 8
+  store i64 %78, i64* @controlflow_guarantee, align 8
   br label %79
 
 ; <label>:79:                                     ; preds = %74, %73
@@ -668,7 +668,7 @@ define i32 @VCHN_init(i64, i64, i64) #1 {
   %12 = load i64, i64* %6, align 8
   %13 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([40 x i8], [40 x i8]* @"\01??_C@_0CI@IMIANPPE@?6VCHN_RFILES?3?5?$CFd?0VCHN_VFILES_off@", i32 0, i32 0), i64 %12, i64 %11)
   %14 = sext i32 %13 to i64
-  store i64 %14, i64* @order_gurantee2, align 8
+  store i64 %14, i64* @controlflow_guarantee, align 8
   ret i32 0
 }
 
@@ -720,7 +720,7 @@ define i32 @VCHN_put(i64, i8) #1 {
 ; <label>:40:                                     ; preds = %2
   %41 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([15 x i8], [15 x i8]* @"\01??_C@_0P@GKADCDB@?6clear?5future?6?$AA@", i32 0, i32 0))
   %42 = sext i32 %41 to i64
-  store i64 %42, i64* @order_gurantee2, align 8
+  store i64 %42, i64* @controlflow_guarantee, align 8
   %43 = load i32, i32* %24, align 4
   %44 = trunc i32 %43 to i8
   %45 = load i64, i64* %22, align 8
@@ -1029,7 +1029,7 @@ define i32 @VCHN_put(i64, i8) #1 {
   %276 = load i64*, i64** %275, align 8
   %277 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([32 x i8], [32 x i8]* @"\01??_C@_0CA@IELPLNGK@?6?5?$FLERROR?$FNBuffer?5overflow?$CB?5at?5?$CFx?$AA@", i32 0, i32 0), i64* %276)
   %278 = sext i32 %277 to i64
-  store i64 %278, i64* @order_gurantee2, align 8
+  store i64 %278, i64* @controlflow_guarantee, align 8
   store i32 -1, i32* %20, align 4
   br label %328
 

@@ -125,7 +125,7 @@ class ETA():
                 self.send(
                     "Executing code in Display Panel of group {}...".format(group))
                 try:
-                    glob = {"eta": self,"FORMAT_SI":1 ,"FORMAT_quTAG" :0}
+                    glob = {"eta": self,"FORMAT_SI":1 ,"quTAG_FORMAT_COMPRESSED" :2,"quTAG_FORMAT_BINARY" :0}
                     # side configuration panel
                     if group in self.usercode_vars:
                         loc = self.usercode_vars[group]

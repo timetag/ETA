@@ -60,8 +60,9 @@ extern "C" {
 #define rtTimeHarp260NT2 0x00010205    // (SubID = $00 ,RecFmt: $01) (V2), T-Mode: $02 (T2), HW: $05 (TimeHarp260N)
 #define rtTimeHarp260PT3 0x00010306    // (SubID = $00 ,RecFmt: $01) (V1), T-Mode: $02 (T3), HW: $06 (TimeHarp260P)
 #define rtTimeHarp260PT2 0x00010206    // (SubID = $00 ,RecFmt: $01) (V1), T-Mode: $02 (T2), HW: $06 (TimeHarp260P)
-#define quTAU 0 
+#define quTAG_FORMAT_BINARY 0 
 #define SwebianInstrument 1 
+#define quTAG_FORMAT_COMPRESSED 2 
 #define MARKER_OFFSET 16
 
 //Got GotRelativeSignal
@@ -369,21 +370,18 @@ extern "C" {
 
 						ProcessHHT3(TTTRRecord, 2, AbsTime_ps, Channel, READERs[0].overflowcorrection);
 						break;
-					case quTAU: {
-	
-						union TTTRRecord
-						{
-							unsigned char allbits[16];
-							struct {
+					case quTAG_FORMAT_BINARY: {
+
+					
+						struct TTTRRecord {
 								uint64_t time;
 								uint16_t channel;
-								char blank[6];
-							} bits;
-						};
+						} bits;
+						
 						TTTRRecord *TTTRRecordPtr;
 						TTTRRecordPtr = (TTTRRecord *)(READERs[0].buffer + READERs[0].next_RecID_in_batch * READERs[0].BytesofRecords);
-						AbsTime_ps = (*TTTRRecordPtr).bits.time *READERs[0].TTRes_pspr;
-						Channel = (*TTTRRecordPtr).bits.channel;
+						AbsTime_ps = (*TTTRRecordPtr).time *READERs[0].TTRes_pspr;
+						Channel = (*TTTRRecordPtr).channel;
 						break;
 					}
 					case SwebianInstrument: {
@@ -397,6 +395,23 @@ extern "C" {
 						TTTRRecordPtr = (SITTTRStruct *)(READERs[0].buffer + READERs[0].next_RecID_in_batch * READERs[0].BytesofRecords);
 						AbsTime_ps = (*TTTRRecordPtr).time *READERs[0].TTRes_pspr;
 						Channel = (*TTTRRecordPtr).channel;
+						break;
+					}
+					case quTAG_FORMAT_COMPRESSED: {
+
+						union COMPTTTRRecord
+						{
+							unsigned char allbits[5];
+							struct {
+								unsigned long long time:  37;    // delay from last sync in units of chosen resolution
+								unsigned channel: 3;
+							
+							} bits;
+						};
+						COMPTTTRRecord *COMPTTTRRecordPtr;
+						COMPTTTRRecordPtr = (COMPTTTRRecord *)(READERs[0].buffer + READERs[0].next_RecID_in_batch * READERs[0].BytesofRecords);
+						AbsTime_ps = (*COMPTTTRRecordPtr).bits.time *READERs[0].TTRes_pspr;
+						Channel = (*COMPTTTRRecordPtr).bits.channel;
 						break;
 					}
 					default:
