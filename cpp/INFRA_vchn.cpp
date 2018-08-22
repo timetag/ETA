@@ -15,12 +15,12 @@ Zuzeng Lin, KTH,2017-2018
 #include <stddef.h>
 #include <stdbool.h>
 typedef unsigned long  DWORD;
-#define PERROR(...) {order_gurantee2=printf( "\n [ERROR]"  __VA_ARGS__ );}
-#define PINFO(...)  {order_gurantee2=printf("\n" __VA_ARGS__);}
+#define PERROR(...) {controlflow_guarantee=printf( "\n [ERROR]"  __VA_ARGS__ );}
+#define PINFO(...)  {controlflow_guarantee=printf("\n" __VA_ARGS__);}
 
 extern "C" {
 
-	long long order_gurantee2 = 0;
+	long long controlflow_guarantee = 0;
 
 
 	/////////////////////////////////////////////////////////////////////
@@ -105,9 +105,7 @@ extern "C" {
 	bool MKS_inline circular_buf_full(circular_buf_t cbuf)
 	{
 		// We determine "full" case by head being one position behind the tail
-		// Note that this means we are wasting one space in the buffer!
-		// Instead, you could have an "empty" flag and determine buffer full that way
-		//PINFO("full judge %d %d", (cbuf.head + 1) % cbuf.size, cbuf.tail);
+		//PINFO("full  %d %d", (cbuf.head + 1) % cbuf.size, cbuf.tail);
 		return ((cbuf.head + 1) % cbuf.size) == cbuf.tail;
 	}
 	int MKS_inline VFILE_init (long long vslot,long long size,void* buffer,long long init) {
@@ -257,9 +255,9 @@ extern "C" {
 					return -1;
 				}
 				else {
-					//PINFO("1111")
+					//PINFO("circular_buf_put-started")
 					auto ret = circular_buf_put(&(VFILES[VFILEid]), timeinfuture);
-					//PINFO("2222");
+					//PINFO("circular_buf_put-finished");
 					return ret;
 				}
 

@@ -48,22 +48,46 @@ int MKS_inline Swebian_header_parser() {
 	return 0;
 }
 
-int MKS_inline quTAU_header_parser(FILE *fpin) {
+int MKS_inline quTAU_FORMAT_BINARY_header_parser(FILE *fpin) {
 
-	// read version
-	char Version[32];
-	if (fread(&Version, 1, sizeof(Version), fpin) != sizeof(Version))
+	// read the rest 32 bytes of the header
+	char Header[32];
+	if (fread(&Header, 1, sizeof(Header), fpin) != sizeof(Header))
 	{
 		PERROR("Error when reading header, aborted.");
 		return -1;
 	}
-	PINFO("quTAU file header is read, but ignored.");
+	PINFO("quTAU_FORMAT_BINARY file header is read, but ignored.");
 	RecordType = 0;
 	BytesofRecords = 10;
-	PINFO("RecordType: quTAU 10-bytes");
+	PINFO("RecordType: quTAU_FORMAT_BINARY 10-bytes");
 
 	//set resolutions
-	TTRes_pspr = 1; //81 for old version
+	TTRes_pspr = 1; 
+	DTRes_pspr = TTRes_pspr;
+	SYNCRate_pspr = 1.249554 * 1000;
+
+	// find size
+	TTF_header_offset = ftell(fpin);
+
+	return 0;
+}
+int MKS_inline quTAU_FORMAT_COMPRESSED_header_parser(FILE *fpin) {
+
+	// read the rest 32 bytes of the header
+	char Header[32];
+	if (fread(&Header, 1, sizeof(Header), fpin) != sizeof(Header))
+	{
+		PERROR("Error when reading header, aborted.");
+		return -1;
+	}
+	PINFO("quTAU_FORMAT_COMPRESSED file header is read, but ignored.");
+	RecordType = 0;
+	BytesofRecords = 5;
+	PINFO("RecordType: quTAU_FORMAT_COMPRESSED 5-bytes");
+
+	//set resolutions
+	TTRes_pspr = 1; 
 	DTRes_pspr = TTRes_pspr;
 	SYNCRate_pspr = 1.249554 * 1000;
 
@@ -140,7 +164,7 @@ time_t TDateTime_TimeT(double Convertee)
 		goto close;
 	}
 
-	PINFO("PTU file Version: %s \n", Version);
+	PINFO("PTU file Header: %s \n", Version);
 	// read tagged header
 	do
 	{
@@ -347,12 +371,17 @@ extern "C" int MKS_inline PARSE_TimeTagFileHeader(char* TTF_filename,int RecordT
 		}
 		switch (RecordTypetemp){
 		case 0:
-			//quTAU magic is shit
-			PINFO("Header Parser: quTAU \n");
-			ret = quTAU_header_parser(fpin);
+			//quTAU_FORMAT_BINARY magic is shit
+			PINFO("Header Parser: quTAU_FORMAT_BINARY \n");
+			ret = quTAU_FORMAT_BINARY_header_parser(fpin);
+			break;
+		case 2:
+			//quTAU_FORMAT_BINARY magic is shit
+			PINFO("Header Parser: quTAU_FORMAT_COMPRESSED \n");
+			ret = quTAU_FORMAT_COMPRESSED_header_parser(fpin);
 			break;
 		case 1:
-			PINFO("Header Parser: swebian instrument \n");
+			PINFO("Header Parser: Swebian Instrument \n");
 			ret = Swebian_header_parser();
 			break;
 		case -1:
