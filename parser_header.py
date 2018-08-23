@@ -9,7 +9,7 @@ NumRecords_get = link_global("NumRecords")
 RecordType_get =link_global("RecordType")
 PARSE_TimeTagFileHeader = link_function("PARSE_TimeTagFileHeader",2)
 @jit(nopython=True, parallel=True, nogil=True)
-def parse_header(filename1, filetype=-1):
+def parse_header(filename1, filetype):
     link_libs()
     # read file header
     #i = BytesofRecords_set(8)

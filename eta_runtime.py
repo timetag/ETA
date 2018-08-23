@@ -209,7 +209,7 @@ class ETA():
                 self.displaying = False
                 self.logger.error(str(e), exc_info=True)
 
-    def simple_cut(self, filename, cuts=1, trunc=-1, format=0):
+    def simple_cut(self, filename, cuts=1, trunc=-1, format=-1):
         self.send(
             "ETA.SIMPLE_CUT: The file '{filename}' is cut into {cuts} equal size sections. ".format(filename=filename,
                                                                                                     cuts=cuts))
