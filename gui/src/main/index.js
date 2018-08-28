@@ -43,21 +43,31 @@ function createMainWindow() {
         event.preventDefault()
         if  (url.indexOf("http")>=0)
         {
-          shell.openExternal(url);
+		const win = new BrowserWindow({
+		    resizable: true,
+		    backgroundColor:'#000000',
+		    width : width1 * 0.8 | 0,
+		    height : height1 * 0.8 | 0,
+		    parent : window,
+		    title: frameName
+		})
+		win.loadURL(url)
+		win.webContents.on('new-window', onWindowOpen)
+		event.newGuest = win
         }else{
             const win = new BrowserWindow({
-            resizable: true,
-            backgroundColor:'#000000',
-            width : width1 * 0.8 | 0,
-            height : height1 * 0.8 | 0,
-            parent : window,
-            frame: false ,
-            resizable: true,
-            title: frameName
-        })
-        win.loadURL(url)
-        win.webContents.on('new-window', onWindowOpen)
-        event.newGuest = win
+		    resizable: true,
+		    backgroundColor:'#000000',
+		    width : width1 * 0.8 | 0,
+		    height : height1 * 0.8 | 0,
+		    parent : window,
+		    frame: false ,
+		    resizable: true,
+		    title: frameName
+		})
+		win.loadURL(url)
+		win.webContents.on('new-window', onWindowOpen)
+		event.newGuest = win
         }
        
       }
