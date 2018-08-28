@@ -51,11 +51,8 @@ function createMainWindow() {
 		    parent : window,
 		    title: frameName
 		})
-		win.loadURL(url)
-		win.webContents.on('new-window', onWindowOpen)
-		event.newGuest = win
         }else{
-            const win = new BrowserWindow({
+        	const win = new BrowserWindow({
 		    resizable: true,
 		    backgroundColor:'#000000',
 		    width : width1 * 0.8 | 0,
@@ -65,11 +62,10 @@ function createMainWindow() {
 		    resizable: true,
 		    title: frameName
 		})
-		win.loadURL(url)
-		win.webContents.on('new-window', onWindowOpen)
-		event.newGuest = win
         }
-       
+       	win.loadURL(url)
+	win.webContents.on('new-window', onWindowOpen)
+	event.newGuest = win
       }
 
       window.webContents.on('new-window', onWindowOpen);
