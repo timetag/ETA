@@ -109,6 +109,7 @@ build_script:
     --hidden-import csv
     --hidden-import numbers
     --hidden-import gettext
+    --hidden-import typing
     -i icon.ico  
     ETA.py
 
