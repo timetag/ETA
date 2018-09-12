@@ -80,9 +80,16 @@ class ETA():
             root = tk.Tk()
             root.update()
             root.withdraw()
+            root.overrideredirect(True)# Make it impossible to close the root via clicking |X| or alt+F4.
+            root.geometry('0x0+0+0')# Make it almost invisible - no decorations, 0 size, top left corner.
+            root.attributes("-alpha", 0.3)# Make it more invisible
             root.attributes("-toolwindow", 1)
             root.wm_attributes("-topmost", 1)
-            path = askopenfilename(filetypes=[("Time Tag File", "*.*")])
+            root.deiconify() #show root again
+            root.lift() #make sure it is on top
+            root.focus_force() #and has focus
+            path = askopenfilename(parent=root, filetypes=[("Time Tag File", "*.*")])
+            # parent=root makes sure the dialogue is inherits the roots attributes, like being on-top
             root.destroy()
             if path is not "":
                 self.recipe_set_parameter(key, path)
