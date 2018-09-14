@@ -21,8 +21,8 @@ while True:
         os.system('setx ETA_LIB "' + os.environ["ETA_LIB"] + '"')
 
 try:
-    #if env_dist.count("\\") < 6:
-    #    raise ValueError("Path should contain more than 6 slashes.")
+    if env_dist.count("\\") < 6:
+        raise ValueError("Path should contain more than 6 slashes.")
     from eta_runtime import *
 except Exception as e:
     print(str(e))
