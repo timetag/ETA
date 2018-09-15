@@ -217,6 +217,7 @@ class ETA():
                 self.logger.error(str(e), exc_info=True)
 
     def simple_cut(self, filename, cuts=1, trunc=-1, format=-1):
+        filename = str(filename) # supporting pathlib
         self.send(
             "ETA.SIMPLE_CUT: The file '{filename}' is cut into {cuts} equal size sections. ".format(filename=filename,
                                                                                                     cuts=cuts))
@@ -251,6 +252,7 @@ class ETA():
         return caller_parms
 
     def incremental_cut(self, filename, cut=None, rec_per_cut=1000000, format=0, verbose=True):
+        filename = str(filename) # supporting pathlib
         if cut == None:
             ret1, out = parse_header(bytearray(filename, "ascii"), format)
             if ret1 is not 0:
