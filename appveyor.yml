@@ -88,6 +88,8 @@ cache:
 
 build_script:
 - cmd: >-
+    cd etabackend
+
     pyinstaller --clean --onefile 
     --add-data "ll/*;ll" 
     --exclude-module numba
@@ -113,7 +115,7 @@ build_script:
     -i icon.ico  
     ETA.py
 
-    move %APPVEYOR_BUILD_FOLDER%\dist\ETA.exe %APPVEYOR_BUILD_FOLDER%\gui\ETA-Backend.exe
+    move %APPVEYOR_BUILD_FOLDER%\etabackend\dist\ETA.exe %APPVEYOR_BUILD_FOLDER%\gui\ETA-Backend.exe
     
     echo building GUI
     

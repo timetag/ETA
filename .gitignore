@@ -1,14 +1,5 @@
 .*
-depends
+build
 dist
+etabackend.egg-info
 __pycache__/
-*.pyc
-*.exe
-*.sh
-*.ipynb
-*.ptu
-*.bin
-*.txt
-*.eps
-llvm.txt
-server.eta
