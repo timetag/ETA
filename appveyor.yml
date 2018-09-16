@@ -88,6 +88,8 @@ cache:
 
 build_script:
 - cmd: >-
+    echo building backend
+
     cd etabackend
 
     pyinstaller --clean --onefile 
@@ -114,6 +116,8 @@ build_script:
     --hidden-import typing
     -i icon.ico  
     ETA.py
+
+    cd ..
 
     move %APPVEYOR_BUILD_FOLDER%\etabackend\dist\ETA.exe %APPVEYOR_BUILD_FOLDER%\gui\ETA-Backend.exe
     
