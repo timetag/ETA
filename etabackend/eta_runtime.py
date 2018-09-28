@@ -216,7 +216,7 @@ class ETA():
                 self.displaying = False
                 self.logger.error(str(e), exc_info=True)
 
-    def simple_cut(self, filename, cuts=1, trunc=-1, format=-1):
+    def simple_cut(self, filename, cuts=1, trunc=-1, format=0):
         filename = str(filename) # supporting pathlib
         self.send(
             "ETA.SIMPLE_CUT: The file '{filename}' is cut into {cuts} equal size sections. ".format(filename=filename,
@@ -257,7 +257,7 @@ class ETA():
             ret1, out = parse_header(bytearray(filename, "ascii"), format)
             if ret1 is not 0:
                 raise ValueError(
-                    "ETA.SIMPLE_CUT: File {} is not found or incorrect, err code {}.".format(filename, ret1))
+                    "ETA.incremental_cut: File {} is not found or incorrect, err code {}.".format(filename, ret1))
             cut = [[out[0], out[0], out[2], out[3],
                     out[4], out[5], out[6], filename]]
         if len(cut) != 1:
