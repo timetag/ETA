@@ -296,7 +296,9 @@ class ETA():
     def run(self, cuts_params, ctxs=None, sum_results=True, iterate_ctxs=False, group="main",
             verbose=True):
         # support legacy API
-        if isinstance(cuts_params, str):
+        if not isinstance(cuts_params, list):
+            self.send(
+                "ETA.RUN: the first parameter should be a cut descriptor. Try cuts = self.simple_cut(your_filename).", "err")
             cuts_params = self.simple_cut(cuts_params)
         # start timeing
         if verbose:
