@@ -266,7 +266,7 @@ class ETA():
 
         cut[0][0] = cut[0][1]
         BytesofRecords = cut[0][-3]
-        if rec_per_cut<0:
+        if rec_per_cut<=0:
              fileactualsize = os.path.getsize(filename)
              filebuffersize = fileactualsize-cut[0][0]
              rec_per_cut+= filebuffersize//BytesofRecords
