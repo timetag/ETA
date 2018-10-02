@@ -269,7 +269,9 @@ class ETA():
         if rec_per_cut<0:
              fileactualsize = os.path.getsize(filename)
              filebuffersize = fileactualsize-cut[0][0]
-             rec_per_cut = filebuffersize//BytesofRecords
+             rec_per_cut+= filebuffersize//BytesofRecords
+        if rec_per_cut<=0:
+            rec_per_cut=1 #read at least one record each time
         cut[0][1] = cut[0][0] + BytesofRecords * rec_per_cut
         if verbose:
             self.send(
