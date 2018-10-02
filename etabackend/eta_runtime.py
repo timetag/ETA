@@ -251,7 +251,7 @@ class ETA():
 
         return caller_parms
 
-    def incremental_cut(self, filename, cut=None, rec_per_cut=1000000, format=-1, verbose=True):
+    def incremental_cut(self, filename, cut=None, rec_per_cut=-10, format=-1, verbose=True):
         filename = str(filename) # supporting pathlib
         if cut == None:
             ret1, out = parse_header(bytearray(filename, "ascii"), format)
@@ -266,6 +266,10 @@ class ETA():
 
         cut[0][0] = cut[0][1]
         BytesofRecords = cut[0][-3]
+        if rec_per_cut<0:
+             fileactualsize = os.path.getsize(filename)
+             filebuffersize = fileactualsize-cut[0][0]
+             rec_per_cut = filebuffersize//BytesofRecords
         cut[0][1] = cut[0][0] + BytesofRecords * rec_per_cut
         if verbose:
             self.send(
