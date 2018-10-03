@@ -51,7 +51,7 @@ install:
     
     python -m pip install lmfit --upgrade
     
-    python -m pip install -e git+https://github.com/simonpercivall/astunparse.git#egg=astunparse # https://github.com/simonpercivall/astunparse/issues/26
+    python -m pip install astunparse --upgrade # https://github.com/simonpercivall/astunparse/issues/26
     
     python -m pip install dash --upgrade
     
