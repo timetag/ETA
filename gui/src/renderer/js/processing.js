@@ -30,7 +30,7 @@ if (req["edit"]) {
                 editing_graph_name = "noname"
                 alert("File name of editing graph is not specified.");
 }
-document.title = editing_graph_name + " - Display Panel Code";
+document.title = editing_graph_name + " - Script Panel Designer";
 d3.select('#main_caption').text(document.title);
 
 if (get_localstorage(editing_graph) === null) {
