@@ -120,7 +120,7 @@ class ETA():
         if self.displaying:
             self.send("Display is running at http://{}:5000.".format(self.hostip))
             self.send(
-                "The ETA program is not executed, in order to prevent data overwritten.")
+                "The ETA program is not executed, in order to prevent data from being overwritten.")
             self.send("http://{}:5000".format(self.hostip), "dash")
         else:
             with open("server.eta", 'w') as file:
@@ -151,7 +151,7 @@ class ETA():
                             '[' + str(type(e).__name__) + ']' + str(e), "err")
                         self.logger.error(str(e), exc_info=True)
                         self.send(
-                            "This error comes from user-code in the display panel.")
+                            "This error is caused by user-code in the display panel.")
                     return
                 self.send("\n")
                 self.send(
@@ -160,7 +160,7 @@ class ETA():
     def display(self, app=None):
         if app is None:
             self.send(
-                "No display dashboard crated. Use 'app = dash.Dash() to create a Dash graph.' .", "err")
+                "No display dashboard created. Use 'app = dash.Dash() to create a Dash graph.' .", "err")
         else:
             self.send("ETA.DISPLAY: Starting Display Panel.")
             try:
@@ -295,7 +295,7 @@ class ETA():
                 if watied_for > timeout:
                     if raiseerr:
                         raise ValueError(
-                            "Timeout when wating for the next cut.")
+                            "Timeout when waiting for the next cut.")
                     return False
         return True
 
