@@ -118,7 +118,7 @@ class ETA():
 
     def process_eta(self, etaobj=None, id="code", group="main"):
         if self.displaying:
-            self.send("Display is running at http://{}:5000.".format(self.hostip))
+            self.send("Script Panel is running at http://{}:5000.".format(self.hostip))
             self.send(
                 "The ETA program is not executed, in order to prevent data from being overwritten.")
             self.send("http://{}:5000".format(self.hostip), "dash")
@@ -130,7 +130,7 @@ class ETA():
             self.compile_eta(etaobj, verbose=True)
             if self.eta_compiled_code is not None:
                 self.send(
-                    "Executing code in Display Panel of group {}...".format(group))
+                    "Executing code in Script Panel of group {}...".format(group))
                 try:
                     glob = {"eta": self,"FORMAT_SI":1 ,"quTAG_FORMAT_COMPRESSED" :2,"quTAG_FORMAT_BINARY" :0}
                     # side configuration panel
@@ -162,7 +162,7 @@ class ETA():
             self.send(
                 "No display dashboard created. Use 'app = dash.Dash() to create a Dash graph.' .", "err")
         else:
-            self.send("ETA.DISPLAY: Starting Display Panel.")
+            self.send("ETA.DISPLAY: Starting Script Panel.")
             try:
                 if str(type(app)) == "<class 'dash.dash.Dash'>":
                     from flask import request
@@ -208,7 +208,7 @@ class ETA():
                     thread3.start()
 
                 self.send(
-                    "ETA.DISPLAY: Display Panel is running at http://{}:5000.".format(self.hostip))
+                    "ETA.DISPLAY: Script Panel is running at http://{}:5000.".format(self.hostip))
                 self.send("http://{}:5000".format(self.hostip), "dash")
                 self.displaying = True
             except Exception as e:
