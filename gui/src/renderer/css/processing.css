@@ -5,6 +5,6 @@ html { overflow: hidden;}
 body {
     border: solid 2px black;
 }
-.ui-layout-north{
+.ui-layout-north,.ui-layout-east{
     overflow: hidden;
 }
