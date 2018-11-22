@@ -41,17 +41,17 @@ function createMainWindow() {
       // general callback
       const onWindowOpen = (event, url, frameName) => {
         event.preventDefault()
-	var showinframe=(url.indexOf("http")>=0)
-	const win = new BrowserWindow({
-		    resizable: true,
-		    backgroundColor:'#000000',
-		    width : width1 * 0.8 | 0,
-		    height : height1 * 0.8 | 0,
-		    parent : window,
-		    frame: showinframe ,
-		    resizable: !showinframe,
-		    title: frameName
-	})
+        var showinframe=(url.indexOf("http")>=0)
+        const win = new BrowserWindow({
+              resizable: true,
+              backgroundColor: showinframe?'#FFFFFF':'#000000',
+              width : width1 * 0.8 | 0,
+              height : height1 * 0.8 | 0,
+              parent : window,
+              frame: showinframe ,
+              resizable: true,
+              title: frameName
+        })
        	win.loadURL(url)
 	win.webContents.on('new-window', onWindowOpen)
 	event.newGuest = win
