@@ -1,7 +1,7 @@
 ; ModuleID = 'TimeTag/PARSE_TimeTags.cpp'
 source_filename = "TimeTag/PARSE_TimeTags.cpp"
 target datalayout = "e-m:w-i64:64-f80:128-n8:16:32:64-S128"
-target triple = "x86_64-pc-windows-msvc19.11.25547"
+target triple = "x86_64-pc-windows-msvc19.15.26732"
 
 %struct.ttf_reader = type { i64, i64, i64, i64, i64, i64, i64, i64, i64, i64, i64, i64, i8*, %struct._iobuf* }
 %struct._iobuf = type { i8* }
@@ -2270,4 +2270,4 @@ attributes #5 = { noinline nounwind optnone uwtable "correctly-rounded-divide-sq
 !0 = !{!"/FAILIFMISMATCH:\22_CRT_STDIO_ISO_WIDE_SPECIFIERS=0\22"}
 !1 = !{i32 1, !"wchar_size", i32 2}
 !2 = !{i32 7, !"PIC Level", i32 2}
-!3 = !{!"clang version 6.0.0 (tags/RELEASE_600/final)"}
+!3 = !{!"clang version 6.0.1 (tags/RELEASE_601/final)"}
