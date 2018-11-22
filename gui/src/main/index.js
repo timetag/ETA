@@ -53,8 +53,8 @@ function createMainWindow() {
               title: frameName
         })
        	win.loadURL(url)
-	win.webContents.on('new-window', onWindowOpen)
-	event.newGuest = win
+        win.webContents.on('new-window', onWindowOpen)
+        event.newGuest = win
       }
 
       window.webContents.on('new-window', onWindowOpen);
