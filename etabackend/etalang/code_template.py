@@ -21,6 +21,7 @@ def mainloop(filename1, ReaderPTR1, vfiles, POOL_timetag1, POOL_fileid1, chn, ch
 
     SYNCRate_pspr = ReaderPTR1[4]
     RESUMING = ReaderPTR1[11]
+    earlystop = True
     Channel = ffi.from_buffer(chn)
     Channel_next = ffi.from_buffer(chn_next)
     eta_ret += FileReader_init(ffi.from_buffer(filename1), ffi.from_buffer(ReaderPTR1))
@@ -30,7 +31,7 @@ def mainloop(filename1, ReaderPTR1, vfiles, POOL_timetag1, POOL_fileid1, chn, ch
     {uettp_initial}
     
     eta_ret += VCHN_init({num_rslot}, {num_rchns}, {num_vslot})
-    eta_ret += POOL_init({num_rslot} + {num_vslot}, ffi.from_buffer(POOL_timetag1), ffi.from_buffer(POOL_fileid1) ,nb.int64(RESUMING))
+    eta_ret += POOL_init({num_rslot} + {num_vslot}, {pool_tree_size},ffi.from_buffer(POOL_timetag1), ffi.from_buffer(POOL_fileid1) ,nb.int64(RESUMING))
     AbsTime_ps = nb.int64(0)
 
     #get first photon
@@ -41,10 +42,12 @@ def mainloop(filename1, ReaderPTR1, vfiles, POOL_timetag1, POOL_fileid1, chn, ch
         if chn[0]<{num_rchns}:
             chn[0] = chn_next[0]
             RETRIVE_FROM_FILE=1
+        if not(earlystop) and AbsTime_ps == 9223372036854775807: # full stop
+            break
         {looping}
         if RETRIVE_FROM_FILE==1:
             controller_file_time = pop_signal_from_file(Channel_next)
-            if controller_file_time == 9223372036854775807:
+            if earlystop and controller_file_time == 9223372036854775807: # early stop 
                 break
             else:
                 eta_ret += POOL_update(nb.int64(controller_file_time),nb.int8(0))
@@ -58,8 +61,8 @@ def initializer(caller_parms):
     ReaderPTR1[0:7]=caller_parms[0:7]
     vfiles = np.zeros(({num_vslot}*4), dtype=np.int64) 
     {global_initial}
-    POOL_timetag1=np.zeros((({num_rslot} + {num_vslot}) * 2) , dtype=np.int64)
-    POOL_fileid1=np.zeros((({num_rslot} + {num_vslot}) * 2) , dtype=np.int8)
+    POOL_timetag1=np.zeros(({pool_tree_size}) , dtype=np.int64)
+    POOL_fileid1=np.zeros(({pool_tree_size}) , dtype=np.int8)
     chn = np.zeros((1), dtype=np.int8)
     chn_next = np.zeros((1), dtype=np.int8)
     return (filename, ReaderPTR1, vfiles, POOL_timetag1, POOL_fileid1, chn, chn_next {tables} )
@@ -76,7 +79,7 @@ def thin_wrapper(filename, ReaderPTR1,vfiles,POOL_timetag1,POOL_fileid1,chn,chn_
 
 """.format(uettp_initial=init_code, deinit=deinit_code, looping=mainloop, global_initial=global_init_code,
            tables=table_para, table_list=table_list,
-           num_rslot=num_rslot, num_vslot=num_vslot, num_rchns=num_rchns)
+           num_rslot=num_rslot, num_vslot=num_vslot,pool_tree_size= 2** int((num_rslot + num_vslot) * 2).bit_length(), num_rchns=num_rchns)
     if getattr(sys, 'frozen', False):
         print(".....")
     else:

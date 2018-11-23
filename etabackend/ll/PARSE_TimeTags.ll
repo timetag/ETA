@@ -70,95 +70,8 @@ $"\01?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA" = comdat any
 @"\01??_C@_0BF@FHCCBLNF@?6?6Reader?5is?5closing?4?$AA@" = linkonce_odr unnamed_addr constant [21 x i8] c"\0A\0AReader is closing.\00", comdat, align 1
 @"\01?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA" = linkonce_odr global i64 0, comdat, align 8
 
-; Function Attrs: noinline nounwind optnone uwtable
-define i32 @"\01?MarkerSHC_to_CHN@@YAIH@Z"(i32) #0 {
-  %2 = alloca i32, align 4
-  %3 = alloca i32, align 4
-  %4 = alloca i32, align 4
-  store i32 %0, i32* %2, align 4
-  store i32 0, i32* %3, align 4
-  %5 = load i32, i32* %2, align 4
-  store i32 %5, i32* %4, align 4
-  %6 = load i32, i32* %4, align 4
-  %7 = icmp ne i32 %6, 0
-  br i1 %7, label %8, label %50
-
-; <label>:8:                                      ; preds = %1
-  %9 = load i32, i32* %4, align 4
-  %10 = and i32 %9, 65535
-  %11 = icmp ne i32 %10, 0
-  br i1 %11, label %17, label %12
-
-; <label>:12:                                     ; preds = %8
-  %13 = load i32, i32* %3, align 4
-  %14 = add i32 %13, 16
-  store i32 %14, i32* %3, align 4
-  %15 = load i32, i32* %4, align 4
-  %16 = lshr i32 %15, 16
-  store i32 %16, i32* %4, align 4
-  br label %17
-
-; <label>:17:                                     ; preds = %12, %8
-  %18 = load i32, i32* %4, align 4
-  %19 = and i32 %18, 255
-  %20 = icmp ne i32 %19, 0
-  br i1 %20, label %26, label %21
-
-; <label>:21:                                     ; preds = %17
-  %22 = load i32, i32* %3, align 4
-  %23 = add i32 %22, 8
-  store i32 %23, i32* %3, align 4
-  %24 = load i32, i32* %4, align 4
-  %25 = lshr i32 %24, 8
-  store i32 %25, i32* %4, align 4
-  br label %26
-
-; <label>:26:                                     ; preds = %21, %17
-  %27 = load i32, i32* %4, align 4
-  %28 = and i32 %27, 15
-  %29 = icmp ne i32 %28, 0
-  br i1 %29, label %35, label %30
-
-; <label>:30:                                     ; preds = %26
-  %31 = load i32, i32* %3, align 4
-  %32 = add i32 %31, 4
-  store i32 %32, i32* %3, align 4
-  %33 = load i32, i32* %4, align 4
-  %34 = lshr i32 %33, 4
-  store i32 %34, i32* %4, align 4
-  br label %35
-
-; <label>:35:                                     ; preds = %30, %26
-  %36 = load i32, i32* %4, align 4
-  %37 = and i32 %36, 3
-  %38 = icmp ne i32 %37, 0
-  br i1 %38, label %44, label %39
-
-; <label>:39:                                     ; preds = %35
-  %40 = load i32, i32* %3, align 4
-  %41 = add i32 %40, 2
-  store i32 %41, i32* %3, align 4
-  %42 = load i32, i32* %4, align 4
-  %43 = lshr i32 %42, 2
-  store i32 %43, i32* %4, align 4
-  br label %44
-
-; <label>:44:                                     ; preds = %39, %35
-  %45 = load i32, i32* %4, align 4
-  %46 = and i32 %45, 1
-  %47 = xor i32 %46, 1
-  %48 = load i32, i32* %3, align 4
-  %49 = add i32 %48, %47
-  store i32 %49, i32* %3, align 4
-  br label %50
-
-; <label>:50:                                     ; preds = %44, %1
-  %51 = load i32, i32* %3, align 4
-  ret i32 %51
-}
-
 ; Function Attrs: alwaysinline uwtable
-define void @ProcessPHT2(i32, i64* dereferenceable(8), i8* dereferenceable(1), i64* dereferenceable(8)) #1 {
+define void @ProcessPHT2(i32, i64* dereferenceable(8), i8* dereferenceable(1), i64* dereferenceable(8)) #0 {
   %5 = alloca i64*, align 8
   %6 = alloca i8*, align 8
   %7 = alloca i64*, align 8
@@ -219,8 +132,8 @@ define void @ProcessPHT2(i32, i64* dereferenceable(8), i8* dereferenceable(1), i
   %47 = load i64*, i64** %7, align 8
   store i64 %46, i64* %47, align 8
   %48 = load i32, i32* %12, align 4
-  %49 = call i32 @"\01?MarkerSHC_to_CHN@@YAIH@Z"(i32 %48)
-  %50 = add i32 16, %49
+  %49 = call i32 @llvm.cttz.i32(i32 %48, i1 true)
+  %50 = add nsw i32 16, %49
   %51 = trunc i32 %50 to i8
   %52 = load i8*, i8** %6, align 8
   store i8 %51, i8* %52, align 1
@@ -280,6 +193,9 @@ define void @ProcessPHT2(i32, i64* dereferenceable(8), i8* dereferenceable(1), i
 ; <label>:90:                                     ; preds = %89, %53
   ret void
 }
+
+; Function Attrs: nounwind readnone speculatable
+declare i32 @llvm.cttz.i32(i32, i1) #1
 
 ; Function Attrs: noinline optnone uwtable
 define linkonce_odr i32 @printf(i8*, ...) #2 comdat {
@@ -424,8 +340,8 @@ define void @ProcessHHT2(i32, i32, i64* dereferenceable(8), i8* dereferenceable(
   %90 = load i32, i32* %89, align 4
   %91 = lshr i32 %90, 25
   %92 = and i32 %91, 63
-  %93 = call i32 @"\01?MarkerSHC_to_CHN@@YAIH@Z"(i32 %92)
-  %94 = add i32 16, %93
+  %93 = call i32 @llvm.cttz.i32(i32 %92, i1 true)
+  %94 = add nsw i32 16, %93
   %95 = trunc i32 %94 to i8
   %96 = load i8*, i8** %7, align 8
   store i8 %95, i8* %96, align 1
@@ -499,7 +415,7 @@ define void @ProcessHHT2(i32, i32, i64* dereferenceable(8), i8* dereferenceable(
 }
 
 ; Function Attrs: alwaysinline uwtable
-define void @ProcessPHT3(i32, i64* dereferenceable(8), i8* dereferenceable(1), i64* dereferenceable(8)) #1 {
+define void @ProcessPHT3(i32, i64* dereferenceable(8), i8* dereferenceable(1), i64* dereferenceable(8)) #0 {
   %5 = alloca i64*, align 8
   %6 = alloca i8*, align 8
   %7 = alloca i64*, align 8
@@ -567,8 +483,8 @@ define void @ProcessPHT3(i32, i64* dereferenceable(8), i8* dereferenceable(1), i
   %54 = load i32, i32* %53, align 4
   %55 = lshr i32 %54, 16
   %56 = and i32 %55, 4095
-  %57 = call i32 @"\01?MarkerSHC_to_CHN@@YAIH@Z"(i32 %56)
-  %58 = add i32 16, %57
+  %57 = call i32 @llvm.cttz.i32(i32 %56, i1 true)
+  %58 = add nsw i32 16, %57
   %59 = trunc i32 %58 to i8
   %60 = load i8*, i8** %6, align 8
   store i8 %59, i8* %60, align 1
@@ -761,8 +677,8 @@ define void @ProcessHHT3(i32, i32, i64* dereferenceable(8), i8* dereferenceable(
   %88 = load i32, i32* %87, align 4
   %89 = lshr i32 %88, 25
   %90 = and i32 %89, 63
-  %91 = call i32 @"\01?MarkerSHC_to_CHN@@YAIH@Z"(i32 %90)
-  %92 = add i32 16, %91
+  %91 = call i32 @llvm.cttz.i32(i32 %90, i1 true)
+  %92 = add nsw i32 16, %91
   %93 = trunc i32 %92 to i8
   %94 = load i8*, i8** %7, align 8
   store i8 %93, i8* %94, align 1
@@ -814,7 +730,7 @@ define void @ProcessHHT3(i32, i32, i64* dereferenceable(8), i8* dereferenceable(
 }
 
 ; Function Attrs: alwaysinline uwtable
-define i32 @read_next_minibatch() #1 {
+define i32 @read_next_minibatch() #0 {
   %1 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
   %2 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %1, i64 0
   %3 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %2, i32 0, i32 13
@@ -862,23 +778,23 @@ define i32 @read_next_minibatch() #1 {
 declare i64 @fread(i8*, i64, i64, %struct._iobuf*) #4
 
 ; Function Attrs: alwaysinline uwtable
-define i64 @pop_signal_from_file(i8*) #1 {
+define i64 @pop_signal_from_file(i8*) #0 {
   %2 = alloca i64*, align 8
   %3 = alloca i8*, align 8
   %4 = alloca i64*, align 8
   %5 = alloca i32, align 4
   %6 = alloca i32, align 4
-  %7 = alloca i32, align 4
-  %8 = alloca %union.anon.5, align 4
-  %9 = alloca i64*, align 8
-  %10 = alloca i8*, align 8
+  %7 = alloca i64, align 8
+  %8 = alloca i32, align 4
+  %9 = alloca i32, align 4
+  %10 = alloca %union.anon.0, align 4
   %11 = alloca i64*, align 8
-  %12 = alloca i32, align 4
-  %13 = alloca i32, align 4
-  %14 = alloca i64, align 8
+  %12 = alloca i8*, align 8
+  %13 = alloca i64*, align 8
+  %14 = alloca i32, align 4
   %15 = alloca i32, align 4
   %16 = alloca i32, align 4
-  %17 = alloca %union.anon.0, align 4
+  %17 = alloca %union.anon.5, align 4
   %18 = alloca i64*, align 8
   %19 = alloca i8*, align 8
   %20 = alloca i64*, align 8
@@ -1137,8 +1053,8 @@ define i64 @pop_signal_from_file(i8*) #1 {
   %216 = load i64*, i64** %43, align 8
   store i64 %215, i64* %216, align 8
   %217 = load i32, i32* %48, align 4
-  %218 = call i32 @"\01?MarkerSHC_to_CHN@@YAIH@Z"(i32 %217)
-  %219 = add i32 16, %218
+  %218 = call i32 @llvm.cttz.i32(i32 %217, i1 true)
+  %219 = add nsw i32 16, %218
   %220 = trunc i32 %219 to i8
   %221 = load i8*, i8** %42, align 8
   store i8 %220, i8* %221, align 1
@@ -1258,8 +1174,8 @@ define i64 @pop_signal_from_file(i8*) #1 {
   %302 = load i32, i32* %301, align 4
   %303 = lshr i32 %302, 16
   %304 = and i32 %303, 4095
-  %305 = call i32 @"\01?MarkerSHC_to_CHN@@YAIH@Z"(i32 %304)
-  %306 = add i32 16, %305
+  %305 = call i32 @llvm.cttz.i32(i32 %304, i1 true)
+  %306 = add nsw i32 16, %305
   %307 = trunc i32 %306 to i8
   %308 = load i8*, i8** %35, align 8
   store i8 %307, i8* %308, align 1
@@ -1451,8 +1367,8 @@ define i64 @pop_signal_from_file(i8*) #1 {
   %441 = load i32, i32* %440, align 4
   %442 = lshr i32 %441, 25
   %443 = and i32 %442, 63
-  %444 = call i32 @"\01?MarkerSHC_to_CHN@@YAIH@Z"(i32 %443) #5
-  %445 = add i32 16, %444
+  %444 = call i32 @llvm.cttz.i32(i32 %443, i1 true) #5
+  %445 = add nsw i32 16, %444
   %446 = trunc i32 %445 to i8
   %447 = load i8*, i8** %26, align 8
   store i8 %446, i8* %447, align 1
@@ -1629,8 +1545,8 @@ define i64 @pop_signal_from_file(i8*) #1 {
   %572 = load i32, i32* %571, align 4
   %573 = lshr i32 %572, 25
   %574 = and i32 %573, 63
-  %575 = call i32 @"\01?MarkerSHC_to_CHN@@YAIH@Z"(i32 %574) #5
-  %576 = add i32 16, %575
+  %575 = call i32 @llvm.cttz.i32(i32 %574, i1 true) #5
+  %576 = add nsw i32 16, %575
   %577 = trunc i32 %576 to i8
   %578 = load i8*, i8** %19, align 8
   store i8 %577, i8* %578, align 1
@@ -1683,17 +1599,17 @@ define i64 @pop_signal_from_file(i8*) #1 {
   %615 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %614, i64 0
   %616 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %615, i32 0, i32 10
   %617 = load i32, i32* %56, align 4
-  store i64* %616, i64** %9, align 8
-  store i8* %52, i8** %10, align 8
-  store i64* %51, i64** %11, align 8
-  store i32 2, i32* %12, align 4
-  store i32 %617, i32* %13, align 4
-  store i32 33552000, i32* %15, align 4
-  store i32 33554432, i32* %16, align 4
-  %618 = load i32, i32* %13, align 4
-  %619 = bitcast %union.anon.0* %17 to i32*
+  store i64* %616, i64** %2, align 8
+  store i8* %52, i8** %3, align 8
+  store i64* %51, i64** %4, align 8
+  store i32 2, i32* %5, align 4
+  store i32 %617, i32* %6, align 4
+  store i32 33552000, i32* %8, align 4
+  store i32 33554432, i32* %9, align 4
+  %618 = load i32, i32* %6, align 4
+  %619 = bitcast %union.anon.0* %10 to i32*
   store i32 %618, i32* %619, align 4
-  %620 = bitcast %union.anon.0* %17 to %struct.anon.1*
+  %620 = bitcast %union.anon.0* %10 to %struct.anon.1*
   %621 = bitcast %struct.anon.1* %620 to i32*
   %622 = load i32, i32* %621, align 4
   %623 = lshr i32 %622, 31
@@ -1701,7 +1617,7 @@ define i64 @pop_signal_from_file(i8*) #1 {
   br i1 %624, label %625, label %723
 
 ; <label>:625:                                    ; preds = %613
-  %626 = bitcast %union.anon.0* %17 to %struct.anon.1*
+  %626 = bitcast %union.anon.0* %10 to %struct.anon.1*
   %627 = bitcast %struct.anon.1* %626 to i32*
   %628 = load i32, i32* %627, align 4
   %629 = lshr i32 %628, 25
@@ -1710,19 +1626,19 @@ define i64 @pop_signal_from_file(i8*) #1 {
   br i1 %631, label %632, label %661
 
 ; <label>:632:                                    ; preds = %625
-  %633 = load i32, i32* %12, align 4
+  %633 = load i32, i32* %5, align 4
   %634 = icmp eq i32 %633, 1
   br i1 %634, label %635, label %639
 
 ; <label>:635:                                    ; preds = %632
-  %636 = load i64*, i64** %9, align 8
+  %636 = load i64*, i64** %2, align 8
   %637 = load i64, i64* %636, align 8
   %638 = add i64 %637, 33552000
   store i64 %638, i64* %636, align 8
   br label %660
 
 ; <label>:639:                                    ; preds = %632
-  %640 = bitcast %union.anon.0* %17 to %struct.anon.1*
+  %640 = bitcast %union.anon.0* %10 to %struct.anon.1*
   %641 = bitcast %struct.anon.1* %640 to i32*
   %642 = load i32, i32* %641, align 4
   %643 = and i32 %642, 33554431
@@ -1730,20 +1646,20 @@ define i64 @pop_signal_from_file(i8*) #1 {
   br i1 %644, label %645, label %649
 
 ; <label>:645:                                    ; preds = %639
-  %646 = load i64*, i64** %9, align 8
+  %646 = load i64*, i64** %2, align 8
   %647 = load i64, i64* %646, align 8
   %648 = add i64 %647, 33554432
   store i64 %648, i64* %646, align 8
   br label %659
 
 ; <label>:649:                                    ; preds = %639
-  %650 = bitcast %union.anon.0* %17 to %struct.anon.1*
+  %650 = bitcast %union.anon.0* %10 to %struct.anon.1*
   %651 = bitcast %struct.anon.1* %650 to i32*
   %652 = load i32, i32* %651, align 4
   %653 = and i32 %652, 33554431
   %654 = zext i32 %653 to i64
   %655 = mul i64 33554432, %654
-  %656 = load i64*, i64** %9, align 8
+  %656 = load i64*, i64** %2, align 8
   %657 = load i64, i64* %656, align 8
   %658 = add i64 %657, %655
   store i64 %658, i64* %656, align 8
@@ -1756,7 +1672,7 @@ define i64 @pop_signal_from_file(i8*) #1 {
   br label %661
 
 ; <label>:661:                                    ; preds = %660, %625
-  %662 = bitcast %union.anon.0* %17 to %struct.anon.1*
+  %662 = bitcast %union.anon.0* %10 to %struct.anon.1*
   %663 = bitcast %struct.anon.1* %662 to i32*
   %664 = load i32, i32* %663, align 4
   %665 = lshr i32 %664, 25
@@ -1765,7 +1681,7 @@ define i64 @pop_signal_from_file(i8*) #1 {
   br i1 %667, label %668, label %699
 
 ; <label>:668:                                    ; preds = %661
-  %669 = bitcast %union.anon.0* %17 to %struct.anon.1*
+  %669 = bitcast %union.anon.0* %10 to %struct.anon.1*
   %670 = bitcast %struct.anon.1* %669 to i32*
   %671 = load i32, i32* %670, align 4
   %672 = lshr i32 %671, 25
@@ -1774,36 +1690,36 @@ define i64 @pop_signal_from_file(i8*) #1 {
   br i1 %674, label %675, label %699
 
 ; <label>:675:                                    ; preds = %668
-  %676 = load i64*, i64** %9, align 8
+  %676 = load i64*, i64** %2, align 8
   %677 = load i64, i64* %676, align 8
-  %678 = bitcast %union.anon.0* %17 to %struct.anon.1*
+  %678 = bitcast %union.anon.0* %10 to %struct.anon.1*
   %679 = bitcast %struct.anon.1* %678 to i32*
   %680 = load i32, i32* %679, align 4
   %681 = and i32 %680, 33554431
   %682 = zext i32 %681 to i64
   %683 = add nsw i64 %677, %682
-  store i64 %683, i64* %14, align 8
-  %684 = load i64, i64* %14, align 8
+  store i64 %683, i64* %7, align 8
+  %684 = load i64, i64* %7, align 8
   %685 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
   %686 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %685, i32 0, i32 2
   %687 = load i64, i64* %686, align 8
   %688 = mul nsw i64 %684, %687
-  %689 = load i64*, i64** %11, align 8
+  %689 = load i64*, i64** %4, align 8
   store i64 %688, i64* %689, align 8
-  %690 = bitcast %union.anon.0* %17 to %struct.anon.1*
+  %690 = bitcast %union.anon.0* %10 to %struct.anon.1*
   %691 = bitcast %struct.anon.1* %690 to i32*
   %692 = load i32, i32* %691, align 4
   %693 = lshr i32 %692, 25
   %694 = and i32 %693, 63
-  %695 = call i32 @"\01?MarkerSHC_to_CHN@@YAIH@Z"(i32 %694) #5
-  %696 = add i32 16, %695
+  %695 = call i32 @llvm.cttz.i32(i32 %694, i1 true) #5
+  %696 = add nsw i32 16, %695
   %697 = trunc i32 %696 to i8
-  %698 = load i8*, i8** %10, align 8
+  %698 = load i8*, i8** %3, align 8
   store i8 %697, i8* %698, align 1
   br label %699
 
 ; <label>:699:                                    ; preds = %675, %668, %661
-  %700 = bitcast %union.anon.0* %17 to %struct.anon.1*
+  %700 = bitcast %union.anon.0* %10 to %struct.anon.1*
   %701 = bitcast %struct.anon.1* %700 to i32*
   %702 = load i32, i32* %701, align 4
   %703 = lshr i32 %702, 25
@@ -1812,23 +1728,23 @@ define i64 @pop_signal_from_file(i8*) #1 {
   br i1 %705, label %706, label %722
 
 ; <label>:706:                                    ; preds = %699
-  %707 = load i64*, i64** %9, align 8
+  %707 = load i64*, i64** %2, align 8
   %708 = load i64, i64* %707, align 8
-  %709 = bitcast %union.anon.0* %17 to %struct.anon.1*
+  %709 = bitcast %union.anon.0* %10 to %struct.anon.1*
   %710 = bitcast %struct.anon.1* %709 to i32*
   %711 = load i32, i32* %710, align 4
   %712 = and i32 %711, 33554431
   %713 = zext i32 %712 to i64
   %714 = add nsw i64 %708, %713
-  store i64 %714, i64* %14, align 8
-  %715 = load i64, i64* %14, align 8
+  store i64 %714, i64* %7, align 8
+  %715 = load i64, i64* %7, align 8
   %716 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
   %717 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %716, i32 0, i32 2
   %718 = load i64, i64* %717, align 8
   %719 = mul nsw i64 %715, %718
-  %720 = load i64*, i64** %11, align 8
+  %720 = load i64*, i64** %4, align 8
   store i64 %719, i64* %720, align 8
-  %721 = load i8*, i8** %10, align 8
+  %721 = load i8*, i8** %3, align 8
   store i8 0, i8* %721, align 1
   br label %722
 
@@ -1836,30 +1752,30 @@ define i64 @pop_signal_from_file(i8*) #1 {
   br label %746
 
 ; <label>:723:                                    ; preds = %613
-  %724 = load i64*, i64** %9, align 8
+  %724 = load i64*, i64** %2, align 8
   %725 = load i64, i64* %724, align 8
-  %726 = bitcast %union.anon.0* %17 to %struct.anon.1*
+  %726 = bitcast %union.anon.0* %10 to %struct.anon.1*
   %727 = bitcast %struct.anon.1* %726 to i32*
   %728 = load i32, i32* %727, align 4
   %729 = and i32 %728, 33554431
   %730 = zext i32 %729 to i64
   %731 = add nsw i64 %725, %730
-  store i64 %731, i64* %14, align 8
-  %732 = load i64, i64* %14, align 8
+  store i64 %731, i64* %7, align 8
+  %732 = load i64, i64* %7, align 8
   %733 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
   %734 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %733, i32 0, i32 2
   %735 = load i64, i64* %734, align 8
   %736 = mul nsw i64 %732, %735
-  %737 = load i64*, i64** %11, align 8
+  %737 = load i64*, i64** %4, align 8
   store i64 %736, i64* %737, align 8
-  %738 = bitcast %union.anon.0* %17 to %struct.anon.1*
+  %738 = bitcast %union.anon.0* %10 to %struct.anon.1*
   %739 = bitcast %struct.anon.1* %738 to i32*
   %740 = load i32, i32* %739, align 4
   %741 = lshr i32 %740, 25
   %742 = and i32 %741, 63
   %743 = add nsw i32 %742, 1
   %744 = trunc i32 %743 to i8
-  %745 = load i8*, i8** %10, align 8
+  %745 = load i8*, i8** %3, align 8
   store i8 %744, i8* %745, align 1
   br label %746
 
@@ -1871,16 +1787,16 @@ define i64 @pop_signal_from_file(i8*) #1 {
   %749 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %748, i64 0
   %750 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %749, i32 0, i32 10
   %751 = load i32, i32* %56, align 4
-  store i64* %750, i64** %2, align 8
-  store i8* %52, i8** %3, align 8
-  store i64* %51, i64** %4, align 8
-  store i32 2, i32* %5, align 4
-  store i32 %751, i32* %6, align 4
-  store i32 1024, i32* %7, align 4
-  %752 = load i32, i32* %6, align 4
-  %753 = bitcast %union.anon.5* %8 to i32*
+  store i64* %750, i64** %11, align 8
+  store i8* %52, i8** %12, align 8
+  store i64* %51, i64** %13, align 8
+  store i32 2, i32* %14, align 4
+  store i32 %751, i32* %15, align 4
+  store i32 1024, i32* %16, align 4
+  %752 = load i32, i32* %15, align 4
+  %753 = bitcast %union.anon.5* %17 to i32*
   store i32 %752, i32* %753, align 4
-  %754 = bitcast %union.anon.5* %8 to %struct.anon.6*
+  %754 = bitcast %union.anon.5* %17 to %struct.anon.6*
   %755 = bitcast %struct.anon.6* %754 to i32*
   %756 = load i32, i32* %755, align 4
   %757 = lshr i32 %756, 31
@@ -1888,7 +1804,7 @@ define i64 @pop_signal_from_file(i8*) #1 {
   br i1 %758, label %759, label %831
 
 ; <label>:759:                                    ; preds = %747
-  %760 = bitcast %union.anon.5* %8 to %struct.anon.6*
+  %760 = bitcast %union.anon.5* %17 to %struct.anon.6*
   %761 = bitcast %struct.anon.6* %760 to i32*
   %762 = load i32, i32* %761, align 4
   %763 = lshr i32 %762, 25
@@ -1897,7 +1813,7 @@ define i64 @pop_signal_from_file(i8*) #1 {
   br i1 %765, label %766, label %790
 
 ; <label>:766:                                    ; preds = %759
-  %767 = bitcast %union.anon.5* %8 to %struct.anon.6*
+  %767 = bitcast %union.anon.5* %17 to %struct.anon.6*
   %768 = bitcast %struct.anon.6* %767 to i32*
   %769 = load i32, i32* %768, align 4
   %770 = and i32 %769, 1023
@@ -1905,25 +1821,25 @@ define i64 @pop_signal_from_file(i8*) #1 {
   br i1 %771, label %775, label %772
 
 ; <label>:772:                                    ; preds = %766
-  %773 = load i32, i32* %5, align 4
+  %773 = load i32, i32* %14, align 4
   %774 = icmp eq i32 %773, 1
   br i1 %774, label %775, label %779
 
 ; <label>:775:                                    ; preds = %772, %766
-  %776 = load i64*, i64** %2, align 8
+  %776 = load i64*, i64** %11, align 8
   %777 = load i64, i64* %776, align 8
   %778 = add i64 %777, 1024
   store i64 %778, i64* %776, align 8
   br label %789
 
 ; <label>:779:                                    ; preds = %772
-  %780 = bitcast %union.anon.5* %8 to %struct.anon.6*
+  %780 = bitcast %union.anon.5* %17 to %struct.anon.6*
   %781 = bitcast %struct.anon.6* %780 to i32*
   %782 = load i32, i32* %781, align 4
   %783 = and i32 %782, 1023
   %784 = zext i32 %783 to i64
   %785 = mul i64 1024, %784
-  %786 = load i64*, i64** %2, align 8
+  %786 = load i64*, i64** %11, align 8
   %787 = load i64, i64* %786, align 8
   %788 = add i64 %787, %785
   store i64 %788, i64* %786, align 8
@@ -1933,7 +1849,7 @@ define i64 @pop_signal_from_file(i8*) #1 {
   br label %790
 
 ; <label>:790:                                    ; preds = %789, %759
-  %791 = bitcast %union.anon.5* %8 to %struct.anon.6*
+  %791 = bitcast %union.anon.5* %17 to %struct.anon.6*
   %792 = bitcast %struct.anon.6* %791 to i32*
   %793 = load i32, i32* %792, align 4
   %794 = lshr i32 %793, 25
@@ -1942,7 +1858,7 @@ define i64 @pop_signal_from_file(i8*) #1 {
   br i1 %796, label %797, label %830
 
 ; <label>:797:                                    ; preds = %790
-  %798 = bitcast %union.anon.5* %8 to %struct.anon.6*
+  %798 = bitcast %union.anon.5* %17 to %struct.anon.6*
   %799 = bitcast %struct.anon.6* %798 to i32*
   %800 = load i32, i32* %799, align 4
   %801 = lshr i32 %800, 25
@@ -1951,9 +1867,9 @@ define i64 @pop_signal_from_file(i8*) #1 {
   br i1 %803, label %804, label %830
 
 ; <label>:804:                                    ; preds = %797
-  %805 = load i64*, i64** %2, align 8
+  %805 = load i64*, i64** %11, align 8
   %806 = load i64, i64* %805, align 8
-  %807 = bitcast %union.anon.5* %8 to %struct.anon.6*
+  %807 = bitcast %union.anon.5* %17 to %struct.anon.6*
   %808 = bitcast %struct.anon.6* %807 to i32*
   %809 = load i32, i32* %808, align 4
   %810 = and i32 %809, 1023
@@ -1966,17 +1882,17 @@ define i64 @pop_signal_from_file(i8*) #1 {
   %817 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
   %818 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %817, i32 0, i32 3
   %819 = load i64, i64* %818, align 8
-  %820 = load i64*, i64** %4, align 8
+  %820 = load i64*, i64** %13, align 8
   store i64 %816, i64* %820, align 8
-  %821 = bitcast %union.anon.5* %8 to %struct.anon.6*
+  %821 = bitcast %union.anon.5* %17 to %struct.anon.6*
   %822 = bitcast %struct.anon.6* %821 to i32*
   %823 = load i32, i32* %822, align 4
   %824 = lshr i32 %823, 25
   %825 = and i32 %824, 63
-  %826 = call i32 @"\01?MarkerSHC_to_CHN@@YAIH@Z"(i32 %825) #5
-  %827 = add i32 16, %826
+  %826 = call i32 @llvm.cttz.i32(i32 %825, i1 true) #5
+  %827 = add nsw i32 16, %826
   %828 = trunc i32 %827 to i8
-  %829 = load i8*, i8** %3, align 8
+  %829 = load i8*, i8** %12, align 8
   store i8 %828, i8* %829, align 1
   br label %830
 
@@ -1984,9 +1900,9 @@ define i64 @pop_signal_from_file(i8*) #1 {
   br label %863
 
 ; <label>:831:                                    ; preds = %747
-  %832 = load i64*, i64** %2, align 8
+  %832 = load i64*, i64** %11, align 8
   %833 = load i64, i64* %832, align 8
-  %834 = bitcast %union.anon.5* %8 to %struct.anon.6*
+  %834 = bitcast %union.anon.5* %17 to %struct.anon.6*
   %835 = bitcast %struct.anon.6* %834 to i32*
   %836 = load i32, i32* %835, align 4
   %837 = and i32 %836, 1023
@@ -1996,7 +1912,7 @@ define i64 @pop_signal_from_file(i8*) #1 {
   %841 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %840, i32 0, i32 4
   %842 = load i64, i64* %841, align 8
   %843 = mul nsw i64 %839, %842
-  %844 = bitcast %union.anon.5* %8 to %struct.anon.6*
+  %844 = bitcast %union.anon.5* %17 to %struct.anon.6*
   %845 = bitcast %struct.anon.6* %844 to i32*
   %846 = load i32, i32* %845, align 4
   %847 = lshr i32 %846, 10
@@ -2007,15 +1923,15 @@ define i64 @pop_signal_from_file(i8*) #1 {
   %852 = load i64, i64* %851, align 8
   %853 = mul nsw i64 %849, %852
   %854 = add nsw i64 %843, %853
-  %855 = load i64*, i64** %4, align 8
+  %855 = load i64*, i64** %13, align 8
   store i64 %854, i64* %855, align 8
-  %856 = bitcast %union.anon.5* %8 to %struct.anon.6*
+  %856 = bitcast %union.anon.5* %17 to %struct.anon.6*
   %857 = bitcast %struct.anon.6* %856 to i32*
   %858 = load i32, i32* %857, align 4
   %859 = lshr i32 %858, 25
   %860 = and i32 %859, 63
   %861 = trunc i32 %860 to i8
-  %862 = load i8*, i8** %3, align 8
+  %862 = load i8*, i8** %12, align 8
   store i8 %861, i8* %862, align 1
   br label %863
 
@@ -2165,7 +2081,7 @@ define i64 @pop_signal_from_file(i8*) #1 {
 }
 
 ; Function Attrs: alwaysinline uwtable
-define i32 @FileReader_init(i8*, i8*) #1 {
+define i32 @FileReader_init(i8*, i8*) #0 {
   %3 = alloca i32, align 4
   %4 = alloca i8*, align 8
   %5 = alloca i8*, align 8
@@ -2275,7 +2191,7 @@ declare i32 @_fseeki64(%struct._iobuf*, i64, i32) #4
 declare noalias i8* @malloc(i64) #4
 
 ; Function Attrs: alwaysinline uwtable
-define i32 @FileReader_close(i8*) #1 {
+define i32 @FileReader_close(i8*) #0 {
   %2 = alloca i32, align 4
   %3 = alloca i8*, align 8
   store i8* %0, i8** %3, align 8
@@ -2349,16 +2265,17 @@ declare void @llvm.va_end(i8*) #5
 declare i32 @__stdio_common_vfprintf(i64, %struct._iobuf*, i8*, %struct.__crt_locale_pointers*, i8*) #4
 
 ; Function Attrs: noinline nounwind optnone uwtable
-define linkonce_odr i64* @__local_stdio_printf_options() #0 comdat {
+define linkonce_odr i64* @__local_stdio_printf_options() #6 comdat {
   ret i64* @"\01?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA"
 }
 
-attributes #0 = { noinline nounwind optnone uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
-attributes #1 = { alwaysinline uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #0 = { alwaysinline uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #1 = { nounwind readnone speculatable }
 attributes #2 = { noinline optnone uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
 attributes #3 = { alwaysinline nounwind uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
 attributes #4 = { "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
 attributes #5 = { nounwind }
+attributes #6 = { noinline nounwind optnone uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
 
 !llvm.linker.options = !{!0}
 !llvm.module.flags = !{!1, !2}
