@@ -145,7 +145,7 @@ def link_jit_code(code):
         "pop_signal_from_file": link_function("pop_signal_from_file", 1, i64=True),
         "VFILES_init": link_function("VFILES_init", 1),
         "VFILE_init": link_function("VFILE_init", 4),
-        "POOL_init": link_function("POOL_init", 4),
+        "POOL_init": link_function("POOL_init", 5),
         "READER_BytesofRecords_get": link_global("READER_BytesofRecords"),
         "POOL_update": link_function("POOL_update", 2, i64=False),
         "VCHN_init": link_function("VCHN_init", 3),
