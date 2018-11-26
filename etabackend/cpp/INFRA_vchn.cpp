@@ -143,17 +143,15 @@ extern "C" {
 	unsigned char *POOL_fileid = 0;
 	//DANGER: globlal
 	int MKS_inline POOL_update(long long timeinfuture, unsigned char FILEid) {
-		//PINFO("-------")
 		unsigned char index = POOL_FILES + FILEid;
 		//save to leaf
 		POOL_timetag[index] = timeinfuture;
 		POOL_fileid[index] = FILEid;
-		//PINFO("index %d, FILEid %d", index,FILEid)
-		while (index > 1) {
-
-			const unsigned char parent_leaf = (index / 2);
-			const unsigned char left_leaf = parent_leaf * 2;
-			const unsigned char right_leaf = parent_leaf * 2 + 1;
+		//PINFO("POOL_update index %d, FILEid %d, timeinfuture %lld", index,FILEid, timeinfuture)
+		while (index > 0) {
+			const unsigned char parent_leaf = (index-1) / 2;
+			const unsigned char left_leaf = (parent_leaf + 1) * 2 - 1;
+			const unsigned char right_leaf = (parent_leaf + 1) * 2;
 			//PINFO("parent %d (%d %d)", parent_leaf, left_leaf, right_leaf)
 			if (POOL_timetag[left_leaf] < POOL_timetag[right_leaf]) {//use smaller one as representative
 				POOL_timetag[parent_leaf] = POOL_timetag[left_leaf];
@@ -163,14 +161,14 @@ extern "C" {
 				POOL_timetag[parent_leaf] = POOL_timetag[right_leaf];
 				POOL_fileid[parent_leaf] = POOL_fileid[right_leaf];
 			}
-			index /= 2;
+			index = parent_leaf;
 		};
-		//PINFO("time %lld FILEid %d ", POOL_timetag[1], POOL_fileid[1])
+		//PINFO("POOL_top %lld FILEid %d ", POOL_timetag[0], POOL_fileid[0])
 		
 		return 0;
 	}
 
-	int MKS_inline POOL_init(long long POOL_FILES1, void* POOL_timetag1, void* POOL_fileid1,long long resume) {
+	int MKS_inline POOL_init(long long POOL_FILES1, long long pool_tree_size, void* POOL_timetag1, void* POOL_fileid1, long long resume) {
 		
 		POOL_FILES = POOL_FILES1;
 		
@@ -189,14 +187,12 @@ extern "C" {
 		if (resume == 0) {
 			PINFO("POOL_init %d", POOL_FILES);
 			//init value
-			for (auto slot = 0; slot < POOL_FILES * 2; slot++) {
-				//PINFO("init value %d", slot);
+			for (auto slot = 0; slot < pool_tree_size; slot++) {
 				POOL_timetag[slot] = INT64_MAX;
 				POOL_fileid[slot] = 0;
 			}
 			//init leaf
 			for (auto slot = 0; slot < POOL_FILES; slot++) {
-				//PINFO("init leaf %d", slot);
 				POOL_fileid[POOL_FILES + slot] = slot;
 			}
 		}
@@ -219,22 +215,16 @@ extern "C" {
 		VCHN_VFILES_offset = rchns; 
 	
 		PINFO("VCHN_RFILES: %d,VCHN_VFILES_offset:%d ", rslots, rchns);
-		/*auto acc= POOL_init(POOL_FILES1, malloc(POOL_FILES1 * 2 * sizeof(long long)), malloc(POOL_FILES1 * 2 * sizeof(unsigned char)),true);
-		PINFO("VFILE MALLOC SIZE: %d", vslots * sizeof(circular_buf_t));
-		acc+=VFILES_init(malloc(vslots * sizeof(circular_buf_t)));
-		for (auto vslot = 0; vslot < vslots; vslot++) {
-			PINFO("VFILE_init(%d) ", vslot);
-			VFILE_init(vslot);
-		}*/
+		
 		return 0;
 	}
 	int MKS_inline VCHN_put(long long timeinfuture, unsigned char virtual_channel) {
-		
+		// for emit() action
 		const auto VFILEid = virtual_channel - VCHN_VFILES_offset;
 		const auto FILEid = VFILEid + VCHN_RFILES;
-
+		//PINFO("VCHN_put FILEid %d, VFILEid %d, virtual_channel  %d , timeinfuture %lld", FILEid, VFILEid, virtual_channel, timeinfuture)
 		if (timeinfuture == INT64_MAX) {
-			PINFO("clear future\n");
+			//PINFO("clear future\n");
 			POOL_update(timeinfuture, FILEid);
 			circular_buf_reset(&(VFILES[VFILEid]));
 			return -1;
@@ -243,9 +233,7 @@ extern "C" {
 			unsigned char  index = POOL_FILES + FILEid;
 			if (POOL_timetag[index] == INT64_MAX) {
 				//PINFO("REACTIVATE FILEid %d with chn %d at %lld",FILEid, virtual_channel, timeinfuture);
-				//PINFO("---")
 				auto ret = POOL_update(timeinfuture, FILEid);//reactivate virtual_channel;
-				//PINFO("!!!!!");
 				return ret;
 			}
 			else {
@@ -269,11 +257,12 @@ extern "C" {
 	long long MKS_inline VCHN_next(unsigned char* channel_out) {
 
 		//get current (min time) from pool
-		const auto AbsTime_ps = POOL_timetag[1];
+		const auto AbsTime_ps = POOL_timetag[0];
 
-		const auto FILEid = POOL_fileid[1];
+		const auto FILEid = POOL_fileid[0];
 		const auto VFILEid = FILEid - VCHN_RFILES;
 		*channel_out = VCHN_VFILES_offset + VFILEid;
+		
 		if (AbsTime_ps < INT64_MAX) {
 			if (VFILEid >= 0) {
 				
@@ -288,10 +277,8 @@ extern "C" {
 				}
 			}
 		}
-		/*if (AbsTime_ps <0) {
-			PINFO("read form channel %d at %lld", *channel_out, AbsTime_ps);
-		}*/
 		
+		//PINFO("VCHN_next FILEid %d, VFILEid %d, channel_out  %d , AbsTime_ps %lld", FILEid, VFILEid, *channel_out, AbsTime_ps)
 		return AbsTime_ps;
 
 	}
