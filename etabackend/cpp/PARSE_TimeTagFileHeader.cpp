@@ -36,13 +36,24 @@ extern "C" {
 	long long TTF_filesize;
 
 }
+int MKS_inline bh_4bytes_header_parser(char Magic[4]) {
+	PINFO("Becker & Hickl SPC-134/144/154/830 timetag file has no header.");
+	SYNCRate_pspr = ((unsigned short *)Magic)[0];
+	DTRes_pspr = 1;
+	TTRes_pspr = 0;
+	RecordType = 3;
+	PINFO("RecordType: bh_spc_4bytes");
+	BytesofRecords = 4;
+	TTF_header_offset = 4;
+	return 0;
+}
 int MKS_inline Swebian_header_parser() {
-	PINFO("SwebianInstr file has no header.");
+	PINFO("Swebian Instrument timetag file has no header.");
 	SYNCRate_pspr = 0;
 	TTRes_pspr = 1;
 	DTRes_pspr = 1;
 	RecordType = 1;
-	PINFO("RecordType: SwebianInstr 16-bytes");
+	PINFO("RecordType: SwebianInstrument 16-bytes");
 	BytesofRecords = 16;
 	TTF_header_offset=0;
 	return 0;
@@ -346,7 +357,7 @@ ex:
 /////////////////////////////////////////////
 //////////////////////////////////////////////
 
-extern "C" int MKS_inline PARSE_TimeTagFileHeader(char* TTF_filename,int RecordTypetemp)
+extern "C" int MKS_inline PARSE_TimeTagFileHeader(char* TTF_filename, int RecordTypetemp)
 {
 	int ret = -1;
 	PINFO("File name: %s", TTF_filename);
@@ -369,20 +380,30 @@ extern "C" int MKS_inline PARSE_TimeTagFileHeader(char* TTF_filename,int RecordT
 			RecordTypetemp = -1;
 			isendlessfile = false;
 		}
+
+		//quTAU_FORMAT_BINARY magic is shit
+		if (strncmp(Magic,"\x87\xB3\x91\xFA", 4) == 0) {
+			RecordTypetemp = 0;
+		}
 		switch (RecordTypetemp){
 		case 0:
-			//quTAU_FORMAT_BINARY magic is shit
 			PINFO("Header Parser: quTAU_FORMAT_BINARY \n");
 			ret = quTAU_FORMAT_BINARY_header_parser(fpin);
 			break;
-		case 2:
-			//quTAU_FORMAT_BINARY magic is shit
-			PINFO("Header Parser: quTAU_FORMAT_COMPRESSED \n");
-			ret = quTAU_FORMAT_COMPRESSED_header_parser(fpin);
-			break;
+		
 		case 1:
 			PINFO("Header Parser: Swebian Instrument \n");
 			ret = Swebian_header_parser();
+			break;
+		case 2:
+			//quTAU_FORMAT_COMPRESSED magic is shit
+			PINFO("Header Parser: quTAU_FORMAT_COMPRESSED \n");
+			ret = quTAU_FORMAT_COMPRESSED_header_parser(fpin);
+			break;
+		case 3:
+			//bh_spc_4bytes magic is shit
+			PINFO("Header Parser: bh_spc_4bytes \n");
+			ret = bh_4bytes_header_parser(Magic);
 			break;
 		case -1:
 			PINFO("Header Parser: PicoQuant \n");

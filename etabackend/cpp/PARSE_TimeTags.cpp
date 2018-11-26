@@ -6,7 +6,27 @@ Zuzeng Lin, KTH, 2017-2018
 
 #ifdef __clang__
 #define MKS_inline __attribute__((always_inline))
+#define MarkerSHC_to_CHN(SHC) (__builtin_ctz(SHC))
 #else
+//
+unsigned int MarkerSHC_to_CHN(int n) {
+	unsigned int bits = 0, x = n;
+
+	if (x) {
+		/* assuming `x` has 32 bits: lets count the low order 0 bits in batches */
+		/* mask the 16 low order bits, add 16 and shift them out if they are all 0 */
+		if (!(x & 0x0000FFFF)) { bits += 16; x >>= 16; }
+		/* mask the 8 low order bits, add 8 and shift them out if they are all 0 */
+		if (!(x & 0x000000FF)) { bits += 8; x >>= 8; }
+		/* mask the 4 low order bits, add 4 and shift them out if they are all 0 */
+		if (!(x & 0x0000000F)) { bits += 4; x >>= 4; }
+		/* mask the 2 low order bits, add 2 and shift them out if they are all 0 */
+		if (!(x & 0x00000003)) { bits += 2; x >>= 2; }
+		/* mask the low order bit and add 1 if it is 0 */
+		bits += (x & 1) ^ 1;
+	}
+	return bits;
+}
 
 #define MKS_inline 
 #endif // _MSC_VER
@@ -63,6 +83,7 @@ extern "C" {
 #define quTAG_FORMAT_BINARY 0 
 #define SwebianInstrument 1 
 #define quTAG_FORMAT_COMPRESSED 2 
+#define bh_spc_4bytes 3
 #define MARKER_OFFSET 16
 
 //Got GotRelativeSignal
@@ -112,7 +133,7 @@ extern "C" {
 				//However, the marker resolution is only a few tens of nanoseconds anyway,
 				//so we can just ignore the few picoseconds of error.
 				truetime = oflcorrection + Record.bits.time;
-				GotAbsoluteSignal(truetime, MARKER_OFFSET+markers);
+				GotAbsoluteSignal(truetime, MARKER_OFFSET+ MarkerSHC_to_CHN(markers));
 				//GotMarker( truetime, markers);
 			}
 		}
@@ -176,7 +197,7 @@ extern "C" {
 			{
 				truetime = oflcorrection + T2Rec.bits.timetag;
 				//Note that actual marker tagging accuracy is only some ns.
-				GotAbsoluteSignal(truetime, MARKER_OFFSET+ T2Rec.bits.channel)
+				GotAbsoluteSignal(truetime, MARKER_OFFSET+ MarkerSHC_to_CHN(T2Rec.bits.channel))
 				//GotMarker(truetime, T2Rec.bits.channel);
 			}
 
@@ -230,7 +251,7 @@ extern "C" {
 			{
 				truensync = oflcorrection + Record.bits.numsync;
 				//GotMarker( truensync, Record.special.markers);
-				GotRelativeSignal(truensync, MARKER_OFFSET+Record.special.markers, 0);
+				GotRelativeSignal(truensync, MARKER_OFFSET+ MarkerSHC_to_CHN(Record.special.markers), 0);
 			}
 		}
 		else
@@ -285,7 +306,7 @@ extern "C" {
 			{
 				
 				//the time unit depends on sync period which can be obtained from the file header
-				GotRelativeSignal(oflcorrection + T3Rec.bits.nsync, MARKER_OFFSET + T3Rec.bits.channel, 0);
+				GotRelativeSignal(oflcorrection + T3Rec.bits.nsync, MARKER_OFFSET + MarkerSHC_to_CHN(T3Rec.bits.channel), 0);
 				//GotMarker(truensync, T3Rec.bits.channel);
 
 			}
@@ -326,7 +347,7 @@ extern "C" {
 			{
 				//read next batch
 				if (read_next_minibatch() <= 0) {
-					PINFO("Reader %x for section [%lld %lld) is reaching end, nextrec %lld, batchend %lld, file is not long enough.", READERs, READERs[0].fseekpoint, READERs[0].fendpoint, next_abspos, READERs[0].batch_nextreadpos_in_file);
+					PINFO("Reader %x for section [%lld %lld) paused, nextrec %lld, batchend %lld, file is not long enough.", READERs, READERs[0].fseekpoint, READERs[0].fendpoint, next_abspos, READERs[0].batch_nextreadpos_in_file);
 					break;
 				}
 			}
@@ -335,7 +356,7 @@ extern "C" {
 			//boundry check
 			if (next_abspos >= READERs[0].fendpoint)
 			{
-				PINFO("Reader %x for section [%lld %lld) is reaching end, nextrec %lld, batchend %lld, boundry.", READERs, READERs[0].fseekpoint, READERs[0].fendpoint,next_abspos,READERs[0].batch_nextreadpos_in_file);
+				PINFO("Reader %x for section [%lld %lld) paused, nextrec %lld, batchend %lld, boundry.", READERs, READERs[0].fseekpoint, READERs[0].fendpoint,next_abspos,READERs[0].batch_nextreadpos_in_file);
 				break;
 			}
 
@@ -414,6 +435,38 @@ extern "C" {
 						Channel = (*COMPTTTRRecordPtr).bits.channel;
 						break;
 					}
+					case bh_spc_4bytes:{
+						union bh4bytesRec {
+							unsigned int allbits;
+							struct {
+								unsigned macrotime : 12; 
+								unsigned detector : 4;
+								unsigned nanotime : 12;
+								unsigned mark : 1;
+								unsigned gap : 1;
+								unsigned overflow : 1;
+								unsigned invalid : 1;
+							} bits;
+						} ;
+						bh4bytesRec *bh4bytesRecPtr;
+						bh4bytesRecPtr = (bh4bytesRec*)(READERs[0].buffer + READERs[0].next_RecID_in_batch * READERs[0].BytesofRecords);
+						AbsTime_ps = ((*bh4bytesRecPtr).bits.macrotime + READERs[0].overflowcorrection)* READERs[0].SYNCRate_pspr
+							+ ((*bh4bytesRecPtr).bits.nanotime)* READERs[0].DTRes_pspr;
+						if ((*bh4bytesRecPtr).bits.invalid) {
+							AbsTime_ps = INT64_MAX;
+						}
+						if ((*bh4bytesRecPtr).bits.overflow) {
+							AbsTime_ps = INT64_MAX;
+							READERs[0].overflowcorrection += 4096;
+						}
+						if ((*bh4bytesRecPtr).bits.mark) {
+							Channel = (*bh4bytesRecPtr).bits.detector+MARKER_OFFSET;
+						}
+						else {
+							Channel = (*bh4bytesRecPtr).bits.detector;
+						}
+						break;
+					 }
 					default:
 					{
 						PERROR("ERROR: Unsupported timetag format.")
@@ -460,7 +513,7 @@ extern "C" {
 			PERROR("Reading buffer for Time-tag file is not assgined properly, aborting.\n");
 			return -1;
 		}
-		PINFO("\nReader %x is assigned to a section of [%lld,%lld)\n", READERs,READERs[0].fseekpoint, READERs[0].fendpoint);
+		PINFO("\nReader %x is assigned to the section [%lld %lld)\n", READERs,READERs[0].fseekpoint, READERs[0].fendpoint);
 
 		/*PINFO("TTRes_pspr %lld", READERs[0].TTRes_pspr);
 		PINFO("DTRes_pspr %lld", READERs[0].DTRes_pspr);
@@ -477,7 +530,7 @@ extern "C" {
 			return -1;
 		}
 		free(READERs[0].buffer);
-		PINFO("\nReader is closing.");
+		PINFO("Reader %x is closing.", READERs);
 	
 		return 0;
 	}

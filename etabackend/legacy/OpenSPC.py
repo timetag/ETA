@@ -64,8 +64,7 @@ def get_spc(file, verbose=True):
     # this line contains the size of a channel in 0.1 ns unit
 
     spc['macro'][0] = 0
-    spc['macrot'] = spc['macro']+4096*np.cumsum(np.maximum(spc['invalid']*(spc['overflow']!=0).astype('int'), 
-                                                       spc['overflow']))
+    spc['macrot'] = spc['macro']+4096*np.cumsum(np.maximum(spc['invalid']*(spc['overflow']!=0).astype('int'), spc['overflow']))
     
     #spc['macrot'] = spc['macrot']# * 250e-10
     
