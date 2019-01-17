@@ -216,7 +216,7 @@ class ETA():
                 self.displaying = False
                 self.logger.error(str(e), exc_info=True)
 
-    def simple_cut(self, filename, cuts=1, trunc=-1, format=-1):
+    def simple_cut(self, filename, cuts=1, keep_indexes=None, format=-1):
         filename = str(filename) # supporting pathlib
         self.send(
             "ETA.SIMPLE_CUT: The file '{filename}' is cut into {cuts} equal size sections. ".format(filename=filename,
@@ -246,9 +246,12 @@ class ETA():
                 caller_parms.append(
                     [start_point, stop_point, out[2], out[3], out[4], out[5], out[6], filename])
                 # print(start_point, stop_point)
-        if trunc > 0:
-            caller_parms = caller_parms[:trunc]
-
+        if keep_indexes:
+            if type(keep_indexes )==list:
+                caller_parms = [caller_parms[i] for i in keep_indexes]
+            else:
+                raise ValueError("ETA.SIMPLE_CUT: The third parameter, keep_indexes, should be a list . ")
+                
         return caller_parms
 
     def incremental_cut(self, filename, cut=None, rec_per_cut=-10, format=-1, verbose=True):
