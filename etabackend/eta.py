@@ -67,7 +67,7 @@ class WSSERVER(ETA):
 
         self.server = ws_broadcast.WebsocketServer(
             int(self.hostport), host='0.0.0.0')
-        print("ETA Server URL: ws://{}:{}".format(self.hostip, self.hostport))
+        print("ETA Backend URL: ws://{}:{}".format(self.hostip, self.hostport))
         self.server.set_fn_new_client(new_client)
         self.server.set_fn_message_received(new_message)
         self.server.run_forever()
