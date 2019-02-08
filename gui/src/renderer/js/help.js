@@ -14,7 +14,7 @@
     });
 
     $('#btn_create_act').on('click', function() {
-        $("#actionModal").modal({backdrop: 'static', keyboard: false});
+        $("#actionModal").modal(); //{backdrop: 'static', keyboard: false}
     });
     $('#btn_create_graph').on('click', function() {
         $("#graphModal").modal();
