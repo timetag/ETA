@@ -1,7 +1,7 @@
 ; ModuleID = 'TimeTag/INFRA_vchn.cpp'
 source_filename = "TimeTag/INFRA_vchn.cpp"
 target datalayout = "e-m:w-i64:64-f80:128-n8:16:32:64-S128"
-target triple = "x86_64-pc-windows-msvc19.15.26732"
+target triple = "x86_64-pc-windows-msvc19.16.27026"
 
 %struct.circular_buf_t = type { i64*, i64, i64, i64 }
 %struct._iobuf = type { i8* }

@@ -46,7 +46,9 @@ int MKS_inline bh_4bytes_header_parser(char Magic[4]) {
 	BytesofRecords = 4;
 	TTF_header_offset = 4;
 	return 0;
+	
 }
+
 int MKS_inline Swebian_header_parser() {
 	PINFO("Swebian Instrument timetag file has no header.");
 	SYNCRate_pspr = 0;
@@ -364,7 +366,7 @@ extern "C" int MKS_inline PARSE_TimeTagFileHeader(char* TTF_filename, int Record
 	FILE *fpin;
 		//open Time-tagged file
 		if ((fpin = fopen(TTF_filename, "rb")) == NULL) {
-			PERROR("Can not open time-tagged file, aborting.");
+			PERROR("Can not open time-tag file, aborted.");
 			return -1;
 		}
 
@@ -374,23 +376,19 @@ extern "C" int MKS_inline PARSE_TimeTagFileHeader(char* TTF_filename, int Record
 			PERROR("Failed to read header, aborted.");
 			return -2;
 		}
-		
+		//automatically find headers
 		bool isendlessfile = true;
-		if (strncmp(Magic, "PQTTTR", 6) == 0) {
-			RecordTypetemp = -1;
-			isendlessfile = false;
+		if (RecordTypetemp == -1) {
+			//auto determine record type using magic
+			if (strncmp(Magic, "PQTTTR", 6) == 0) RecordTypetemp = 4;
+			if (strncmp(Magic, "\x87\xB3\x91\xFA", 4) == 0) RecordTypetemp = 0;
 		}
-
-		//quTAU_FORMAT_BINARY magic is shit
-		if (strncmp(Magic,"\x87\xB3\x91\xFA", 4) == 0) {
-			RecordTypetemp = 0;
-		}
+	
 		switch (RecordTypetemp){
 		case 0:
 			PINFO("Header Parser: quTAU_FORMAT_BINARY \n");
 			ret = quTAU_FORMAT_BINARY_header_parser(fpin);
 			break;
-		
 		case 1:
 			PINFO("Header Parser: Swebian Instrument \n");
 			ret = Swebian_header_parser();
@@ -405,9 +403,15 @@ extern "C" int MKS_inline PARSE_TimeTagFileHeader(char* TTF_filename, int Record
 			PINFO("Header Parser: bh_spc_4bytes \n");
 			ret = bh_4bytes_header_parser(Magic);
 			break;
-		case -1:
+		case 4:
 			PINFO("Header Parser: PicoQuant \n");
 			ret = PicoQuant_header_parser(fpin);
+			isendlessfile = false;
+			break;
+		case -1:
+			PERROR("Unidentified time-tag format. Specify one the with parameter format=???. Aborted.");
+			ret = -2;
+			BytesofRecords = 1;
 			break;
 		}
 
