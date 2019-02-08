@@ -11,8 +11,6 @@ PARSE_TimeTagFileHeader = link_function("PARSE_TimeTagFileHeader",2)
 @jit(nopython=True, parallel=True, nogil=True)
 def parse_header(filename1, filetype):
     link_libs()
-    # read file header
-    #i = BytesofRecords_set(8)
     filename = ffi.from_buffer(filename1)
     ret1 = PARSE_TimeTagFileHeader(filename,nb.int32(filetype))
     return (ret1,[
