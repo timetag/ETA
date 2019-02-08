@@ -43,21 +43,15 @@ class WSSERVER(ETA):
         self.hostip = None
         self.hostport = None
         while True:
-            self.hostip = os.environ.get('ETA_HOST')
-            if self.hostip is not None:
-                break
-            else:
+            envhosts = os.environ.get('ETA_HOST')
+            if envhosts is None or envhosts.find(':')<0:
                 os.environ["ETA_HOST"] = input(
-                    "Specify the IP address of this computer (localhost):") or "localhost"
+                    "Specify the IP address and port (localhost:5678):") or "localhost:5678"
                 os.system('setx ETA_HOST "' + os.environ["ETA_HOST"] + '"')
-        while True:
-            self.hostport = os.environ.get('ETA_PORT')
-            if self.hostport is not None:
-                break
             else:
-                os.environ["ETA_PORT"] = str(
-                    int(input("Specify the port to be used by ETA Backend (5678):")or "5678"))
-                os.system('setx ETA_PORT "' + os.environ["ETA_PORT"] + '"')
+                self.hostip = envhosts[:envhosts.find(':')]
+                self.hostport = envhosts[self.hostip.find(':')+1:]
+                break
 
         self.displaying = False
 
