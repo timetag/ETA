@@ -3,7 +3,7 @@
   "license": "MIT",
   "author": "Zuzeng Lin <zuzeng@kth.se>",
   "homepage": "http://timetag.github.io",
-  "version": "0.5.8",
+  "version": "0.5.9",
   "scripts": {
     "dev": "electron .",
     "dist": "electron-builder",
@@ -13,7 +13,7 @@
   "build": {
     "appId": "com.eta.client",
     "productName": "ETA",
-    "copyright": "Copyright (C) 2018 Zuzeng Lin",
+    "copyright": "Copyright (C) 2019 Zuzeng Lin",
     "mac": {
       "category": "your.app.category.type",
       "publish": [

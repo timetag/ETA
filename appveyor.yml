@@ -6,7 +6,7 @@ environment:
   PYTHON: C:\Python37-x64
   PYTHON_VERSION: 3.7
   PYTHON_ARCH: 64
-  ETA_VER: v0.5.8
+  ETA_VER: v0.5.9
   GITHUB_TOKEN:
     secure: IdgCOIno/YfkZynVnR2pBSjpkNG+4+XZneFXnqBVvxwX3MYX0EKqdzIUVPxQrkJu
   GOPATH: c:\gopath
@@ -49,7 +49,7 @@ install:
     
     python -m pip install lmfit --upgrade
     
-    python -m pip install astunparse --upgrade # https://github.com/simonpercivall/astunparse/issues/26
+    python -m pip install astunparse --upgrade 
     
     python -m pip install dash --upgrade
     
@@ -63,7 +63,7 @@ install:
     
     python -m pip install bokeh --upgrade
 
-    python -m pip install llvmlite==0.26
+    python -m pip install llvmlite==0.26 #LLVM 6
     
     python -m pip install numba==0.41.0
     
