@@ -4,25 +4,30 @@ const electron = require('electron')
 const app = electron.app
 const BrowserWindow = electron.BrowserWindow
 const url = require('url')
-const shell = require('electron').shell;
 const formatUrl = url.format
 const path = require('path')
-const {autoUpdater} = require("electron-updater");
+
+const { dialog } = require('electron')
+const { autoUpdater } = require('electron-updater')
+
 autoUpdater.logger = require("electron-log")
 autoUpdater.logger.transports.file.level = "info"
 
 // global reference to mainWindow (necessary to prevent window from being garbage collected)
 let mainWindow
-// Someone tried to run a second instance, we should focus our window.
- var shouldQuit = app.makeSingleInstance(function(commandLine, workingDirectory) {
-  if (mainWindow) {
-    if (mainWindow.isMinimized()) mainWindow.restore();
-    mainWindow.focus();
-  }
-});
-if (shouldQuit) {
+
+const gotTheLock = app.requestSingleInstanceLock()
+if (!gotTheLock) {
   app.quit();
   return;
+} else {
+  app.on('second-instance', (event, commandLine, workingDirectory) => {
+    // Someone tried to run a second instance, we should focus our window.
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) mainWindow.restore()
+      mainWindow.focus()
+    }
+  })
 }
 
 function createMainWindow() {
@@ -89,13 +94,50 @@ app.on('activate', () => {
     mainWindow = createMainWindow()
   }
 })
-autoUpdater.on('update-downloaded', (info) => {
 
-});
 
 // create main BrowserWindow when electron is ready
 app.on('ready', () => {
-	autoUpdater.checkForUpdatesAndNotify()
   mainWindow = createMainWindow()
 
+    autoUpdater.autoDownload = false
+
+    autoUpdater.on('error', (error) => {
+      dialog.showErrorBox('Update Error', error == null ? "unknown" : (error).toString())
+    })
+
+    autoUpdater.on('update-available', () => {
+      dialog.showMessageBox({
+        type: 'info',
+        title: 'Updates Found',
+        message: 'There is a new version of ETA. Do you want to update now?',
+        buttons: ['Yes', 'No']
+      }, (buttonIndex) => {
+        if (buttonIndex === 0) {
+          autoUpdater.downloadUpdate()
+        }
+        else {
+         
+        }
+      })
+    })
+
+    autoUpdater.on('update-not-available', () => {
+      dialog.showMessageBox({
+        title: 'No Updates',
+        message: 'Current version is up-to-date.'
+      })
+     
+    })
+
+    autoUpdater.on('update-downloaded', () => {
+      dialog.showMessageBox({
+        title: 'Installing Update',
+        message: 'ETA will now quit for updating.'
+      }, () => {
+        setImmediate(() => autoUpdater.quitAndInstall())
+      })
+    })
+
+    autoUpdater.checkForUpdates()
 })
