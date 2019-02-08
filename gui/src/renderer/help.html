@@ -17,73 +17,79 @@
             module = undefined;
         }
     </script>
-    
+
     <script src='js/lib/jquery.min.js'></script>
     <!-- Helper libraries -->
     <script src="js/lib/bootstrap.min.js"></script>
-    
+
     <!-- Local storage -->
-	 <script src="js/jsondrop.js"></script>
+    <script src="js/jsondrop.js"></script>
     <script src="js/lib/jstorage.js"></script>
     <script src="js/helper.js"></script>
-   
+
     <!-- Layout system -->
-	<script type="text/javascript" src="js/lib/jquery-ui-latest.js"></script>
-	<script type="text/javascript" src="js/lib/jquery.layout-1.3.0.rc30.80.js"></script>
-    
+    <script type="text/javascript" src="js/lib/jquery-ui-latest.js"></script>
+    <script type="text/javascript" src="js/lib/jquery.layout-1.3.0.rc30.80.js"></script>
+
     <script>
         if (window.module) module = window.module;
     </script>
-    <title>Help - Instrument Designer</title>
+    <title>Help</title>
 
-	
+
 </head>
+
 <body id="body">
     <script type="text/javascript" src="js/layout.js"></script>
 
     <!-- manually attach allowOverflow method to pane -->
 
-    <div class="ui-layout-north" >
-        <div id="top_panel" >
-            <span class="caption" id="main_caption">Help - Instrument Designer</span>
-
+    <div class="ui-layout-north">
+        <div id="top_panel">
+            <span class="caption" id="main_caption">Help</span>
+            <a href="https://eta.readthedocs.io/" target="_blank">ONLINE
+                DOCUMENTATION</a>
             <a href="#" class="menu-link" id="btn_close">Exit</a>
         </div>
     </div>
 
-    <div class="ui-layout-center" >
+    <div class="ui-layout-center">
         <div class="container-fluid" style="padding-top: 1rem;">
-            <div class="row">
-                    <div class="col-sm-4">
-                        <div class="card">
-                            <img class="card-img-top gif" src="img/draw_name.png">
-                            <div class="card-body">
-                                <h5 class="card-title"><a href="#" id="btn_create_graph">DRAW</a></h5>
-                                <p class="card-text">Model the experiment outcome with the transition graph on the right panel.</p>
 
-                            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="card">
+                        <img class="card-img-top gif" src="img/coincidence.jpg">
+                        <div class="card-body">
+                            <h5 class="card-title"><a href="#" id="btn_create_act">RUN ANALYSIS</a></h5>
+                            <p class="card-text">Run your first experiments.
+                            </p>
                         </div>
+                    </div>
+                </div>
+                
+                <div class="col-sm-4">
+                    <div class="card">
+                        <img class="card-img-top gif" src="img/shortcuts.jpg">
+                        <div class="card-body">
+                            <h5 class="card-title"><a href="#" id="">MAKE RECIPES</a></h5>
+                            <p class="card-text">Learn more about ETA with examples and tutorials.</p>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-sm-4">
                     <div class="card">
                         <img class="card-img-top gif" src="img/draw_trigger.png">
                         <div class="card-body">
-                            <h5 class="card-title"><a href="#" id="btn_create_act">CODE</a></h5>
-                            <p class="card-text">Perform analytical instruction or emit signals on any event trigger.</p>
+                            <h5 class="card-title"><a href="#" id="btn_create_graph">DESIGN AN INSTRUMENT</a></h5>
+                            <p class="card-text">How to draw the transition graphs.</p>
+
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-4">
-                        <div class="card">
-                            <img class="card-img-top gif" src="img/shortcuts.jpg">
-                            <div class="card-body">
-                                <h5 class="card-title"><a href="https://eta.readthedocs.io/en/latest/recipes.html"   target="_blank">RECIPES</a></h5>
-                                <p class="card-text">Examples and tutorial.</p>
-                            </div>
-                        </div>
-                    </div>
+
             </div>
-           
+
         </div>
     </div>
 
@@ -92,62 +98,16 @@
         <div class="modal-dialog " style="max-width: 80%" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Actions</h5>
+                    <h5 class="modal-title">RECIPE</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
 
                 <div class="modal-body">
-                    <input class="form-control" id="actionSearch" type="text" placeholder="Search..">
-                    <br>
-                    <table class="table table-bordered table-striped">
-                        <thead>
-                            <tr>
-                                <th>Action</th>
-                                <th>Example</th>
-                                <th>Useage</th>
-                               
-                            </tr>
-                        </thead>
-                        <tbody id="actionTable">
-                            <tr>
-                                <td>start(clock)</td>
-                                <td>start(c1)</td>
-                                <td>Start a clock labeled c1.</td>
-                            </tr>
-                            <tr>
-                                <td>stop(clock)</td>
-                                <td>stop(c1)</td>
-                                <td>Stop a clock labeled c1.</td>
-                                
-                            </tr>
-                            <tr>
-                                <td>emit(channel_number,waittime_ps,period_ps,repeat)</td>
-                                <td>emit(2,10)</td>
-                                <td>Emit signal to a channel 2 after 10 picoseconds.</td>
-                                
-                            </tr>
-                            <tr>
-                                <td>record(histogram,clock)</td>
-                                <td>record(h1,c1)</td>
-                                <td>Record the time interval on clock c1 to histogram h1.</td>
-                                
-                            </tr>
-                            <tr>
-                                <td>fill(coincidence,slot_number)</td>
-                                <td>fill(coinci1,1)</td>
-                                <td>Record coincidence event on slot 1 of coincidence tool coinci1.</td>
-
-                            </tr>
-                            <tr>
-                                <td>clear(coincidence,slot_number)</td>
-                                <td>clear(coinci1,1)</td>
-                                <td>Clear coincidence event of coincidence tool coinci1.</td>
-
-                            </tr>
-                        </tbody>
-                    </table>
+                    Animations are not ready yet. Please refer to <a href="https://eta.readthedocs.io/en/latest/workflow.html" class="menu-link" target="_blank"> Online Help</a>
+                    
+                    
                 </div>
 
             </div>
@@ -162,7 +122,7 @@
         <div class="modal-dialog " style="max-width: 80%" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Transition Graph</h5>
+                    <h5 class="modal-title">Darwing the Transition Graphs</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -171,7 +131,7 @@
                 <div class="modal-body">
 
                     <div class="row">
-						<div class="col-sm-4">
+                        <div class="col-sm-4">
                             <div class="card">
                                 <img class="card-img-top gif" src="img/draw_blob.png">
                                 <div class="card-body">
@@ -196,7 +156,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                     </div>
                     <div class="row">
 
@@ -219,23 +179,24 @@
                         </div>
                         <div class="col-sm-4">
                             <div class="card">
-                                 <img class="card-img-top gif" src="img/draw_del.png">
+                                <img class="card-img-top gif" src="img/draw_del.png">
                                 <div class="card-body">
                                     <p class="card-text">Delete circles or arrows.</p>
                                 </div>
                             </div>
                         </div>
                     </div>
-                   
+
                 </div>
 
             </div>
         </div>
     </div>
-    
+
     <!-- application main script -->
     <script type="text/javascript" src="js/help.js"></script>
     <script type="text/javascript" src="js/gif.js"></script>
 
 </body>
+
 </html>
