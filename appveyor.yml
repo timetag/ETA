@@ -62,6 +62,8 @@ install:
     python -m pip install plotly --upgrade
     
     python -m pip install bokeh --upgrade
+
+    python -m pip install llvmlite==0.26
     
     python -m pip install numba==0.41.0
     
