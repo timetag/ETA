@@ -127,10 +127,9 @@ def compile_eta(jsobj, print):
             for a in list(each.output_chn.keys()):
                 if num_vslot < int(a):
                     num_vslot = int(a)
-            select_by_name(vis, each.name)["info"] = '📥 {}, 📤 {}, 📊 {} '.format(
+            select_by_name(vis, each.name)["info"] = '📥 {}, 📤 {} '.format(#, 📊 {}
                 str(list(each.input_chn.keys())),
-                str(list(each.output_chn.keys())),
-                str("???")
+                str(list(each.output_chn.keys()))#, str("???")
             )
 
             select_by_name(vis, each.name)["config"] = ""
