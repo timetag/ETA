@@ -117,6 +117,7 @@ class ETA():
             self.logger.error(str(e), exc_info=True)
 
     def process_eta(self, etaobj=None, id="code", group="main"):
+        self.send("none", "dash") #show a neutral icon
         if self.displaying:
             self.send("Script Panel is running at http://{}:5000.".format(self.hostip))
             self.send(
