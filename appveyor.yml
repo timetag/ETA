@@ -33,8 +33,6 @@ install:
     
     gothub info -u timetag -r ETA
 
-    python -m pip install --disable-pip-version-check --upgrade pip
-
     python -m pip --version
 
     python -m pip install pypiwin32 --upgrade
