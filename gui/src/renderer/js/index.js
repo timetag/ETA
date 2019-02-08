@@ -206,7 +206,7 @@ d3.select('#btn_connect').on('click', function () {
             $("#exampleModalLabel").html('🛑 ETA Error');
         }
         if (ret[0] == "log" || ret[0] == "err") {
-            $("#remoteModal").modal({ backdrop: 'static', keyboard: false });
+            $("#remoteModal").modal();
             $("#remoteLOG").html($("#remoteLOG").html() + "<br/>" + ret[1]);
         }
         if (ret[0] == "table") {
@@ -214,11 +214,14 @@ d3.select('#btn_connect').on('click', function () {
             update_to_ls();
         }
         if (ret[0] == "running") {
+           
             $("#exampleModalLabel").html('<div class="loader d-inline-block"></div> <div class="d-inline-block">ETA Running...</div>');
             $("#btn_viewresult").toggleClass("d-none", true);
+            $("#exampleModalClose").toggleClass("d-none", true);
             $("#remoteLOG").html($("#remoteLOG").html() + "<br/>" + ret[1]);
         }
         if (ret[0] == "stopped") {
+            $("#exampleModalClose").toggleClass("d-none", false);
             $("#exampleModalLabel").html('<img src="favicon.ico" style="width: 2em;"/> ETA Results');
             $("#remoteLOG").html($("#remoteLOG").html() + "<br/>" + ret[1]);
         }
@@ -226,6 +229,7 @@ d3.select('#btn_connect').on('click', function () {
             $("#remoteLOG").html("");// clear log
         }
         if (ret[0] == "dash") {
+            $("#exampleModalClose").toggleClass("d-none", false);
             $("#btn_viewresult").toggleClass("d-none", false);
             $("#btn_viewresult").unbind("click");
             $("#btn_viewresult").click(function (d) {
@@ -242,6 +246,7 @@ d3.select('#btn_connect').on('click', function () {
             });
         }
         if (ret[0] == "discard") {
+            $("#exampleModalClose").toggleClass("d-none", false);
             $("#remoteModal").modal('hide');
             $("#exampleModalLabel").html('ETA Backend');
             $("#btn_viewresult").toggleClass("d-none", true);
