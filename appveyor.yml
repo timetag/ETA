@@ -63,9 +63,7 @@ install:
     
     python -m pip install bokeh --upgrade
     
-    python -m pip install llvmlite --upgrade
-    
-    python -m pip install numba --upgrade
+    python -m pip install numba==0.41.0
     
     python -m pip install pandas --upgrade
 
