@@ -358,7 +358,7 @@ class Graph(INTEGER, TABLE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENCE):
             raise ValueError(
                 "State name must be a string, but a {} is found on graph {}.".format(str(type(name)), self.name))
         if name in self.states_to_id:
-            raise ValueError("State name should be unique, but the state '{}' is found mutiple times on graph {}.".format(name,self.name))
+            raise ValueError("State name should be unique, but the state '{}' is found multiple times on graph {}.".format(name,self.name))
         self.id_to_states[stateid] = name
         
         self.states_to_id[name] = stateid
