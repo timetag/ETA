@@ -203,16 +203,13 @@ d3.select('#btn_connect').on('click', function () {
         var ret = JSON.parse(t.data);
         if (ret[0] == "err") {
             ret[1] = "⚠" + ret[1];
-
             $("#exampleModalLabel").html('🛑 ETA Error');
-            //alert(ret[1]);
         }
         if (ret[0] == "log" || ret[0] == "err") {
             $("#remoteModal").modal({ backdrop: 'static', keyboard: false });
             $("#remoteLOG").html($("#remoteLOG").html() + "<br/>" + ret[1]);
         }
         if (ret[0] == "table") {
-            //JSON.parse(ret[1]);
             load_table(ret[1]);
             update_to_ls();
         }
@@ -229,31 +226,29 @@ d3.select('#btn_connect').on('click', function () {
             $("#remoteLOG").html("");// clear log
         }
         if (ret[0] == "dash") {
-                $("#btn_viewresult").toggleClass("d-none", false);
-                $("#btn_viewresult").unbind("click");
-                $("#btn_viewresult").click(function (d) {
+            $("#btn_viewresult").toggleClass("d-none", false);
+            $("#btn_viewresult").unbind("click");
+            $("#btn_viewresult").click(function (d) {
                     window.open(ret[1]);
-                });
+            });
 
-                $("#btn_discardresult").toggleClass("d-none", false);
-                $("#btn_discardresult").unbind("click");
-                $("#btn_discardresult").click(function (d) {
+            $("#btn_discardresult").toggleClass("d-none", false);
+            $("#btn_discardresult").unbind("click");
+            $("#btn_discardresult").click(function (d) {
                     $.ajax({
                         url: ret[1] + "/shutdown",
                         context: document.body
                     });
-                });
+            });
         }
         if (ret[0] == "discard") {
-
+            $("#remoteModal").modal('hide');
             $("#exampleModalLabel").html('ETA Backend');
             $("#btn_viewresult").toggleClass("d-none", true);
             $("#btn_discardresult").toggleClass("d-none", true);
             $("#btn_viewresult").unbind("click");
             $("#btn_discardresult").unbind("click");
-            /* d3.select('#btn_run').on('click')();*/
             $("#remoteLOG").html("");// clear log
-            $("#remoteModal").modal('hide');
         }
     }
 
@@ -309,5 +304,4 @@ function recipe_set_filename(id, key) {
             ws.send(JSON.stringify(rpcobj));
         }
     }
-
 }
