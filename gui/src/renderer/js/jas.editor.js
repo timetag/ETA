@@ -603,29 +603,16 @@ View.prototype.node = (function () {
             var marked = view.select('rect.marked');
             if (marked.empty()) {
                 if (d.marked) {
-
-                    //textbox.attr('transform',"translate(0,35)");
-                    
-                   view.append('circle')
-                        .attr('r',30)
-                        .attr('transform',"translate(10,-10)")
-                        .classed('marked', true);
-                   view.append('circle')
-                        .attr('r',30)
-                        .attr('transform',"translate(5,-5)")
-                        .classed('marked', true);
+                   //textbox.attr('transform',"translate(0,35)");
                    //view.append('text')
-                    //    .classed('marked', true);
+                   //    .classed('marked', true);
                 }
             } else {
                 if (!d.marked) {
-                    
                     //textbox.attr('transform',"none");
                     //    .classed('marked', false).text(d.text.split("(")[0] || '');
-                    
-                    marked.remove();
-                    
-                   // textmarked.remove();
+                    //marked.remove();
+                    // textmarked.remove();
                 }
             }
         }
