@@ -356,8 +356,11 @@ class Graph(INTEGER, TABLE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENCE):
     def make_state(self, stateid, name):
         if not isinstance(name, str):
             raise ValueError(
-                "State name must be a string, but a {type} is found on graph {}.".format(str(name), self.name))
+                "State name must be a string, but a {} is found on graph {}.".format(str(type(name)), self.name))
+        if name in self.states_to_id:
+            raise ValueError("State name should be unique, but the state '{}' is found mutiple times on graph {}.".format(name,self.name))
         self.id_to_states[stateid] = name
+        
         self.states_to_id[name] = stateid
 
     def make_trans(self, gofrom, goto, cond):
@@ -367,7 +370,7 @@ class Graph(INTEGER, TABLE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENCE):
             self.transition_table[cond][gofrom] = goto
         else:
             raise ValueError(
-                "Ambiguous transition with condition {} on graph{}.".format(cond, self.name))
+                "Ambiguous transition with condition {} on graph {}.".format(cond, self.name))
 
     # called by etacode_parser
     #############################
@@ -422,7 +425,7 @@ class Graph(INTEGER, TABLE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENCE):
                 inblob = self.states_to_id[inblob]
             condition = trigger[1]
             if condition is None:
-                condition = [maxchn - 1]
+                condition = [maxchn - 1] # arbitrary condition
             for each_cond in condition:
                 each_cond = int(each_cond)
                 if inblob is not None and outblob is not None:
@@ -431,6 +434,11 @@ class Graph(INTEGER, TABLE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENCE):
                     if outblob is None:
                         self.tranin_to_section[each_cond][inblob] += "\n" + code
                     if inblob is None:
+                        print("----------------")
+                        print(trigger)
+                        print(each_cond)
+                        print(outblob)
+                        print("----------------")
                         self.tranout_to_section[each_cond][outblob] += "\n" + code
 
     def EMIT_LINE(self, triggers, code):
