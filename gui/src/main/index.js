@@ -121,15 +121,14 @@ app.on('ready', () => {
         }
       })
     })
-
+    /*
     autoUpdater.on('update-not-available', () => {
       dialog.showMessageBox({
         title: 'No Updates',
         message: 'Current version is up-to-date.'
       })
-     
-    })
-
+    }) 
+    */
     autoUpdater.on('update-downloaded', () => {
       dialog.showMessageBox({
         title: 'Installing Update',
