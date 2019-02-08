@@ -50,7 +50,7 @@ class WSSERVER(ETA):
                 os.system('setx ETA_HOST "' + os.environ["ETA_HOST"] + '"')
             else:
                 self.hostip = envhosts[:envhosts.find(':')]
-                self.hostport = envhosts[self.hostip.find(':')+1:]
+                self.hostport = envhosts[envhosts.find(':')+1:]
                 break
 
         self.displaying = False
