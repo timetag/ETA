@@ -225,16 +225,10 @@ d3.select('#btn_connect').on('click', function () {
             $("#exampleModalLabel").html('<img src="favicon.ico" style="width: 2em;"/> ETA Results');
             $("#remoteLOG").html($("#remoteLOG").html() + "<br/>" + ret[1]);
         }
+        if (ret[0] == "clear") {
+            $("#remoteLOG").html("");// clear log
+        }
         if (ret[0] == "dash") {
-            if (ret[1] == "none") {
-                $("#btn_viewresult").toggleClass("d-none", true);
-                $("#btn_viewresult").unbind("click");
-
-                /*$("#btn_discardresult").toggleClass( "d-none",false );
-                $("#btn_discardresult").click(function(d){
-                   d3.select('#btn_run').on('click')();
-               });*/
-            } else {
                 $("#btn_viewresult").toggleClass("d-none", false);
                 $("#btn_viewresult").unbind("click");
                 $("#btn_viewresult").click(function (d) {
@@ -249,13 +243,16 @@ d3.select('#btn_connect').on('click', function () {
                         context: document.body
                     });
                 });
-            }
-
         }
         if (ret[0] == "discard") {
+
+            $("#exampleModalLabel").html('ETA Backend');
             $("#btn_viewresult").toggleClass("d-none", true);
             $("#btn_discardresult").toggleClass("d-none", true);
+            $("#btn_viewresult").unbind("click");
+            $("#btn_discardresult").unbind("click");
             /* d3.select('#btn_run').on('click')();*/
+            $("#remoteLOG").html("");// clear log
             $("#remoteModal").modal('hide');
         }
     }
@@ -280,12 +277,10 @@ d3.select('#btn_connect').on('click')();
 
 //RPC calls
 
-// compile
+// vi checking
 d3.select('#btn_compile').on('click', function () {
     if (check_connectivity()) {
-        $("#remoteLOG").html("");// clear log
         eta_linker_result = export_localstorage();
-
         if (eta_linker_result) {
             var rpcobj = { 'method': "compile_eta", 'args': [eta_linker_result] };
             ws.send(JSON.stringify(rpcobj));
@@ -296,14 +291,12 @@ d3.select('#btn_compile').on('click', function () {
 // run
 function process_eta(id, group) {
     if (check_connectivity()) {
-        $("#remoteLOG").html("");// clear log
         eta_linker_result = export_localstorage();
         if (eta_linker_result) {
             var rpcobj = { 'method': "process_eta", 'args': [eta_linker_result, id, group] };
             ws.send(JSON.stringify(rpcobj));
         }
     }
-
 }
 
 

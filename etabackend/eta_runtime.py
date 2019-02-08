@@ -112,16 +112,17 @@ class ETA():
             self.initializer = {}
 
         except Exception as e:
+            self.send("", "discard")
             self.send('[' + str(type(e).__name__) + ']' + str(e), "err")
             self.send("Compilation failed.")
             self.logger.error(str(e), exc_info=True)
 
     def process_eta(self, etaobj=None, id="code", group="main"):
-        self.send("none", "dash") #show a neutral icon
+        self.send("none", "discard") #show a neutral icon
         if self.displaying:
-            self.send("Script Panel is running at http://{}:5000.".format(self.hostip))
+            self.send("Script Panel is serving at http://{}:5000.".format(self.hostip))
             self.send(
-                "The ETA program is not executed, in order to prevent data from being overwritten.")
+                "The current script is not executed, because a previously executed script is still serving the results.")
             self.send("http://{}:5000".format(self.hostip), "dash")
         else:
             with open("server.eta", 'w') as file:
