@@ -7,13 +7,12 @@ import zipfile
 
 
 def web_install(url="https://github.com/timetag/ETA/releases/download/v0.5.8/ETA_LIB-win64.zip", prefix="./", file_name="ETA_LIB-win64.zip"):
-    file_name=prefix+file_name
-    folder=prefix
+    file_name = prefix+file_name
+    folder = prefix
     if os.path.isfile(file_name):
-        print("Skipped downloading %s, file exists." % file_name)
+        print("Installing using the existing file %s, downloading is skipped." % file_name)
     else:
-        print("Downloading %s" % file_name)
-        print(url)
+        print("Downloading %s" % url)
         try:
             resp = urllib.request.urlopen(url)
             length = resp.getheader('content-length')
@@ -47,3 +46,32 @@ def web_install(url="https://github.com/timetag/ETA/releases/download/v0.5.8/ETA
     zip_ref.close()
     print("Installing completed.")
 
+
+def set_path(default=False):
+    default_folder = os.path.dirname(sys.executable)
+    if default:
+        os.environ["ETA_LIB"] = default_folder
+    else:
+        os.environ["ETA_LIB"] = input(
+            "[*]Please specify a new path to ETA_LIB ({}):".format(default_folder)) or default_folder
+    os.system('setx ETA_LIB "' + os.environ["ETA_LIB"] + '"')
+    print("The path to ETA_LIB is changed to %s ." % os.environ.get('ETA_LIB'))
+    return os.environ["ETA_LIB"]
+
+
+def installer():
+    while True:
+        env_dist = os.environ.get('ETA_LIB')
+        if env_dist is not None and os.path.isdir(env_dist+"\\site-packages"):
+            sys.path.insert(0, env_dist+"\\site-packages")
+            break
+        else:
+            print("===================\nInstall ETA Backend\n===================\nWelcome! It seems that this is the first time that ETA Backend is started on this computer.\n")
+            print("This installer will help you set up ETA Backend.")
+            inp = input(
+                "[*]Please type 'yes' to download ETA_LIB, the required files for ETA scripting environment ('no' if you have it already):")
+            if 'y' in inp.lower():
+                default_folder = set_path(True)
+                web_install(prefix=default_folder+"\\")
+            else:
+                set_path()

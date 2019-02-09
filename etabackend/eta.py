@@ -2,43 +2,20 @@ import multiprocessing
 
 multiprocessing.freeze_support()
 
-import os,traceback
+import os
+import traceback
 import sys
 import ws_broadcast
 import webinstall
-def set_path(default = False):
-    print("The current path to ETA_LIB is set to %s ."%os.environ.get('ETA_LIB'))
-    default_folder = os.path.dirname(sys.executable)
-    if default:
-        os.environ["ETA_LIB"] = default_folder
-    else:
-        os.environ["ETA_LIB"] = input("[*]Please specify a new path to ETA_LIB ({}):".format(default_folder)) or default_folder
-    os.system('setx ETA_LIB "' + os.environ["ETA_LIB"] + '"')
-    return os.environ["ETA_LIB"]
-while True:
-
-    env_dist = os.environ.get('ETA_LIB')
-    if env_dist is not None and os.path.isdir(env_dist+"\\site-packages"):
-        sys.path.insert(0, env_dist+"\\site-packages")
-        break
-    else:
-        print("===================\nInstall ETA Backend\n===================\nWelcome! It seems that this is the first time that ETA Backend is started on this computer.\n")
-        print("This installer will help you set up ETA Backend.")
-        inp = input("[*]Please type 'yes' to download ETA_LIB, the required files for ETA scripting environment ('no' if you have it already):")
-        if 'y' in inp.lower():
-            default_folder = set_path(True)
-            webinstall.web_install(prefix=default_folder+"\\")
-        else:
-            set_path()
-
+webinstall.installer()
 try:
     from eta_runtime import *
 except Exception as e:
     print(str(e))
     traceback.print_exc()
-    print("It seems that ETA can not recognize ETA_LIB at path %s.",env_dist)
+    print("It seems that ETA can not recognize ETA_LIB at path %s.",os.environ.get('ETA_LIB'))
     print("Note: If the path to ETA_LIB is correct, please try moving ETA_LIB to another path containing more than 6 slashes (C:\\f1\\f2\\f3\\f4\\f5\\).")
-    set_path()
+    webinstall.set_path()
 
 
 class WSSERVER(ETA):
