@@ -5,32 +5,40 @@ multiprocessing.freeze_support()
 import os,traceback
 import sys
 import ws_broadcast
-
+import webinstall
+def set_path(default = False):
+    print("The current path to ETA_LIB is set to %s ."%os.environ.get('ETA_LIB'))
+    default_folder = os.path.dirname(sys.executable)
+    if default:
+        os.environ["ETA_LIB"] = default_folder
+    else:
+        os.environ["ETA_LIB"] = input("[*]Please specify a new path to ETA_LIB ({}):".format(default_folder)) or default_folder
+        os.system('setx ETA_LIB "' + os.environ["ETA_LIB"] + '"')
+    return os.environ["ETA_LIB"]
 while True:
-    env_dist = os.environ.get('ETA_LIB')
-    if env_dist is not None:
 
-        sys.path.insert(0, env_dist)
+    env_dist = os.environ.get('ETA_LIB')
+    if env_dist is not None and os.path.isdir(env_dist+"\\site-packages"):
+        sys.path.insert(0, env_dist+"\\site-packages")
         break
     else:
-        print("ETA_LIB is not found.")
-        default_folder = os.path.dirname(sys.executable)+"\\site-packages"
-        print("Please use a full path like: 'C:\\...\\site-packages'.")
-        os.environ["ETA_LIB"] = input(
-            "Specify the path to ETA_LIB ({}):".format(default_folder)) or default_folder
-        os.system('setx ETA_LIB "' + os.environ["ETA_LIB"] + '"')
+        print("===================\nInstall ETA Backend\n===================\nWelcome! It seems that this is the first time that ETA Backend is started on this computer.\n")
+        print("This installer will help you set up ETA Backend.")
+        inp = input("[*]Please type 'yes' to download ETA_LIB, the required files for ETA scripting environment ('no' if you have it already):")
+        if 'y' in inp.lower():
+            default_folder = set_path(True)
+            webinstall.web_install(prefix=default_folder+"\\")
+        else:
+            set_path()
 
 try:
-    if env_dist.count("\\") < 6:
-        raise ValueError("Path should contain more than 6 slashes.")
     from eta_runtime import *
 except Exception as e:
     print(str(e))
     traceback.print_exc()
-    print("ETA_LIB is found, but it seems there is an unknown error that prevents ETA to load the packages, \n"
-          "please try to put ETA_LIB in another path that contains more than 6 slashes (C:\\f1\\f2\\f3\\f4\\f5\\site-packages).")
-    os.environ["ETA_LIB"] = input("Specify the path to ETA_LIB:")
-    os.system('setx ETA_LIB "' + os.environ["ETA_LIB"] + '"')
+    print("It seems that ETA can not recognize ETA_LIB at path %s.",env_dist)
+    print("Note: If the path to ETA_LIB is correct, please try moving ETA_LIB to another path containing more than 6 slashes (C:\\f1\\f2\\f3\\f4\\f5\\).")
+    set_path()
 
 
 class WSSERVER(ETA):
@@ -46,7 +54,7 @@ class WSSERVER(ETA):
             envhosts = os.environ.get('ETA_HOST')
             if envhosts is None or envhosts.find(':')<0:
                 os.environ["ETA_HOST"] = input(
-                    "Specify the IP address and port (localhost:5678):") or "localhost:5678"
+                    "[*]Please specify the IP address and port (localhost:5678):") or "localhost:5678"
                 os.system('setx ETA_HOST "' + os.environ["ETA_HOST"] + '"')
             else:
                 self.hostip = envhosts[:envhosts.find(':')]
