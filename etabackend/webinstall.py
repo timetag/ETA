@@ -38,6 +38,7 @@ def web_install(url="https://github.com/timetag/ETA/releases/download/v0.5.8/ETA
         except Exception as e:
             print("Downloading failed. ")
             print(e)
+            print("NOTE: If it fails for many times, try downloading %s manually and place it at %s."%(url,file_name))
             return
     print("Installing downloaded packages to %s ..." % folder)
     print("[==== This process could take several minutes. ====] N/A %")
