@@ -13,7 +13,7 @@ def set_path(default = False):
         os.environ["ETA_LIB"] = default_folder
     else:
         os.environ["ETA_LIB"] = input("[*]Please specify a new path to ETA_LIB ({}):".format(default_folder)) or default_folder
-        os.system('setx ETA_LIB "' + os.environ["ETA_LIB"] + '"')
+    os.system('setx ETA_LIB "' + os.environ["ETA_LIB"] + '"')
     return os.environ["ETA_LIB"]
 while True:
 

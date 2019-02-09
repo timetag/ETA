@@ -6,9 +6,9 @@ import io
 import zipfile
 
 
-def web_install(url="https://github.com/timetag/ETA/releases/download/v0.5.8/ETA_LIB-win64.zip", prefix="./", file_name="ETA_LIB-win64.zip", folder="ETA_LIB-win64"):
+def web_install(url="https://github.com/timetag/ETA/releases/download/v0.5.8/ETA_LIB-win64.zip", prefix="./", file_name="ETA_LIB-win64.zip"):
     file_name=prefix+file_name
-    folder=prefix+folder
+    folder=prefix
     if os.path.isfile(file_name):
         print("Skipped downloading %s, file exists." % file_name)
     else:
@@ -40,7 +40,7 @@ def web_install(url="https://github.com/timetag/ETA/releases/download/v0.5.8/ETA
             print("Downloading failed. ")
             print(e)
             return
-    print("Installing downloaded packages %s ..." % file_name)
+    print("Installing downloaded packages to %s ..." % folder)
     print("[==== This process could take several minutes. ====] N/A %")
     zip_ref = zipfile.ZipFile(file_name, 'r')
     zip_ref.extractall(folder)
