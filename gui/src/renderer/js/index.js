@@ -114,16 +114,13 @@ $('#add-ri').click(function () {
 });
 $('#add-vi').click(function () {
     create_item("vi_template")
-}
-);
+});
 $('#add-var').click(function () {
     create_item("var_template", "NewParameter", "main", "", "value")
-}
-);
+});
 $('#add-dpp').click(function () {
     create_item("dpp_template", "NewPanel")
-}
-);
+});
 function ri_table(form) {
     form.addEventListener('submit', function (event) {
         if (form.checkValidity() === false) {

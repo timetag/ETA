@@ -20,10 +20,11 @@ function TABLEBIND(eta_index_table) {
         var $td = $clone.find('td');
 
         var source = $td.eq(0).text()
-        if (source.indexOf("vi_template") >= 0)
-            var target = create_link("vi_template");
+        if (source.indexOf("_template") >= 0){
+            var target = create_link(source.substr(0,source.indexOf("_template"))+"_template");
+        }
         else
-            var target = create_link("ri_template");
+            console.log("illleagal typing "+source)
         $td.eq(0).text(target);
         copy_link(source, target);
     });
