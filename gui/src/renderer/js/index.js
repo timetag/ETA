@@ -200,6 +200,7 @@ d3.select('#btn_connect').on('click', function () {
         var ret = JSON.parse(t.data);
         if (ret[0] == "err") {
             ret[1] = "⚠" + ret[1];
+            $("#exampleModalClose").toggleClass("d-none", false); //allow closing on error
             $("#exampleModalLabel").html('🛑 ETA Error');
         }
         if (ret[0] == "log" || ret[0] == "err") {
@@ -211,10 +212,9 @@ d3.select('#btn_connect').on('click', function () {
             update_to_ls();
         }
         if (ret[0] == "running") {
-           
+            $("#exampleModalClose").toggleClass("d-none", true);
             $("#exampleModalLabel").html('<div class="loader d-inline-block"></div> <div class="d-inline-block">ETA Running...</div>');
             $("#btn_viewresult").toggleClass("d-none", true);
-            $("#exampleModalClose").toggleClass("d-none", true);
             $("#remoteLOG").html($("#remoteLOG").html() + "<br/>" + ret[1]);
         }
         if (ret[0] == "stopped") {

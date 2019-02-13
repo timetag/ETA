@@ -8,20 +8,23 @@ import copy
 
 
 def compile_eta(jsobj, print):
-    def group_viri(vi_groupings, vis_all):
-        for each in range(len(vis_all)):
-            instgroup = vis_all[each]["group"]
-            if instgroup in vi_groupings:
-                vi_groupings[instgroup].append(vis_all[each])
-            else:
-                vi_groupings[instgroup] = [vis_all[each]]
+    def put_into_groups(groupings_output, vis_ris_var_all):
+        for each in range(len(vis_ris_var_all)):
+            for group_of_instrument in vis_ris_var_all[each]["group"].split(","):
+                group_of_instrument  = group_of_instrument.strip()
+                if len(group_of_instrument)==0:
+                    group_of_instrument="main"
+                if group_of_instrument in groupings_output:
+                    groupings_output[group_of_instrument].append(vis_ris_var_all[each])
+                else:
+                    groupings_output[group_of_instrument] = [vis_ris_var_all[each]]
 
     def select_by_name(obj, name):
         for each in obj:
             if each["name"] == name:
                 return each
 
-    # split vi/ri
+    # split recipe
     vis_all = []
     ris_all = []
     dpps_all = []
@@ -35,13 +38,13 @@ def compile_eta(jsobj, print):
             var_all.append(each)
         else:
             dpps_all.append(each)
-    # groupings
+    # groupings for vi/ri/var
     vi_groupings = {}
     ri_groupings = {}
     var_groupings = {}
-    group_viri(vi_groupings, vis_all)
-    group_viri(ri_groupings, ris_all)
-    group_viri(var_groupings, var_all)
+    put_into_groups(vi_groupings, vis_all)
+    put_into_groups(ri_groupings, ris_all)
+    put_into_groups(var_groupings, var_all)
     var_per_groupings = {}
     for vargroup in var_groupings:
         vars = var_groupings[vargroup]
