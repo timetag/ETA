@@ -118,14 +118,14 @@ build_script:
     ls %APPVEYOR_BUILD_FOLDER%\gui\dist\
 
     move %APPVEYOR_BUILD_FOLDER%\gui\dist\*.exe %APPVEYOR_BUILD_FOLDER%\
-
-test_script:
-- cmd: >-
-    twine upload %APPVEYOR_BUILD_FOLDER%\dist\*.whl -u %PYPI_USERNAME% -p %PYPI_PASSWORD%
     
     7z a ETA_Install-win64.zip %APPVEYOR_BUILD_FOLDER%\*.exe
-
+    
+test_script:
+- cmd: >-
     gothub upload -u timetag -r ETA -t "%ETA_VER%" -f "ETA_LIB-win64.zip"  -n "ETA_LIB-win64.zip" --replace
      
     gothub upload -u timetag -r ETA -t "%ETA_VER%" -f "ETA_Install-win64.zip"  -n "ETA_Install-win64.zip" --replace
-     
+    
+    twine upload %APPVEYOR_BUILD_FOLDER%\dist\*.whl -u %PYPI_USERNAME% -p %PYPI_PASSWORD% --skip-existing
+    
