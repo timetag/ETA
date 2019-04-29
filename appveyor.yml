@@ -47,7 +47,9 @@ install:
     python -m pip install pyinstaller --upgrade
 
     python -m pip install twine --upgrade
-
+    
+    python -m pip install wheel --upgrade
+    
     Install-Product node 8 x64
     
     cd gui
