@@ -9,6 +9,10 @@ environment:
   ETA_VER: v0.5.10
   GITHUB_TOKEN:
     secure: IdgCOIno/YfkZynVnR2pBSjpkNG+4+XZneFXnqBVvxwX3MYX0EKqdzIUVPxQrkJu
+  PYPI_USERNAME:
+    secure: +n9bRrcr1wUOt6LkYPOmBw==
+  PYPI_PASSWORD:
+    secure: yRdmCM7a4/Tg2xMCn38bSc9+xadPa1zVf7FCZtKCsPI=
   GOPATH: c:\gopath
 
 
@@ -28,7 +32,10 @@ init:
 
 install:
 - ps: >-
-   
+    pip install --upgrade -r requirements.txt
+
+    7z a ETA_LIB-win64.zip "c:\python37-x64\lib\site-packages"
+
     go get github.com/itchio/gothub
     
     gothub info -u timetag -r ETA
@@ -39,8 +46,8 @@ install:
     
     python -m pip install pyinstaller --upgrade
 
-    pip install --upgrade -r requirements.txt
-    
+    python -m pip install twine --upgrade
+
     Install-Product node 8 x64
     
     cd gui
@@ -90,6 +97,10 @@ build_script:
 
     cd ..
 
+    echo building wheel
+
+    python setup.py sdist_wheel
+
     move %APPVEYOR_BUILD_FOLDER%\etabackend\dist\ETA.exe %APPVEYOR_BUILD_FOLDER%\gui\ETA-Backend.exe
     
     echo building GUI
@@ -106,7 +117,7 @@ build_script:
 
 test_script:
 - cmd: >-
-    7z a ETA_LIB-win64.zip "c:\python37-x64\lib\site-packages"
+    twine upload %APPVEYOR_BUILD_FOLDER%\dist\*.whl -u %PYPI_USERNAME% -p %PYPI_PASSWORD%
     
     7z a ETA_Install-win64.zip %APPVEYOR_BUILD_FOLDER%\*.exe
 
