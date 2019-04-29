@@ -1,19 +1,20 @@
+import webinstall
+import ws_broadcast
+import sys
+import traceback
+import os
 import multiprocessing
 
 multiprocessing.freeze_support()
-
-import os
-import traceback
-import sys
-import ws_broadcast
-import webinstall
-webinstall.installer()
+ETA_VERSION = "v0.5.10"
+webinstall.installer(ETA_VERSION)
 try:
     from eta_runtime import *
 except Exception as e:
     print(str(e))
     traceback.print_exc()
-    print("It seems that ETA can not recognize ETA_LIB at path %s.",os.environ.get('ETA_LIB'))
+    print("It seems that ETA can not recognize ETA_LIB at path %s.",
+          os.environ.get('ETA_LIB'))
     print("Note: If the path to ETA_LIB is correct, please try moving ETA_LIB to another path containing more than 6 slashes (C:\\f1\\f2\\f3\\f4\\f5\\).")
     webinstall.set_path()
 
@@ -22,14 +23,15 @@ class WSSERVER(ETA):
 
     def __init__(self):
         import logging
-        self.max_frontend = 23
+        self.ETA_VERSION = ETA_VERSION
         self.logger = logging.getLogger(__name__)
         logging.basicConfig()
+        self.hostlisten = None
         self.hostip = None
         self.hostport = None
         while True:
             envhosts = os.environ.get('ETA_HOST')
-            if envhosts is None or envhosts.find(':')<0:
+            if envhosts is None or envhosts.find(':') < 0:
                 os.environ["ETA_HOST"] = input(
                     "[*]Please specify the IP address and port (localhost:5678):") or "localhost:5678"
                 os.system('setx ETA_HOST "' + os.environ["ETA_HOST"] + '"')
@@ -49,9 +51,13 @@ class WSSERVER(ETA):
         def new_client(client, server):
             print("New client " + str(client["address"]) +
                   " connected to port " + str(self.hostport) + ". ")
-
+        # listen only on loop as default
+        if self.hostip == "localhost" or self.hostip == "127.0.0.1":
+            hostlisten = "127.0.0.1"
+        else:
+            hostlisten = "0.0.0.0"
         self.server = ws_broadcast.WebsocketServer(
-            int(self.hostport), host='0.0.0.0')
+            int(self.hostport), host=hostlisten)
         print("ETA Backend URL: ws://{}:{}".format(self.hostip, self.hostport))
         self.server.set_fn_new_client(new_client)
         self.server.set_fn_message_received(new_message)

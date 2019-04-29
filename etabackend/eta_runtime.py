@@ -71,7 +71,7 @@ class ETA():
         for each in self.recipe_metadata:
             if each["name"].strip() == key:
                 return each["config"]
-
+        
     def recipe_set_filename(self, etaobj, id, key):
         self.compile_eta(etaobj, verbose=False)
         if self.eta_compiled_code is not None:
@@ -130,9 +130,14 @@ class ETA():
 
             self.eta_compiled_code = None
             self.compile_eta(etaobj, verbose=True)
+            # ETA File version check 
+            if self.recipe_get_parameter("ETA_VERSION") is not None and self.recipe_get_parameter("ETA_VERSION") is not self.ETA_VERSION:
+                  self.send(
+                    "ETA_VERSION: the recipe requires {} while ETA Backend is {}, you might encounter compatibility issues.".format(self.recipe_get_parameter("ETA_VERSION"),self.ETA_VERSION))
+
             if self.eta_compiled_code is not None:
                 self.send(
-                    "Executing code in Script Panel of group {}...".format(group))
+                    "Executing code in Script Panel in group {}...".format(group))
                 try:
                     glob = {"eta": self,"quTAG_FORMAT_BINARY" :0,"FORMAT_SI":1 ,"quTAG_FORMAT_COMPRESSED" :2,"bh_spc_4bytes" :3}
                     # side configuration panel
@@ -153,11 +158,11 @@ class ETA():
                             '[' + str(type(e).__name__) + ']' + str(e), "err")
                         self.logger.error(str(e), exc_info=True)
                         self.send(
-                            "This error is caused by user-code in the display panel.")
+                            "This error is caused by user-written code in the Script Panel, instead of ETA itself.")
                     return
                 self.send("\n")
                 self.send(
-                    "Don't forget to save the recipe and SHARE it on ETAHub!")
+                    "Don't forget to save the recipe and share it!")
 
     def display(self, app=None):
         if app is None:
@@ -183,7 +188,7 @@ class ETA():
                         response.headers.add(
                             'Access-Control-Allow-Origin', '*')
                         return response
-
+                    # TODO: hard coded ip and port for bokeh. Try making a HTTP router? 
                     thread2 = threading.Thread(
                         target=app.server.run, kwargs={'host': "0.0.0.0"})
                     thread2.daemon = True

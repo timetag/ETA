@@ -59,7 +59,7 @@ def compile_eta(jsobj, print):
         # compile ri
         if not(instgroup in ri_groupings):
             raise ValueError(
-                "Instrument group {} doesn't have any real instruments. Create an accusition device.".format(instgroup))
+                "Group {} doesn't have any real instruments. Create an accusition device.".format(instgroup))
         ris = ri_groupings[instgroup]
 
         num_rslot = 0
@@ -87,7 +87,7 @@ def compile_eta(jsobj, print):
         vis = vi_groupings[instgroup]
         vi_code_list = []
         graphnames = []
-        print("Compiling instrument group {}...".format(instgroup))
+        print("Compiling group {}...".format(instgroup))
         for each in range(len(vis)):
 
             instname = vis[each]["name"]
@@ -95,7 +95,7 @@ def compile_eta(jsobj, print):
 
             if not (instid in jsobj):
                 raise ValueError(
-                    "ETA file corrupted. Graph for {} is not found.".format(instname))
+                    "ETA file is corrupted. Graph for {} is not found.".format(instname))
             usercode, graph_instructions = graph_parser.compile_graph(
                 jsobj[instid], automata=each)
             # apply vars to user code
@@ -155,6 +155,6 @@ def compile_eta(jsobj, print):
     metadata += ris_all
     metadata += vis_all
 
-    print("Compilation succeeded.\n")
+    #print("Compilation succeeded.\n")
     print("\n")
     return code_per_groupings, var_per_groupings, metadata
