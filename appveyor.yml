@@ -32,6 +32,8 @@ init:
 
 install:
 - ps: >-
+    python -m pip --version
+    
     pip install --upgrade -r requirements.txt
 
     7z a ETA_LIB-win64.zip "c:\python37-x64\lib\site-packages"
@@ -39,8 +41,6 @@ install:
     go get github.com/itchio/gothub
     
     gothub info -u timetag -r ETA
-
-    python -m pip --version
 
     python -m pip install pypiwin32 --upgrade
     
@@ -101,7 +101,7 @@ build_script:
 
     echo building wheel
 
-    python setup.py sdist_wheel
+    python setup.py bdist-wheel
 
     move %APPVEYOR_BUILD_FOLDER%\etabackend\dist\ETA.exe %APPVEYOR_BUILD_FOLDER%\gui\ETA-Backend.exe
     
