@@ -3,16 +3,16 @@ import numba as nb
 from numba import jit
 import numpy as np
 from os import listdir
-from os.path import isfile, join
+import os.path
 import cffi
 import sys
 
 ffi = cffi.FFI()
 if getattr(sys, 'frozen', False):
-    ll_path = join(sys._MEIPASS, ".\\ll\\")
+    ll_path = os.path.join(sys._MEIPASS, ".\\ll\\")
 else:
-    ll_path = ".\\ll\\"
-
+    ll_path = os.path.join(os.path.dirname(os.path.realpath(__file__) ),"ll\\")
+    # ll code is binded to the path of the py file
 
 def compile_library(context, asm, libname='compiled_module'):
     library = context.codegen().create_library(libname)
@@ -98,8 +98,8 @@ def link_libs(typingctx):
         # print("===== linking =====")
         
         for f in listdir(ll_path):
-            lib_path = join(ll_path, f)
-            if isfile(lib_path):
+            lib_path = os.path.join(ll_path, f)
+            if  os.path.isfile(lib_path):
                 # print(lib_path)
                 with open(lib_path, "r") as fio:
                     assembly = fio.read()
