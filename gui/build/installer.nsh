@@ -1,6 +1,7 @@
 !macro customRemoveFiles
    ExecWait "taskkill /f /im ETA-Backend.exe"
    Delete "$instdir\ETA-Backend.exe"
+   RMDir /r "$instdir\site-packages"
 !macroend
 
 !macro customInstall
