@@ -11,4 +11,5 @@
 
 !macro customUnInstall
    Delete "$desktop\ETABackend.lnk"
+   RMDir /r "$instdir\site-packages"
 !macroend
