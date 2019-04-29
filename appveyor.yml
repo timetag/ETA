@@ -18,11 +18,13 @@ environment:
 
 init:
 - cmd: >-
-    SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%
-
+    SET PATH=%PYTHON%;%PYTHON%\Scripts;%PATH%
+    
     echo %GOPATH%
 
     set PATH=%GOPATH%\bin;c:\go\bin;%PATH%
+    
+    echo %PATH%
     
     python --version
     
