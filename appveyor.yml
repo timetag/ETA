@@ -103,7 +103,7 @@ build_script:
 
     echo building wheel
 
-    python setup.py bdist-wheel
+    python setup.py bdist_wheel
 
     move %APPVEYOR_BUILD_FOLDER%\etabackend\dist\ETA.exe %APPVEYOR_BUILD_FOLDER%\gui\ETA-Backend.exe
     
