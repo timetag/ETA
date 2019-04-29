@@ -1,10 +1,14 @@
 import setuptools
+with open('requirements.txt') as f:
+    required = f.read().splitlines()
 
 setuptools.setup(
     name="etabackend",
-    version="0.5.6",
+    version="0.5.10",
     author="ETA Team",
     description="Extensible Timetag Analyzer",
+    include_package_data=True,
+    install_requires=required,
     long_description="ETA is a graphical event-driven programming language for time-tag processing.",
     url="https://timetag.github.io",
     packages=setuptools.find_packages(),
