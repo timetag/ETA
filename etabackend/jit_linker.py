@@ -51,7 +51,7 @@ def link_global(name, do_get=True, type=nb.int64):
         def codegen(context, builder, sig, args):
             library = compile_library(
                 context, llvm_global_get.replace("test", name))
-            codegen.libs = [library]  # Weird hack to get the library linked
+            context.active_code_library.add_linking_library(library) # no more weird hack to get the library linked
             argtypes = [context.get_argument_type(aty) for aty in sig.args]
             restype = context.get_argument_type(sig.return_type)
             fnty = ir.FunctionType(restype, argtypes)
@@ -71,7 +71,7 @@ def link_global(name, do_get=True, type=nb.int64):
             code = llvm_global_set.replace("test", name)
             library = compile_library(
                 context, code)
-            codegen.libs = [library]  # Weird hack to get the library linked
+            context.active_code_library.add_linking_library(library) # no more weird hack to get the library linked
             argtypes = [context.get_argument_type(aty) for aty in sig.args]
             restype = context.get_argument_type(sig.return_type)
             fnty = ir.FunctionType(restype, argtypes)
@@ -96,15 +96,17 @@ def link_libs(typingctx):
 
     def codegen(context, builder, sig, args):
         # print("===== linking =====")
-        codegen.libs = []  # Weird hack to get the library linked
+        
         for f in listdir(ll_path):
             lib_path = join(ll_path, f)
             if isfile(lib_path):
                 # print(lib_path)
                 with open(lib_path, "r") as fio:
                     assembly = fio.read()
+                    assembly = assembly.replace("""!llvm.linker.options = !{!0}""","")# hack: remove useless linker options for LLVM7 
                     library = compile_library(context, assembly, lib_path)
-                codegen.libs.append(library)
+                context.active_code_library.add_linking_library(library) # no more weird hack to get the library linked
+
         # print("===== done =====")
         return context.get_constant(nb.int32, 42)
 

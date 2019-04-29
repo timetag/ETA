@@ -1,7 +1,7 @@
 ; ModuleID = 'TimeTag/PARSE_TimeTags.cpp'
 source_filename = "TimeTag/PARSE_TimeTags.cpp"
 target datalayout = "e-m:w-i64:64-f80:128-n8:16:32:64-S128"
-target triple = "x86_64-pc-windows-msvc19.16.27026"
+target triple = "x86_64-pc-windows-msvc19.16.27027"
 
 %struct.ttf_reader = type { i64, i64, i64, i64, i64, i64, i64, i64, i64, i64, i64, i64, i8*, %struct._iobuf* }
 %struct._iobuf = type { i8* }
@@ -30,50 +30,50 @@ $_vfprintf_l = comdat any
 
 $__local_stdio_printf_options = comdat any
 
-$"\01??_C@_0BO@LNBDDACF@?6?5?$FLERROR?$FN?5Illegal?5Chan?3?5?5?$CF1u?6?$AA@" = comdat any
+$"??_C@_0BO@LNBDDACF@?6?5?$FLERROR?$FN?5Illegal?5Chan?3?5?5?$CF1u?6?$AA@" = comdat any
 
-$"\01??_C@_0CI@OJHAHNJJ@?6?5?$FLERROR?$FN?6Illegal?5virtual_channe@" = comdat any
+$"??_C@_0CI@OJHAHNJJ@?6?5?$FLERROR?$FN?6Illegal?5virtual_channe@" = comdat any
 
-$"\01??_C@_0GB@GKAMEOCN@?6Reader?5?$CFx?5for?5section?5?$FL?$CFlld?5?$CFll@" = comdat any
+$"??_C@_0GB@GKAMEOCN@?6Reader?5?$CFx?5for?5section?5?$FL?$CFlld?5?$CFll@" = comdat any
 
-$"\01??_C@_0FB@HLCILKJ@?6Reader?5?$CFx?5for?5section?5?$FL?$CFlld?5?$CFll@" = comdat any
+$"??_C@_0FB@HLCILKJ@?6Reader?5?$CFx?5for?5section?5?$FL?$CFlld?5?$CFll@" = comdat any
 
-$"\01??_C@_0CM@DODOIIB@?6?5?$FLERROR?$FNERROR?3?5Unsupported?5time@" = comdat any
+$"??_C@_0CM@DODOIIB@?6?5?$FLERROR?$FNERROR?3?5Unsupported?5time@" = comdat any
 
-$"\01??_C@_02JDPG@rb?$AA@" = comdat any
+$"??_C@_02JDPG@rb?$AA@" = comdat any
 
-$"\01??_C@_0DE@PLFGPKJO@?6?5?$FLERROR?$FNTime?9tag?5file?5cannot?5be@" = comdat any
+$"??_C@_0DE@PLFGPKJO@?6?5?$FLERROR?$FNTime?9tag?5file?5cannot?5be@" = comdat any
 
-$"\01??_C@_0CP@EMJMNIIB@?6?5?$FLERROR?$FNTime?9tag?5file?5cannot?5se@" = comdat any
+$"??_C@_0CP@EMJMNIIB@?6?5?$FLERROR?$FNTime?9tag?5file?5cannot?5se@" = comdat any
 
-$"\01??_C@_0EP@PGBLNION@?6?5?$FLERROR?$FNReading?5buffer?5for?5Time@" = comdat any
+$"??_C@_0EP@PGBLNION@?6?5?$FLERROR?$FNReading?5buffer?5for?5Time@" = comdat any
 
-$"\01??_C@_0DE@KHGIDNIO@?6?6Reader?5?$CFx?5is?5assigned?5to?5the?5s@" = comdat any
+$"??_C@_0DE@KHGIDNIO@?6?6Reader?5?$CFx?5is?5assigned?5to?5the?5s@" = comdat any
 
-$"\01??_C@_0DE@PEIEGMHF@?6?5?$FLERROR?$FNTime?9tag?5file?5cannot?5be@" = comdat any
+$"??_C@_0DE@PEIEGMHF@?6?5?$FLERROR?$FNTime?9tag?5file?5cannot?5be@" = comdat any
 
-$"\01??_C@_0BH@PIFINJNO@?6Reader?5?$CFx?5is?5closing?4?$AA@" = comdat any
+$"??_C@_0BH@PIFINJNO@?6Reader?5?$CFx?5is?5closing?4?$AA@" = comdat any
 
-$"\01?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA" = comdat any
+$"?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA" = comdat any
 
-@order_gurantee3 = global i64 0, align 8
+@order_gurantee3 = dso_local global i64 0, align 8
 @READERs = internal global %struct.ttf_reader* null, align 8
-@"\01??_C@_0BO@LNBDDACF@?6?5?$FLERROR?$FN?5Illegal?5Chan?3?5?5?$CF1u?6?$AA@" = linkonce_odr unnamed_addr constant [30 x i8] c"\0A [ERROR] Illegal Chan:  %1u\0A\00", comdat, align 1
-@"\01??_C@_0CI@OJHAHNJJ@?6?5?$FLERROR?$FN?6Illegal?5virtual_channe@" = linkonce_odr unnamed_addr constant [40 x i8] c"\0A [ERROR]\0AIllegal virtual_channel:  %1u\00", comdat, align 1
-@"\01??_C@_0GB@GKAMEOCN@?6Reader?5?$CFx?5for?5section?5?$FL?$CFlld?5?$CFll@" = linkonce_odr unnamed_addr constant [97 x i8] c"\0AReader %x for section [%lld %lld) paused, nextrec %lld, batchend %lld, file is not long enough.\00", comdat, align 1
-@"\01??_C@_0FB@HLCILKJ@?6Reader?5?$CFx?5for?5section?5?$FL?$CFlld?5?$CFll@" = linkonce_odr unnamed_addr constant [81 x i8] c"\0AReader %x for section [%lld %lld) paused, nextrec %lld, batchend %lld, boundry.\00", comdat, align 1
-@"\01??_C@_0CM@DODOIIB@?6?5?$FLERROR?$FNERROR?3?5Unsupported?5time@" = linkonce_odr unnamed_addr constant [44 x i8] c"\0A [ERROR]ERROR: Unsupported timetag format.\00", comdat, align 1
-@"\01??_C@_02JDPG@rb?$AA@" = linkonce_odr unnamed_addr constant [3 x i8] c"rb\00", comdat, align 1
-@"\01??_C@_0DE@PLFGPKJO@?6?5?$FLERROR?$FNTime?9tag?5file?5cannot?5be@" = linkonce_odr unnamed_addr constant [52 x i8] c"\0A [ERROR]Time-tag file cannot be opened, aborting.\0A\00", comdat, align 1
-@"\01??_C@_0CP@EMJMNIIB@?6?5?$FLERROR?$FNTime?9tag?5file?5cannot?5se@" = linkonce_odr unnamed_addr constant [47 x i8] c"\0A [ERROR]Time-tag file cannot seek, aborting.\0A\00", comdat, align 1
-@"\01??_C@_0EP@PGBLNION@?6?5?$FLERROR?$FNReading?5buffer?5for?5Time@" = linkonce_odr unnamed_addr constant [79 x i8] c"\0A [ERROR]Reading buffer for Time-tag file is not assgined properly, aborting.\0A\00", comdat, align 1
-@"\01??_C@_0DE@KHGIDNIO@?6?6Reader?5?$CFx?5is?5assigned?5to?5the?5s@" = linkonce_odr unnamed_addr constant [52 x i8] c"\0A\0AReader %x is assigned to the section [%lld %lld)\0A\00", comdat, align 1
-@"\01??_C@_0DE@PEIEGMHF@?6?5?$FLERROR?$FNTime?9tag?5file?5cannot?5be@" = linkonce_odr unnamed_addr constant [52 x i8] c"\0A [ERROR]Time-tag file cannot be closed, aborting.\0A\00", comdat, align 1
-@"\01??_C@_0BH@PIFINJNO@?6Reader?5?$CFx?5is?5closing?4?$AA@" = linkonce_odr unnamed_addr constant [23 x i8] c"\0AReader %x is closing.\00", comdat, align 1
-@"\01?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA" = linkonce_odr global i64 0, comdat, align 8
+@"??_C@_0BO@LNBDDACF@?6?5?$FLERROR?$FN?5Illegal?5Chan?3?5?5?$CF1u?6?$AA@" = linkonce_odr dso_local unnamed_addr constant [30 x i8] c"\0A [ERROR] Illegal Chan:  %1u\0A\00", comdat, align 1
+@"??_C@_0CI@OJHAHNJJ@?6?5?$FLERROR?$FN?6Illegal?5virtual_channe@" = linkonce_odr dso_local unnamed_addr constant [40 x i8] c"\0A [ERROR]\0AIllegal virtual_channel:  %1u\00", comdat, align 1
+@"??_C@_0GB@GKAMEOCN@?6Reader?5?$CFx?5for?5section?5?$FL?$CFlld?5?$CFll@" = linkonce_odr dso_local unnamed_addr constant [97 x i8] c"\0AReader %x for section [%lld %lld) paused, nextrec %lld, batchend %lld, file is not long enough.\00", comdat, align 1
+@"??_C@_0FB@HLCILKJ@?6Reader?5?$CFx?5for?5section?5?$FL?$CFlld?5?$CFll@" = linkonce_odr dso_local unnamed_addr constant [81 x i8] c"\0AReader %x for section [%lld %lld) paused, nextrec %lld, batchend %lld, boundry.\00", comdat, align 1
+@"??_C@_0CM@DODOIIB@?6?5?$FLERROR?$FNERROR?3?5Unsupported?5time@" = linkonce_odr dso_local unnamed_addr constant [44 x i8] c"\0A [ERROR]ERROR: Unsupported timetag format.\00", comdat, align 1
+@"??_C@_02JDPG@rb?$AA@" = linkonce_odr dso_local unnamed_addr constant [3 x i8] c"rb\00", comdat, align 1
+@"??_C@_0DE@PLFGPKJO@?6?5?$FLERROR?$FNTime?9tag?5file?5cannot?5be@" = linkonce_odr dso_local unnamed_addr constant [52 x i8] c"\0A [ERROR]Time-tag file cannot be opened, aborting.\0A\00", comdat, align 1
+@"??_C@_0CP@EMJMNIIB@?6?5?$FLERROR?$FNTime?9tag?5file?5cannot?5se@" = linkonce_odr dso_local unnamed_addr constant [47 x i8] c"\0A [ERROR]Time-tag file cannot seek, aborting.\0A\00", comdat, align 1
+@"??_C@_0EP@PGBLNION@?6?5?$FLERROR?$FNReading?5buffer?5for?5Time@" = linkonce_odr dso_local unnamed_addr constant [79 x i8] c"\0A [ERROR]Reading buffer for Time-tag file is not assgined properly, aborting.\0A\00", comdat, align 1
+@"??_C@_0DE@KHGIDNIO@?6?6Reader?5?$CFx?5is?5assigned?5to?5the?5s@" = linkonce_odr dso_local unnamed_addr constant [52 x i8] c"\0A\0AReader %x is assigned to the section [%lld %lld)\0A\00", comdat, align 1
+@"??_C@_0DE@PEIEGMHF@?6?5?$FLERROR?$FNTime?9tag?5file?5cannot?5be@" = linkonce_odr dso_local unnamed_addr constant [52 x i8] c"\0A [ERROR]Time-tag file cannot be closed, aborting.\0A\00", comdat, align 1
+@"??_C@_0BH@PIFINJNO@?6Reader?5?$CFx?5is?5closing?4?$AA@" = linkonce_odr dso_local unnamed_addr constant [23 x i8] c"\0AReader %x is closing.\00", comdat, align 1
+@"?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA" = linkonce_odr dso_local global i64 0, comdat, align 8
 
 ; Function Attrs: alwaysinline uwtable
-define void @ProcessPHT2(i32, i64* dereferenceable(8), i8* dereferenceable(1), i64* dereferenceable(8)) #0 {
+define dso_local void @ProcessPHT2(i32, i64* dereferenceable(8), i8* dereferenceable(1), i64* dereferenceable(8)) #0 {
   %5 = alloca i64*, align 8
   %6 = alloca i8*, align 8
   %7 = alloca i64*, align 8
@@ -157,7 +157,7 @@ define void @ProcessPHT2(i32, i64* dereferenceable(8), i8* dereferenceable(1), i
   %62 = bitcast %struct.anon* %61 to i32*
   %63 = load i32, i32* %62, align 4
   %64 = lshr i32 %63, 28
-  %65 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([30 x i8], [30 x i8]* @"\01??_C@_0BO@LNBDDACF@?6?5?$FLERROR?$FN?5Illegal?5Chan?3?5?5?$CF1u?6?$AA@", i32 0, i32 0), i32 %64)
+  %65 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([30 x i8], [30 x i8]* @"??_C@_0BO@LNBDDACF@?6?5?$FLERROR?$FN?5Illegal?5Chan?3?5?5?$CF1u?6?$AA@", i32 0, i32 0), i32 %64)
   %66 = sext i32 %65 to i64
   store i64 %66, i64* @order_gurantee3, align 8
   br label %89
@@ -200,7 +200,7 @@ define void @ProcessPHT2(i32, i64* dereferenceable(8), i8* dereferenceable(1), i
 declare i32 @llvm.cttz.i32(i32, i1) #1
 
 ; Function Attrs: noinline optnone uwtable
-define linkonce_odr i32 @printf(i8*, ...) #2 comdat {
+define linkonce_odr dso_local i32 @printf(i8*, ...) #2 comdat {
   %2 = alloca i8*, align 8
   %3 = alloca i32, align 4
   %4 = alloca i8*, align 8
@@ -219,7 +219,7 @@ define linkonce_odr i32 @printf(i8*, ...) #2 comdat {
 }
 
 ; Function Attrs: alwaysinline nounwind uwtable
-define void @ProcessHHT2(i32, i32, i64* dereferenceable(8), i8* dereferenceable(1), i64* dereferenceable(8)) #3 {
+define dso_local void @ProcessHHT2(i32, i32, i64* dereferenceable(8), i8* dereferenceable(1), i64* dereferenceable(8)) #3 {
   %6 = alloca i64*, align 8
   %7 = alloca i8*, align 8
   %8 = alloca i64*, align 8
@@ -417,7 +417,7 @@ define void @ProcessHHT2(i32, i32, i64* dereferenceable(8), i8* dereferenceable(
 }
 
 ; Function Attrs: alwaysinline uwtable
-define void @ProcessPHT3(i32, i64* dereferenceable(8), i8* dereferenceable(1), i64* dereferenceable(8)) #0 {
+define dso_local void @ProcessPHT3(i32, i64* dereferenceable(8), i8* dereferenceable(1), i64* dereferenceable(8)) #0 {
   %5 = alloca i64*, align 8
   %6 = alloca i8*, align 8
   %7 = alloca i64*, align 8
@@ -516,7 +516,7 @@ define void @ProcessPHT3(i32, i64* dereferenceable(8), i8* dereferenceable(1), i
   %76 = bitcast %struct.anon.3* %75 to i32*
   %77 = load i32, i32* %76, align 4
   %78 = lshr i32 %77, 28
-  %79 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([40 x i8], [40 x i8]* @"\01??_C@_0CI@OJHAHNJJ@?6?5?$FLERROR?$FN?6Illegal?5virtual_channe@", i32 0, i32 0), i32 %78)
+  %79 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([40 x i8], [40 x i8]* @"??_C@_0CI@OJHAHNJJ@?6?5?$FLERROR?$FN?6Illegal?5virtual_channe@", i32 0, i32 0), i32 %78)
   %80 = sext i32 %79 to i64
   store i64 %80, i64* @order_gurantee3, align 8
   br label %81
@@ -565,7 +565,7 @@ define void @ProcessPHT3(i32, i64* dereferenceable(8), i8* dereferenceable(1), i
 }
 
 ; Function Attrs: alwaysinline nounwind uwtable
-define void @ProcessHHT3(i32, i32, i64* dereferenceable(8), i8* dereferenceable(1), i64* dereferenceable(8)) #3 {
+define dso_local void @ProcessHHT3(i32, i32, i64* dereferenceable(8), i8* dereferenceable(1), i64* dereferenceable(8)) #3 {
   %6 = alloca i64*, align 8
   %7 = alloca i8*, align 8
   %8 = alloca i64*, align 8
@@ -732,7 +732,7 @@ define void @ProcessHHT3(i32, i32, i64* dereferenceable(8), i8* dereferenceable(
 }
 
 ; Function Attrs: alwaysinline uwtable
-define i32 @read_next_minibatch() #0 {
+define dso_local i32 @read_next_minibatch() #0 {
   %1 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
   %2 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %1, i64 0
   %3 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %2, i32 0, i32 13
@@ -777,10 +777,10 @@ define i32 @read_next_minibatch() #0 {
   ret i32 %38
 }
 
-declare i64 @fread(i8*, i64, i64, %struct._iobuf*) #4
+declare dso_local i64 @fread(i8*, i64, i64, %struct._iobuf*) #4
 
 ; Function Attrs: alwaysinline uwtable
-define i64 @pop_signal_from_file(i8*) #0 {
+define dso_local i64 @pop_signal_from_file(i8*) #0 {
   %2 = alloca i64*, align 8
   %3 = alloca i8*, align 8
   %4 = alloca i64*, align 8
@@ -930,7 +930,7 @@ define i64 @pop_signal_from_file(i8*) #0 {
   %133 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %132, i32 0, i32 0
   %134 = load i64, i64* %133, align 8
   %135 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %136 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([97 x i8], [97 x i8]* @"\01??_C@_0GB@GKAMEOCN@?6Reader?5?$CFx?5for?5section?5?$FL?$CFlld?5?$CFll@", i32 0, i32 0), %struct.ttf_reader* %135, i64 %134, i64 %130, i64 %126, i64 %125)
+  %136 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([97 x i8], [97 x i8]* @"??_C@_0GB@GKAMEOCN@?6Reader?5?$CFx?5for?5section?5?$FL?$CFlld?5?$CFll@", i32 0, i32 0), %struct.ttf_reader* %135, i64 %134, i64 %130, i64 %126, i64 %125)
   %137 = sext i32 %136 to i64
   store i64 %137, i64* @order_gurantee3, align 8
   br label %1061
@@ -962,7 +962,7 @@ define i64 @pop_signal_from_file(i8*) #0 {
   %158 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %157, i32 0, i32 0
   %159 = load i64, i64* %158, align 8
   %160 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %161 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([81 x i8], [81 x i8]* @"\01??_C@_0FB@HLCILKJ@?6Reader?5?$CFx?5for?5section?5?$FL?$CFlld?5?$CFll@", i32 0, i32 0), %struct.ttf_reader* %160, i64 %159, i64 %155, i64 %151, i64 %150)
+  %161 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([81 x i8], [81 x i8]* @"??_C@_0FB@HLCILKJ@?6Reader?5?$CFx?5for?5section?5?$FL?$CFlld?5?$CFll@", i32 0, i32 0), %struct.ttf_reader* %160, i64 %159, i64 %155, i64 %151, i64 %150)
   %162 = sext i32 %161 to i64
   store i64 %162, i64* @order_gurantee3, align 8
   br label %1061
@@ -1080,7 +1080,7 @@ define i64 @pop_signal_from_file(i8*) #0 {
   %232 = bitcast %struct.anon* %231 to i32*
   %233 = load i32, i32* %232, align 4
   %234 = lshr i32 %233, 28
-  %235 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([30 x i8], [30 x i8]* @"\01??_C@_0BO@LNBDDACF@?6?5?$FLERROR?$FN?5Illegal?5Chan?3?5?5?$CF1u?6?$AA@", i32 0, i32 0), i32 %234)
+  %235 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([30 x i8], [30 x i8]* @"??_C@_0BO@LNBDDACF@?6?5?$FLERROR?$FN?5Illegal?5Chan?3?5?5?$CF1u?6?$AA@", i32 0, i32 0), i32 %234)
   %236 = sext i32 %235 to i64
   store i64 %236, i64* @order_gurantee3, align 8
   br label %258
@@ -1209,7 +1209,7 @@ define i64 @pop_signal_from_file(i8*) #0 {
   %325 = bitcast %struct.anon.3* %324 to i32*
   %326 = load i32, i32* %325, align 4
   %327 = lshr i32 %326, 28
-  %328 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([40 x i8], [40 x i8]* @"\01??_C@_0CI@OJHAHNJJ@?6?5?$FLERROR?$FN?6Illegal?5virtual_channe@", i32 0, i32 0), i32 %327)
+  %328 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([40 x i8], [40 x i8]* @"??_C@_0CI@OJHAHNJJ@?6?5?$FLERROR?$FN?6Illegal?5virtual_channe@", i32 0, i32 0), i32 %327)
   %329 = sext i32 %328 to i64
   store i64 %329, i64* @order_gurantee3, align 8
   br label %330
@@ -2161,7 +2161,7 @@ define i64 @pop_signal_from_file(i8*) #0 {
   br label %1048
 
 ; <label>:1045:                                   ; preds = %163
-  %1046 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([44 x i8], [44 x i8]* @"\01??_C@_0CM@DODOIIB@?6?5?$FLERROR?$FNERROR?3?5Unsupported?5time@", i32 0, i32 0))
+  %1046 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([44 x i8], [44 x i8]* @"??_C@_0CM@DODOIIB@?6?5?$FLERROR?$FNERROR?3?5Unsupported?5time@", i32 0, i32 0))
   %1047 = sext i32 %1046 to i64
   store i64 %1047, i64* @order_gurantee3, align 8
   br label %1048
@@ -2200,7 +2200,7 @@ define i64 @pop_signal_from_file(i8*) #0 {
 }
 
 ; Function Attrs: alwaysinline uwtable
-define i32 @FileReader_init(i8*, i8*) #0 {
+define dso_local i32 @FileReader_init(i8*, i8*) #0 {
   %3 = alloca i32, align 4
   %4 = alloca i8*, align 8
   %5 = alloca i8*, align 8
@@ -2226,7 +2226,7 @@ define i32 @FileReader_init(i8*, i8*) #0 {
   %20 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %19, i32 0, i32 8
   store i64 0, i64* %20, align 8
   %21 = load i8*, i8** %5, align 8
-  %22 = call %struct._iobuf* @fopen(i8* %21, i8* getelementptr inbounds ([3 x i8], [3 x i8]* @"\01??_C@_02JDPG@rb?$AA@", i32 0, i32 0))
+  %22 = call %struct._iobuf* @fopen(i8* %21, i8* getelementptr inbounds ([3 x i8], [3 x i8]* @"??_C@_02JDPG@rb?$AA@", i32 0, i32 0))
   %23 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
   %24 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %23, i64 0
   %25 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %24, i32 0, i32 13
@@ -2235,7 +2235,7 @@ define i32 @FileReader_init(i8*, i8*) #0 {
   br i1 %26, label %27, label %30
 
 ; <label>:27:                                     ; preds = %2
-  %28 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([52 x i8], [52 x i8]* @"\01??_C@_0DE@PLFGPKJO@?6?5?$FLERROR?$FNTime?9tag?5file?5cannot?5be@", i32 0, i32 0))
+  %28 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([52 x i8], [52 x i8]* @"??_C@_0DE@PLFGPKJO@?6?5?$FLERROR?$FNTime?9tag?5file?5cannot?5be@", i32 0, i32 0))
   %29 = sext i32 %28 to i64
   store i64 %29, i64* @order_gurantee3, align 8
   store i32 -1, i32* %3, align 4
@@ -2255,7 +2255,7 @@ define i32 @FileReader_init(i8*, i8*) #0 {
   br i1 %40, label %41, label %44
 
 ; <label>:41:                                     ; preds = %30
-  %42 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([47 x i8], [47 x i8]* @"\01??_C@_0CP@EMJMNIIB@?6?5?$FLERROR?$FNTime?9tag?5file?5cannot?5se@", i32 0, i32 0))
+  %42 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([47 x i8], [47 x i8]* @"??_C@_0CP@EMJMNIIB@?6?5?$FLERROR?$FNTime?9tag?5file?5cannot?5se@", i32 0, i32 0))
   %43 = sext i32 %42 to i64
   store i64 %43, i64* @order_gurantee3, align 8
   store i32 -1, i32* %3, align 4
@@ -2276,7 +2276,7 @@ define i32 @FileReader_init(i8*, i8*) #0 {
   br i1 %54, label %55, label %58
 
 ; <label>:55:                                     ; preds = %44
-  %56 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([79 x i8], [79 x i8]* @"\01??_C@_0EP@PGBLNION@?6?5?$FLERROR?$FNReading?5buffer?5for?5Time@", i32 0, i32 0))
+  %56 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([79 x i8], [79 x i8]* @"??_C@_0EP@PGBLNION@?6?5?$FLERROR?$FNReading?5buffer?5for?5Time@", i32 0, i32 0))
   %57 = sext i32 %56 to i64
   store i64 %57, i64* @order_gurantee3, align 8
   store i32 -1, i32* %3, align 4
@@ -2292,7 +2292,7 @@ define i32 @FileReader_init(i8*, i8*) #0 {
   %65 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %64, i32 0, i32 0
   %66 = load i64, i64* %65, align 8
   %67 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %68 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([52 x i8], [52 x i8]* @"\01??_C@_0DE@KHGIDNIO@?6?6Reader?5?$CFx?5is?5assigned?5to?5the?5s@", i32 0, i32 0), %struct.ttf_reader* %67, i64 %66, i64 %62)
+  %68 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([52 x i8], [52 x i8]* @"??_C@_0DE@KHGIDNIO@?6?6Reader?5?$CFx?5is?5assigned?5to?5the?5s@", i32 0, i32 0), %struct.ttf_reader* %67, i64 %66, i64 %62)
   %69 = sext i32 %68 to i64
   store i64 %69, i64* @order_gurantee3, align 8
   store i32 0, i32* %3, align 4
@@ -2303,14 +2303,14 @@ define i32 @FileReader_init(i8*, i8*) #0 {
   ret i32 %71
 }
 
-declare %struct._iobuf* @fopen(i8*, i8*) #4
+declare dso_local %struct._iobuf* @fopen(i8*, i8*) #4
 
-declare i32 @_fseeki64(%struct._iobuf*, i64, i32) #4
+declare dso_local i32 @_fseeki64(%struct._iobuf*, i64, i32) #4
 
-declare noalias i8* @malloc(i64) #4
+declare dso_local noalias i8* @malloc(i64) #4
 
 ; Function Attrs: alwaysinline uwtable
-define i32 @FileReader_close(i8*) #0 {
+define dso_local i32 @FileReader_close(i8*) #0 {
   %2 = alloca i32, align 4
   %3 = alloca i8*, align 8
   store i8* %0, i8** %3, align 8
@@ -2326,7 +2326,7 @@ define i32 @FileReader_close(i8*) #0 {
   br i1 %11, label %12, label %15
 
 ; <label>:12:                                     ; preds = %1
-  %13 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([52 x i8], [52 x i8]* @"\01??_C@_0DE@PEIEGMHF@?6?5?$FLERROR?$FNTime?9tag?5file?5cannot?5be@", i32 0, i32 0))
+  %13 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([52 x i8], [52 x i8]* @"??_C@_0DE@PEIEGMHF@?6?5?$FLERROR?$FNTime?9tag?5file?5cannot?5be@", i32 0, i32 0))
   %14 = sext i32 %13 to i64
   store i64 %14, i64* @order_gurantee3, align 8
   store i32 -1, i32* %2, align 4
@@ -2339,7 +2339,7 @@ define i32 @FileReader_close(i8*) #0 {
   %19 = load i8*, i8** %18, align 8
   call void @free(i8* %19)
   %20 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %21 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @"\01??_C@_0BH@PIFINJNO@?6Reader?5?$CFx?5is?5closing?4?$AA@", i32 0, i32 0), %struct.ttf_reader* %20)
+  %21 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @"??_C@_0BH@PIFINJNO@?6Reader?5?$CFx?5is?5closing?4?$AA@", i32 0, i32 0), %struct.ttf_reader* %20)
   %22 = sext i32 %21 to i64
   store i64 %22, i64* @order_gurantee3, align 8
   store i32 0, i32* %2, align 4
@@ -2350,15 +2350,15 @@ define i32 @FileReader_close(i8*) #0 {
   ret i32 %24
 }
 
-declare i32 @fclose(%struct._iobuf*) #4
+declare dso_local i32 @fclose(%struct._iobuf*) #4
 
-declare void @free(i8*) #4
+declare dso_local void @free(i8*) #4
 
 ; Function Attrs: nounwind
 declare void @llvm.va_start(i8*) #5
 
 ; Function Attrs: noinline optnone uwtable
-define linkonce_odr i32 @_vfprintf_l(%struct._iobuf*, i8*, %struct.__crt_locale_pointers*, i8*) #2 comdat {
+define linkonce_odr dso_local i32 @_vfprintf_l(%struct._iobuf*, i8*, %struct.__crt_locale_pointers*, i8*) #2 comdat {
   %5 = alloca i8*, align 8
   %6 = alloca %struct.__crt_locale_pointers*, align 8
   %7 = alloca i8*, align 8
@@ -2377,16 +2377,16 @@ define linkonce_odr i32 @_vfprintf_l(%struct._iobuf*, i8*, %struct.__crt_locale_
   ret i32 %15
 }
 
-declare %struct._iobuf* @__acrt_iob_func(i32) #4
+declare dso_local %struct._iobuf* @__acrt_iob_func(i32) #4
 
 ; Function Attrs: nounwind
 declare void @llvm.va_end(i8*) #5
 
-declare i32 @__stdio_common_vfprintf(i64, %struct._iobuf*, i8*, %struct.__crt_locale_pointers*, i8*) #4
+declare dso_local i32 @__stdio_common_vfprintf(i64, %struct._iobuf*, i8*, %struct.__crt_locale_pointers*, i8*) #4
 
 ; Function Attrs: noinline nounwind optnone uwtable
-define linkonce_odr i64* @__local_stdio_printf_options() #6 comdat {
-  ret i64* @"\01?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA"
+define linkonce_odr dso_local i64* @__local_stdio_printf_options() #6 comdat {
+  ret i64* @"?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA"
 }
 
 attributes #0 = { alwaysinline uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
@@ -2404,4 +2404,4 @@ attributes #6 = { noinline nounwind optnone uwtable "correctly-rounded-divide-sq
 !0 = !{!"/FAILIFMISMATCH:\22_CRT_STDIO_ISO_WIDE_SPECIFIERS=0\22"}
 !1 = !{i32 1, !"wchar_size", i32 2}
 !2 = !{i32 7, !"PIC Level", i32 2}
-!3 = !{!"clang version 6.0.1 (tags/RELEASE_601/final)"}
+!3 = !{!"clang version 7.0.1 (tags/RELEASE_701/final)"}

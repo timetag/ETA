@@ -1,7 +1,7 @@
 ; ModuleID = 'TimeTag/INFRA_vchn.cpp'
 source_filename = "TimeTag/INFRA_vchn.cpp"
 target datalayout = "e-m:w-i64:64-f80:128-n8:16:32:64-S128"
-target triple = "x86_64-pc-windows-msvc19.16.27026"
+target triple = "x86_64-pc-windows-msvc19.16.27027"
 
 %struct.circular_buf_t = type { i64*, i64, i64, i64 }
 %struct._iobuf = type { i8* }
@@ -15,43 +15,43 @@ $_vfprintf_l = comdat any
 
 $__local_stdio_printf_options = comdat any
 
-$"\01??_C@_0DA@FDKMBOFF@?6?5?$FLERROR?$FNMemalloc?5failed?5for?5VFI@" = comdat any
+$"??_C@_0DA@FDKMBOFF@?6?5?$FLERROR?$FNMemalloc?5failed?5for?5VFI@" = comdat any
 
-$"\01??_C@_0DA@NLDMGFAH@?6Creating?5ring?5buffer?5?$CFd?5at?5?$CFx?5w@" = comdat any
+$"??_C@_0DA@NLDMGFAH@?6Creating?5ring?5buffer?5?$CFd?5at?5?$CFx?5w@" = comdat any
 
-$"\01??_C@_0DB@PEPKOABL@?6Resetting?5ring?5buffer?5?$CFd?5at?5?$CFx?5@" = comdat any
+$"??_C@_0DB@PEPKOABL@?6Resetting?5ring?5buffer?5?$CFd?5at?5?$CFx?5@" = comdat any
 
-$"\01??_C@_0CF@BDINJJIB@?6?5?$FLERROR?$FNMemalloc?5failed?0?5aborti@" = comdat any
+$"??_C@_0CF@BDINJJIB@?6?5?$FLERROR?$FNMemalloc?5failed?0?5aborti@" = comdat any
 
-$"\01??_C@_0O@HDHCNGNA@?6POOL_init?5?$CFd?$AA@" = comdat any
+$"??_C@_0O@HDHCNGNA@?6POOL_init?5?$CFd?$AA@" = comdat any
 
-$"\01??_C@_0BG@OEIAFCBM@?6POOL_init?5resumed?5?$CFd?$AA@" = comdat any
+$"??_C@_0BG@OEIAFCBM@?6POOL_init?5resumed?5?$CFd?$AA@" = comdat any
 
-$"\01??_C@_0CI@IMIANPPE@?6VCHN_RFILES?3?5?$CFd?0VCHN_VFILES_off@" = comdat any
+$"??_C@_0CI@IMIANPPE@?6VCHN_RFILES?3?5?$CFd?0VCHN_VFILES_off@" = comdat any
 
-$"\01??_C@_0CA@IELPLNGK@?6?5?$FLERROR?$FNBuffer?5overflow?$CB?5at?5?$CFx?$AA@" = comdat any
+$"??_C@_0CA@IELPLNGK@?6?5?$FLERROR?$FNBuffer?5overflow?$CB?5at?5?$CFx?$AA@" = comdat any
 
-$"\01?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA" = comdat any
+$"?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA" = comdat any
 
-@controlflow_guarantee = global i64 0, align 8
-@VFILES = global %struct.circular_buf_t* null, align 8
-@"\01??_C@_0DA@FDKMBOFF@?6?5?$FLERROR?$FNMemalloc?5failed?5for?5VFI@" = linkonce_odr unnamed_addr constant [48 x i8] c"\0A [ERROR]Memalloc failed for VFILES, aborting.\0A\00", comdat, align 1
-@"\01??_C@_0DA@NLDMGFAH@?6Creating?5ring?5buffer?5?$CFd?5at?5?$CFx?5w@" = linkonce_odr unnamed_addr constant [48 x i8] c"\0ACreating ring buffer %d at %x with size %lld. \00", comdat, align 1
-@"\01??_C@_0DB@PEPKOABL@?6Resetting?5ring?5buffer?5?$CFd?5at?5?$CFx?5@" = linkonce_odr unnamed_addr constant [49 x i8] c"\0AResetting ring buffer %d at %x with size %lld. \00", comdat, align 1
-@"\01??_C@_0CF@BDINJJIB@?6?5?$FLERROR?$FNMemalloc?5failed?0?5aborti@" = linkonce_odr unnamed_addr constant [37 x i8] c"\0A [ERROR]Memalloc failed, aborting.\0A\00", comdat, align 1
-@POOL_FILES = global i8 0, align 1
-@POOL_timetag = global i64* null, align 8
-@POOL_fileid = global i8* null, align 8
-@"\01??_C@_0O@HDHCNGNA@?6POOL_init?5?$CFd?$AA@" = linkonce_odr unnamed_addr constant [14 x i8] c"\0APOOL_init %d\00", comdat, align 1
-@"\01??_C@_0BG@OEIAFCBM@?6POOL_init?5resumed?5?$CFd?$AA@" = linkonce_odr unnamed_addr constant [22 x i8] c"\0APOOL_init resumed %d\00", comdat, align 1
-@VCHN_VFILES_offset = global i8 0, align 1
-@VCHN_RFILES = global i8 0, align 1
-@"\01??_C@_0CI@IMIANPPE@?6VCHN_RFILES?3?5?$CFd?0VCHN_VFILES_off@" = linkonce_odr unnamed_addr constant [40 x i8] c"\0AVCHN_RFILES: %d,VCHN_VFILES_offset:%d \00", comdat, align 1
-@"\01??_C@_0CA@IELPLNGK@?6?5?$FLERROR?$FNBuffer?5overflow?$CB?5at?5?$CFx?$AA@" = linkonce_odr unnamed_addr constant [32 x i8] c"\0A [ERROR]Buffer overflow! at %x\00", comdat, align 1
-@"\01?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA" = linkonce_odr global i64 0, comdat, align 8
+@controlflow_guarantee = dso_local global i64 0, align 8
+@VFILES = dso_local global %struct.circular_buf_t* null, align 8
+@"??_C@_0DA@FDKMBOFF@?6?5?$FLERROR?$FNMemalloc?5failed?5for?5VFI@" = linkonce_odr dso_local unnamed_addr constant [48 x i8] c"\0A [ERROR]Memalloc failed for VFILES, aborting.\0A\00", comdat, align 1
+@"??_C@_0DA@NLDMGFAH@?6Creating?5ring?5buffer?5?$CFd?5at?5?$CFx?5w@" = linkonce_odr dso_local unnamed_addr constant [48 x i8] c"\0ACreating ring buffer %d at %x with size %lld. \00", comdat, align 1
+@"??_C@_0DB@PEPKOABL@?6Resetting?5ring?5buffer?5?$CFd?5at?5?$CFx?5@" = linkonce_odr dso_local unnamed_addr constant [49 x i8] c"\0AResetting ring buffer %d at %x with size %lld. \00", comdat, align 1
+@"??_C@_0CF@BDINJJIB@?6?5?$FLERROR?$FNMemalloc?5failed?0?5aborti@" = linkonce_odr dso_local unnamed_addr constant [37 x i8] c"\0A [ERROR]Memalloc failed, aborting.\0A\00", comdat, align 1
+@POOL_FILES = dso_local global i8 0, align 1
+@POOL_timetag = dso_local global i64* null, align 8
+@POOL_fileid = dso_local global i8* null, align 8
+@"??_C@_0O@HDHCNGNA@?6POOL_init?5?$CFd?$AA@" = linkonce_odr dso_local unnamed_addr constant [14 x i8] c"\0APOOL_init %d\00", comdat, align 1
+@"??_C@_0BG@OEIAFCBM@?6POOL_init?5resumed?5?$CFd?$AA@" = linkonce_odr dso_local unnamed_addr constant [22 x i8] c"\0APOOL_init resumed %d\00", comdat, align 1
+@VCHN_VFILES_offset = dso_local global i8 0, align 1
+@VCHN_RFILES = dso_local global i8 0, align 1
+@"??_C@_0CI@IMIANPPE@?6VCHN_RFILES?3?5?$CFd?0VCHN_VFILES_off@" = linkonce_odr dso_local unnamed_addr constant [40 x i8] c"\0AVCHN_RFILES: %d,VCHN_VFILES_offset:%d \00", comdat, align 1
+@"??_C@_0CA@IELPLNGK@?6?5?$FLERROR?$FNBuffer?5overflow?$CB?5at?5?$CFx?$AA@" = linkonce_odr dso_local unnamed_addr constant [32 x i8] c"\0A [ERROR]Buffer overflow! at %x\00", comdat, align 1
+@"?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA" = linkonce_odr dso_local global i64 0, comdat, align 8
 
 ; Function Attrs: alwaysinline nounwind uwtable
-define i32 @circular_buf_reset(%struct.circular_buf_t*) #0 {
+define dso_local i32 @circular_buf_reset(%struct.circular_buf_t*) #0 {
   %2 = alloca %struct.circular_buf_t*, align 8
   %3 = alloca i32, align 4
   store %struct.circular_buf_t* %0, %struct.circular_buf_t** %2, align 8
@@ -76,7 +76,7 @@ define i32 @circular_buf_reset(%struct.circular_buf_t*) #0 {
 }
 
 ; Function Attrs: alwaysinline nounwind uwtable
-define i32 @circular_buf_put(%struct.circular_buf_t*, i64) #0 {
+define dso_local i32 @circular_buf_put(%struct.circular_buf_t*, i64) #0 {
   %3 = alloca i64, align 8
   %4 = alloca %struct.circular_buf_t*, align 8
   %5 = alloca i32, align 4
@@ -141,7 +141,7 @@ define i32 @circular_buf_put(%struct.circular_buf_t*, i64) #0 {
 }
 
 ; Function Attrs: alwaysinline uwtable
-define i32 @circular_buf_get(%struct.circular_buf_t*, i64*, i1 zeroext) #1 {
+define dso_local i32 @circular_buf_get(%struct.circular_buf_t*, i64*, i1 zeroext) #1 {
   %4 = alloca i8, align 1
   %5 = alloca i64*, align 8
   %6 = alloca %struct.circular_buf_t*, align 8
@@ -165,7 +165,7 @@ define i32 @circular_buf_get(%struct.circular_buf_t*, i64*, i1 zeroext) #1 {
   %16 = load %struct.circular_buf_t*, %struct.circular_buf_t** %6, align 8
   %17 = bitcast %struct.circular_buf_t* %8 to i8*
   %18 = bitcast %struct.circular_buf_t* %16 to i8*
-  call void @llvm.memcpy.p0i8.p0i8.i64(i8* %17, i8* %18, i64 32, i32 8, i1 false)
+  call void @llvm.memcpy.p0i8.p0i8.i64(i8* align 8 %17, i8* align 8 %18, i64 32, i1 false)
   %19 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %8, i32 0, i32 1
   %20 = load i64, i64* %19, align 8
   %21 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %8, i32 0, i32 2
@@ -212,7 +212,7 @@ define i32 @circular_buf_get(%struct.circular_buf_t*, i64*, i1 zeroext) #1 {
 }
 
 ; Function Attrs: alwaysinline nounwind uwtable
-define zeroext i1 @circular_buf_empty(%struct.circular_buf_t*) #0 {
+define dso_local zeroext i1 @circular_buf_empty(%struct.circular_buf_t*) #0 {
   %2 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %0, i32 0, i32 1
   %3 = load i64, i64* %2, align 8
   %4 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %0, i32 0, i32 2
@@ -222,10 +222,10 @@ define zeroext i1 @circular_buf_empty(%struct.circular_buf_t*) #0 {
 }
 
 ; Function Attrs: argmemonly nounwind
-declare void @llvm.memcpy.p0i8.p0i8.i64(i8* nocapture writeonly, i8* nocapture readonly, i64, i32, i1) #2
+declare void @llvm.memcpy.p0i8.p0i8.i64(i8* nocapture writeonly, i8* nocapture readonly, i64, i1) #2
 
 ; Function Attrs: alwaysinline nounwind uwtable
-define zeroext i1 @circular_buf_full(%struct.circular_buf_t*) #0 {
+define dso_local zeroext i1 @circular_buf_full(%struct.circular_buf_t*) #0 {
   %2 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %0, i32 0, i32 1
   %3 = load i64, i64* %2, align 8
   %4 = add nsw i64 %3, 1
@@ -239,7 +239,7 @@ define zeroext i1 @circular_buf_full(%struct.circular_buf_t*) #0 {
 }
 
 ; Function Attrs: alwaysinline uwtable
-define i32 @VFILE_init(i64, i64, i8*, i64) #1 {
+define dso_local i32 @VFILE_init(i64, i64, i8*, i64) #1 {
   %5 = alloca %struct.circular_buf_t*, align 8
   %6 = alloca i32, align 4
   %7 = alloca i32, align 4
@@ -267,7 +267,7 @@ define i32 @VFILE_init(i64, i64, i8*, i64) #1 {
   br i1 %23, label %24, label %27
 
 ; <label>:24:                                     ; preds = %4
-  %25 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([48 x i8], [48 x i8]* @"\01??_C@_0DA@FDKMBOFF@?6?5?$FLERROR?$FNMemalloc?5failed?5for?5VFI@", i32 0, i32 0))
+  %25 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([48 x i8], [48 x i8]* @"??_C@_0DA@FDKMBOFF@?6?5?$FLERROR?$FNMemalloc?5failed?5for?5VFI@", i32 0, i32 0))
   %26 = sext i32 %25 to i64
   store i64 %26, i64* @controlflow_guarantee, align 8
   store i32 -1, i32* %7, align 4
@@ -313,7 +313,7 @@ define i32 @VFILE_init(i64, i64, i8*, i64) #1 {
   %52 = load i64, i64* %51, align 8
   %53 = load i8*, i8** %9, align 8
   %54 = load i64, i64* %11, align 8
-  %55 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([48 x i8], [48 x i8]* @"\01??_C@_0DA@NLDMGFAH@?6Creating?5ring?5buffer?5?$CFd?5at?5?$CFx?5w@", i32 0, i32 0), i64 %54, i8* %53, i64 %52)
+  %55 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([48 x i8], [48 x i8]* @"??_C@_0DA@NLDMGFAH@?6Creating?5ring?5buffer?5?$CFd?5at?5?$CFx?5w@", i32 0, i32 0), i64 %54, i8* %53, i64 %52)
   %56 = sext i32 %55 to i64
   store i64 %56, i64* @controlflow_guarantee, align 8
   br label %67
@@ -326,7 +326,7 @@ define i32 @VFILE_init(i64, i64, i8*, i64) #1 {
   %62 = load i64, i64* %61, align 8
   %63 = load i8*, i8** %9, align 8
   %64 = load i64, i64* %11, align 8
-  %65 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([49 x i8], [49 x i8]* @"\01??_C@_0DB@PEPKOABL@?6Resetting?5ring?5buffer?5?$CFd?5at?5?$CFx?5@", i32 0, i32 0), i64 %64, i8* %63, i64 %62)
+  %65 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([49 x i8], [49 x i8]* @"??_C@_0DB@PEPKOABL@?6Resetting?5ring?5buffer?5?$CFd?5at?5?$CFx?5@", i32 0, i32 0), i64 %64, i8* %63, i64 %62)
   %66 = sext i32 %65 to i64
   store i64 %66, i64* @controlflow_guarantee, align 8
   br label %67
@@ -341,7 +341,7 @@ define i32 @VFILE_init(i64, i64, i8*, i64) #1 {
 }
 
 ; Function Attrs: noinline optnone uwtable
-define linkonce_odr i32 @printf(i8*, ...) #3 comdat {
+define linkonce_odr dso_local i32 @printf(i8*, ...) #3 comdat {
   %2 = alloca i8*, align 8
   %3 = alloca i32, align 4
   %4 = alloca i8*, align 8
@@ -360,7 +360,7 @@ define linkonce_odr i32 @printf(i8*, ...) #3 comdat {
 }
 
 ; Function Attrs: alwaysinline uwtable
-define i32 @VFILES_init(i8*) #1 {
+define dso_local i32 @VFILES_init(i8*) #1 {
   %2 = alloca i32, align 4
   %3 = alloca i8*, align 8
   store i8* %0, i8** %3, align 8
@@ -372,7 +372,7 @@ define i32 @VFILES_init(i8*) #1 {
   br i1 %7, label %8, label %11
 
 ; <label>:8:                                      ; preds = %1
-  %9 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([37 x i8], [37 x i8]* @"\01??_C@_0CF@BDINJJIB@?6?5?$FLERROR?$FNMemalloc?5failed?0?5aborti@", i32 0, i32 0))
+  %9 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([37 x i8], [37 x i8]* @"??_C@_0CF@BDINJJIB@?6?5?$FLERROR?$FNMemalloc?5failed?0?5aborti@", i32 0, i32 0))
   %10 = sext i32 %9 to i64
   store i64 %10, i64* @controlflow_guarantee, align 8
   store i32 -1, i32* %2, align 4
@@ -388,7 +388,7 @@ define i32 @VFILES_init(i8*) #1 {
 }
 
 ; Function Attrs: alwaysinline nounwind uwtable
-define i32 @POOL_update(i64, i8) #0 {
+define dso_local i32 @POOL_update(i64, i8) #0 {
   %3 = alloca i8, align 1
   %4 = alloca i64, align 8
   %5 = alloca i8, align 1
@@ -513,7 +513,7 @@ define i32 @POOL_update(i64, i8) #0 {
 }
 
 ; Function Attrs: alwaysinline uwtable
-define i32 @POOL_init(i64, i64, i8*, i8*, i64) #1 {
+define dso_local i32 @POOL_init(i64, i64, i8*, i8*, i64) #1 {
   %6 = alloca i32, align 4
   %7 = alloca i64, align 8
   %8 = alloca i8*, align 8
@@ -538,7 +538,7 @@ define i32 @POOL_init(i64, i64, i8*, i8*, i64) #1 {
   br i1 %19, label %20, label %23
 
 ; <label>:20:                                     ; preds = %5
-  %21 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([37 x i8], [37 x i8]* @"\01??_C@_0CF@BDINJJIB@?6?5?$FLERROR?$FNMemalloc?5failed?0?5aborti@", i32 0, i32 0))
+  %21 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([37 x i8], [37 x i8]* @"??_C@_0CF@BDINJJIB@?6?5?$FLERROR?$FNMemalloc?5failed?0?5aborti@", i32 0, i32 0))
   %22 = sext i32 %21 to i64
   store i64 %22, i64* @controlflow_guarantee, align 8
   store i32 -1, i32* %6, align 4
@@ -552,7 +552,7 @@ define i32 @POOL_init(i64, i64, i8*, i8*, i64) #1 {
   br i1 %26, label %27, label %30
 
 ; <label>:27:                                     ; preds = %23
-  %28 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([37 x i8], [37 x i8]* @"\01??_C@_0CF@BDINJJIB@?6?5?$FLERROR?$FNMemalloc?5failed?0?5aborti@", i32 0, i32 0))
+  %28 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([37 x i8], [37 x i8]* @"??_C@_0CF@BDINJJIB@?6?5?$FLERROR?$FNMemalloc?5failed?0?5aborti@", i32 0, i32 0))
   %29 = sext i32 %28 to i64
   store i64 %29, i64* @controlflow_guarantee, align 8
   store i32 -1, i32* %6, align 4
@@ -566,7 +566,7 @@ define i32 @POOL_init(i64, i64, i8*, i8*, i64) #1 {
 ; <label>:33:                                     ; preds = %30
   %34 = load i8, i8* @POOL_FILES, align 1
   %35 = zext i8 %34 to i32
-  %36 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([14 x i8], [14 x i8]* @"\01??_C@_0O@HDHCNGNA@?6POOL_init?5?$CFd?$AA@", i32 0, i32 0), i32 %35)
+  %36 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([14 x i8], [14 x i8]* @"??_C@_0O@HDHCNGNA@?6POOL_init?5?$CFd?$AA@", i32 0, i32 0), i32 %35)
   %37 = sext i32 %36 to i64
   store i64 %37, i64* @controlflow_guarantee, align 8
   store i32 0, i32* %12, align 4
@@ -634,7 +634,7 @@ define i32 @POOL_init(i64, i64, i8*, i8*, i64) #1 {
 ; <label>:75:                                     ; preds = %30
   %76 = load i8, i8* @POOL_FILES, align 1
   %77 = zext i8 %76 to i32
-  %78 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([22 x i8], [22 x i8]* @"\01??_C@_0BG@OEIAFCBM@?6POOL_init?5resumed?5?$CFd?$AA@", i32 0, i32 0), i32 %77)
+  %78 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([22 x i8], [22 x i8]* @"??_C@_0BG@OEIAFCBM@?6POOL_init?5resumed?5?$CFd?$AA@", i32 0, i32 0), i32 %77)
   %79 = sext i32 %78 to i64
   store i64 %79, i64* @controlflow_guarantee, align 8
   br label %80
@@ -649,7 +649,7 @@ define i32 @POOL_init(i64, i64, i8*, i8*, i64) #1 {
 }
 
 ; Function Attrs: alwaysinline uwtable
-define i32 @VCHN_init(i64, i64, i64) #1 {
+define dso_local i32 @VCHN_init(i64, i64, i64) #1 {
   %4 = alloca i64, align 8
   %5 = alloca i64, align 8
   %6 = alloca i64, align 8
@@ -664,14 +664,14 @@ define i32 @VCHN_init(i64, i64, i64) #1 {
   store i8 %10, i8* @VCHN_VFILES_offset, align 1
   %11 = load i64, i64* %5, align 8
   %12 = load i64, i64* %6, align 8
-  %13 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([40 x i8], [40 x i8]* @"\01??_C@_0CI@IMIANPPE@?6VCHN_RFILES?3?5?$CFd?0VCHN_VFILES_off@", i32 0, i32 0), i64 %12, i64 %11)
+  %13 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([40 x i8], [40 x i8]* @"??_C@_0CI@IMIANPPE@?6VCHN_RFILES?3?5?$CFd?0VCHN_VFILES_off@", i32 0, i32 0), i64 %12, i64 %11)
   %14 = sext i32 %13 to i64
   store i64 %14, i64* @controlflow_guarantee, align 8
   ret i32 0
 }
 
 ; Function Attrs: alwaysinline uwtable
-define i32 @VCHN_put(i64, i8) #1 {
+define dso_local i32 @VCHN_put(i64, i8) #1 {
   %3 = alloca i8, align 1
   %4 = alloca i64, align 8
   %5 = alloca i8, align 1
@@ -1003,7 +1003,7 @@ define i32 @VCHN_put(i64, i8) #1 {
   %256 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %253, i64 %255
   %257 = bitcast %struct.circular_buf_t* %27 to i8*
   %258 = bitcast %struct.circular_buf_t* %256 to i8*
-  call void @llvm.memcpy.p0i8.p0i8.i64(i8* %257, i8* %258, i64 32, i32 8, i1 false)
+  call void @llvm.memcpy.p0i8.p0i8.i64(i8* align 8 %257, i8* align 8 %258, i64 32, i1 false)
   %259 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %27, i32 0, i32 1
   %260 = load i64, i64* %259, align 8
   %261 = add nsw i64 %260, 1
@@ -1022,7 +1022,7 @@ define i32 @VCHN_put(i64, i8) #1 {
   %272 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %269, i64 %271
   %273 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %272, i32 0, i32 0
   %274 = load i64*, i64** %273, align 8
-  %275 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([32 x i8], [32 x i8]* @"\01??_C@_0CA@IELPLNGK@?6?5?$FLERROR?$FNBuffer?5overflow?$CB?5at?5?$CFx?$AA@", i32 0, i32 0), i64* %274)
+  %275 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([32 x i8], [32 x i8]* @"??_C@_0CA@IELPLNGK@?6?5?$FLERROR?$FNBuffer?5overflow?$CB?5at?5?$CFx?$AA@", i32 0, i32 0), i64* %274)
   %276 = sext i32 %275 to i64
   store i64 %276, i64* @controlflow_guarantee, align 8
   store i32 -1, i32* %20, align 4
@@ -1102,7 +1102,7 @@ define i32 @VCHN_put(i64, i8) #1 {
 }
 
 ; Function Attrs: alwaysinline uwtable
-define i64 @VCHN_next(i8*) #1 {
+define dso_local i64 @VCHN_next(i8*) #1 {
   %2 = alloca i8, align 1
   %3 = alloca i64, align 8
   %4 = alloca i8, align 1
@@ -1164,7 +1164,7 @@ define i64 @VCHN_next(i8*) #1 {
   %51 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %48, i64 %50
   %52 = bitcast %struct.circular_buf_t* %23 to i8*
   %53 = bitcast %struct.circular_buf_t* %51 to i8*
-  call void @llvm.memcpy.p0i8.p0i8.i64(i8* %52, i8* %53, i64 32, i32 8, i1 false)
+  call void @llvm.memcpy.p0i8.p0i8.i64(i8* align 8 %52, i8* align 8 %53, i64 32, i1 false)
   %54 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %23, i32 0, i32 1
   %55 = load i64, i64* %54, align 8
   %56 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %23, i32 0, i32 2
@@ -1312,7 +1312,7 @@ define i64 @VCHN_next(i8*) #1 {
   %161 = load %struct.circular_buf_t*, %struct.circular_buf_t** %10, align 8
   %162 = bitcast %struct.circular_buf_t* %12 to i8*
   %163 = bitcast %struct.circular_buf_t* %161 to i8*
-  call void @llvm.memcpy.p0i8.p0i8.i64(i8* %162, i8* %163, i64 32, i32 8, i1 false)
+  call void @llvm.memcpy.p0i8.p0i8.i64(i8* align 8 %162, i8* align 8 %163, i64 32, i1 false)
   %164 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %12, i32 0, i32 1
   %165 = load i64, i64* %164, align 8
   %166 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %12, i32 0, i32 2
@@ -1488,7 +1488,7 @@ define i64 @VCHN_next(i8*) #1 {
 declare void @llvm.va_start(i8*) #4
 
 ; Function Attrs: noinline optnone uwtable
-define linkonce_odr i32 @_vfprintf_l(%struct._iobuf*, i8*, %struct.__crt_locale_pointers*, i8*) #3 comdat {
+define linkonce_odr dso_local i32 @_vfprintf_l(%struct._iobuf*, i8*, %struct.__crt_locale_pointers*, i8*) #3 comdat {
   %5 = alloca i8*, align 8
   %6 = alloca %struct.__crt_locale_pointers*, align 8
   %7 = alloca i8*, align 8
@@ -1507,16 +1507,16 @@ define linkonce_odr i32 @_vfprintf_l(%struct._iobuf*, i8*, %struct.__crt_locale_
   ret i32 %15
 }
 
-declare %struct._iobuf* @__acrt_iob_func(i32) #5
+declare dso_local %struct._iobuf* @__acrt_iob_func(i32) #5
 
 ; Function Attrs: nounwind
 declare void @llvm.va_end(i8*) #4
 
-declare i32 @__stdio_common_vfprintf(i64, %struct._iobuf*, i8*, %struct.__crt_locale_pointers*, i8*) #5
+declare dso_local i32 @__stdio_common_vfprintf(i64, %struct._iobuf*, i8*, %struct.__crt_locale_pointers*, i8*) #5
 
 ; Function Attrs: noinline nounwind optnone uwtable
-define linkonce_odr i64* @__local_stdio_printf_options() #6 comdat {
-  ret i64* @"\01?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA"
+define linkonce_odr dso_local i64* @__local_stdio_printf_options() #6 comdat {
+  ret i64* @"?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA"
 }
 
 attributes #0 = { alwaysinline nounwind uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
@@ -1534,4 +1534,4 @@ attributes #6 = { noinline nounwind optnone uwtable "correctly-rounded-divide-sq
 !0 = !{!"/FAILIFMISMATCH:\22_CRT_STDIO_ISO_WIDE_SPECIFIERS=0\22"}
 !1 = !{i32 1, !"wchar_size", i32 2}
 !2 = !{i32 7, !"PIC Level", i32 2}
-!3 = !{!"clang version 6.0.1 (tags/RELEASE_601/final)"}
+!3 = !{!"clang version 7.0.1 (tags/RELEASE_701/final)"}

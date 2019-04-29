@@ -37,38 +37,10 @@ install:
 
     python -m pip install pypiwin32 --upgrade
     
-    python -m pip install matplotlib --upgrade 
+    python -m pip install pyinstaller --upgrade
 
-    python -m pip install pyinstaller --upgrade 
+    pip install --upgrade -r requirements.txt
     
-    python -m pip install cffi --upgrade
-    
-    python -m pip install numpy --upgrade
-    
-    python -m pip install scipy --upgrade
-    
-    python -m pip install lmfit --upgrade
-    
-    python -m pip install astunparse --upgrade 
-    
-    python -m pip install dash --upgrade
-    
-    python -m pip install dash-renderer --upgrade
-    
-    python -m pip install dash-html-components --upgrade
-    
-    python -m pip install dash-core-components --upgrade
-    
-    python -m pip install plotly --upgrade
-    
-    python -m pip install bokeh --upgrade
-
-    python -m pip install llvmlite
-    
-    python -m pip install numba
-    
-    python -m pip install pandas --upgrade
-
     Install-Product node 8 x64
     
     cd gui
