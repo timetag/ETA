@@ -11,7 +11,7 @@ module.exports = function () {
         log.info(ls.stderr.toString())
         if (ls.stderr && ls.stderr.toString().indexOf("No module named etabackend") > 0) {
           log.info("Installing etabackend via pip...")
-          const pip = spawnSync('pip', ['install', 'etabackend'], { detached: true });
+          const pip = spawnSync('pip', ['install', 'etabackend*.whl'], { detached: true });
           if (pip.error) {
             log.info("Please install pip")
           } else {
