@@ -49,7 +49,7 @@ def web_install(url, prefix, file_name):
 
 
 def set_path(default=False):
-    default_folder = os.path.dirname(sys.executable)
+    default_folder = os.path.dirname(sys.executable+"\\Lib\\site-packages")
     if default:
         os.environ["ETA_LIB"] = default_folder
     else:
@@ -63,8 +63,8 @@ def set_path(default=False):
 def installer(ETA_VERSION):
     while True:
         env_dist = os.environ.get('ETA_LIB')
-        if env_dist is not None and os.path.isdir(env_dist+"\\site-packages"):
-            sys.path.insert(0, env_dist+"\\site-packages")
+        if env_dist is not None and os.path.isdir(env_dist):
+            sys.path.insert(0, env_dist)
             break
         else:
             print("===================\nInstall ETA Backend\n===================\nWelcome! It seems that ETA Backend has just been installed or upgraded on this computer.\n")
