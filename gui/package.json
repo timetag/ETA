@@ -23,7 +23,8 @@
     "win": {
       "extraFiles": [
         "backend.ico",
-        "python-webinstall.exe"
+        "python-webinstall.exe",
+        "*.whl"
       ],
       "publish": [
         "github"

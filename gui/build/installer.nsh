@@ -1,6 +1,7 @@
 !macro customRemoveFiles
    ExecWait "taskkill /f /im python.exe"
    RMDir /r "$instdir\site-packages"
+   Delete "$instdir\*.whl"
 !macroend
 
 !macro customInstall
