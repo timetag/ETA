@@ -27,7 +27,8 @@ process.argv.forEach((val, index) => {
     backend_mode=true;
 });
 if (backend_mode){
-  backend_run()
+  while (backend_run()){};
+
   app.quit();
   return;
 }
