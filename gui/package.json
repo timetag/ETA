@@ -22,7 +22,8 @@
     },
     "win": {
       "extraFiles": [
-        "ETA-Backend.exe"
+        "backend.ico",
+        "python-webinstall.exe"
       ],
       "publish": [
         "github"

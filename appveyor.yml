@@ -44,16 +44,12 @@ install:
     
     gothub info -u timetag -r ETA
 
-    python -m pip install pypiwin32 --upgrade
-    
-    python -m pip install pyinstaller --upgrade
-
     python -m pip install twine --upgrade
     
     python -m pip install wheel --upgrade
     
     Install-Product node 8 x64
-    
+
     cd gui
 
     yarn
@@ -69,46 +65,14 @@ cache:
 
 build_script:
 - cmd: >-
-    echo building backend
-
-    cd etabackend
-
-    pyinstaller --clean --onefile 
-    --add-data "ll/*;ll" 
-    --exclude-module numba
-    --exclude-module llvmlite
-    --exclude-module numpy
-    --exclude-module bokeh
-    --exclude-module scipy
-    --exclude-module flask
-    --hidden-import pathlib
-    --hidden-import tkinter 
-    --hidden-import tkinter.filedialog
-    --hidden-import tkinter.simpledialog
-    --hidden-import timeit
-    --hidden-import http
-    --hidden-import http.cookies
-    --hidden-import logging.handlers
-    --hidden-import logging
-    --hidden-import ctypes.wintypes
-    --hidden-import colorsys
-    --hidden-import csv
-    --hidden-import numbers
-    --hidden-import gettext
-    --hidden-import typing
-    -i icon.ico  
-    ETA.py
-
-    cd ..
-
     echo building wheel
 
     python setup.py bdist_wheel
 
-    move %APPVEYOR_BUILD_FOLDER%\etabackend\dist\ETA.exe %APPVEYOR_BUILD_FOLDER%\gui\ETA-Backend.exe
-    
     echo building GUI
     
+    appveyor DownloadFile https://www.python.org/ftp/python/3.7.3/python-3.7.3-amd64-webinstall.exe -FileName %APPVEYOR_BUILD_FOLDER%\gui\python-webinstall.exe
+
     cd gui
 
     yarn dist

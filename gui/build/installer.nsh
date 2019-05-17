@@ -1,12 +1,11 @@
 !macro customRemoveFiles
-   ExecWait "taskkill /f /im ETA-Backend.exe"
-   Delete "$instdir\ETA-Backend.exe"
+   ExecWait "taskkill /f /im python.exe"
    RMDir /r "$instdir\site-packages"
 !macroend
 
 !macro customInstall
    RMDir /r "$instdir\site-packages"
-   CreateShortcut "$desktop\ETABackend.lnk" "$instdir\ETA-Backend.exe"
+   CreateShortcut "$desktop\ETABackend.lnk" "$instdir\ETA.exe" "start_backend" "$instdir\backend.ico"
    ExecShell "open" "https://eta.readthedocs.io/en/latest/installation.html"
 !macroend
 

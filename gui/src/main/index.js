@@ -6,9 +6,12 @@ const BrowserWindow = electron.BrowserWindow
 const url = require('url')
 const formatUrl = url.format
 const path = require('path')
+const process = require('process');
 
 const { dialog } = require('electron')
 const { autoUpdater } = require('electron-updater')
+
+const backend_run = require('backend')
 
 autoUpdater.logger = require("electron-log")
 autoUpdater.logger.transports.file.level = "info"
@@ -16,6 +19,18 @@ autoUpdater.logger.transports.file.level = "info"
 // global reference to mainWindow (necessary to prevent window from being garbage collected)
 let mainWindow
 
+
+// run via command line
+let backend_mode = false
+process.argv.forEach((val, index) => {
+  if (val.indexOf("backend") > 0) 
+    backend_mode=true;
+});
+if (backend_mode){
+  backend_run()
+}
+
+// single instance lock
 const gotTheLock = app.requestSingleInstanceLock()
 if (!gotTheLock) {
   app.quit();
@@ -30,52 +45,53 @@ if (!gotTheLock) {
   })
 }
 
+// GUI related part
 function createMainWindow() {
-      let {width, height} = electron.screen.getPrimaryDisplay().workAreaSize;
-      var width1 = width * 0.9 | 0;
-      var height1 = height * 0.9 | 0;
-      const window = new BrowserWindow({width: width1, height: height1,show:false})//
+  let { width, height } = electron.screen.getPrimaryDisplay().workAreaSize;
+  var width1 = width * 0.9 | 0;
+  var height1 = height * 0.9 | 0;
+  const window = new BrowserWindow({ width: width1, height: height1, show: false })//
 
-      window.once('ready-to-show', () => {
-        window.show()
-      })
-      window.on('closed', () => {
-        mainWindow = null
-      })
+  window.once('ready-to-show', () => {
+    window.show()
+  })
+  window.on('closed', () => {
+    mainWindow = null
+  })
 
-      // general callback
-      const onWindowOpen = (event, url, frameName) => {
-        event.preventDefault()
-        var showinframe=(url.indexOf("http")>=0)
-        const win = new BrowserWindow({
-              resizable: true,
-              backgroundColor: showinframe?'#FFFFFF':'#000000',
-              width : width1 * 0.8 | 0,
-              height : height1 * 0.8 | 0,
-              parent : window,
-              frame: showinframe ,
-              resizable: true,
-              title: frameName
-        })
-       	win.loadURL(url)
-        win.webContents.on('new-window', onWindowOpen)
-        event.newGuest = win
-      }
+  // general callback
+  const onWindowOpen = (event, url, frameName) => {
+    event.preventDefault()
+    var showinframe = (url.indexOf("http") >= 0)
+    const win = new BrowserWindow({
+      resizable: true,
+      backgroundColor: showinframe ? '#FFFFFF' : '#000000',
+      width: width1 * 0.8 | 0,
+      height: height1 * 0.8 | 0,
+      parent: window,
+      frame: showinframe,
+      resizable: true,
+      title: frameName
+    })
+    win.loadURL(url)
+    win.webContents.on('new-window', onWindowOpen)
+    event.newGuest = win
+  }
 
-      window.webContents.on('new-window', onWindowOpen);
-      /*
-      window.webContents.on('devtools-opened', () => {
-        window.focus()
-        setImmediate(() => {
-          window.focus()
-        })
-      })
-      */
-      window.loadURL(formatUrl({
-        pathname: path.join(__dirname, '/../renderer/index.html'),
-        protocol: 'file',
-        slashes: true
-      }))
+  window.webContents.on('new-window', onWindowOpen);
+  /*
+  window.webContents.on('devtools-opened', () => {
+    window.focus()
+    setImmediate(() => {
+      window.focus()
+    })
+  })
+  */
+  window.loadURL(formatUrl({
+    pathname: path.join(__dirname, '/../renderer/index.html'),
+    protocol: 'file',
+    slashes: true
+  }))
 
   return window
 }
@@ -100,43 +116,43 @@ app.on('activate', () => {
 app.on('ready', () => {
   mainWindow = createMainWindow()
 
-    autoUpdater.autoDownload = false
+  autoUpdater.autoDownload = false
 
-    autoUpdater.on('error', (error) => {
-      dialog.showErrorBox('Update Error', error == null ? "unknown" : (error).toString())
-    })
+  autoUpdater.on('error', (error) => {
+    dialog.showErrorBox('Update Error', error == null ? "unknown" : (error).toString())
+  })
 
-    autoUpdater.on('update-available', () => {
-      dialog.showMessageBox({
-        type: 'info',
-        title: 'Updates Found',
-        message: 'There is a new version of ETA. Do you want to update now?',
-        buttons: ['Yes', 'No']
-      }, (buttonIndex) => {
-        if (buttonIndex === 0) {
-          autoUpdater.downloadUpdate()
-        }
-        else {
-         
-        }
-      })
-    })
-    /*
-    autoUpdater.on('update-not-available', () => {
-      dialog.showMessageBox({
-        title: 'No Updates',
-        message: 'Current version is up-to-date.'
-      })
-    }) 
-    */
-    autoUpdater.on('update-downloaded', () => {
-      dialog.showMessageBox({
-        title: 'Installing Update',
-        message: 'ETA will now quit for updating.'
-      }, () => {
-        setImmediate(() => autoUpdater.quitAndInstall())
-      })
-    })
+  autoUpdater.on('update-available', () => {
+    dialog.showMessageBox({
+      type: 'info',
+      title: 'Updates Found',
+      message: 'There is a new version of ETA. Do you want to update now?',
+      buttons: ['Yes', 'No']
+    }, (buttonIndex) => {
+      if (buttonIndex === 0) {
+        autoUpdater.downloadUpdate()
+      }
+      else {
 
-    autoUpdater.checkForUpdates()
+      }
+    })
+  })
+  /*
+  autoUpdater.on('update-not-available', () => {
+    dialog.showMessageBox({
+      title: 'No Updates',
+      message: 'Current version is up-to-date.'
+    })
+  }) 
+  */
+  autoUpdater.on('update-downloaded', () => {
+    dialog.showMessageBox({
+      title: 'Installing Update',
+      message: 'ETA will now quit for updating.'
+    }, () => {
+      setImmediate(() => autoUpdater.quitAndInstall())
+    })
+  })
+
+  autoUpdater.checkForUpdates()
 })
