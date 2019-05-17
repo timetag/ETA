@@ -6,7 +6,7 @@ import os
 import multiprocessing
 
 multiprocessing.freeze_support()
-ETA_VERSION = "v0.5.10"
+ETA_VERSION = "v0.5.11"
 webinstall.installer(ETA_VERSION)
 try:
     from eta_runtime import *

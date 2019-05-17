@@ -6,7 +6,7 @@ environment:
   PYTHON: C:\Python37-x64
   PYTHON_VERSION: 3.7
   PYTHON_ARCH: 64
-  ETA_VER: v0.5.10
+  ETA_VER: v0.5.11
   GITHUB_TOKEN:
     secure: IdgCOIno/YfkZynVnR2pBSjpkNG+4+XZneFXnqBVvxwX3MYX0EKqdzIUVPxQrkJu
   PYPI_USERNAME:
@@ -127,5 +127,7 @@ test_script:
      
     gothub upload -u timetag -r ETA -t "%ETA_VER%" -f "ETA_Install-win64.zip"  -n "ETA_Install-win64.zip" --replace
     
+    gothub upload -u timetag -r ETA -t "%ETA_VER%" -f %APPVEYOR_BUILD_FOLDER%\dist\*.whl  -n "ETA_Backend-win64.whl" --replace
+
     echo twine upload %APPVEYOR_BUILD_FOLDER%\dist\*.whl -u %PYPI_USERNAME% -p %PYPI_PASSWORD% --skip-existing
     

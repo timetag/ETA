@@ -80,8 +80,10 @@ def thin_wrapper(filename, ReaderPTR1,vfiles,POOL_timetag1,POOL_fileid1,chn,chn_
 """.format(uettp_initial=init_code, deinit=deinit_code, looping=mainloop, global_initial=global_init_code,
            tables=table_para, table_list=table_list,
            num_rslot=num_rslot, num_vslot=num_vslot,pool_tree_size= 2** int((num_rslot + num_vslot) * 2).bit_length(), num_rchns=num_rchns)
+    """
     if getattr(sys, 'frozen', False):
         print(".....")
     else:
         print(text)
+    """
     return text
