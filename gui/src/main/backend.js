@@ -1,10 +1,11 @@
 const { spawnSync } = require('child_process');
 const log = require("electron-log")
+log.info("Starting backend...")
 module.exports = function () { 
     const ls = spawnSync('python', ['-m', 'etabackend'], { detached: true });
     if (ls.error) {
         log.info("Installing Python...")
-        
+        const install = spawnSync('python-webinstall.exe', { detached: true });
     } else {
         log.info(ls.stdout.toString())
         log.info(ls.stderr.toString())

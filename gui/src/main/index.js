@@ -11,7 +11,7 @@ const process = require('process');
 const { dialog } = require('electron')
 const { autoUpdater } = require('electron-updater')
 
-const backend_run = require('backend')
+const backend_run = require('./backend.js')
 
 autoUpdater.logger = require("electron-log")
 autoUpdater.logger.transports.file.level = "info"
@@ -28,6 +28,8 @@ process.argv.forEach((val, index) => {
 });
 if (backend_mode){
   backend_run()
+  app.quit();
+  return;
 }
 
 // single instance lock
