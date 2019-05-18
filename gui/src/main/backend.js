@@ -1,12 +1,11 @@
 const { spawnSync } = require('child_process');
 const { dialog } = require('electron')
-const open = require('open');
+const { shell } = require('electron')
+
 logger = require("electron-log")
 logger.transports.file.level = "info"
 function show_help(){
-  (async () => {
-    await open('https://eta.readthedocs.io/en/latest/installation.html');
-  })();
+  shell.openExternal('https://eta.readthedocs.io/en/latest/installation.html')
 }
 function python_not_found(){
   let buttonIndex = dialog.showMessageBox({
@@ -52,7 +51,7 @@ function install_deps(){
 }
 function backend_run(install_mode) { 
   if (install_mode){
-    return install_deps();
+    if (install_deps()==false) return false;
   }
   let ls = spawnSync('python', ['-m', 'etabackend'], { detached: true });
   if (ls.error) {

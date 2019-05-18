@@ -33,8 +33,7 @@
   },
   "dependencies": {
     "electron-log": "^3.0.5",
-    "electron-updater": "^4.0.0",
-    "open": "^6.3.0"
+    "electron-updater": "^4.0.0"
   },
   "devDependencies": {
     "electron": "^4.0.1",
