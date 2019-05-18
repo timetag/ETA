@@ -6,7 +6,7 @@ import os
 import multiprocessing
 
 multiprocessing.freeze_support()
-ETA_VERSION = "v0.5.11"
+ETA_VERSION = "v0.6.0"
 try:
     from eta_runtime import *
 except Exception as e:
@@ -72,5 +72,5 @@ if __name__ == '__main__':
 ==============================
 """)
     print("ETA_VERSION: "+ETA_VERSION)
-    print("Using Python libraries from ", sys.path)
+    #print("Using Python libraries from ", sys.path)
     ws = WSSERVER()
