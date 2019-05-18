@@ -29,26 +29,24 @@ process.argv.forEach((val, index) => {
   if (val.indexOf("install") >= 0) 
     install_mode=true;
 });
-if (backend_mode){
-  while (backend_run(install_mode)){};
-  app.quit();
-  return;
+
+if (backend_mode==false &&  install_mode ==false){
+  // single instance lock
+  const gotTheLock = app.requestSingleInstanceLock()
+  if (!gotTheLock) {
+    app.quit();
+    return;
+  } else {
+    app.on('second-instance', (event, commandLine, workingDirectory) => {
+      // Someone tried to run a second instance, we should focus our window.
+      if (mainWindow) {
+        if (mainWindow.isMinimized()) mainWindow.restore()
+        mainWindow.focus()
+      }
+    })
+  }
 }
 
-// single instance lock
-const gotTheLock = app.requestSingleInstanceLock()
-if (!gotTheLock) {
-  app.quit();
-  return;
-} else {
-  app.on('second-instance', (event, commandLine, workingDirectory) => {
-    // Someone tried to run a second instance, we should focus our window.
-    if (mainWindow) {
-      if (mainWindow.isMinimized()) mainWindow.restore()
-      mainWindow.focus()
-    }
-  })
-}
 
 // GUI related part
 function createMainWindow() {
@@ -119,6 +117,14 @@ app.on('activate', () => {
 
 // create main BrowserWindow when electron is ready
 app.on('ready', () => {
+  // Backend Part
+  if (backend_mode){
+    while (backend_run(install_mode)){};
+    app.quit();
+    return;
+  }
+  
+  // GUI part
   mainWindow = createMainWindow()
 
   autoUpdater.autoDownload = false
