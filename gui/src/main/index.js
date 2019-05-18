@@ -30,8 +30,8 @@ process.argv.forEach((val, index) => {
     install_mode=true;
 });
 
+// single instance lock
 if (backend_mode==false &&  install_mode ==false){
-  // single instance lock
   const gotTheLock = app.requestSingleInstanceLock()
   if (!gotTheLock) {
     app.quit();
@@ -117,16 +117,17 @@ app.on('activate', () => {
 
 // create main BrowserWindow when electron is ready
 app.on('ready', () => {
-  // Backend Part
   if (backend_mode){
+    // Backend 
     while (backend_run(install_mode)){};
     app.quit();
     return;
+  }else{
+    // create GUI
+    mainWindow = createMainWindow()
   }
   
-  // GUI part
-  mainWindow = createMainWindow()
-
+  // Auto updater logic
   autoUpdater.autoDownload = false
 
   autoUpdater.on('error', (error) => {
