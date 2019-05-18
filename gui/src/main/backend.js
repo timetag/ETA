@@ -49,19 +49,22 @@ function backend_run(install_mode) {
   if (ls.error) {
     return python_not_found()
   } else {
-      if (ls.stderr && ls.stderr.toString().indexOf("No module named ") > 0) {
+      if (ls.stderr  && pip.stderr.toString().length>1 ) {
         logger.error(ls.stderr.toString())
-        let buttonIndex = dialog.showMessageBox({
-          type: 'info',
-          title: 'ETA Backend Setup',
-          message: 'There seems to be ETA dependencies missing on this computer. Do you want to install them?',
-          buttons: ['Yes', 'No']
-        });
-        if (buttonIndex ==0)  {
-          return install_deps();
-        }else {
-          dialog.showErrorBox('Skipped', "Please run `pip install etabackend` mannually." )
-          return false;
+        if (ls.stderr.toString().indexOf("No module named ") >= 0){
+          //module problem auto-fixer
+          let buttonIndex = dialog.showMessageBox({
+            type: 'info',
+            title: 'ETA Backend Setup',
+            message: 'There seems to be ETA dependencies missing on this computer. Do you want to install them?',
+            buttons: ['Yes', 'No']
+          });
+          if (buttonIndex ==0)  {
+            return install_deps();
+          }else {
+            dialog.showErrorBox('Skipped', "Please run `pip install etabackend` mannually." )
+            return false;
+          }
         }
       }
       logger.info("ETA Backend quitted.")
