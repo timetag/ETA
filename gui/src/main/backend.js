@@ -11,7 +11,7 @@ function python_not_found() {
   let buttonIndex = dialog.showMessageBox({
     type: 'info',
     title: 'Install Python',
-    message: 'Python is not installed on this computer. Do you want to download and install now?\n NOTE: Pleaseselect the add Python to PATH option during install.',
+    message: 'Python is not installed on this computer. Do you want to download and install now?\nNOTE: Please select the `add Python to PATH` option during installation.',
     buttons: ['Yes', 'No']
   });
   if (buttonIndex === 0) {

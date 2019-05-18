@@ -1,10 +1,8 @@
-
 import os
 import urllib.request
 import sys
 import io
 import zipfile
-
 
 def web_install(url, prefix, file_name):
     file_name = prefix+file_name
@@ -46,33 +44,3 @@ def web_install(url, prefix, file_name):
     zip_ref.extractall(folder)
     zip_ref.close()
     print("Installing completed.")
-
-
-def set_path(default=False):
-    default_folder = os.path.dirname(sys.executable+"\\Lib\\site-packages")
-    if default:
-        os.environ["ETA_LIB"] = default_folder
-    else:
-        os.environ["ETA_LIB"] = input(
-            "[*]Please specify a new path to ETA_LIB ({}):".format(default_folder)) or default_folder
-    os.system('setx ETA_LIB "' + os.environ["ETA_LIB"] + '"')
-    print("The path to ETA_LIB is changed to %s ." % os.environ.get('ETA_LIB'))
-    return os.environ["ETA_LIB"]
-
-
-def installer(ETA_VERSION):
-    while True:
-        env_dist = os.environ.get('ETA_LIB')
-        if env_dist is not None and os.path.isdir(env_dist):
-            sys.path.insert(0, env_dist)
-            break
-        else:
-            print("===================\nInstall ETA Backend\n===================\nWelcome! It seems that ETA Backend has just been installed or upgraded on this computer.\n")
-            print("This installer will help you set up ETA Backend.")
-            inp = input(
-                "[*]Please type 'yes' to download ETA_LIB, the required files for ETA scripting environment ('no' if you have it already):")
-            if 'y' in inp.lower():
-                default_folder = set_path(True)
-                web_install(url="https://github.com/timetag/ETA/releases/download/"+ETA_VERSION+"/ETA_LIB-win64.zip",prefix=default_folder+"\\",file_name="ETA_LIB-win64_"+ETA_VERSION+".zip")
-            else:
-                set_path()
