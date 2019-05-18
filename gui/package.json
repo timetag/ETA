@@ -32,7 +32,7 @@
     }
   },
   "dependencies": {
-    "electron-log": "^2.2.16",
+    "electron-log": "^3.0.5",
     "electron-updater": "^4.0.0"
   },
   "devDependencies": {

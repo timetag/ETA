@@ -15,45 +15,46 @@ function python_not_found(){
         dialog.showErrorBox('Install Failed', "python-webinstall.exe is not found in the ETA install folder.")
         return false;
       } else {
-        logger.info(pip.stdout.toString())
-        logger.error(pip.stderr.toString())
         if (pip.stderr){
+          logger.error(pip.stderr.toString())
           dialog.showErrorBox('Install Failed', pip.stderror == null ? "unknown" : (pip.stderror).toString())
           return false;
         }
+        //success
+        logger.info(pip.stdout.toString())
         return true;
       }
   }else {
-      dialog.showErrorBox('Skipped', "Please install Python mannually." )
-      return false;
+    //skipped
+    dialog.showErrorBox('Skipped', "Please install Python mannually." )
+    return false;
   }
 }
-function install_deps(){
+function install_deps(install_mode){
   const pip = spawnSync('python',['-m','pip', 'install', '--find-links=.','etabackend'], { detached: true });
   if (pip.error) {
     return python_not_found()
   } else {
-    logger.info(pip.stdout.toString())
-    logger.error(pip.stderr.toString())
     if (pip.stderr){
-      dialog.showErrorBox('Install Failed', pip.stderror == null ? "unknown" : (pip.stderror).toString())
+      logger.error(pip.stderr.toString())
+      dialog.showErrorBox('Install Failed', pip.stderr == null ? "unknown" : (pip.stderr).toString())
       return false;
     }
-    return true;
+    //success
+    logger.info(pip.stdout.toString())
+    return !install_mode;
   }
 }
 function backend_run(install_mode) { 
   if (install_mode){
-    install_deps();
+    return install_deps(install_mode);
   }
   const ls = spawnSync('python', ['-m', 'etabackend'], { detached: true });
   if (ls.error) {
     return python_not_found()
   } else {
-      logger.info("ETA Backend quitted.")
-      logger.info(ls.stdout.toString())
-      logger.error(ls.stderr.toString())
       if (ls.stderr && ls.stderr.toString().indexOf("No module named ") > 0) {
+        logger.error(ls.stderr.toString())
         let buttonIndex = dialog.showMessageBox({
           type: 'info',
           title: 'ETA Backend Setup',
@@ -67,6 +68,9 @@ function backend_run(install_mode) {
           return false;
         }
       }
+      logger.info("ETA Backend quitted.")
+      logger.info(ls.stdout.toString())
+      //success
       return false;
   }
 }
