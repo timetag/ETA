@@ -1,18 +1,23 @@
 const { spawnSync } = require('child_process');
 const { dialog } = require('electron')
+const open = require('open');
 logger = require("electron-log")
 logger.transports.file.level = "info"
+function show_help(){
+  open('https://eta.readthedocs.io/en/latest/installation.html');
+}
 function python_not_found(){
   let buttonIndex = dialog.showMessageBox({
     type: 'info',
     title: 'Install Python',
-    message: 'Python is not installed on this computer. Do you want to download and install now?',
+    message: 'Python is not installed on this computer. Do you want to download and install now?\n NOTE: Pleaseselect the add Python to PATH option during install.',
     buttons: ['Yes', 'No']
   });
   if (buttonIndex === 0) {
       const ls = spawnSync('python-webinstall.exe',[], { detached: true });
       if (ls.error) {
         dialog.showErrorBox('Install Failed', "python-webinstall.exe is not found in the ETA install folder.")
+        show_help();
         return false;
       } else {
         //focre success
@@ -23,10 +28,11 @@ function python_not_found(){
   }else {
     //skipped
     dialog.showErrorBox('Skipped', "Please install Python mannually." )
+    show_help();
     return false;
   }
 }
-function install_deps(install_mode){
+function install_deps(){
   const ls = spawnSync('python',['-m','pip', '--disable-pip-version-check','install', '--find-links=.','etabackend','--upgrade','--yes'], { detached: true });
   if (ls.error) {
     return python_not_found()
@@ -34,16 +40,17 @@ function install_deps(install_mode){
     if (ls.stderr && ls.stderr.toString().length>1){
       logger.error(ls.stderr.toString())
       dialog.showErrorBox('Install Failed', ls.stderr == null ? "unknown" : (ls.stderr).toString())
+      show_help();
       return false;
     }
     //success
     if (ls.stdout) logger.info(ls.stdout.toString())
-    return !install_mode;
+    return true;
   }
 }
 function backend_run(install_mode) { 
   if (install_mode){
-    return install_deps(install_mode);
+    return install_deps();
   }
   const ls = spawnSync('python', ['-m', 'etabackend'], { detached: true });
   if (ls.error) {
@@ -63,6 +70,7 @@ function backend_run(install_mode) {
             return install_deps();
           }else {
             dialog.showErrorBox('Skipped', "Please run `pip install etabackend` mannually." )
+            show_help();
             return false;
           }
         }
