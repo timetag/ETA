@@ -31,7 +31,7 @@ function install_deps(install_mode){
   if (pip.error) {
     return python_not_found()
   } else {
-    if (pip.stderr){
+    if (pip.stderr && pip.stderr.toString().length>1){
       logger.error(pip.stderr.toString())
       dialog.showErrorBox('Install Failed', pip.stderr == null ? "unknown" : (pip.stderr).toString())
       return false;
