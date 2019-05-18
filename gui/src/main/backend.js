@@ -15,13 +15,9 @@ function python_not_found(){
         dialog.showErrorBox('Install Failed', "python-webinstall.exe is not found in the ETA install folder.")
         return false;
       } else {
-        if (pip.stderr){
-          logger.error(pip.stderr.toString())
-          dialog.showErrorBox('Install Failed', pip.stderror == null ? "unknown" : (pip.stderror).toString())
-          return false;
-        }
-        //success
-        logger.info(pip.stdout.toString())
+        //focre success
+        if (pip.stderr) logger.error(pip.stderr.toString())
+        if (pip.stdout) logger.info(pip.stdout.toString())
         return true;
       }
   }else {
@@ -41,7 +37,7 @@ function install_deps(install_mode){
       return false;
     }
     //success
-    logger.info(pip.stdout.toString())
+    if (pip.stdout) logger.info(pip.stdout.toString())
     return !install_mode;
   }
 }
@@ -69,7 +65,7 @@ function backend_run(install_mode) {
         }
       }
       logger.info("ETA Backend quitted.")
-      logger.info(ls.stdout.toString())
+      if (ls.stdout) logger.info(ls.stdout.toString())
       //success
       return false;
   }
