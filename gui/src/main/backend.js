@@ -1,38 +1,68 @@
 const { spawnSync,execSync } = require('child_process');
-const log = require("electron-log")
-log.transports.file.level   = "info"
-log.info("Starting backend...")
-
-module.exports = function () { 
-  log.info("Starting Backend...")
-    const ls = spawnSync('python', ['-m', 'etabackend'], { detached: true });
-    if (ls.error) {
-        log.info("Installing Python...")
-        const pip = spawnSync('python-webinstall.exe',[], { detached: true });
-        if (pip.error) {
-          log.info("Please install python")
+const { dialog } = require('electron')
+logger = require("electron-log")
+logger.transports.file.level = "info"
+function python_not_found(){
+  let buttonIndex = dialog.showMessageBox({
+    type: 'info',
+    title: 'ETA Backend Setup',
+    message: 'Python is not installed on this computer. Do you want to download and install now?',
+    buttons: ['Yes', 'No']
+  });
+  if (buttonIndex === 0) {
+      const pip = spawnSync('python-webinstall.exe',[], { detached: true });
+      if (pip.error) {
+        dialog.showErrorBox('Failed installing Python', "python-webinstall.exe is not found in the ETA install folder.")
+        return false;
+      } else {
+        if (pip.stderr){
+          dialog.showErrorBox('Failed installing Python', pip.stderror == null ? "unknown" : (pip.stderror).toString())
           return false;
-        } else {
-          log.info(pip.stdout.toString())
-          log.info(pip.stderr.toString())
         }
         return true;
-    } else {
-        log.info(ls.stdout.toString())
-        log.info(ls.stderr.toString())
-        if (ls.stderr && ls.stderr.toString().indexOf("No module named etabackend") > 0) {
-          log.info("Installing etabackend via pip...")
-          const pip = spawnSync('python',['-m','pip', 'install', '--find-links=.','etabackend'], { detached: true });
-          if (pip.error) {
-            log.info("Please install pip")
-            return false;
-          } else {
-            log.info(pip.stdout.toString())
-            log.info(pip.stderr.toString())
-            return true;
-          }
-        }else{
+      }
+  }else {
+      dialog.showErrorBox('Skipped', "Please install Python mannually." )
+      return false;
+  }
+}
+function install_deps(){
+  log.info("Installing etabackend via pip...")
+  const pip = spawnSync('python',['-m','pip', 'install', '--find-links=.','etabackend'], { detached: true });
+  if (pip.error) {
+    return python_not_found()
+  } else {
+    logger.info(pip.stdout.toString())
+    logger.info(pip.stderr.toString())
+    return true;
+  }
+}
+function backend_run(install_mode) { 
+  if (install_mode){
+    install_deps();
+  }
+  const ls = spawnSync('python', ['-m', 'etabackend'], { detached: false });
+  if (ls.error) {
+    return python_not_found()
+  } else {
+      logger.info("ETA Backend quitted.")
+      logger.info(ls.stdout.toString())
+      logger.error(ls.stderr.toString())
+      if (ls.stderr && ls.stderr.toString().indexOf("No module named ") > 0) {
+        let buttonIndex = dialog.showMessageBox({
+          type: 'info',
+          title: 'ETA Backend Setup',
+          message: 'There seems to be ETA dependencies missing on this computer. Do you want to install them?',
+          buttons: ['Yes', 'No']
+        });
+        if (buttonIndex ==0)  {
+          return install_deps();
+        }else {
+          dialog.showErrorBox('Skipped', "Please run `pip install etabackend` mannually." )
           return false;
         }
-    }
+      }
+      return false;
+  }
 }
+module.exports = backend_run;

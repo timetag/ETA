@@ -22,13 +22,15 @@ let mainWindow
 
 // run via command line
 let backend_mode = false
+let install_mode = false
 process.argv.forEach((val, index) => {
-  if (val.indexOf("backend") > 0) 
+  if (val.indexOf("backend") >= 0) 
     backend_mode=true;
+  if (val.indexOf("install") >= 0) 
+    install_mode=true;
 });
 if (backend_mode){
-  while (backend_run()){};
-
+  while (backend_run(install_mode)){};
   app.quit();
   return;
 }
