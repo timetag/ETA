@@ -10,14 +10,14 @@ function python_not_found(){
     buttons: ['Yes', 'No']
   });
   if (buttonIndex === 0) {
-      const pip = spawnSync('python-webinstall.exe',[], { detached: true });
-      if (pip.error) {
+      const ls = spawnSync('python-webinstall.exe',[], { detached: true });
+      if (ls.error) {
         dialog.showErrorBox('Install Failed', "python-webinstall.exe is not found in the ETA install folder.")
         return false;
       } else {
         //focre success
-        if (pip.stderr) logger.error(pip.stderr.toString())
-        if (pip.stdout) logger.info(pip.stdout.toString())
+        if (ls.stderr) logger.error(ls.stderr.toString())
+        if (ls.stdout) logger.info(ls.stdout.toString())
         return true;
       }
   }else {
@@ -27,17 +27,17 @@ function python_not_found(){
   }
 }
 function install_deps(install_mode){
-  const pip = spawnSync('python',['-m','pip', 'install', '--find-links=.','etabackend','--upgrade'], { detached: true });
-  if (pip.error) {
+  const ls = spawnSync('python',['-m','pip', '--disable-pip-version-check','install', '--find-links=.','etabackend','--upgrade','--yes'], { detached: true });
+  if (ls.error) {
     return python_not_found()
   } else {
-    if (pip.stderr && pip.stderr.toString().length>1){
-      logger.error(pip.stderr.toString())
-      dialog.showErrorBox('Install Failed', pip.stderr == null ? "unknown" : (pip.stderr).toString())
+    if (ls.stderr && ls.stderr.toString().length>1){
+      logger.error(ls.stderr.toString())
+      dialog.showErrorBox('Install Failed', ls.stderr == null ? "unknown" : (ls.stderr).toString())
       return false;
     }
     //success
-    if (pip.stdout) logger.info(pip.stdout.toString())
+    if (ls.stdout) logger.info(ls.stdout.toString())
     return !install_mode;
   }
 }
@@ -49,7 +49,7 @@ function backend_run(install_mode) {
   if (ls.error) {
     return python_not_found()
   } else {
-      if (ls.stderr && pip.stderr.toString().length>1 ) {
+      if (ls.stderr && ls.stderr.toString().length>1 ) {
         logger.error(ls.stderr.toString())
         if (ls.stderr.toString().indexOf("No module named") >= 0){
           //module problem auto-fixer
