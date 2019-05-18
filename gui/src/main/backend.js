@@ -44,7 +44,7 @@ function install_backend(slient_mode) {
     });
   }
   if (buttonIndex == 0) {
-    let ls = spawnSync('python', ['-m', 'pip', '--disable-pip-version-check', 'install', '--find-links=.', 'etabackend', '--ignore-installed'], { detached: false });
+    let ls = spawnSync('python', ['-m', 'pip', '--disable-pip-version-check', 'install', '--find-links=.', 'etabackend', '--upgrade'], { detached: false });
     if (ls.error) {
       return python_not_found()
     } else {

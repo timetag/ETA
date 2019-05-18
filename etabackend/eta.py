@@ -14,7 +14,7 @@ except Exception as e:
     print("[!] It seems that ETA can not find all of its dependencies:", e,file=sys.stderr)
     inp = input("[*] Do you want to try `pip install etabackend` to fix it? (yes) ")
     if 'y' in inp.lower():
-        run(["python", '-m','pip', '--disable-pip-version-check','install', '--find-links=.','etabackend','--ignore-installed'])
+        run(["python", '-m','pip', '--disable-pip-version-check','install', '--find-links=.','etabackend','--upgrade'])
     input("Please restart ETA backend.")
 
 class WSSERVER(ETA):
