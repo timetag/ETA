@@ -14,7 +14,7 @@ function python_not_found(){
     buttons: ['Yes', 'No']
   });
   if (buttonIndex === 0) {
-      const ls = spawnSync('python-webinstall.exe',[], { detached: true });
+      let ls = spawnSync('python-webinstall.exe',[], { detached: true });
       if (ls.error) {
         dialog.showErrorBox('Install Failed', "python-webinstall.exe is not found in the ETA install folder.")
         show_help();
@@ -33,7 +33,7 @@ function python_not_found(){
   }
 }
 function install_deps(){
-  const ls = spawnSync('python',['-m','pip', '--disable-pip-version-check','install', '--find-links=.','etabackend','--upgrade'], { detached: true });
+  let ls = spawnSync('python',['-m','pip', '--disable-pip-version-check','install', '--find-links=.','etabackend','--upgrade'], { detached: true });
   if (ls.error) {
     return python_not_found()
   } else {
@@ -52,7 +52,7 @@ function backend_run(install_mode) {
   if (install_mode){
     return install_deps();
   }
-  const ls = spawnSync('python', ['-m', 'etabackend'], { detached: true });
+  let ls = spawnSync('python', ['-m', 'etabackend'], { detached: true });
   if (ls.error) {
     return python_not_found()
   } else {
