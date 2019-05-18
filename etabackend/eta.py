@@ -7,16 +7,12 @@ import multiprocessing
 
 multiprocessing.freeze_support()
 ETA_VERSION = "v0.5.11"
-webinstall.installer(ETA_VERSION)
 try:
     from eta_runtime import *
 except Exception as e:
     print(str(e))
     traceback.print_exc()
-    print("It seems that ETA can not recognize ETA_LIB at path %s.",
-          os.environ.get('ETA_LIB'))
-    print("Note: If the path to ETA_LIB is correct, please try moving ETA_LIB to another path containing more than 6 slashes (C:\\f1\\f2\\f3\\f4\\f5\\).")
-    webinstall.set_path()
+    print("It seems that ETA can not find all of its dependencies. Try `pip install etabackend` again. ")
 
 
 class WSSERVER(ETA):
