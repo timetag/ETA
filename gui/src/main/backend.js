@@ -5,7 +5,7 @@ logger.transports.file.level = "info"
 function python_not_found(){
   let buttonIndex = dialog.showMessageBox({
     type: 'info',
-    title: 'ETA Backend Setup',
+    title: 'Install Python',
     message: 'Python is not installed on this computer. Do you want to download and install now?',
     buttons: ['Yes', 'No']
   });
@@ -49,9 +49,9 @@ function backend_run(install_mode) {
   if (ls.error) {
     return python_not_found()
   } else {
-      if (ls.stderr  && pip.stderr.toString().length>1 ) {
+      if (ls.stderr && pip.stderr.toString().length>1 ) {
         logger.error(ls.stderr.toString())
-        if (ls.stderr.toString().indexOf("No module named ") >= 0){
+        if (ls.stderr.toString().indexOf("No module named") >= 0){
           //module problem auto-fixer
           let buttonIndex = dialog.showMessageBox({
             type: 'info',

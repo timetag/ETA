@@ -10,9 +10,9 @@ ETA_VERSION = "v0.6.0"
 try:
     from eta_runtime import *
 except Exception as e:
-    print(str(e))
     traceback.print_exc()
     print("It seems that ETA can not find all of its dependencies. Try `pip install etabackend` again. ")
+    raise e
 
 
 class WSSERVER(ETA):
