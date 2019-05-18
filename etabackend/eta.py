@@ -6,17 +6,16 @@ from subprocess import run
 #multiprocessing.freeze_support()
 ETA_VERSION = "v0.6.0"
 try:
+    #deps check
     import webinstall
     import ws_broadcast
     from eta_runtime import *
 except Exception as e:
-    traceback.print_exc()
-    print("It seems that ETA can not find all of its dependencies.")
+    print("[!] It seems that ETA can not find all of its dependencies:", e,file=sys.stderr)
     inp = input("[*] Do you want to try `pip install etabackend` to fix it? (yes) ")
     if 'y' in inp.lower():
         run(["python", '-m','pip', '--disable-pip-version-check','install', '--find-links=.','etabackend','--upgrade'])
-    else:
-        input("Try reinstalling ETA to fix this problem.")
+    input("Please restart ETA backend.")
 
 class WSSERVER(ETA):
 
@@ -31,8 +30,9 @@ class WSSERVER(ETA):
         while True:
             envhosts = os.environ.get('ETA_HOST')
             if envhosts is None or envhosts.find(':') < 0:
-                os.environ["ETA_HOST"] = input(
-                    "[*]Please specify the IP address and port (localhost:5678):") or "localhost:5678"
+                os.environ["ETA_HOST"] = "localhost:5678"
+                print("The IP address and port of the backend is not specified, default to localhost:5678.")
+                print("You can change it in the ETA_HOST environment variable.")
                 os.system('setx ETA_HOST "' + os.environ["ETA_HOST"] + '"')
             else:
                 self.hostip = envhosts[:envhosts.find(':')]
