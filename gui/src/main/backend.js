@@ -4,7 +4,9 @@ const open = require('open');
 logger = require("electron-log")
 logger.transports.file.level = "info"
 function show_help(){
-  open('https://eta.readthedocs.io/en/latest/installation.html');
+  (async () => {
+    await open('https://eta.readthedocs.io/en/latest/installation.html');
+  })();
 }
 function python_not_found(){
   let buttonIndex = dialog.showMessageBox({
