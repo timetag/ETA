@@ -33,7 +33,7 @@ function python_not_found(){
   }
 }
 function install_deps(){
-  const ls = spawnSync('python',['-m','pip', '--disable-pip-version-check','install', '--find-links=.','etabackend','--upgrade','--yes'], { detached: true });
+  const ls = spawnSync('python',['-m','pip', '--disable-pip-version-check','install', '--find-links=.','etabackend','--upgrade'], { detached: true });
   if (ls.error) {
     return python_not_found()
   } else {
