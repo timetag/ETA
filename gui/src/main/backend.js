@@ -1,4 +1,4 @@
-const { spawnSync,execSync } = require('child_process');
+const { spawnSync } = require('child_process');
 const { dialog } = require('electron')
 logger = require("electron-log")
 logger.transports.file.level = "info"
@@ -31,7 +31,7 @@ function python_not_found(){
   }
 }
 function install_deps(install_mode){
-  const pip = spawnSync('python',['-m','pip', 'install', '--find-links=.','etabackend'], { detached: true });
+  const pip = spawnSync('python',['-m','pip', 'install', '--find-links=.','etabackend','--upgrade'], { detached: true });
   if (pip.error) {
     return python_not_found()
   } else {
