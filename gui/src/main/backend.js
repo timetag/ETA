@@ -12,11 +12,13 @@ function python_not_found(){
   if (buttonIndex === 0) {
       const pip = spawnSync('python-webinstall.exe',[], { detached: true });
       if (pip.error) {
-        dialog.showErrorBox('Failed installing Python', "python-webinstall.exe is not found in the ETA install folder.")
+        dialog.showErrorBox('Install Failed', "python-webinstall.exe is not found in the ETA install folder.")
         return false;
       } else {
+        logger.info(pip.stdout.toString())
+        logger.error(pip.stderr.toString())
         if (pip.stderr){
-          dialog.showErrorBox('Failed installing Python', pip.stderror == null ? "unknown" : (pip.stderror).toString())
+          dialog.showErrorBox('Install Failed', pip.stderror == null ? "unknown" : (pip.stderror).toString())
           return false;
         }
         return true;
@@ -32,7 +34,11 @@ function install_deps(){
     return python_not_found()
   } else {
     logger.info(pip.stdout.toString())
-    logger.info(pip.stderr.toString())
+    logger.error(pip.stderr.toString())
+    if (pip.stderr){
+      dialog.showErrorBox('Install Failed', pip.stderror == null ? "unknown" : (pip.stderror).toString())
+      return false;
+    }
     return true;
   }
 }
@@ -40,7 +46,7 @@ function backend_run(install_mode) {
   if (install_mode){
     install_deps();
   }
-  const ls = spawnSync('python', ['-m', 'etabackend'], { detached: false });
+  const ls = spawnSync('python', ['-m', 'etabackend'], { detached: true });
   if (ls.error) {
     return python_not_found()
   } else {
