@@ -53,7 +53,7 @@ function backend_run(install_mode) {
   if (install_mode){
     if (install_deps()==false) return false;
   }
-  let ls = spawnSync('python', ['-m', 'etabackend'], {shell: true, detached: true });
+  let ls = spawnSync('python', ['-m', 'etabackend'], {shell: true, detached: false });
   if (ls.error) {
     return python_not_found()
   } else {

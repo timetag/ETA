@@ -5,7 +5,7 @@ import traceback
 import os
 import multiprocessing
 
-#multiprocessing.freeze_support()
+multiprocessing.freeze_support()
 ETA_VERSION = "v0.6.0"
 try:
     from eta_runtime import *
