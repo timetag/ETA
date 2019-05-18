@@ -1,19 +1,22 @@
-import webinstall
-import ws_broadcast
 import sys
 import traceback
 import os
 import multiprocessing
-
+from subprocess import run
 #multiprocessing.freeze_support()
 ETA_VERSION = "v0.6.0"
 try:
+    import webinstall
+    import ws_broadcast
     from eta_runtime import *
 except Exception as e:
     traceback.print_exc()
-    print("It seems that ETA can not find all of its dependencies. Try `pip install etabackend` again. ")
-    raise e
-
+    print("It seems that ETA can not find all of its dependencies.")
+    inp = input("[*] Do you want to try `pip install etabackend` to fix it? (yes) ")
+    if 'y' in inp.lower():
+        run(["python", '-m','pip', '--disable-pip-version-check','install', '--find-links=.','etabackend','--upgrade'])
+    else:
+        input("Try reinstalling ETA to fix this problem.")
 
 class WSSERVER(ETA):
 

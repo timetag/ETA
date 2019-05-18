@@ -6,7 +6,6 @@ import sys
 import os
 import logging
 import copy
-# multiprocessing.log_to_stderr(logging.DEBUG)
 import jit_linker
 from parser_header import parse_header
 from etalang import eta_codegen
