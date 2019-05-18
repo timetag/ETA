@@ -33,15 +33,17 @@ function python_not_found() {
     return false;
   }
 }
-function install_backend() {
-  let buttonIndex = dialog.showMessageBox({
-    type: 'info',
-    title: 'ETA Backend Setup',
-    message: 'Do you want to install ETA Backend with its dependencies?',
-    buttons: ['Yes', 'No']
-  });
+function install_backend(slient_mode) {
+  let buttonIndex = 0
+  if (!slient_mode){
+    buttonIndex = dialog.showMessageBox({
+      type: 'info',
+      title: 'ETA Backend Setup',
+      message: 'Do you want to install ETA Backend with its dependencies?',
+      buttons: ['Yes', 'No']
+    });
+  }
   if (buttonIndex == 0) {
-
     let ls = spawnSync('python', ['-m', 'pip', '--disable-pip-version-check', 'install', '--find-links=.', 'etabackend', '--upgrade'], { detached: false });
     if (ls.error) {
       return python_not_found()
@@ -64,7 +66,7 @@ function install_backend() {
 }
 function backend_run(install_mode) {
   if (install_mode) {
-    if (install_backend() == false) return false;
+    if (install_backend(install_mode) == false) return false;
   }
   let ls = spawnSync('python', ['-m', 'etabackend'], { detached: true });
   if (ls.error) {
