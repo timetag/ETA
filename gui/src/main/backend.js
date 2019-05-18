@@ -27,7 +27,6 @@ function python_not_found(){
   }
 }
 function install_deps(){
-  log.info("Installing etabackend via pip...")
   const pip = spawnSync('python',['-m','pip', 'install', '--find-links=.','etabackend'], { detached: true });
   if (pip.error) {
     return python_not_found()

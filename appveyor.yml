@@ -53,7 +53,6 @@ install:
     cd ..
 
 cache:
-- '%LOCALAPPDATA%\pip\Cache'
 - gui\node_modules
 - '%USERPROFILE%\.electron'
 - '%LOCALAPPDATA%\electron\Cache'
