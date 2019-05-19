@@ -7,6 +7,10 @@ logger.transports.file.level = "info"
 function show_help() {
   shell.openExternal('https://eta.readthedocs.io/en/latest/installation.html')
 }
+function check_python(){
+  let ls = spawnSync('python', ['--version'], { detached: false });
+  if (ls.error) return false; else return false;
+}
 function python_not_found() {
   let buttonIndex = dialog.showMessageBox({
     type: 'info',
@@ -44,9 +48,14 @@ function install_backend(slient_mode) {
     });
   }
   if (buttonIndex == 0) {
+    if (!check_python()){
+      return python_not_found();
+    }
+    //execute with shell
     let ls = spawnSync('python', ['-m', 'pip', '--disable-pip-version-check', 'install', '--find-links=.', 'etabackend', '--upgrade'], { detached: true, shell: true });
     if (ls.error) {
-      return python_not_found()
+      dialog.showErrorBox('Install Failed', "Can not execute python via system shell.")
+      return false;
     } else {
       if (ls.stderr && ls.stderr.toString().length > 1) {
         logger.error(ls.stderr.toString())
