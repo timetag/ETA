@@ -24,22 +24,9 @@ class WSSERVER(ETA):
         self.ETA_VERSION = ETA_VERSION
         self.logger = logging.getLogger(__name__)
         logging.basicConfig()
-        self.hostlisten = os.environ.get('ETA_LISTEN')
-        self.hostip = os.environ.get('ETA_IP')
-        self.hostport = os.environ.get('ETA_PORT')
-        if self.hostlisten is None or self.hostip is None or self.hostport is None:
-            os.environ["ETA_LISTEN"] = "127.0.0.1"
-            os.system('setx ETA_LISTEN "' + os.environ["ETA_LISTEN"] + '"')
-            os.environ["ETA_IP"] = "localhost"
-            os.system('setx ETA_IP "' + os.environ["ETA_IP"] + '"')
-            os.environ["ETA_PORT"] = "5678"
-            os.system('setx ETA_PORT "' + os.environ["ETA_PORT"] + '"')
-            print("The IP address and port of the backend is not specified, default to localhost:5678.")
-            print("You can change it in the ETA_IP,ETA_PORT and ETA_LISTEN environment variables.")
-        self.hostlisten = os.environ.get('ETA_LISTEN')
-        self.hostip = os.environ.get('ETA_IP')
-        self.hostport = os.environ.get('ETA_PORT')
-
+        self.hostlisten = os.environ.get('ETA_LISTEN') or "127.0.0.1"
+        self.hostip = os.environ.get('ETA_IP') or "localhost"
+        self.hostport = os.environ.get('ETA_PORT') or "5678"
         self.displaying = False
 
         def new_message(client, server, message):
