@@ -7,9 +7,9 @@ logger.transports.file.level = "info"
 function show_help() {
   shell.openExternal('https://eta.readthedocs.io/en/latest/installation.html')
 }
-function check_python(){
+function check_python() {
   let ls = spawnSync('python', ['--version'], { detached: false });
-  if (ls.error) return false; else return false;
+  if (ls.error) return false; else return true;
 }
 function python_not_found() {
   let buttonIndex = dialog.showMessageBox({
@@ -39,7 +39,7 @@ function python_not_found() {
 }
 function install_backend(slient_mode) {
   let buttonIndex = 0
-  if (!slient_mode){
+  if (!slient_mode) {
     buttonIndex = dialog.showMessageBox({
       type: 'info',
       title: 'ETA Backend Setup',
@@ -48,7 +48,7 @@ function install_backend(slient_mode) {
     });
   }
   if (buttonIndex == 0) {
-    if (!check_python()){
+    if (!check_python()) {
       return python_not_found();
     }
     //execute with shell
@@ -59,7 +59,7 @@ function install_backend(slient_mode) {
     } else {
       if (ls.stderr && ls.stderr.toString().length > 1) {
         logger.error(ls.stderr.toString())
-        dialog.showErrorBox('Install Failed', ls.stderr == null ? "unknown" : (ls.stderr).toString())
+        dialog.showErrorBox('Install Failed', ls.stderr == null ? "unknown" : (ls.stderr).toString('utf8'))
         show_help();
         return false;
       }
