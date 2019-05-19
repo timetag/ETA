@@ -24,20 +24,21 @@ class WSSERVER(ETA):
         self.ETA_VERSION = ETA_VERSION
         self.logger = logging.getLogger(__name__)
         logging.basicConfig()
-        self.hostlisten = None
-        self.hostip = None
-        self.hostport = None
-        while True:
-            envhosts = os.environ.get('ETA_HOST')
-            if envhosts is None or envhosts.find(':') < 0:
-                os.environ["ETA_HOST"] = "localhost:5678"
-                print("The IP address and port of the backend is not specified, default to localhost:5678.")
-                print("You can change it in the ETA_HOST environment variable.")
-                os.system('setx ETA_HOST "' + os.environ["ETA_HOST"] + '"')
-            else:
-                self.hostip = envhosts[:envhosts.find(':')]
-                self.hostport = envhosts[envhosts.find(':')+1:]
-                break
+        self.hostlisten = os.environ.get('ETA_LISTEN')
+        self.hostip = os.environ.get('ETA_IP')
+        self.hostport = os.environ.get('ETA_PORT')
+        if self.hostlisten is None or self.hostip is None or self.hostport is None:
+            os.environ["ETA_LISTEN"] = "127.0.0.1"
+            os.system('setx ETA_LISTEN "' + os.environ["ETA_LISTEN"] + '"')
+            os.environ["ETA_IP"] = "localhost"
+            os.system('setx ETA_IP "' + os.environ["ETA_IP"] + '"')
+            os.environ["ETA_PORT"] = "5678"
+            os.system('setx ETA_PORT "' + os.environ["ETA_PORT"] + '"')
+            print("The IP address and port of the backend is not specified, default to localhost:5678.")
+            print("You can change it in the ETA_IP,ETA_PORT and ETA_LISTEN environment variables.")
+        self.hostlisten = os.environ.get('ETA_LISTEN')
+        self.hostip = os.environ.get('ETA_IP')
+        self.hostport = os.environ.get('ETA_PORT')
 
         self.displaying = False
 
@@ -50,13 +51,8 @@ class WSSERVER(ETA):
         def new_client(client, server):
             print("New client " + str(client["address"]) +
                   " connected to port " + str(self.hostport) + ". ")
-        # listen only on loop as default
-        if self.hostip == "localhost" or self.hostip == "127.0.0.1":
-            hostlisten = "127.0.0.1"
-        else:
-            hostlisten = "0.0.0.0"
         self.server = ws_broadcast.WebsocketServer(
-            int(self.hostport), host=hostlisten)
+            int(self.hostport), host=self.hostlisten)
         print("ETA Backend URL: ws://{}:{}".format(self.hostip, self.hostport))
         self.server.set_fn_new_client(new_client)
         self.server.set_fn_message_received(new_message)
