@@ -20,7 +20,8 @@ def parse_header(filename1, filetype):
             DTRes_pspr_get(),#3
             SYNCRate_pspr_get(),#4
             BytesofRecords_get(),#5
-            RecordType_get()#6
+            RecordType_get(),#6
+            0
             ])
 
 if __name__ == "__main__":

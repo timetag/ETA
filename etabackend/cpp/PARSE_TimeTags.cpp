@@ -53,14 +53,16 @@ extern "C" {
 
 		long long BytesofRecords ;//5
 		long long RecordType ;//6
-			long long batch_nextreadpos_in_file ;//7
-			long long batch_actualread_length ;//8
-			long long next_RecID_in_batch ;//9
+		long long GlobalTimeShift;//7
 
-			long long overflowcorrection ;//10
-			long long resuming ;//11
-			char *buffer = 0;//12
-			FILE *fpttf;//13
+			long long batch_nextreadpos_in_file ;//8
+			long long batch_actualread_length ; //9
+			long long next_RecID_in_batch ;//10
+
+			long long overflowcorrection ;//11
+			long long resuming ;//12
+			char *buffer = 0;//13
+			FILE *fpttf;//14
 	}ttf_reader;
 
 	//DANGER: globlal
@@ -330,6 +332,13 @@ extern "C" {
 	int MKS_inline read_next_minibatch() {
 		READERs[0].batch_actualread_length = fread(READERs[0].buffer, READERs[0].BytesofRecords, batchreadRecNum, READERs[0].fpttf)*READERs[0].BytesofRecords;
 		READERs[0].batch_nextreadpos_in_file += READERs[0].batch_actualread_length;
+		const long long batches_left = READERs[0].batch_nextreadpos_in_file - READERs[0].fseekpoint;
+		
+		if (batches_left % (100* batchreadRecNum*READERs[0].BytesofRecords) == 0) {
+			const long long total_batches = (READERs[0].fendpoint - READERs[0].fseekpoint);
+			const long long percentage = batches_left * 200  / total_batches;
+			PINFO("Reader %x for section [%lld %lld) %lld%% finished.", READERs, READERs[0].fseekpoint, READERs[0].fendpoint, percentage)
+		}
 		READERs[0].next_RecID_in_batch = 0; 
 		return READERs[0].batch_actualread_length;
 	}
@@ -482,9 +491,10 @@ extern "C" {
 			}
 			else {
 				*out_Channel = Channel;
-				return AbsTime_ps;
+				return AbsTime_ps + READERs[0].GlobalTimeShift; // add global timeshift only at the very end
 			}	
 		}
+		// failure case, all breaks will jump here
 		*out_Channel = 255;
 		return INT64_MAX;
 	}

@@ -20,7 +20,7 @@ def mainloop(filename1, ReaderPTR1, vfiles, POOL_timetag1, POOL_fileid1, chn, ch
     eta_ret = 0
 
     SYNCRate_pspr = ReaderPTR1[4]
-    RESUMING = ReaderPTR1[11]
+    RESUMING = ReaderPTR1[12] # 12th for resuming
     earlystop = True
     Channel = ffi.from_buffer(chn)
     Channel_next = ffi.from_buffer(chn_next)
@@ -57,8 +57,8 @@ def mainloop(filename1, ReaderPTR1, vfiles, POOL_timetag1, POOL_fileid1, chn, ch
     
 def initializer(caller_parms):
     filename = bytearray(caller_parms[-1], "ascii")
-    ReaderPTR1=np.zeros((18*1), dtype=np.int64)
-    ReaderPTR1[0:7]=caller_parms[0:7]
+    ReaderPTR1 = np.zeros((18*1), dtype=np.int64) # 18 for more than enough
+    ReaderPTR1[0:8] = caller_parms[0:8] # 7th for the global time shift
     vfiles = np.zeros(({num_vslot}*4), dtype=np.int64) 
     {global_initial}
     POOL_timetag1=np.zeros(({pool_tree_size}) , dtype=np.int64)

@@ -47,7 +47,7 @@ class ETA():
         self.eta_compiled_code = None
         self.usercode_vars = None
         self.recipe_metadata = None
-        
+
     def send(self, text, endpoint="log"):
         self.server.send_message_to_all(json.dumps([endpoint, str(text)]))
 
@@ -70,7 +70,7 @@ class ETA():
         for each in self.recipe_metadata:
             if each["name"].strip() == key:
                 return each["config"]
-        
+
     def recipe_set_filename(self, etaobj, id, key):
         self.compile_eta(etaobj, verbose=False)
         if self.eta_compiled_code is not None:
@@ -79,15 +79,18 @@ class ETA():
             root = tk.Tk()
             root.update()
             root.withdraw()
-            root.overrideredirect(True)# Make it impossible to close the root via clicking |X| or alt+F4.
-            root.geometry('0x0+0+0')# Make it almost invisible - no decorations, 0 size, top left corner.
-            root.attributes("-alpha", 0.3)# Make it more invisible
+            # Make it impossible to close the root via clicking |X| or alt+F4.
+            root.overrideredirect(True)
+            # Make it almost invisible - no decorations, 0 size, top left corner.
+            root.geometry('0x0+0+0')
+            root.attributes("-alpha", 0.3)  # Make it more invisible
             root.attributes("-toolwindow", 1)
             root.wm_attributes("-topmost", 1)
-            root.deiconify() #show root again
-            root.lift() #make sure it is on top
-            root.focus_force() #and has focus
-            path = askopenfilename(parent=root, filetypes=[("Time Tag File", "*.*")])
+            root.deiconify()  # show root again
+            root.lift()  # make sure it is on top
+            root.focus_force()  # and has focus
+            path = askopenfilename(parent=root, filetypes=[
+                                   ("Time Tag File", "*.*")])
             # parent=root makes sure the dialogue is inherits the roots attributes, like being on-top
             root.destroy()
             if path is not "":
@@ -99,9 +102,9 @@ class ETA():
                 info_emitter = self.send
             else:
                 info_emitter = print
-            self.eta_compiled_code=None
-            self.usercode_vars=None
-            self.recipe_metadata =None
+            self.eta_compiled_code = None
+            self.usercode_vars = None
+            self.recipe_metadata = None
             self.eta_compiled_code, self.usercode_vars, self.recipe_metadata = eta_codegen.compile_eta(
                 etaobj, info_emitter)
             self.recipe_update()
@@ -117,9 +120,10 @@ class ETA():
             self.logger.error(str(e), exc_info=True)
 
     def process_eta(self, etaobj=None, id="code", group="main"):
-        self.send("none", "discard") #show a neutral icon
+        self.send("none", "discard")  # show a neutral icon
         if self.displaying:
-            self.send("Script Panel is serving at http://{}:5000.".format(self.hostip))
+            self.send(
+                "Script Panel is serving at http://{}:5000.".format(self.hostip))
             self.send(
                 "The current script is not executed, because a previously executed script is still serving the results.")
             self.send("http://{}:5000".format(self.hostip), "dash")
@@ -129,16 +133,17 @@ class ETA():
 
             self.eta_compiled_code = None
             self.compile_eta(etaobj, verbose=True)
-            # ETA File version check 
+            # ETA File version check
             if self.recipe_get_parameter("ETA_VERSION") is not None and self.recipe_get_parameter("ETA_VERSION") is not self.ETA_VERSION:
-                  self.send(
-                    "ETA_VERSION: the recipe requires {} while ETA Backend is {}, you might encounter compatibility issues.".format(self.recipe_get_parameter("ETA_VERSION"),self.ETA_VERSION))
+                self.send(
+                    "ETA_VERSION: the recipe requires {} while ETA Backend is {}, you might encounter compatibility issues.".format(self.recipe_get_parameter("ETA_VERSION"), self.ETA_VERSION))
 
             if self.eta_compiled_code is not None:
                 self.send(
                     "Executing code in Script Panel in group {}...".format(group))
                 try:
-                    glob = {"eta": self,"quTAG_FORMAT_BINARY" :0,"FORMAT_SI":1 ,"quTAG_FORMAT_COMPRESSED" :2,"bh_spc_4bytes" :3}
+                    glob = {"eta": self, "quTAG_FORMAT_BINARY": 0, "FORMAT_SI": 1,
+                            "quTAG_FORMAT_COMPRESSED": 2, "bh_spc_4bytes": 3}
                     # side configuration panel
                     if group in self.usercode_vars:
                         loc = self.usercode_vars[group]
@@ -187,7 +192,7 @@ class ETA():
                         response.headers.add(
                             'Access-Control-Allow-Origin', '*')
                         return response
-                    # TODO: hard coded ip and port for bokeh. Try making a HTTP router? 
+                    # TODO: hard coded ip and port for bokeh. Try making a HTTP router?
                     thread2 = threading.Thread(
                         target=app.server.run, kwargs={'host': "0.0.0.0"})
                     thread2.daemon = True
@@ -223,7 +228,7 @@ class ETA():
                 self.logger.error(str(e), exc_info=True)
 
     def simple_cut(self, filename, cuts=1, keep_indexes=None, format=-1):
-        filename = str(filename) # supporting pathlib
+        filename = str(filename)  # supporting pathlib
         self.send(
             "ETA.SIMPLE_CUT: The file '{filename}' is cut into {cuts} equal size sections. ".format(filename=filename,
                                                                                                     cuts=cuts))
@@ -231,13 +236,13 @@ class ETA():
             self.send(
                 "ETA.SIMPLE_CUT: You can increase the cuts to enable multi-threading.")
 
-        ret1, out = parse_header(bytearray(filename, "ascii"), format)
+        ret1, parse_output = parse_header(bytearray(filename, "ascii"), format)
         if ret1 is not 0:
             raise ValueError(
                 "ETA.SIMPLE_CUT: File {} is not found or incorrect, err code {}.".format(filename, ret1))
-        BytesofRecords = out[-2]
-        TTF_header_offset = out[0]
-        TTF_filesize = out[1]
+        BytesofRecords = parse_output[-2]
+        TTF_header_offset = parse_output[0]
+        TTF_filesize = parse_output[1]
 
         NumRecords = (TTF_filesize - TTF_header_offset) // BytesofRecords
         Chunck_size = (NumRecords // cuts) * BytesofRecords
@@ -250,41 +255,47 @@ class ETA():
                 stop_point = TTF_filesize
             if (stop_point - start_point > BytesofRecords):
                 caller_parms.append(
-                    [start_point, stop_point, out[2], out[3], out[4], out[5], out[6], filename])
+                    [start_point, stop_point, *parse_output[2:8], filename]) # 7th for the global time shift
                 # print(start_point, stop_point)
         if keep_indexes:
-            if type(keep_indexes )==list:
+            if type(keep_indexes) == list:
                 caller_parms = [caller_parms[i] for i in keep_indexes]
             else:
-                raise ValueError("ETA.SIMPLE_CUT: The third parameter, keep_indexes, should be a list . ")
-                
+                raise ValueError(
+                    "ETA.SIMPLE_CUT: The third parameter, keep_indexes, should be a list . ")
+
         return caller_parms
 
     def incremental_cut(self, filename, cut=None, rec_per_cut=-10, format=-1, verbose=True):
-        filename = str(filename) # supporting pathlib
+        filename = str(filename)  # supporting pathlib
         if cut == None:
-            ret1, out = parse_header(bytearray(filename, "ascii"), format)
+            ret1, parse_output = parse_header(
+                bytearray(filename, "ascii"), format)
             if ret1 is not 0:
                 raise ValueError(
                     "ETA.incremental_cut: File {} is not found or incorrect, err code {}.".format(filename, ret1))
-            cut = [[out[0], out[0], out[2], out[3],
-                    out[4], out[5], out[6], filename]]
+            cut = [[parse_output[0], parse_output[0],
+                    *parse_output[2:8], filename]] # 7th for the global time shift
         if len(cut) != 1:
             raise ValueError(
                 "Incremental cut must take a list with only one cut in it.")
 
         cut[0][0] = cut[0][1]
         BytesofRecords = cut[0][-3]
-        if rec_per_cut<=0:
-             fileactualsize = os.path.getsize(filename)
-             filebuffersize = fileactualsize-cut[0][0]
-             rec_per_cut+= filebuffersize//BytesofRecords
-        if rec_per_cut<=0:
-            rec_per_cut=1 #read at least one record each time
+        if rec_per_cut <= 0:
+            fileactualsize = os.path.getsize(filename)
+            filebuffersize = fileactualsize - cut[0][0]
+            rec_per_cut += filebuffersize//BytesofRecords
+        if rec_per_cut <= 0:
+            rec_per_cut = 1  # read at least one record each time
         cut[0][1] = cut[0][0] + BytesofRecords * rec_per_cut
         if verbose:
             self.send(
                 "ETA.incremental_cut: The file '{}' cut into section [{},{}). ".format(filename, cut[0][0], cut[0][1]))
+        return cut
+    def cut_modifier_timeshift(self,cut=None, global_time_shift=0):
+        for i in range(len(cut)):
+            cut[i][7] = int(global_time_shift)
         return cut
 
     def validate_cut(self, each_caller_parms):
@@ -372,9 +383,9 @@ class ETA():
                     if not self.validate_cut(each_caller_parms):
                         raise ValueError(
                             "Invalid section for cut." + str(each_caller_parms))
-                    vals[each_caller_parms_id][1][0:7] = cuts_params[each_caller_parms_id][0:7]
+                    vals[each_caller_parms_id][1][0:8] = cuts_params[each_caller_parms_id][0:8] # 7th for the global time shift
 
-                    vals[each_caller_parms_id][1][11] = 1  # resuming
+                    vals[each_caller_parms_id][1][12] = 1  # resuming
 
                 # print(vals[each_caller_parms_id][1])
             print("Executing analysis program...")
