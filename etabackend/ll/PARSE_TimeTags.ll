@@ -786,7 +786,7 @@ define dso_local i32 @read_next_minibatch() #0 {
   %45 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %44, i64 0
   %46 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %45, i32 0, i32 5
   %47 = load i64, i64* %46, align 8
-  %48 = mul nsw i64 1000000, %47
+  %48 = mul nsw i64 2000000, %47
   %49 = srem i64 %43, %48
   %50 = icmp eq i64 %49, 0
   br i1 %50, label %51, label %77
@@ -803,7 +803,7 @@ define dso_local i32 @read_next_minibatch() #0 {
   %60 = sub nsw i64 %55, %59
   store i64 %60, i64* %2, align 8
   %61 = load i64, i64* %1, align 8
-  %62 = mul nsw i64 %61, 200
+  %62 = mul nsw i64 %61, 100
   %63 = load i64, i64* %2, align 8
   %64 = sdiv i64 %62, %63
   store i64 %64, i64* %3, align 8
@@ -978,7 +978,7 @@ define dso_local i64 @pop_signal_from_file(i8*) #0 {
   %125 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
   %126 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %125, i32 0, i32 5
   %127 = load i64, i64* %126, align 8
-  %128 = mul nsw i64 1000000, %127
+  %128 = mul nsw i64 2000000, %127
   %129 = srem i64 %124, %128
   %130 = icmp eq i64 %129, 0
   br i1 %130, label %131, label %153
@@ -993,7 +993,7 @@ define dso_local i64 @pop_signal_from_file(i8*) #0 {
   %138 = sub nsw i64 %134, %137
   store i64 %138, i64* %50, align 8
   %139 = load i64, i64* %49, align 8
-  %140 = mul nsw i64 %139, 200
+  %140 = mul nsw i64 %139, 100
   %141 = load i64, i64* %50, align 8
   %142 = sdiv i64 %140, %141
   store i64 %142, i64* %51, align 8

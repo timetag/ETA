@@ -334,9 +334,9 @@ extern "C" {
 		READERs[0].batch_nextreadpos_in_file += READERs[0].batch_actualread_length;
 		const long long batches_left = READERs[0].batch_nextreadpos_in_file - READERs[0].fseekpoint;
 		
-		if (batches_left % (100* batchreadRecNum*READERs[0].BytesofRecords) == 0) {
+		if (batches_left % (200* batchreadRecNum*READERs[0].BytesofRecords) == 0) {
 			const long long total_batches = (READERs[0].fendpoint - READERs[0].fseekpoint);
-			const long long percentage = batches_left * 200  / total_batches;
+			const long long percentage = batches_left * 100  / total_batches;
 			PINFO("Reader %x for section [%lld %lld) %lld%% finished.", READERs, READERs[0].fseekpoint, READERs[0].fendpoint, percentage)
 		}
 		READERs[0].next_RecID_in_batch = 0; 
