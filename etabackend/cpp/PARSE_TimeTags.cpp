@@ -37,6 +37,7 @@ unsigned int MarkerSHC_to_CHN(int n) {
 #include <stddef.h>
 #include <stdbool.h>
 typedef unsigned long  DWORD;
+#define PFATAL(...) {order_gurantee3=printf( "\n [FATAL]"  __VA_ARGS__ );while(1){order_gurantee3+=1;};}
 #define PERROR(...) {order_gurantee3=printf( "\n [ERROR]"  __VA_ARGS__ );}
 #define PINFO(...)  {order_gurantee3=printf("\n" __VA_ARGS__);}
 
@@ -70,7 +71,7 @@ extern "C" {
 	//DANGER: globlal
 
 
-#define batchreadRecNum  10000
+#define batchreadRecNum  50000
 	// RecordTypes
 #define rtPicoHarpT3     0x00010303    // (SubID = $00 ,RecFmt: $01) (V1), T-Mode: $03 (T3), HW: $03 (PicoHarp)
 #define rtPicoHarpT2     0x00010203    // (SubID = $00 ,RecFmt: $01) (V1), T-Mode: $02 (T2), HW: $03 (PicoHarp)
@@ -143,7 +144,7 @@ extern "C" {
 		{
 			if ((int)Record.bits.channel > 4) //Should not occur
 			{
-				PERROR(" Illegal Chan:  %1u\n", Record.bits.channel);
+				PFATAL(" Illegal Chan:  %1u\n", Record.bits.channel);
 			}
 			else
 			{
@@ -263,7 +264,7 @@ extern "C" {
 				|| (Record.bits.channel>4) //Should not occur with current routers
 				)
 			{
-				PERROR("\nIllegal virtual_channel:  %1u", Record.bits.channel);
+				PFATAL("\nIllegal virtual_channel:  %1u", Record.bits.channel);
 			}
 
 			truensync = oflcorrection + Record.bits.numsync;

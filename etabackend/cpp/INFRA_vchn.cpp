@@ -14,7 +14,10 @@ Zuzeng Lin, KTH,2017-2018
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
+
+
 typedef unsigned long  DWORD;
+#define PFATAL(...) {controlflow_guarantee=printf( "\n [FATAL]"  __VA_ARGS__ );while(1){controlflow_guarantee+=1;};}
 #define PERROR(...) {controlflow_guarantee=printf( "\n [ERROR]"  __VA_ARGS__ );}
 #define PINFO(...)  {controlflow_guarantee=printf("\n" __VA_ARGS__);}
 
@@ -239,7 +242,7 @@ extern "C" {
 			else {
 				//PINFO("WRITE TO %lld, %d, FILEid %d", timeinfuture, virtual_channel, FILEid)
 				if (circular_buf_full(VFILES[VFILEid])) {
-					PERROR("Buffer overflow! at %x", VFILES[VFILEid].buffer);
+					PFATAL("Buffer overflow! at %x", VFILES[VFILEid].buffer);
 					return -1;
 				}
 				else {
