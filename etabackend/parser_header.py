@@ -8,11 +8,12 @@ TTF_filesize_get = link_global("TTF_filesize")
 NumRecords_get = link_global("NumRecords")
 RecordType_get =link_global("RecordType")
 PARSE_TimeTagFileHeader = link_function("PARSE_TimeTagFileHeader",2)
-@jit(nopython=True, parallel=True, nogil=True)
+@jit(nopython=True, nogil=True)
 def parse_header(filename1, filetype):
     link_libs()
     filename = ffi.from_buffer(filename1)
     ret1 = PARSE_TimeTagFileHeader(filename,nb.int32(filetype))
+    # can not return them as a list because the cast from int32 to unicode is not possible 
     return (ret1,[
             TTF_header_offset_get(),#0
             TTF_filesize_get(),#1

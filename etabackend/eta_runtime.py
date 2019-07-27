@@ -240,7 +240,7 @@ class ETA():
         if ret1 is not 0:
             raise ValueError(
                 "ETA.SIMPLE_CUT: File {} is not found or incorrect, err code {}.".format(filename, ret1))
-        BytesofRecords = parse_output[-2]
+        BytesofRecords = parse_output[5] 
         TTF_header_offset = parse_output[0]
         TTF_filesize = parse_output[1]
 
