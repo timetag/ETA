@@ -281,8 +281,10 @@ class ETA():
                 "Incremental cut must take a list with only one cut in it.")
 
         cut[0][0] = cut[0][1]
-        BytesofRecords = cut[0][-3]
+        BytesofRecords = cut[0][5] 
+        #TODO: unpack cut[0][*] in only one assignment statement to prevent similar bugs
         if rec_per_cut <= 0:
+            #use actual size of the file
             fileactualsize = os.path.getsize(filename)
             filebuffersize = fileactualsize - cut[0][0]
             rec_per_cut += filebuffersize//BytesofRecords

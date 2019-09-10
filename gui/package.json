@@ -3,7 +3,7 @@
   "license": "MIT",
   "author": "Zuzeng Lin <zuzeng@kth.se>",
   "homepage": "http://timetag.github.io",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "scripts": {
     "dev": "electron .",
     "dist": "electron-builder",
