@@ -47,7 +47,11 @@ class ETA():
         self.eta_compiled_code = None
         self.usercode_vars = None
         self.recipe_metadata = None
-
+        #defined in PARSE_TimeTags.cpp#L55
+        
+        self.idx_fseekpoint=0
+        self.idx_fendpoint=1
+        self.idx_BytesofRecords = 5 
     def send(self, text, endpoint="log"):
         self.server.send_message_to_all(json.dumps([endpoint, str(text)]))
 
@@ -240,7 +244,8 @@ class ETA():
         if ret1 is not 0:
             raise ValueError(
                 "ETA.SIMPLE_CUT: File {} is not found or incorrect, err code {}.".format(filename, ret1))
-        BytesofRecords = parse_output[5] 
+        BytesofRecords = parse_output[ self.idx_BytesofRecords] 
+        #TODO: fixing the rest of the parse_output
         TTF_header_offset = parse_output[0]
         TTF_filesize = parse_output[1]
 
@@ -280,9 +285,9 @@ class ETA():
             raise ValueError(
                 "Incremental cut must take a list with only one cut in it.")
 
-        cut[0][0] = cut[0][1]
-        BytesofRecords = cut[0][5] 
-        #TODO: unpack cut[0][*] in only one assignment statement to prevent similar bugs
+        cut[0][0] = cut[0][self.idx_fendpoint]
+        BytesofRecords = cut[0][self.idx_BytesofRecords] 
+        
         if rec_per_cut <= 0:
             #use actual size of the file
             fileactualsize = os.path.getsize(filename)
