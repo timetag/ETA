@@ -24,7 +24,18 @@ def parse_header(filename1, filetype):
             RecordType_get(),#6
             0
             ])
-
+class ETACReaderStructIDX():
+    #defined in PARSE_TimeTags.cpp#L55
+    fseekpoint = 0
+    fendpoint = 1
+    TTRes_pspr = 2
+    DTRes_pspr = 3
+    SYNCRate_pspr = 4
+    BytesofRecords = 5
+    RecordType = 6
+    GlobalTimeShift = 7
+    resuming = 12
+ 
 if __name__ == "__main__":
     out = parse_header(bytearray("HHT2.ptu", "ascii"))
     print(out)

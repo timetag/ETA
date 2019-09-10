@@ -7,10 +7,9 @@ import os
 import logging
 import copy
 import jit_linker
-from parser_header import parse_header
+from parser_header import parse_header,ETACReaderStructIDX
 from etalang import eta_codegen
 import numpy as np
-
 
 class ETAThread(threading.Thread):
     def __init__(self, func, args):
@@ -47,11 +46,7 @@ class ETA():
         self.eta_compiled_code = None
         self.usercode_vars = None
         self.recipe_metadata = None
-        #defined in PARSE_TimeTags.cpp#L55
-        
-        self.idx_fseekpoint=0
-        self.idx_fendpoint=1
-        self.idx_BytesofRecords = 5 
+       
     def send(self, text, endpoint="log"):
         self.server.send_message_to_all(json.dumps([endpoint, str(text)]))
 
@@ -244,11 +239,10 @@ class ETA():
         if ret1 is not 0:
             raise ValueError(
                 "ETA.SIMPLE_CUT: File {} is not found or incorrect, err code {}.".format(filename, ret1))
-        BytesofRecords = parse_output[ self.idx_BytesofRecords] 
-        #TODO: fixing the rest of the parse_output
-        TTF_header_offset = parse_output[0]
-        TTF_filesize = parse_output[1]
-
+        BytesofRecords = parse_output[ETACReaderStructIDX.BytesofRecords] 
+        TTF_header_offset = parse_output[ETACReaderStructIDX.fseekpoint]
+        TTF_filesize = parse_output[ETACReaderStructIDX.fendpoint]
+        
         NumRecords = (TTF_filesize - TTF_header_offset) // BytesofRecords
         Chunck_size = (NumRecords // cuts) * BytesofRecords
         caller_parms = []
@@ -284,25 +278,25 @@ class ETA():
         if len(cut) != 1:
             raise ValueError(
                 "Incremental cut must take a list with only one cut in it.")
-
-        cut[0][0] = cut[0][self.idx_fendpoint]
-        BytesofRecords = cut[0][self.idx_BytesofRecords] 
-        
+        #moving to the end of the last read
+        cut[0][ETACReaderStructIDX.fseekpoint] = cut[0][ETACReaderStructIDX.fendpoint]
+        BytesofRecords = cut[0][ETACReaderStructIDX.BytesofRecords] 
+        #update the new ending
         if rec_per_cut <= 0:
             #use actual size of the file
             fileactualsize = os.path.getsize(filename)
-            filebuffersize = fileactualsize - cut[0][0]
+            filebuffersize = fileactualsize - cut[0][ETACReaderStructIDX.fseekpoint]
             rec_per_cut += filebuffersize//BytesofRecords
         if rec_per_cut <= 0:
             rec_per_cut = 1  # read at least one record each time
-        cut[0][1] = cut[0][0] + BytesofRecords * rec_per_cut
+        cut[0][ETACReaderStructIDX.fendpoint] = cut[0][ETACReaderStructIDX.fseekpoint] + BytesofRecords * rec_per_cut
         if verbose:
             self.send(
-                "ETA.incremental_cut: The file '{}' cut into section [{},{}). ".format(filename, cut[0][0], cut[0][1]))
+                "ETA.incremental_cut: The file '{}' cut into section [{},{}). ".format(filename, cut[0][ETACReaderStructIDX.fseekpoint], cut[0][ETACReaderStructIDX.fendpoint]))
         return cut
     def cut_modifier_timeshift(self,cut=None, global_time_shift=0):
         for i in range(len(cut)):
-            cut[i][7] = int(global_time_shift)
+            cut[i][ETACReaderStructIDX.GlobalTimeShift] = int(global_time_shift)
         return cut
 
     def validate_cut(self, each_caller_parms):
@@ -390,9 +384,9 @@ class ETA():
                     if not self.validate_cut(each_caller_parms):
                         raise ValueError(
                             "Invalid section for cut." + str(each_caller_parms))
-                    vals[each_caller_parms_id][1][0:8] = cuts_params[each_caller_parms_id][0:8] # 7th for the global time shift
+                    vals[each_caller_parms_id][1][ETACReaderStructIDX.fseekpoint:ETACReaderStructIDX.GlobalTimeShift+1] = cuts_params[each_caller_parms_id][ETACReaderStructIDX.fseekpoint:ETACReaderStructIDX.GlobalTimeShift+1] # 7th for the global time shift
 
-                    vals[each_caller_parms_id][1][12] = 1  # resuming
+                    vals[each_caller_parms_id][1][ETACReaderStructIDX.resuming] = 1  # resuming
 
                 # print(vals[each_caller_parms_id][1])
             print("Executing analysis program...")
