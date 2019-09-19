@@ -303,7 +303,7 @@ class ETA():
         fileactualsize = os.path.getsize(each_caller_parms[-1])
         return (fileactualsize >= each_caller_parms[1])
 
-    def wait_till_presnese(self, caller_parms, timeout=1, raiseerr=False):
+    def wait_till_presence(self, caller_parms, timeout=1, raiseerr=False):
         for each_caller_parms in caller_parms:
             fileactualsize = os.path.getsize(each_caller_parms[-1])
             watied_for = 0
