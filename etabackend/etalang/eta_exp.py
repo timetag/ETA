@@ -140,15 +140,18 @@ class HISTOGRAM():
         dims = ast.literal_eval(dims)
         if isinstance(dims, tuple):
             dims = [dims]
+        new_dims = []
         if isinstance(dims, list):
             for each in dims:
                 if isinstance(each, tuple):
-                    base.append(each[0])
+                    each_converted = (int(each[0]),int(each[1]),each[2]) # supporting scientific notation
+                    base.append(each_converted[0])
+                    new_dims.append(each_converted)
                 else:
                     raise ValueError(
                         "Histogram dimension should be a tuple(bin_num,bin_step,pre_act).")
 
-        self.define_syms(name, ["histogram", dims])
+        self.define_syms(name, ["histogram", new_dims])
         self.define_syms(name, base, register=True)
 
     def record_all(self, triggers, histogram, clock_name):
