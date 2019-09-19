@@ -191,6 +191,11 @@ d3.select('#btn_connect').on('click', function () {
     ws.onerror = function (t) {
         d3.select('#ws').classed("is-valid", false);
         d3.select('#ws').classed("is-invalid", true);
+        
+        // TODO: merge with onmessage in to a function 
+        $("#remoteLOG").html($("#remoteLOG").html() + "<br/>" + "⚠ Backend is not responding!" )
+        $("#exampleModalClose").toggleClass("d-none", false); //allow closing on error
+        $("#exampleModalLabel").html('🛑 ETA Error');
     };
     ws.onclose = function (t) {
         d3.select('#btn_connect').text("Connect");
