@@ -144,12 +144,18 @@ class HISTOGRAM():
         if isinstance(dims, list):
             for each in dims:
                 if isinstance(each, tuple):
-                    each_converted = (int(each[0]),int(each[1]),each[2]) # supporting scientific notation
+                    if len(each)==3:
+                        each_converted = (int(each[0]),int(each[1]),each[2]) # supporting scientific notation with pre_act
+                    elif len(each)==2:
+                        each_converted = (int(each[0]),int(each[1])) # supporting scientific notation without pre_act
+                    else:
+                         raise ValueError(
+                        "Histogram dimension should be a tuple of (bin_num,bin_step,pre_act).")
                     base.append(each_converted[0])
                     new_dims.append(each_converted)
                 else:
                     raise ValueError(
-                        "Histogram dimension should be a tuple(bin_num,bin_step,pre_act).")
+                        "Histogram dimension should be a tuple of (bin_num,bin_step,pre_act).")
 
         self.define_syms(name, ["histogram", new_dims])
         self.define_syms(name, base, register=True)
