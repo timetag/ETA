@@ -303,18 +303,18 @@ class ETA():
         fileactualsize = os.path.getsize(each_caller_parms[-1])
         return (fileactualsize >= each_caller_parms[1])
 
-    def wait_till_presence(self, caller_parms, timeout=1, raiseerr=False, verbose=False):
+    def wait_for_data(self, caller_parms, timeout=1, raiseerr=False, verbose=False):
         for each_caller_parms in caller_parms:
             fileactualsize = os.path.getsize(each_caller_parms[-1])
-            watied_for = 0
+            waited_for = 0
             while not self.validate_cut(each_caller_parms):
                 if verbose:
                     print("Waiting for file {} to grow from {} to {} bytes.".format(each_caller_parms[-1],
                                                                                 fileactualsize,
                                                                                 each_caller_parms[1]))
                 time.sleep(0.1) # hard-coded checking period is probably not good.
-                watied_for += 0.1
-                if watied_for > timeout:
+                waited_for += 0.1
+                if waited_for > timeout:
                     if raiseerr:
                         raise ValueError(
                             "Timeout when waiting for the next cut.")
