@@ -53,8 +53,10 @@ function createMainWindow() {
   let { width, height } = electron.screen.getPrimaryDisplay().workAreaSize;
   var width1 = width * 0.9 | 0;
   var height1 = height * 0.9 | 0;
-  const window = new BrowserWindow({ width: width1, height: height1, show: false })//
-
+  const window = new BrowserWindow({ width: width1, height: height1, show: false })
+  
+  window.setMenuBarVisibility(false) // removing menu
+  
   window.once('ready-to-show', () => {
     window.show()
   })
@@ -76,6 +78,7 @@ function createMainWindow() {
       resizable: true,
       title: frameName
     })
+    win.setMenuBarVisibility(false) // removing menu
     win.loadURL(url)
     win.webContents.on('new-window', onWindowOpen)
     event.newGuest = win
