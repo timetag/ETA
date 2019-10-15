@@ -32,12 +32,12 @@
     }
   },
   "dependencies": {
-    "electron-log": "^3.0.5",
-    "electron-updater": "^4.0.0"
+    "electron-log": "^3.0.8",
+    "electron-updater": "^4.1.2"
   },
   "devDependencies": {
-    "electron": "^4.0.1",
-    "electron-builder": "20.38.2"
+    "electron": "^6.0.12",
+    "electron-builder": "21.2.0"
   },
   "resolutions": {}
 }
