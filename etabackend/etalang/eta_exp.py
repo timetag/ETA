@@ -45,7 +45,8 @@ class VFILE():
         eta_ret += VFILE_init(nb.int64({chn}-eta_num_rchns),nb.int64({buffer_size}),ffi.from_buffer({vfile2}),nb.int64(1))
         """.format(vfile2=type[1], buffer_size=type[2],chn=type[3]))
 
-    def VFILE(self, triggers, chn, size="800000"):
+    def VFILE(self, triggers, chn, size="2097152"):
+        # TODO: remove hard-coded VFILE size
         size = int(ast.literal_eval(size))
         name = "vchn"+str(chn)
         tablename =  name + "_vfile"
@@ -145,9 +146,9 @@ class HISTOGRAM():
             for each in dims:
                 if isinstance(each, tuple):
                     if len(each)==3:
-                        each_converted = (int(each[0]),int(each[1]),each[2]) # supporting scientific notation with pre_act
+                        each_converted = (int(float(each[0])),int(float(each[1])),each[2]) # supporting scientific notation with pre_act
                     elif len(each)==2:
-                        each_converted = (int(each[0]),int(each[1])) # supporting scientific notation without pre_act
+                        each_converted = (int(float(each[0])),int(float(each[1]))) # supporting scientific notation without pre_act
                     else:
                          raise ValueError(
                         "Histogram dimension should be a tuple of (bin_num,bin_step,pre_act).")
