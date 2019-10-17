@@ -298,7 +298,10 @@ class ETA():
         for i in range(len(cut)):
             cut[i][ETACReaderStructIDX.GlobalTimeShift] = int(global_time_shift)
         return cut
-
+    def cut_modifier_syncrate(self,cut=None, global_sync_rate=0):
+        for i in range(len(cut)):
+            cut[i][ETACReaderStructIDX.SYNCRate_pspr] = int(global_sync_rate)
+        return cut
     def validate_cut(self, each_caller_parms):
         fileactualsize = os.path.getsize(each_caller_parms[-1])
         return (fileactualsize >= each_caller_parms[1])
