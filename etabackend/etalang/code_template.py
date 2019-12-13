@@ -1,7 +1,10 @@
 import textwrap, sys
 
 
-def get_onefile_loop(histograms, mainloop, init_code, deinit_code, global_init_code, num_rslot, num_rchns, num_vslot):
+def get_onefile_loop(histograms, mainloop, init_code, deinit_code, global_init_code, 
+num_rslot, num_rchns, num_vslot,
+sign_chn_offset_per_rslots,
+mark_chn_offset_per_rslots):
     init_code = textwrap.indent(init_code, "    ")
     deinit_code = textwrap.indent(deinit_code, "    ")
     mainloop = textwrap.indent(mainloop, "        ")

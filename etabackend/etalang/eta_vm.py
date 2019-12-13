@@ -3,11 +3,9 @@ from .eta_exp import Graph
 
 
 class ETA_VM():
-    def __init__(self, real_chns_per_rslots, graph_names):
+    def __init__(self, chn_real , graph_names):
         # first include real slots
-        self.chn_real = sum(real_chns_per_rslots)
-
-        self.chn_max = self.chn_real
+        self.chn_real = chn_real
         self.graphs = []
         self.graphs_name_to_id = {}
         for each in graph_names:

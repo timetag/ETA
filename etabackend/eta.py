@@ -4,7 +4,7 @@ import os
 import multiprocessing
 from subprocess import run
 #multiprocessing.freeze_support()
-ETA_VERSION = "v0.6.4"
+ETA_VERSION = "v0.7.0"
 try:
     #deps check
     import webinstall

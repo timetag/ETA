@@ -1,5 +1,5 @@
 from . import eta_vm
-from . import etacode_parser
+from . import eta_parser
 from . import graph_parser
 from . import code_template
 import textwrap
@@ -64,23 +64,29 @@ def compile_eta(jsobj, print):
 
         num_rslot = 0
         num_rchns = 0
-        real_chns_per_rslots = []
+        sign_chn_offset_per_rslots = []
+        mark_chn_offset_per_rslots = []
         for each in ris:
+            # parse config string
             try:
                 config = json.loads(each["config"])
             except Exception as ex:
                 raise ValueError("The recipe is corrupted or unsupported. \n\r If you are trying a recipe from a previous version of ETA,  please refer to the Download page for updating your recipe. \n\r "+str(ex))
-
             if isinstance(config, int):
-                thiscount = config
+                sign_chn_count = config
+                mark_chn_count = 0
             elif isinstance(config, list):
-                thiscount = config[0]
-            real_chns_per_rslots.append(thiscount)
+                sign_chn_count = config[0]
+                mark_chn_count = config[1]
+            # display channel number on info
             each["info"] = "📤 " + \
                 json.dumps(
-                    [i for i in range(num_rchns, num_rchns + thiscount)])
-
-            num_rchns += thiscount
+                    [i for i in range(num_rchns, num_rchns + sign_chn_count+mark_chn_count)])
+            # assign channel number offset
+            sign_chn_offset_per_rslots.append(num_rchns)
+            num_rchns += sign_chn_count
+            mark_chn_offset_per_rslots.append(num_rchns)
+            num_rchns += mark_chn_count
             num_rslot += 1
 
         # compile vi
@@ -107,7 +113,7 @@ def compile_eta(jsobj, print):
                         "`{}`".format(varkey), varvalue)
             # parse user code
 
-            intp = etacode_parser.Parser(usercode, [each])
+            intp = eta_parser.Parser(usercode, [each])
             vi_code_list += graph_instructions
             vi_code_list += [["PREP_code_assignment", [each]]]
             # load embed codes
@@ -118,7 +124,7 @@ def compile_eta(jsobj, print):
                               [each]]]
             graphnames.append(instname)
         # code gen main process
-        etavm = eta_vm.ETA_VM(real_chns_per_rslots, graphnames)
+        etavm = eta_vm.ETA_VM(num_rchns, graphnames)
         # execute instructions
         for each in vi_code_list:
             # print(each)
@@ -145,7 +151,9 @@ def compile_eta(jsobj, print):
         mainloop, init_code, deinit_code, global_init_code = etavm.dump_code()
         onefile = code_template.get_onefile_loop(defines,
                                                  mainloop, init_code, deinit_code, global_init_code,
-                                                 num_rslot=1, num_rchns=num_rchns, num_vslot=num_vslot)
+                                                 num_rslot=num_rslot, num_rchns=num_rchns, num_vslot=num_vslot,
+                                                 mark_chn_offset_per_rslots=mark_chn_offset_per_rslots,
+                                                 sign_chn_offset_per_rslots=sign_chn_offset_per_rslots)
         code_per_groupings[instgroup] = onefile
 
     # update metadata

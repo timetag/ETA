@@ -8,7 +8,7 @@ import logging
 import copy
 import jit_linker
 from parser_header import parse_header,ETACReaderStructIDX
-from etalang import eta_codegen
+from etalang import recipe_compiler
 import numpy as np
 
 class ETAThread(threading.Thread):
@@ -104,7 +104,7 @@ class ETA():
             self.eta_compiled_code = None
             self.usercode_vars = None
             self.recipe_metadata = None
-            self.eta_compiled_code, self.usercode_vars, self.recipe_metadata = eta_codegen.compile_eta(
+            self.eta_compiled_code, self.usercode_vars, self.recipe_metadata = recipe_compiler.compile_eta(
                 etaobj, info_emitter)
             self.recipe_update()
             # clear cache

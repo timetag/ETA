@@ -382,7 +382,7 @@ class Graph(INTEGER, TABLE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENCE):
             raise ValueError(
                 "Ambiguous transition with condition {} on graph {}.".format(cond, self.name))
 
-    # called by etacode_parser
+    # called by eta_parser
     #############################
 
     def PREP_code_assignment(self, maxchn=255):
