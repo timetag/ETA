@@ -1,10 +1,11 @@
+#!/bin/env python
 import sys
 import traceback
 import os
 import multiprocessing
 from subprocess import run
 #multiprocessing.freeze_support()
-ETA_VERSION = "v0.7.0"
+ETA_VERSION = "v0.6.5"
 try:
     #deps check
     import webinstall

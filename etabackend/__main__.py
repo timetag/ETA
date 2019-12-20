@@ -1,3 +1,4 @@
+#!/bin/env python
 from subprocess import call
 import os.path
 
