@@ -6,12 +6,13 @@ from os import listdir
 from pathlib import Path
 import cffi
 import sys
+import os
 
 ffi = cffi.FFI()
-if getattr(sys, 'frozen', False):
-    ll_path = Path(sys._MEIPASS).resolve() / "ll"
-else:
-    ll_path = Path(__file__).resolve().parent/ "ll"
+#if getattr(sys, 'frozen', False):
+#   ll_path = Path(sys._MEIPASS).resolve() / "ll"
+#else:
+ll_path = Path(__file__).resolve().parent/"ll"/ os.name
     # ll code is binded to the path of the py file
 
 def compile_library(context, asm, libname='compiled_module'):
