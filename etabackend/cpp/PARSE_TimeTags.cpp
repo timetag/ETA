@@ -30,9 +30,14 @@ unsigned int MarkerSHC_to_CHN(int n) {
 
 #define MKS_inline 
 #endif // _MSC_VER
+
+#ifdef __linux__
+#define _fseeki64 fseeko64 
+#endif
+
+
 #include <stdio.h>
 #include <stdlib.h>
-#include <conio.h>
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
@@ -177,7 +182,7 @@ extern "C" {
 			{
 				if (HHVersion == 1)
 				{
-					oflcorrection += (unsigned __int64)T2WRAPAROUND_V1;
+					oflcorrection += (uint64_t)T2WRAPAROUND_V1;
 					//GotOverflow( 1);
 				}
 				else
@@ -186,11 +191,11 @@ extern "C" {
 					if (T2Rec.bits.timetag == 0) //if it is zero it is an old style single overflow
 					{
 						//GotOverflow( 1);
-						oflcorrection += (unsigned __int64)T2WRAPAROUND_V2;  //should never happen with new Firmware!
+						oflcorrection += (uint64_t)T2WRAPAROUND_V2;  //should never happen with new Firmware!
 					}
 					else
 					{
-						oflcorrection += (unsigned __int64)T2WRAPAROUND_V2 * T2Rec.bits.timetag;
+						oflcorrection += (uint64_t)T2WRAPAROUND_V2 * T2Rec.bits.timetag;
 						//GotOverflow( T2Rec.bits.timetag);
 					}
 				}
@@ -294,13 +299,13 @@ extern "C" {
 				//number of overflows is stored in nsync
 				if ((T3Rec.bits.nsync == 0) || (HHVersion == 1)) //if it is zero or old version it is an old style single overflow
 				{
-					oflcorrection += (unsigned __int64)T3WRAPAROUND;
+					oflcorrection += (uint64_t)T3WRAPAROUND;
 					//GotOverflow(1); 
 					//should never happen with new Firmware!
 				}
 				else
 				{
-					oflcorrection += (unsigned __int64)T3WRAPAROUND * T3Rec.bits.nsync;
+					oflcorrection += (uint64_t)T3WRAPAROUND * T3Rec.bits.nsync;
 					//GotOverflow( T3Rec.bits.nsync);
 				}
 				

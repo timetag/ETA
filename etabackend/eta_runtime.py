@@ -241,7 +241,7 @@ class ETA():
                 "ETA.SIMPLE_CUT: File {} is not found or incorrect, err code {}.".format(filename, ret1))
         BytesofRecords = parse_output[ETACReaderStructIDX.BytesofRecords] 
         TTF_header_offset = parse_output[ETACReaderStructIDX.fseekpoint]
-        TTF_filesize = parse_output[ETACReaderStructIDX.fendpoint]
+        TTF_filesize = os.path.getsize(filename)
         
         NumRecords = (TTF_filesize - TTF_header_offset) // BytesofRecords
         Chunck_size = (NumRecords // cuts) * BytesofRecords

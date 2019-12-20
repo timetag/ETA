@@ -12,13 +12,16 @@ Zuzeng Lin, KTH, Nov 2017
 #define VC_inline 
 #define MKS_inline
 #endif // _MSC_VER
+#ifdef __linux__
+/* Linux */
+ #include <wchar.h>
 
+#endif
 #include "stdlib.h"
 #include "stdio.h"
 #include "fcntl.h" 
 #include "string.h"
 #include "time.h"
-#include "io.h"
 typedef wchar_t WCHAR;
 long long order_gurantee = 0;
 #define PERROR(...) {order_gurantee=printf( "\n [ERROR]"  __VA_ARGS__ );}
@@ -33,8 +36,6 @@ extern "C" {
 	long long RecordType = 0;
 	long long BytesofRecords = 0;
 	long long TTF_header_offset;
-	long long TTF_filesize;
-
 }
 int MKS_inline bh_4bytes_header_parser(char Magic[4]) {
 	PINFO("Becker & Hickl SPC-134/144/154/830 timetag file has no header.");
@@ -418,15 +419,15 @@ extern "C" int MKS_inline PARSE_TimeTagFileHeader(char* TTF_filename, int Record
 		
 		fclose(fpin);
 		// get file size
-		int fh;
-		_sopen_s(&fh, TTF_filename, _O_RDONLY, _SH_DENYNO, 0);
-		TTF_filesize = _lseeki64(fh, 0L, SEEK_END);
-		_close(fh);
+		//int fh;
+		//_sopen_s(&fh, TTF_filename, _O_RDONLY, _SH_DENYNO, 0);
+		//TTF_filesize = _lseeki64(fh, 0L, SEEK_END);
+		//_close(fh);
 
-		PINFO("Filesize: %lld", TTF_filesize);
+		PINFO("NumRecords: %lld", NumRecords);
 		
-		if (isendlessfile)
-				NumRecords = ((TTF_filesize - TTF_header_offset) / BytesofRecords);
+		//if (isendlessfile)
+		//		NumRecords = ((TTF_filesize - TTF_header_offset) / BytesofRecords);
 		
 		return ret;
 }

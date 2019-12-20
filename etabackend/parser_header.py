@@ -4,8 +4,8 @@ TTRes_pspr_get = link_global("TTRes_pspr")
 SYNCRate_pspr_get = link_global("SYNCRate_pspr")
 DTRes_pspr_get = link_global("DTRes_pspr")
 TTF_header_offset_get = link_global("TTF_header_offset")
-TTF_filesize_get = link_global("TTF_filesize")
-NumRecords_get = link_global("NumRecords")
+#TTF_filesize_get = link_global("TTF_filesize")
+#NumRecords_get = link_global("NumRecords")
 RecordType_get =link_global("RecordType")
 PARSE_TimeTagFileHeader = link_function("PARSE_TimeTagFileHeader",2)
 @jit(nopython=True, nogil=True)
@@ -16,7 +16,7 @@ def parse_header(filename1, filetype):
     # can not return them as a list because the cast from int32 to unicode is not possible 
     return (ret1,[
             TTF_header_offset_get(),#0
-            TTF_filesize_get(),#1
+            0,#1
             TTRes_pspr_get(),#2
             DTRes_pspr_get(),#3
             SYNCRate_pspr_get(),#4

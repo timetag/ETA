@@ -10,7 +10,6 @@ Zuzeng Lin, KTH,2017-2018
 #endif // _MSC_VER
 #include <stdio.h>
 #include <stdlib.h>
-#include <conio.h>
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
@@ -23,7 +22,7 @@ typedef unsigned long  DWORD;
 
 extern "C" {
 
-	long long controlflow_guarantee = 0;
+	int64_t controlflow_guarantee = 0;
 
 
 	/////////////////////////////////////////////////////////////////////
@@ -111,7 +110,7 @@ extern "C" {
 		//PINFO("full  %d %d", (cbuf.head + 1) % cbuf.size, cbuf.tail);
 		return ((cbuf.head + 1) % cbuf.size) == cbuf.tail;
 	}
-	int MKS_inline VFILE_init (long long vslot,long long size,void* buffer,long long init) {
+	int MKS_inline VFILE_init (int64_t vslot,int64_t size,void* buffer,int64_t init) {
 		VFILES[vslot].buffer = (int64_t*)buffer;//malloc(VFILES[vslot].size * sizeof(int64_t));
 		if (VFILES[vslot].buffer == NULL ) {
 			PERROR("Memalloc failed for VFILES, aborting.\n");
@@ -142,10 +141,10 @@ extern "C" {
 	//////////////////////////////////////////////////////////////////////
 	//DANGER: globlal
 	unsigned char POOL_FILES;
-	long long *POOL_timetag = 0;
+	int64_t *POOL_timetag = 0;
 	unsigned char *POOL_fileid = 0;
 	//DANGER: globlal
-	int MKS_inline POOL_update(long long timeinfuture, unsigned char FILEid) {
+	int MKS_inline POOL_update(int64_t timeinfuture, unsigned char FILEid) {
 		unsigned char index = POOL_FILES + FILEid;
 		//save to leaf
 		POOL_timetag[index] = timeinfuture;
@@ -171,11 +170,11 @@ extern "C" {
 		return 0;
 	}
 
-	int MKS_inline POOL_init(long long POOL_FILES1, long long pool_tree_size, void* POOL_timetag1, void* POOL_fileid1, long long resume) {
+	int MKS_inline POOL_init(int64_t POOL_FILES1, int64_t pool_tree_size, void* POOL_timetag1, void* POOL_fileid1, int64_t resume) {
 		
 		POOL_FILES = POOL_FILES1;
 		
-		POOL_timetag = (long long *)POOL_timetag1; ;
+		POOL_timetag = (int64_t *)POOL_timetag1; ;
 		if (POOL_timetag == NULL ) {
 			PERROR("Memalloc failed, aborting.\n");
 			return -1;
@@ -212,7 +211,7 @@ extern "C" {
 	unsigned char VCHN_VFILES_offset;
 	unsigned char VCHN_RFILES;
 	//DANGER: globlal
-	int MKS_inline VCHN_init(long long rslots, long long rchns, long long vslots) {
+	int MKS_inline VCHN_init(int64_t rslots, int64_t rchns, int64_t vslots) {
 		
 		VCHN_RFILES = rslots;
 		VCHN_VFILES_offset = rchns; 
@@ -221,7 +220,7 @@ extern "C" {
 		
 		return 0;
 	}
-	int MKS_inline VCHN_put(long long timeinfuture, unsigned char virtual_channel) {
+	int MKS_inline VCHN_put(int64_t timeinfuture, unsigned char virtual_channel) {
 		// for emit() action
 		const auto VFILEid = virtual_channel - VCHN_VFILES_offset;
 		const auto FILEid = VFILEid + VCHN_RFILES;
@@ -257,7 +256,7 @@ extern "C" {
 		return 0;
 	}
 
-	long long MKS_inline VCHN_next(unsigned char* channel_out) {
+	int64_t MKS_inline VCHN_next(unsigned char* channel_out) {
 
 		//get current (min time) from pool
 		const auto AbsTime_ps = POOL_timetag[0];
@@ -274,7 +273,7 @@ extern "C" {
 					POOL_update(INT64_MAX, FILEid);// disable FILEid
 				}
 				else {
-					long long tempdata;
+					int64_t tempdata;
 					circular_buf_get(&(VFILES[VFILEid]), &tempdata, true);
 					POOL_update(tempdata, FILEid);
 				}

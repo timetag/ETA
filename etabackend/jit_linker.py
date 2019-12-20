@@ -3,15 +3,15 @@ import numba as nb
 from numba import jit
 import numpy as np
 from os import listdir
-import os.path
+from pathlib import Path
 import cffi
 import sys
 
 ffi = cffi.FFI()
 if getattr(sys, 'frozen', False):
-    ll_path = os.path.join(sys._MEIPASS, ".\\ll\\")
+    ll_path = Path(sys._MEIPASS).resolve() / "ll"
 else:
-    ll_path = os.path.join(os.path.dirname(os.path.realpath(__file__) ),"ll\\")
+    ll_path = Path(__file__).resolve().parent/ "ll"
     # ll code is binded to the path of the py file
 
 def compile_library(context, asm, libname='compiled_module'):
@@ -98,13 +98,13 @@ def link_libs(typingctx):
         # print("===== linking =====")
         
         for f in listdir(ll_path):
-            lib_path = os.path.join(ll_path, f)
-            if  os.path.isfile(lib_path):
+            lib_path = Path(ll_path)/ f
+            if lib_path.is_file():
                 # print(lib_path)
                 with open(lib_path, "r") as fio:
                     assembly = fio.read()
                     assembly = assembly.replace("""!llvm.linker.options = !{!0}""","")# hack: remove useless linker options for LLVM7 
-                    library = compile_library(context, assembly, lib_path)
+                    library = compile_library(context, assembly, str(lib_path.resolve()))
                 context.active_code_library.add_linking_library(library) # no more weird hack to get the library linked
 
         # print("===== done =====")
