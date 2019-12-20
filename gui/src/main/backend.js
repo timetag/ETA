@@ -12,7 +12,7 @@ function check_python() {
   if (ls.error) return false; else return true;
 }
 function python_not_found() {
-  let buttonIndex = dialog.showMessageBox({
+  let buttonIndex = dialog.showMessageBoxSync({
     type: 'info',
     title: 'Install Python',
     message: 'Python is not installed on this computer. Do you want to download and install now?\nNOTE: Please select the `add Python to PATH` option during installation.',
@@ -40,7 +40,7 @@ function python_not_found() {
 function install_backend(slient_mode) {
   let buttonIndex = 0
   if (!slient_mode) {
-    buttonIndex = dialog.showMessageBox({
+    buttonIndex = dialog.showMessageBoxSync({
       type: 'info',
       title: 'ETA Backend Setup',
       message: 'Do you want to install ETA Backend with its dependencies?',
