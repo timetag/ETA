@@ -86,5 +86,5 @@ test_script:
 
     gothub upload -u timetag -r ETA -t "%ETA_VER%" -f "ETA_Install-win64.zip"  -n "ETA_Install-win64.zip" --replace
     
-    twine upload %APPVEYOR_BUILD_FOLDER%\dist\*.whl -u %PYPI_USERNAME% -p %PYPI_PASSWORD% --skip-existing
+    twine upload %APPVEYOR_BUILD_FOLDER%\gui\*.whl -u %PYPI_USERNAME% -p %PYPI_PASSWORD% --skip-existing
     
