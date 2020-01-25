@@ -63,8 +63,8 @@ function TABLEBIND(eta_index_table) {
         for (let each in obj) {
             var thisrow = obj[each];
             //console.log(thisrow)
-            if ("id" in thisrow && thisrow["id"].indexOf("ri_template") >= 0)
-                var $td = clone("ri_template");
+            if ("id" in thisrow && thisrow["id"].indexOf("ri_template") >= 0) //preserve for backward-competibility
+                var $td = clone("vi_template");
             if ("id" in thisrow && thisrow["id"].indexOf("vi_template") >= 0)
                 var $td = clone("vi_template");
             if ("id" in thisrow && thisrow["id"].indexOf("dpp_template") >= 0)

@@ -312,7 +312,23 @@
   BIND_btn_create("coincidence");
   BIND_btn_create("table");
   BIND_btn_create("integer");
-  
+  //////dump here/////////
+  function ri_table(form) {
+    form.addEventListener('submit', function (event) {
+        if (form.checkValidity() === false) {
+            form.classList.add('was-validated');
+        } else {
+            form.classList.remove('was-validated');
+            codegen = `[${$('#ri2').val()},${$('#ri3').val()}]`;
+            $("#riModal").modal('hide');
+            create_item("ri_template", $('#ri1').val(), "main","", codegen);
+        }
+        event.preventDefault();
+        event.stopPropagation();
+    }, false);
+}
+ri_table(document.getElementById('ri_table'))
+
 /////////////////////////
      
 }());
