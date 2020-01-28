@@ -7,7 +7,7 @@ import os
 import logging
 import copy
 import jit_linker
-from parser_header import parse_header,ETACReaderStructIDX
+from parser_header import ETACReaderStructIDX
 from etalang import recipe_compiler
 import numpy as np
 from eta_clip import ETA_CUT
@@ -227,24 +227,6 @@ class ETA(ETA_CUT):
                 self.displaying = False
                 self.logger.error(str(e), exc_info=True)
 
-    def wait_for_data(self, caller_parms, timeout=1, raiseerr=False, verbose=False):
-        for each_caller_parms in caller_parms:
-            fileactualsize = os.path.getsize(each_caller_parms[-1])
-            waited_for = 0
-            while not self.validate_cut(each_caller_parms):
-                if verbose:
-                    print("Waiting for file {} to grow from {} to {} bytes.".format(each_caller_parms[-1],
-                                                                                fileactualsize,
-                                                                                each_caller_parms[1]))
-                time.sleep(0.1) # hard-coded checking period is probably not good.
-                waited_for += 0.1
-                if waited_for > timeout:
-                    if raiseerr:
-                        raise ValueError(
-                            "Timeout when waiting for the next cut.")
-                    return False
-        return True
-
     def run(self, cuts_params, ctxs=None, sum_results=True, iterate_ctxs=False, group="main",
             verbose=True):
         # support legacy API
@@ -367,3 +349,18 @@ class ETA(ETA_CUT):
             return result, vals
         else:
             return result
+"""
+	int MKS_inline read_next_minibatch() {
+		READERs[0].batch_actualread_length = fread(READERs[0].buffer, READERs[0].BytesofRecords, batchreadRecNum, READERs[0].fpttf)*READERs[0].BytesofRecords;
+		READERs[0].batch_nextreadpos_in_file += READERs[0].batch_actualread_length;
+		const long long batches_left = READERs[0].batch_nextreadpos_in_file - READERs[0].fseekpoint;
+		
+		if (batches_left % (200* batchreadRecNum*READERs[0].BytesofRecords) == 0) {
+			const long long total_batches = (READERs[0].fendpoint - READERs[0].fseekpoint);
+			const long long percentage = batches_left * 100  / total_batches;
+			PINFO("Reader %x for section [%lld %lld) %lld%% finished.", READERs, READERs[0].fseekpoint, READERs[0].fendpoint, percentage)
+		}
+		READERs[0].next_RecID_in_batch = 0; 
+		return READERs[0].batch_actualread_length;
+	}
+"""

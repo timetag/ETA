@@ -1,5 +1,6 @@
 from parser_header import parse_header,ETACReaderStructIDX
 import os
+import time
 class ETA_CUT():
     def __init__(self):
          pass
@@ -81,3 +82,21 @@ class ETA_CUT():
     def validate_cut(self, each_caller_parms):
         fileactualsize = os.path.getsize(each_caller_parms[-1])
         return (fileactualsize >= each_caller_parms[1])
+
+    def wait_for_data(self, caller_parms, timeout=1, raiseerr=False, verbose=False):
+        for each_caller_parms in caller_parms:
+            fileactualsize = os.path.getsize(each_caller_parms[-1])
+            waited_for = 0
+            while not self.validate_cut(each_caller_parms):
+                if verbose:
+                    print("Waiting for file {} to grow from {} to {} bytes.".format(each_caller_parms[-1],
+                                                                                fileactualsize,
+                                                                                each_caller_parms[1]))
+                time.sleep(0.1) # hard-coded checking period is probably not good.
+                waited_for += 0.1
+                if waited_for > timeout:
+                    if raiseerr:
+                        raise ValueError(
+                            "Timeout when waiting for the next cut.")
+                    return False
+        return True

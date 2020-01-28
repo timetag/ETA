@@ -8,7 +8,7 @@ Zuzeng Lin, KTH, 2017-2018
 #define MKS_inline __attribute__((always_inline))
 #define MarkerSHC_to_CHN(SHC) (__builtin_ctz(SHC))
 #else
-//
+
 unsigned int MarkerSHC_to_CHN(int n) {
 	unsigned int bits = 0, x = n;
 
@@ -51,24 +51,27 @@ extern "C" {
 	long long order_gurantee3 = 0;
 
 	typedef struct {
+		// CLIP info
 		long long fseekpoint;//0
 		long long fendpoint ;//1
+
 		long long TTRes_pspr ;//2
 		long long DTRes_pspr ;//3
 		long long SYNCRate_pspr ;//4
-
 		long long BytesofRecords ;//5
 		long long RecordType ;//6
-		long long GlobalTimeShift;//7
 
-			long long batch_nextreadpos_in_file ;//8
-			long long batch_actualread_length ; //9
-			long long next_RecID_in_batch ;//10
+		long long GlobalTimeShift;//7
+		long long UnusedConfig ;//8 unused
+
+		//UniBuf info
+			long long batch_actualread_length ; //9 buffer length
+			long long next_RecID_in_batch ;//10 reader head
 
 			long long overflowcorrection ;//11
 			long long resuming ;//12
 			char *buffer = 0;//13
-			FILE *fpttf;//14
+			long long buffer_type =0;//14 unused
 	}ttf_reader;
 
 	//DANGER: globlal
@@ -334,44 +337,28 @@ extern "C" {
 	/////////////////////////////////////////////////////////////////////////////////
 	//external
 	/////////////////////////////////////////////////////////////////////////////////
+	
 
-	int MKS_inline read_next_minibatch() {
-		READERs[0].batch_actualread_length = fread(READERs[0].buffer, READERs[0].BytesofRecords, batchreadRecNum, READERs[0].fpttf)*READERs[0].BytesofRecords;
-		READERs[0].batch_nextreadpos_in_file += READERs[0].batch_actualread_length;
-		const long long batches_left = READERs[0].batch_nextreadpos_in_file - READERs[0].fseekpoint;
-		
-		if (batches_left % (200* batchreadRecNum*READERs[0].BytesofRecords) == 0) {
-			const long long total_batches = (READERs[0].fendpoint - READERs[0].fseekpoint);
-			const long long percentage = batches_left * 100  / total_batches;
-			PINFO("Reader %x for section [%lld %lld) %lld%% finished.", READERs, READERs[0].fseekpoint, READERs[0].fendpoint, percentage)
-		}
-		READERs[0].next_RecID_in_batch = 0; 
-		return READERs[0].batch_actualread_length;
-	}
 	long long  MKS_inline pop_signal_from_file(unsigned char *out_Channel) {
 		
 		//PINFO("overflowcorrection %lld \n ", READERs[0].overflowcorrection)
 		while (true) {
 			long long AbsTime_ps = INT64_MAX;
 			unsigned char Channel = 255;
+
+			//boundry check
 			const auto next_relpos = READERs[0].next_RecID_in_batch*READERs[0].BytesofRecords;
-			const auto batch_head_abspos = READERs[0].batch_nextreadpos_in_file - READERs[0].batch_actualread_length;
-			const auto next_abspos = batch_head_abspos + next_relpos;
-			
+			const auto next_abspos = READERs[0].fseekpoint + next_relpos;
+			const auto batch_end_abspos =  READERs[0].fseekpoint+READERs[0].batch_actualread_length;
+
 			if (next_relpos >= READERs[0].batch_actualread_length)
 			{
-				//read next batch
-				if (read_next_minibatch() <= 0) {
-					PINFO("Reader %x for section [%lld %lld) paused, nextrec %lld, batchend %lld, file is not long enough.", READERs, READERs[0].fseekpoint, READERs[0].fendpoint, next_abspos, READERs[0].batch_nextreadpos_in_file);
-					break;
-				}
+				PINFO("Reader %x for section [%lld %lld) paused, nextrec %lld, batchend %lld, buffer is not long enough.", (unsigned int)READERs, READERs[0].fseekpoint, READERs[0].fendpoint, next_abspos,batch_end_abspos);
+				break;
 			}
-			
-				
-			//boundry check
 			if (next_abspos >= READERs[0].fendpoint)
 			{
-				PINFO("Reader %x for section [%lld %lld) paused, nextrec %lld, batchend %lld, boundry.", READERs, READERs[0].fseekpoint, READERs[0].fendpoint,next_abspos,READERs[0].batch_nextreadpos_in_file);
+				PINFO("Reader %x for section [%lld %lld) paused, nextrec %lld, batchend %lld, file boundry.", (unsigned int)READERs, READERs[0].fseekpoint, READERs[0].fendpoint,next_abspos,batch_end_abspos);
 				break;
 			}
 
@@ -504,17 +491,16 @@ extern "C" {
 		*out_Channel = 255;
 		return INT64_MAX;
 	}
-	int MKS_inline FileReader_init(char* filename, void* ptr) {
+	int MKS_inline FileReader_init(char* UniBuf, void* ptr) {
 		READERs = (ttf_reader*)ptr;
 
 
 		// reset nextreadpos to seekpoint
-
-		READERs[0].batch_nextreadpos_in_file = READERs[0].fseekpoint;
 		READERs[0].next_RecID_in_batch = 0;
-		READERs[0].batch_actualread_length = 0;
+		//READERs[0].batch_actualread_length = 0;
+		READERs[0].buffer = UniBuf;
 		//open file
-		if ((READERs[0].fpttf = fopen(filename, "rb")) == NULL)
+		/*if ((READERs[0].fpttf = fopen(filename, "rb")) == NULL)
 		{
 			PERROR("Time-tag file cannot be opened, aborting.\n");
 			return -1;
@@ -529,7 +515,9 @@ extern "C" {
 			PERROR("Reading buffer for Time-tag file is not assgined properly, aborting.\n");
 			return -1;
 		}
-		PINFO("\nReader %x is assigned to the section [%lld %lld)\n", READERs,READERs[0].fseekpoint, READERs[0].fendpoint);
+		*/
+
+		PINFO("\nReader %x is assigned to the section [%lld %lld)\n", (unsigned int)READERs,READERs[0].fseekpoint, READERs[0].fendpoint);
 
 		/*PINFO("TTRes_pspr %lld", READERs[0].TTRes_pspr);
 		PINFO("DTRes_pspr %lld", READERs[0].DTRes_pspr);
@@ -539,6 +527,7 @@ extern "C" {
 		return 0;
 	}
 	int MKS_inline FileReader_close( void* ptr) {
+		/*
 		READERs = (ttf_reader*)ptr;
 		if (fclose(READERs[0].fpttf) != NULL)
 		{
@@ -546,8 +535,9 @@ extern "C" {
 			return -1;
 		}
 		free(READERs[0].buffer);
+		
 		PINFO("Reader %x is closing.", READERs);
-	
+		*/
 		return 0;
 	}
 }

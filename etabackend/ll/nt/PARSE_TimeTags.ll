@@ -3,10 +3,10 @@ source_filename = "TimeTag/PARSE_TimeTags.cpp"
 target datalayout = "e-m:w-i64:64-f80:128-n8:16:32:64-S128"
 target triple = "x86_64-pc-windows-msvc19.24.28315"
 
-%struct.ttf_reader = type { i64, i64, i64, i64, i64, i64, i64, i64, i64, i64, i64, i64, i64, i8*, %struct._iobuf* }
-%struct._iobuf = type { i8* }
+%struct.ttf_reader = type { i64, i64, i64, i64, i64, i64, i64, i64, i64, i64, i64, i64, i64, i8*, i64 }
 %union.anon = type { i32 }
 %struct.anon = type { i32 }
+%struct._iobuf = type { i8* }
 %struct.__crt_locale_pointers = type { %struct.__crt_locale_data*, %struct.__crt_multibyte_data* }
 %struct.__crt_locale_data = type opaque
 %struct.__crt_multibyte_data = type opaque
@@ -34,27 +34,13 @@ $"??_C@_0BO@LDGIBODO@?6?5?$FLFATAL?$FN?5Illegal?5Chan?3?5?5?$CF1u?6?$AA@" = comd
 
 $"??_C@_0CI@NNAIKICM@?6?5?$FLFATAL?$FN?6Illegal?5virtual_channe@" = comdat any
 
-$"??_C@_0DE@OJFNDMHF@?6Reader?5?$CFx?5for?5section?5?$FL?$CFlld?5?$CFll@" = comdat any
+$"??_C@_0GD@PFHPAIMA@?6Reader?5?$CFx?5for?5section?5?$FL?$CFlld?5?$CFll@" = comdat any
 
-$"??_C@_0GB@GKAMEOCN@?6Reader?5?$CFx?5for?5section?5?$FL?$CFlld?5?$CFll@" = comdat any
-
-$"??_C@_0FB@HLCILKJ@?6Reader?5?$CFx?5for?5section?5?$FL?$CFlld?5?$CFll@" = comdat any
+$"??_C@_0FG@KKOHJNIC@?6Reader?5?$CFx?5for?5section?5?$FL?$CFlld?5?$CFll@" = comdat any
 
 $"??_C@_0CM@DODOIIB@?6?5?$FLERROR?$FNERROR?3?5Unsupported?5time@" = comdat any
 
-$"??_C@_02JDPG@rb?$AA@" = comdat any
-
-$"??_C@_0DE@PLFGPKJO@?6?5?$FLERROR?$FNTime?9tag?5file?5cannot?5be@" = comdat any
-
-$"??_C@_0CP@EMJMNIIB@?6?5?$FLERROR?$FNTime?9tag?5file?5cannot?5se@" = comdat any
-
-$"??_C@_0EP@PGBLNION@?6?5?$FLERROR?$FNReading?5buffer?5for?5Time@" = comdat any
-
 $"??_C@_0DE@KHGIDNIO@?6?6Reader?5?$CFx?5is?5assigned?5to?5the?5s@" = comdat any
-
-$"??_C@_0DE@PEIEGMHF@?6?5?$FLERROR?$FNTime?9tag?5file?5cannot?5be@" = comdat any
-
-$"??_C@_0BH@PIFINJNO@?6Reader?5?$CFx?5is?5closing?4?$AA@" = comdat any
 
 $"?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA" = comdat any
 
@@ -62,17 +48,10 @@ $"?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA" = comdat any
 @READERs = internal global %struct.ttf_reader* null, align 8
 @"??_C@_0BO@LDGIBODO@?6?5?$FLFATAL?$FN?5Illegal?5Chan?3?5?5?$CF1u?6?$AA@" = linkonce_odr dso_local unnamed_addr constant [30 x i8] c"\0A [FATAL] Illegal Chan:  %1u\0A\00", comdat, align 1
 @"??_C@_0CI@NNAIKICM@?6?5?$FLFATAL?$FN?6Illegal?5virtual_channe@" = linkonce_odr dso_local unnamed_addr constant [40 x i8] c"\0A [FATAL]\0AIllegal virtual_channel:  %1u\00", comdat, align 1
-@"??_C@_0DE@OJFNDMHF@?6Reader?5?$CFx?5for?5section?5?$FL?$CFlld?5?$CFll@" = linkonce_odr dso_local unnamed_addr constant [52 x i8] c"\0AReader %x for section [%lld %lld) %lld%% finished.\00", comdat, align 1
-@"??_C@_0GB@GKAMEOCN@?6Reader?5?$CFx?5for?5section?5?$FL?$CFlld?5?$CFll@" = linkonce_odr dso_local unnamed_addr constant [97 x i8] c"\0AReader %x for section [%lld %lld) paused, nextrec %lld, batchend %lld, file is not long enough.\00", comdat, align 1
-@"??_C@_0FB@HLCILKJ@?6Reader?5?$CFx?5for?5section?5?$FL?$CFlld?5?$CFll@" = linkonce_odr dso_local unnamed_addr constant [81 x i8] c"\0AReader %x for section [%lld %lld) paused, nextrec %lld, batchend %lld, boundry.\00", comdat, align 1
+@"??_C@_0GD@PFHPAIMA@?6Reader?5?$CFx?5for?5section?5?$FL?$CFlld?5?$CFll@" = linkonce_odr dso_local unnamed_addr constant [99 x i8] c"\0AReader %x for section [%lld %lld) paused, nextrec %lld, batchend %lld, buffer is not long enough.\00", comdat, align 1
+@"??_C@_0FG@KKOHJNIC@?6Reader?5?$CFx?5for?5section?5?$FL?$CFlld?5?$CFll@" = linkonce_odr dso_local unnamed_addr constant [86 x i8] c"\0AReader %x for section [%lld %lld) paused, nextrec %lld, batchend %lld, file boundry.\00", comdat, align 1
 @"??_C@_0CM@DODOIIB@?6?5?$FLERROR?$FNERROR?3?5Unsupported?5time@" = linkonce_odr dso_local unnamed_addr constant [44 x i8] c"\0A [ERROR]ERROR: Unsupported timetag format.\00", comdat, align 1
-@"??_C@_02JDPG@rb?$AA@" = linkonce_odr dso_local unnamed_addr constant [3 x i8] c"rb\00", comdat, align 1
-@"??_C@_0DE@PLFGPKJO@?6?5?$FLERROR?$FNTime?9tag?5file?5cannot?5be@" = linkonce_odr dso_local unnamed_addr constant [52 x i8] c"\0A [ERROR]Time-tag file cannot be opened, aborting.\0A\00", comdat, align 1
-@"??_C@_0CP@EMJMNIIB@?6?5?$FLERROR?$FNTime?9tag?5file?5cannot?5se@" = linkonce_odr dso_local unnamed_addr constant [47 x i8] c"\0A [ERROR]Time-tag file cannot seek, aborting.\0A\00", comdat, align 1
-@"??_C@_0EP@PGBLNION@?6?5?$FLERROR?$FNReading?5buffer?5for?5Time@" = linkonce_odr dso_local unnamed_addr constant [79 x i8] c"\0A [ERROR]Reading buffer for Time-tag file is not assgined properly, aborting.\0A\00", comdat, align 1
 @"??_C@_0DE@KHGIDNIO@?6?6Reader?5?$CFx?5is?5assigned?5to?5the?5s@" = linkonce_odr dso_local unnamed_addr constant [52 x i8] c"\0A\0AReader %x is assigned to the section [%lld %lld)\0A\00", comdat, align 1
-@"??_C@_0DE@PEIEGMHF@?6?5?$FLERROR?$FNTime?9tag?5file?5cannot?5be@" = linkonce_odr dso_local unnamed_addr constant [52 x i8] c"\0A [ERROR]Time-tag file cannot be closed, aborting.\0A\00", comdat, align 1
-@"??_C@_0BH@PIFINJNO@?6Reader?5?$CFx?5is?5closing?4?$AA@" = linkonce_odr dso_local unnamed_addr constant [23 x i8] c"\0AReader %x is closing.\00", comdat, align 1
 @"?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA" = linkonce_odr dso_local global i64 0, comdat, align 8
 
 ; Function Attrs: alwaysinline uwtable
@@ -747,126 +726,23 @@ define dso_local void @ProcessHHT3(i32, i32, i64* dereferenceable(8), i8* derefe
 }
 
 ; Function Attrs: alwaysinline uwtable
-define dso_local i32 @read_next_minibatch() #0 {
-  %1 = alloca i64, align 8
-  %2 = alloca i64, align 8
-  %3 = alloca i64, align 8
-  %4 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %5 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %4, i64 0
-  %6 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %5, i32 0, i32 14
-  %7 = load %struct._iobuf*, %struct._iobuf** %6, align 8
-  %8 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %9 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %8, i64 0
-  %10 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %9, i32 0, i32 5
-  %11 = load i64, i64* %10, align 8
-  %12 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %13 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %12, i64 0
-  %14 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %13, i32 0, i32 13
-  %15 = load i8*, i8** %14, align 8
-  %16 = call i64 @fread(i8* %15, i64 %11, i64 50000, %struct._iobuf* %7)
-  %17 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %18 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %17, i64 0
-  %19 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %18, i32 0, i32 5
-  %20 = load i64, i64* %19, align 8
-  %21 = mul i64 %16, %20
-  %22 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %23 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %22, i64 0
-  %24 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %23, i32 0, i32 9
-  store i64 %21, i64* %24, align 8
-  %25 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %26 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %25, i64 0
-  %27 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %26, i32 0, i32 9
-  %28 = load i64, i64* %27, align 8
-  %29 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %30 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %29, i64 0
-  %31 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %30, i32 0, i32 8
-  %32 = load i64, i64* %31, align 8
-  %33 = add nsw i64 %32, %28
-  store i64 %33, i64* %31, align 8
-  %34 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %35 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %34, i64 0
-  %36 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %35, i32 0, i32 8
-  %37 = load i64, i64* %36, align 8
-  %38 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %39 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %38, i64 0
-  %40 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %39, i32 0, i32 0
-  %41 = load i64, i64* %40, align 8
-  %42 = sub nsw i64 %37, %41
-  store i64 %42, i64* %1, align 8
-  %43 = load i64, i64* %1, align 8
-  %44 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %45 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %44, i64 0
-  %46 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %45, i32 0, i32 5
-  %47 = load i64, i64* %46, align 8
-  %48 = mul nsw i64 10000000, %47
-  %49 = srem i64 %43, %48
-  %50 = icmp eq i64 %49, 0
-  br i1 %50, label %51, label %77
-
-; <label>:51:                                     ; preds = %0
-  %52 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %53 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %52, i64 0
-  %54 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %53, i32 0, i32 1
-  %55 = load i64, i64* %54, align 8
-  %56 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %57 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %56, i64 0
-  %58 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %57, i32 0, i32 0
-  %59 = load i64, i64* %58, align 8
-  %60 = sub nsw i64 %55, %59
-  store i64 %60, i64* %2, align 8
-  %61 = load i64, i64* %1, align 8
-  %62 = mul nsw i64 %61, 100
-  %63 = load i64, i64* %2, align 8
-  %64 = sdiv i64 %62, %63
-  store i64 %64, i64* %3, align 8
-  %65 = load i64, i64* %3, align 8
-  %66 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %67 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %66, i64 0
-  %68 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %67, i32 0, i32 1
-  %69 = load i64, i64* %68, align 8
-  %70 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %71 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %70, i64 0
-  %72 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %71, i32 0, i32 0
-  %73 = load i64, i64* %72, align 8
-  %74 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %75 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([52 x i8], [52 x i8]* @"??_C@_0DE@OJFNDMHF@?6Reader?5?$CFx?5for?5section?5?$FL?$CFlld?5?$CFll@", i32 0, i32 0), %struct.ttf_reader* %74, i64 %73, i64 %69, i64 %65)
-  %76 = sext i32 %75 to i64
-  store i64 %76, i64* @order_gurantee3, align 8
-  br label %77
-
-; <label>:77:                                     ; preds = %51, %0
-  %78 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %79 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %78, i64 0
-  %80 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %79, i32 0, i32 10
-  store i64 0, i64* %80, align 8
-  %81 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %82 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %81, i64 0
-  %83 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %82, i32 0, i32 9
-  %84 = load i64, i64* %83, align 8
-  %85 = trunc i64 %84 to i32
-  ret i32 %85
-}
-
-declare dso_local i64 @fread(i8*, i64, i64, %struct._iobuf*) #4
-
-; Function Attrs: alwaysinline uwtable
 define dso_local i64 @pop_signal_from_file(i8*) #0 {
   %2 = alloca i64*, align 8
   %3 = alloca i8*, align 8
   %4 = alloca i64*, align 8
   %5 = alloca i32, align 4
   %6 = alloca i32, align 4
-  %7 = alloca i32, align 4
-  %8 = alloca %union.anon.5, align 4
-  %9 = alloca i64*, align 8
-  %10 = alloca i8*, align 8
+  %7 = alloca i64, align 8
+  %8 = alloca i32, align 4
+  %9 = alloca i32, align 4
+  %10 = alloca %union.anon.0, align 4
   %11 = alloca i64*, align 8
-  %12 = alloca i32, align 4
-  %13 = alloca i32, align 4
-  %14 = alloca i64, align 8
+  %12 = alloca i8*, align 8
+  %13 = alloca i64*, align 8
+  %14 = alloca i32, align 4
   %15 = alloca i32, align 4
   %16 = alloca i32, align 4
-  %17 = alloca %union.anon.0, align 4
+  %17 = alloca %union.anon.5, align 4
   %18 = alloca i64*, align 8
   %19 = alloca i8*, align 8
   %20 = alloca i64*, align 8
@@ -899,1595 +775,1393 @@ define dso_local i64 @pop_signal_from_file(i8*) #0 {
   %47 = alloca %union.anon, align 4
   %48 = alloca i32, align 4
   %49 = alloca i64, align 8
-  %50 = alloca i64, align 8
+  %50 = alloca i8*, align 8
   %51 = alloca i64, align 8
-  %52 = alloca i64, align 8
-  %53 = alloca i8*, align 8
+  %52 = alloca i8, align 1
+  %53 = alloca i64, align 8
   %54 = alloca i64, align 8
-  %55 = alloca i8, align 1
-  %56 = alloca i64, align 8
-  %57 = alloca i64, align 8
-  %58 = alloca i64, align 8
-  %59 = alloca i32, align 4
-  %60 = alloca %struct.TTTRRecord, align 8
-  %61 = alloca %struct.TTTRRecord*, align 8
-  %62 = alloca %struct.SITTTRStruct*, align 8
-  %63 = alloca %union.COMPTTTRRecord*, align 8
-  %64 = alloca %union.bh4bytesRec*, align 8
-  store i8* %0, i8** %53, align 8
-  br label %65
+  %55 = alloca i64, align 8
+  %56 = alloca i32, align 4
+  %57 = alloca %struct.TTTRRecord, align 8
+  %58 = alloca %struct.TTTRRecord*, align 8
+  %59 = alloca %struct.SITTTRStruct*, align 8
+  %60 = alloca %union.COMPTTTRRecord*, align 8
+  %61 = alloca %union.bh4bytesRec*, align 8
+  store i8* %0, i8** %50, align 8
+  br label %62
 
-; <label>:65:                                     ; preds = %1, %1101
-  store i64 9223372036854775807, i64* %54, align 8
-  store i8 -1, i8* %55, align 1
-  %66 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %67 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %66, i64 0
-  %68 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %67, i32 0, i32 10
-  %69 = load i64, i64* %68, align 8
-  %70 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %71 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %70, i64 0
-  %72 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %71, i32 0, i32 5
-  %73 = load i64, i64* %72, align 8
-  %74 = mul nsw i64 %69, %73
-  store i64 %74, i64* %56, align 8
-  %75 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %76 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %75, i64 0
-  %77 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %76, i32 0, i32 8
-  %78 = load i64, i64* %77, align 8
-  %79 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %80 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %79, i64 0
-  %81 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %80, i32 0, i32 9
-  %82 = load i64, i64* %81, align 8
-  %83 = sub nsw i64 %78, %82
-  store i64 %83, i64* %57, align 8
-  %84 = load i64, i64* %57, align 8
-  %85 = load i64, i64* %56, align 8
-  %86 = add nsw i64 %84, %85
-  store i64 %86, i64* %58, align 8
-  %87 = load i64, i64* %56, align 8
+; <label>:62:                                     ; preds = %1, %1028
+  store i64 9223372036854775807, i64* %51, align 8
+  store i8 -1, i8* %52, align 1
+  %63 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %64 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %63, i64 0
+  %65 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %64, i32 0, i32 10
+  %66 = load i64, i64* %65, align 8
+  %67 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %68 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %67, i64 0
+  %69 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %68, i32 0, i32 5
+  %70 = load i64, i64* %69, align 8
+  %71 = mul nsw i64 %66, %70
+  store i64 %71, i64* %53, align 8
+  %72 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %73 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %72, i64 0
+  %74 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %73, i32 0, i32 0
+  %75 = load i64, i64* %74, align 8
+  %76 = load i64, i64* %53, align 8
+  %77 = add nsw i64 %75, %76
+  store i64 %77, i64* %54, align 8
+  %78 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %79 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %78, i64 0
+  %80 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %79, i32 0, i32 0
+  %81 = load i64, i64* %80, align 8
+  %82 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %83 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %82, i64 0
+  %84 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %83, i32 0, i32 9
+  %85 = load i64, i64* %84, align 8
+  %86 = add nsw i64 %81, %85
+  store i64 %86, i64* %55, align 8
+  %87 = load i64, i64* %53, align 8
   %88 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
   %89 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %88, i64 0
   %90 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %89, i32 0, i32 9
   %91 = load i64, i64* %90, align 8
   %92 = icmp sge i64 %87, %91
-  br i1 %92, label %93, label %179
+  br i1 %92, label %93, label %108
 
-; <label>:93:                                     ; preds = %65
-  %94 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %95 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %94, i32 0, i32 14
-  %96 = load %struct._iobuf*, %struct._iobuf** %95, align 8
-  %97 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %98 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %97, i32 0, i32 5
+; <label>:93:                                     ; preds = %62
+  %94 = load i64, i64* %55, align 8
+  %95 = load i64, i64* %54, align 8
+  %96 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %97 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %96, i64 0
+  %98 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %97, i32 0, i32 1
   %99 = load i64, i64* %98, align 8
   %100 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %101 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %100, i32 0, i32 13
-  %102 = load i8*, i8** %101, align 8
-  %103 = call i64 @fread(i8* %102, i64 %99, i64 50000, %struct._iobuf* %96)
+  %101 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %100, i64 0
+  %102 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %101, i32 0, i32 0
+  %103 = load i64, i64* %102, align 8
   %104 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %105 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %104, i32 0, i32 5
-  %106 = load i64, i64* %105, align 8
-  %107 = mul i64 %103, %106
-  %108 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %109 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %108, i32 0, i32 9
-  store i64 %107, i64* %109, align 8
+  %105 = ptrtoint %struct.ttf_reader* %104 to i32
+  %106 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([99 x i8], [99 x i8]* @"??_C@_0GD@PFHPAIMA@?6Reader?5?$CFx?5for?5section?5?$FL?$CFlld?5?$CFll@", i32 0, i32 0), i32 %105, i64 %103, i64 %99, i64 %95, i64 %94)
+  %107 = sext i32 %106 to i64
+  store i64 %107, i64* @order_gurantee3, align 8
+  br label %1038
+
+; <label>:108:                                    ; preds = %62
+  %109 = load i64, i64* %54, align 8
   %110 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %111 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %110, i32 0, i32 9
-  %112 = load i64, i64* %111, align 8
-  %113 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %114 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %113, i32 0, i32 8
-  %115 = load i64, i64* %114, align 8
-  %116 = add nsw i64 %115, %112
-  store i64 %116, i64* %114, align 8
-  %117 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %118 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %117, i32 0, i32 8
-  %119 = load i64, i64* %118, align 8
-  %120 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %121 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %120, i32 0, i32 0
-  %122 = load i64, i64* %121, align 8
-  %123 = sub nsw i64 %119, %122
-  store i64 %123, i64* %49, align 8
-  %124 = load i64, i64* %49, align 8
-  %125 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %126 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %125, i32 0, i32 5
-  %127 = load i64, i64* %126, align 8
-  %128 = mul nsw i64 10000000, %127
-  %129 = srem i64 %124, %128
-  %130 = icmp eq i64 %129, 0
-  br i1 %130, label %131, label %153
+  %111 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %110, i64 0
+  %112 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %111, i32 0, i32 1
+  %113 = load i64, i64* %112, align 8
+  %114 = icmp sge i64 %109, %113
+  br i1 %114, label %115, label %130
 
-; <label>:131:                                    ; preds = %93
-  %132 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %133 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %132, i32 0, i32 1
-  %134 = load i64, i64* %133, align 8
-  %135 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %136 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %135, i32 0, i32 0
-  %137 = load i64, i64* %136, align 8
-  %138 = sub nsw i64 %134, %137
-  store i64 %138, i64* %50, align 8
-  %139 = load i64, i64* %49, align 8
-  %140 = mul nsw i64 %139, 100
-  %141 = load i64, i64* %50, align 8
-  %142 = sdiv i64 %140, %141
-  store i64 %142, i64* %51, align 8
-  %143 = load i64, i64* %51, align 8
-  %144 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %145 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %144, i32 0, i32 1
-  %146 = load i64, i64* %145, align 8
-  %147 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %148 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %147, i32 0, i32 0
-  %149 = load i64, i64* %148, align 8
-  %150 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %151 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([52 x i8], [52 x i8]* @"??_C@_0DE@OJFNDMHF@?6Reader?5?$CFx?5for?5section?5?$FL?$CFlld?5?$CFll@", i32 0, i32 0), %struct.ttf_reader* %150, i64 %149, i64 %146, i64 %143)
-  %152 = sext i32 %151 to i64
-  store i64 %152, i64* @order_gurantee3, align 8
-  br label %153
+; <label>:115:                                    ; preds = %108
+  %116 = load i64, i64* %55, align 8
+  %117 = load i64, i64* %54, align 8
+  %118 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %119 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %118, i64 0
+  %120 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %119, i32 0, i32 1
+  %121 = load i64, i64* %120, align 8
+  %122 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %123 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %122, i64 0
+  %124 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %123, i32 0, i32 0
+  %125 = load i64, i64* %124, align 8
+  %126 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %127 = ptrtoint %struct.ttf_reader* %126 to i32
+  %128 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([86 x i8], [86 x i8]* @"??_C@_0FG@KKOHJNIC@?6Reader?5?$CFx?5for?5section?5?$FL?$CFlld?5?$CFll@", i32 0, i32 0), i32 %127, i64 %125, i64 %121, i64 %117, i64 %116)
+  %129 = sext i32 %128 to i64
+  store i64 %129, i64* @order_gurantee3, align 8
+  br label %1038
 
-; <label>:153:                                    ; preds = %93, %131
-  %154 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %155 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %154, i32 0, i32 10
-  store i64 0, i64* %155, align 8
-  %156 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %157 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %156, i32 0, i32 9
-  %158 = load i64, i64* %157, align 8
-  %159 = trunc i64 %158 to i32
-  %160 = icmp sle i32 %159, 0
-  br i1 %160, label %161, label %178
-
-; <label>:161:                                    ; preds = %153
-  %162 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %163 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %162, i64 0
-  %164 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %163, i32 0, i32 8
-  %165 = load i64, i64* %164, align 8
-  %166 = load i64, i64* %58, align 8
-  %167 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %168 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %167, i64 0
-  %169 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %168, i32 0, i32 1
-  %170 = load i64, i64* %169, align 8
-  %171 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %172 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %171, i64 0
-  %173 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %172, i32 0, i32 0
-  %174 = load i64, i64* %173, align 8
-  %175 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %176 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([97 x i8], [97 x i8]* @"??_C@_0GB@GKAMEOCN@?6Reader?5?$CFx?5for?5section?5?$FL?$CFlld?5?$CFll@", i32 0, i32 0), %struct.ttf_reader* %175, i64 %174, i64 %170, i64 %166, i64 %165)
-  %177 = sext i32 %176 to i64
-  store i64 %177, i64* @order_gurantee3, align 8
-  br label %1111
-
-; <label>:178:                                    ; preds = %153
-  br label %179
-
-; <label>:179:                                    ; preds = %178, %65
-  %180 = load i64, i64* %58, align 8
-  %181 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %182 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %181, i64 0
-  %183 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %182, i32 0, i32 1
-  %184 = load i64, i64* %183, align 8
-  %185 = icmp sge i64 %180, %184
-  br i1 %185, label %186, label %203
-
-; <label>:186:                                    ; preds = %179
-  %187 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %188 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %187, i64 0
-  %189 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %188, i32 0, i32 8
-  %190 = load i64, i64* %189, align 8
-  %191 = load i64, i64* %58, align 8
-  %192 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %193 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %192, i64 0
-  %194 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %193, i32 0, i32 1
-  %195 = load i64, i64* %194, align 8
-  %196 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %197 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %196, i64 0
-  %198 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %197, i32 0, i32 0
-  %199 = load i64, i64* %198, align 8
-  %200 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %201 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([81 x i8], [81 x i8]* @"??_C@_0FB@HLCILKJ@?6Reader?5?$CFx?5for?5section?5?$FL?$CFlld?5?$CFll@", i32 0, i32 0), %struct.ttf_reader* %200, i64 %199, i64 %195, i64 %191, i64 %190)
-  %202 = sext i32 %201 to i64
-  store i64 %202, i64* @order_gurantee3, align 8
-  br label %1111
-
-; <label>:203:                                    ; preds = %179
-  %204 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %205 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %204, i64 0
-  %206 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %205, i32 0, i32 13
-  %207 = load i8*, i8** %206, align 8
-  %208 = bitcast i8* %207 to i32*
-  %209 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %210 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %209, i64 0
-  %211 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %210, i32 0, i32 10
-  %212 = load i64, i64* %211, align 8
-  %213 = getelementptr inbounds i32, i32* %208, i64 %212
-  %214 = load i32, i32* %213, align 4
-  store i32 %214, i32* %59, align 4
-  %215 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %216 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %215, i64 0
-  %217 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %216, i32 0, i32 6
-  %218 = load i64, i64* %217, align 8
-  switch i64 %218, label %1090 [
-    i64 66051, label %219
-    i64 66307, label %302
-    i64 66052, label %408
-    i64 66308, label %542
-    i64 16843268, label %659
-    i64 66053, label %659
-    i64 66054, label %659
-    i64 16843524, label %793
-    i64 66309, label %793
-    i64 66310, label %793
-    i64 0, label %910
-    i64 1, label %938
-    i64 2, label %966
-    i64 3, label %998
+; <label>:130:                                    ; preds = %108
+  %131 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %132 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %131, i64 0
+  %133 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %132, i32 0, i32 13
+  %134 = load i8*, i8** %133, align 8
+  %135 = bitcast i8* %134 to i32*
+  %136 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %137 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %136, i64 0
+  %138 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %137, i32 0, i32 10
+  %139 = load i64, i64* %138, align 8
+  %140 = getelementptr inbounds i32, i32* %135, i64 %139
+  %141 = load i32, i32* %140, align 4
+  store i32 %141, i32* %56, align 4
+  %142 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %143 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %142, i64 0
+  %144 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %143, i32 0, i32 6
+  %145 = load i64, i64* %144, align 8
+  switch i64 %145, label %1017 [
+    i64 66051, label %146
+    i64 66307, label %229
+    i64 66052, label %335
+    i64 66308, label %469
+    i64 16843268, label %586
+    i64 66053, label %586
+    i64 66054, label %586
+    i64 16843524, label %720
+    i64 66309, label %720
+    i64 66310, label %720
+    i64 0, label %837
+    i64 1, label %865
+    i64 2, label %893
+    i64 3, label %925
   ]
 
-; <label>:219:                                    ; preds = %203
-  %220 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %221 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %220, i64 0
-  %222 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %221, i32 0, i32 11
-  %223 = load i32, i32* %59, align 4
-  store i64* %222, i64** %41, align 8
-  store i8* %55, i8** %42, align 8
-  store i64* %54, i64** %43, align 8
-  store i32 %223, i32* %44, align 4
+; <label>:146:                                    ; preds = %130
+  %147 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %148 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %147, i64 0
+  %149 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %148, i32 0, i32 11
+  %150 = load i32, i32* %56, align 4
+  store i64* %149, i64** %41, align 8
+  store i8* %52, i8** %42, align 8
+  store i64* %51, i64** %43, align 8
+  store i32 %150, i32* %44, align 4
   store i32 210698240, i32* %45, align 4
-  %224 = load i32, i32* %44, align 4
-  %225 = bitcast %union.anon* %47 to i32*
-  store i32 %224, i32* %225, align 4
-  %226 = bitcast %union.anon* %47 to %struct.anon*
-  %227 = bitcast %struct.anon* %226 to i32*
-  %228 = load i32, i32* %227, align 4
-  %229 = lshr i32 %228, 28
-  %230 = icmp eq i32 %229, 15
-  br i1 %230, label %231, label %264
+  %151 = load i32, i32* %44, align 4
+  %152 = bitcast %union.anon* %47 to i32*
+  store i32 %151, i32* %152, align 4
+  %153 = bitcast %union.anon* %47 to %struct.anon*
+  %154 = bitcast %struct.anon* %153 to i32*
+  %155 = load i32, i32* %154, align 4
+  %156 = lshr i32 %155, 28
+  %157 = icmp eq i32 %156, 15
+  br i1 %157, label %158, label %191
 
-; <label>:231:                                    ; preds = %219
-  %232 = bitcast %union.anon* %47 to %struct.anon*
-  %233 = bitcast %struct.anon* %232 to i32*
-  %234 = load i32, i32* %233, align 4
-  %235 = and i32 %234, 268435455
-  %236 = and i32 %235, 15
-  store i32 %236, i32* %48, align 4
-  %237 = load i32, i32* %48, align 4
-  %238 = icmp eq i32 %237, 0
-  br i1 %238, label %239, label %243
+; <label>:158:                                    ; preds = %146
+  %159 = bitcast %union.anon* %47 to %struct.anon*
+  %160 = bitcast %struct.anon* %159 to i32*
+  %161 = load i32, i32* %160, align 4
+  %162 = and i32 %161, 268435455
+  %163 = and i32 %162, 15
+  store i32 %163, i32* %48, align 4
+  %164 = load i32, i32* %48, align 4
+  %165 = icmp eq i32 %164, 0
+  br i1 %165, label %166, label %170
 
-; <label>:239:                                    ; preds = %231
-  %240 = load i64*, i64** %41, align 8
-  %241 = load i64, i64* %240, align 8
-  %242 = add nsw i64 %241, 210698240
-  store i64 %242, i64* %240, align 8
-  br label %263
+; <label>:166:                                    ; preds = %158
+  %167 = load i64*, i64** %41, align 8
+  %168 = load i64, i64* %167, align 8
+  %169 = add nsw i64 %168, 210698240
+  store i64 %169, i64* %167, align 8
+  br label %190
 
-; <label>:243:                                    ; preds = %231
-  %244 = load i64*, i64** %41, align 8
-  %245 = load i64, i64* %244, align 8
-  %246 = bitcast %union.anon* %47 to %struct.anon*
-  %247 = bitcast %struct.anon* %246 to i32*
-  %248 = load i32, i32* %247, align 4
-  %249 = and i32 %248, 268435455
-  %250 = zext i32 %249 to i64
-  %251 = add nsw i64 %245, %250
-  store i64 %251, i64* %46, align 8
-  %252 = load i64, i64* %46, align 8
-  %253 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %254 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %253, i32 0, i32 2
-  %255 = load i64, i64* %254, align 8
-  %256 = mul nsw i64 %252, %255
-  %257 = load i64*, i64** %43, align 8
-  store i64 %256, i64* %257, align 8
-  %258 = load i32, i32* %48, align 4
-  %259 = call i32 @llvm.cttz.i32(i32 %258, i1 true)
-  %260 = add nsw i32 16, %259
-  %261 = trunc i32 %260 to i8
-  %262 = load i8*, i8** %42, align 8
-  store i8 %261, i8* %262, align 1
-  br label %263
+; <label>:170:                                    ; preds = %158
+  %171 = load i64*, i64** %41, align 8
+  %172 = load i64, i64* %171, align 8
+  %173 = bitcast %union.anon* %47 to %struct.anon*
+  %174 = bitcast %struct.anon* %173 to i32*
+  %175 = load i32, i32* %174, align 4
+  %176 = and i32 %175, 268435455
+  %177 = zext i32 %176 to i64
+  %178 = add nsw i64 %172, %177
+  store i64 %178, i64* %46, align 8
+  %179 = load i64, i64* %46, align 8
+  %180 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %181 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %180, i32 0, i32 2
+  %182 = load i64, i64* %181, align 8
+  %183 = mul nsw i64 %179, %182
+  %184 = load i64*, i64** %43, align 8
+  store i64 %183, i64* %184, align 8
+  %185 = load i32, i32* %48, align 4
+  %186 = call i32 @llvm.cttz.i32(i32 %185, i1 true)
+  %187 = add nsw i32 16, %186
+  %188 = trunc i32 %187 to i8
+  %189 = load i8*, i8** %42, align 8
+  store i8 %188, i8* %189, align 1
+  br label %190
 
-; <label>:263:                                    ; preds = %243, %239
-  br label %301
+; <label>:190:                                    ; preds = %170, %166
+  br label %228
 
-; <label>:264:                                    ; preds = %219
-  %265 = bitcast %union.anon* %47 to %struct.anon*
-  %266 = bitcast %struct.anon* %265 to i32*
-  %267 = load i32, i32* %266, align 4
-  %268 = lshr i32 %267, 28
-  %269 = icmp sgt i32 %268, 4
-  br i1 %269, label %270, label %280
+; <label>:191:                                    ; preds = %146
+  %192 = bitcast %union.anon* %47 to %struct.anon*
+  %193 = bitcast %struct.anon* %192 to i32*
+  %194 = load i32, i32* %193, align 4
+  %195 = lshr i32 %194, 28
+  %196 = icmp sgt i32 %195, 4
+  br i1 %196, label %197, label %207
 
-; <label>:270:                                    ; preds = %264
-  %271 = bitcast %union.anon* %47 to %struct.anon*
-  %272 = bitcast %struct.anon* %271 to i32*
-  %273 = load i32, i32* %272, align 4
-  %274 = lshr i32 %273, 28
-  %275 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([30 x i8], [30 x i8]* @"??_C@_0BO@LDGIBODO@?6?5?$FLFATAL?$FN?5Illegal?5Chan?3?5?5?$CF1u?6?$AA@", i32 0, i32 0), i32 %274)
-  %276 = sext i32 %275 to i64
-  store i64 %276, i64* @order_gurantee3, align 8
-  br label %277
+; <label>:197:                                    ; preds = %191
+  %198 = bitcast %union.anon* %47 to %struct.anon*
+  %199 = bitcast %struct.anon* %198 to i32*
+  %200 = load i32, i32* %199, align 4
+  %201 = lshr i32 %200, 28
+  %202 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([30 x i8], [30 x i8]* @"??_C@_0BO@LDGIBODO@?6?5?$FLFATAL?$FN?5Illegal?5Chan?3?5?5?$CF1u?6?$AA@", i32 0, i32 0), i32 %201)
+  %203 = sext i32 %202 to i64
+  store i64 %203, i64* @order_gurantee3, align 8
+  br label %204
 
-; <label>:277:                                    ; preds = %277, %270
-  %278 = load i64, i64* @order_gurantee3, align 8
-  %279 = add nsw i64 %278, 1
-  store i64 %279, i64* @order_gurantee3, align 8
-  br label %277
+; <label>:204:                                    ; preds = %204, %197
+  %205 = load i64, i64* @order_gurantee3, align 8
+  %206 = add nsw i64 %205, 1
+  store i64 %206, i64* @order_gurantee3, align 8
+  br label %204
 
-; <label>:280:                                    ; preds = %264
-  %281 = load i64*, i64** %41, align 8
-  %282 = load i64, i64* %281, align 8
-  %283 = bitcast %union.anon* %47 to %struct.anon*
-  %284 = bitcast %struct.anon* %283 to i32*
-  %285 = load i32, i32* %284, align 4
-  %286 = and i32 %285, 268435455
-  %287 = zext i32 %286 to i64
-  %288 = add nsw i64 %282, %287
-  store i64 %288, i64* %46, align 8
-  %289 = load i64, i64* %46, align 8
-  %290 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %291 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %290, i32 0, i32 2
-  %292 = load i64, i64* %291, align 8
-  %293 = mul nsw i64 %289, %292
-  %294 = load i64*, i64** %43, align 8
-  store i64 %293, i64* %294, align 8
-  %295 = bitcast %union.anon* %47 to %struct.anon*
-  %296 = bitcast %struct.anon* %295 to i32*
-  %297 = load i32, i32* %296, align 4
-  %298 = lshr i32 %297, 28
-  %299 = trunc i32 %298 to i8
-  %300 = load i8*, i8** %42, align 8
-  store i8 %299, i8* %300, align 1
-  br label %301
+; <label>:207:                                    ; preds = %191
+  %208 = load i64*, i64** %41, align 8
+  %209 = load i64, i64* %208, align 8
+  %210 = bitcast %union.anon* %47 to %struct.anon*
+  %211 = bitcast %struct.anon* %210 to i32*
+  %212 = load i32, i32* %211, align 4
+  %213 = and i32 %212, 268435455
+  %214 = zext i32 %213 to i64
+  %215 = add nsw i64 %209, %214
+  store i64 %215, i64* %46, align 8
+  %216 = load i64, i64* %46, align 8
+  %217 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %218 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %217, i32 0, i32 2
+  %219 = load i64, i64* %218, align 8
+  %220 = mul nsw i64 %216, %219
+  %221 = load i64*, i64** %43, align 8
+  store i64 %220, i64* %221, align 8
+  %222 = bitcast %union.anon* %47 to %struct.anon*
+  %223 = bitcast %struct.anon* %222 to i32*
+  %224 = load i32, i32* %223, align 4
+  %225 = lshr i32 %224, 28
+  %226 = trunc i32 %225 to i8
+  %227 = load i8*, i8** %42, align 8
+  store i8 %226, i8* %227, align 1
+  br label %228
 
-; <label>:301:                                    ; preds = %263, %280
-  br label %1093
+; <label>:228:                                    ; preds = %190, %207
+  br label %1020
 
-; <label>:302:                                    ; preds = %203
-  %303 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %304 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %303, i64 0
-  %305 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %304, i32 0, i32 11
-  %306 = load i32, i32* %59, align 4
-  store i64* %305, i64** %34, align 8
-  store i8* %55, i8** %35, align 8
-  store i64* %54, i64** %36, align 8
-  store i32 %306, i32* %37, align 4
+; <label>:229:                                    ; preds = %130
+  %230 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %231 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %230, i64 0
+  %232 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %231, i32 0, i32 11
+  %233 = load i32, i32* %56, align 4
+  store i64* %232, i64** %34, align 8
+  store i8* %52, i8** %35, align 8
+  store i64* %51, i64** %36, align 8
+  store i32 %233, i32* %37, align 4
   store i32 65536, i32* %39, align 4
-  %307 = load i32, i32* %37, align 4
-  %308 = bitcast %union.anon.2* %40 to i32*
-  store i32 %307, i32* %308, align 4
-  %309 = bitcast %union.anon.2* %40 to %struct.anon.3*
-  %310 = bitcast %struct.anon.3* %309 to i32*
-  %311 = load i32, i32* %310, align 4
-  %312 = lshr i32 %311, 28
-  %313 = icmp eq i32 %312, 15
-  br i1 %313, label %314, label %353
+  %234 = load i32, i32* %37, align 4
+  %235 = bitcast %union.anon.2* %40 to i32*
+  store i32 %234, i32* %235, align 4
+  %236 = bitcast %union.anon.2* %40 to %struct.anon.3*
+  %237 = bitcast %struct.anon.3* %236 to i32*
+  %238 = load i32, i32* %237, align 4
+  %239 = lshr i32 %238, 28
+  %240 = icmp eq i32 %239, 15
+  br i1 %240, label %241, label %280
 
-; <label>:314:                                    ; preds = %302
-  %315 = bitcast %union.anon.2* %40 to %struct.anon.4*
-  %316 = bitcast %struct.anon.4* %315 to i32*
-  %317 = load i32, i32* %316, align 4
-  %318 = lshr i32 %317, 16
-  %319 = and i32 %318, 4095
-  %320 = icmp eq i32 %319, 0
-  br i1 %320, label %321, label %325
+; <label>:241:                                    ; preds = %229
+  %242 = bitcast %union.anon.2* %40 to %struct.anon.4*
+  %243 = bitcast %struct.anon.4* %242 to i32*
+  %244 = load i32, i32* %243, align 4
+  %245 = lshr i32 %244, 16
+  %246 = and i32 %245, 4095
+  %247 = icmp eq i32 %246, 0
+  br i1 %247, label %248, label %252
 
-; <label>:321:                                    ; preds = %314
-  %322 = load i64*, i64** %34, align 8
-  %323 = load i64, i64* %322, align 8
-  %324 = add nsw i64 %323, 65536
-  store i64 %324, i64* %322, align 8
-  br label %352
+; <label>:248:                                    ; preds = %241
+  %249 = load i64*, i64** %34, align 8
+  %250 = load i64, i64* %249, align 8
+  %251 = add nsw i64 %250, 65536
+  store i64 %251, i64* %249, align 8
+  br label %279
 
-; <label>:325:                                    ; preds = %314
-  %326 = load i64*, i64** %34, align 8
-  %327 = load i64, i64* %326, align 8
+; <label>:252:                                    ; preds = %241
+  %253 = load i64*, i64** %34, align 8
+  %254 = load i64, i64* %253, align 8
+  %255 = bitcast %union.anon.2* %40 to %struct.anon.3*
+  %256 = bitcast %struct.anon.3* %255 to i32*
+  %257 = load i32, i32* %256, align 4
+  %258 = and i32 %257, 65535
+  %259 = zext i32 %258 to i64
+  %260 = add nsw i64 %254, %259
+  store i64 %260, i64* %38, align 8
+  %261 = load i64, i64* %38, align 8
+  %262 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %263 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %262, i32 0, i32 4
+  %264 = load i64, i64* %263, align 8
+  %265 = mul nsw i64 %261, %264
+  %266 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %267 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %266, i32 0, i32 3
+  %268 = load i64, i64* %267, align 8
+  %269 = load i64*, i64** %36, align 8
+  store i64 %265, i64* %269, align 8
+  %270 = bitcast %union.anon.2* %40 to %struct.anon.4*
+  %271 = bitcast %struct.anon.4* %270 to i32*
+  %272 = load i32, i32* %271, align 4
+  %273 = lshr i32 %272, 16
+  %274 = and i32 %273, 4095
+  %275 = call i32 @llvm.cttz.i32(i32 %274, i1 true)
+  %276 = add nsw i32 16, %275
+  %277 = trunc i32 %276 to i8
+  %278 = load i8*, i8** %35, align 8
+  store i8 %277, i8* %278, align 1
+  br label %279
+
+; <label>:279:                                    ; preds = %252, %248
+  br label %334
+
+; <label>:280:                                    ; preds = %229
+  %281 = bitcast %union.anon.2* %40 to %struct.anon.3*
+  %282 = bitcast %struct.anon.3* %281 to i32*
+  %283 = load i32, i32* %282, align 4
+  %284 = lshr i32 %283, 28
+  %285 = icmp eq i32 %284, 0
+  br i1 %285, label %292, label %286
+
+; <label>:286:                                    ; preds = %280
+  %287 = bitcast %union.anon.2* %40 to %struct.anon.3*
+  %288 = bitcast %struct.anon.3* %287 to i32*
+  %289 = load i32, i32* %288, align 4
+  %290 = lshr i32 %289, 28
+  %291 = icmp sgt i32 %290, 4
+  br i1 %291, label %292, label %302
+
+; <label>:292:                                    ; preds = %286, %280
+  %293 = bitcast %union.anon.2* %40 to %struct.anon.3*
+  %294 = bitcast %struct.anon.3* %293 to i32*
+  %295 = load i32, i32* %294, align 4
+  %296 = lshr i32 %295, 28
+  %297 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([40 x i8], [40 x i8]* @"??_C@_0CI@NNAIKICM@?6?5?$FLFATAL?$FN?6Illegal?5virtual_channe@", i32 0, i32 0), i32 %296)
+  %298 = sext i32 %297 to i64
+  store i64 %298, i64* @order_gurantee3, align 8
+  br label %299
+
+; <label>:299:                                    ; preds = %299, %292
+  %300 = load i64, i64* @order_gurantee3, align 8
+  %301 = add nsw i64 %300, 1
+  store i64 %301, i64* @order_gurantee3, align 8
+  br label %299
+
+; <label>:302:                                    ; preds = %286
+  %303 = load i64*, i64** %34, align 8
+  %304 = load i64, i64* %303, align 8
+  %305 = bitcast %union.anon.2* %40 to %struct.anon.3*
+  %306 = bitcast %struct.anon.3* %305 to i32*
+  %307 = load i32, i32* %306, align 4
+  %308 = and i32 %307, 65535
+  %309 = zext i32 %308 to i64
+  %310 = add nsw i64 %304, %309
+  store i64 %310, i64* %38, align 8
+  %311 = load i64, i64* %38, align 8
+  %312 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %313 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %312, i32 0, i32 4
+  %314 = load i64, i64* %313, align 8
+  %315 = mul nsw i64 %311, %314
+  %316 = bitcast %union.anon.2* %40 to %struct.anon.3*
+  %317 = bitcast %struct.anon.3* %316 to i32*
+  %318 = load i32, i32* %317, align 4
+  %319 = lshr i32 %318, 16
+  %320 = and i32 %319, 4095
+  %321 = zext i32 %320 to i64
+  %322 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %323 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %322, i32 0, i32 3
+  %324 = load i64, i64* %323, align 8
+  %325 = mul nsw i64 %321, %324
+  %326 = add nsw i64 %315, %325
+  %327 = load i64*, i64** %36, align 8
+  store i64 %326, i64* %327, align 8
   %328 = bitcast %union.anon.2* %40 to %struct.anon.3*
   %329 = bitcast %struct.anon.3* %328 to i32*
   %330 = load i32, i32* %329, align 4
-  %331 = and i32 %330, 65535
-  %332 = zext i32 %331 to i64
-  %333 = add nsw i64 %327, %332
-  store i64 %333, i64* %38, align 8
-  %334 = load i64, i64* %38, align 8
-  %335 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %336 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %335, i32 0, i32 4
-  %337 = load i64, i64* %336, align 8
-  %338 = mul nsw i64 %334, %337
-  %339 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %340 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %339, i32 0, i32 3
-  %341 = load i64, i64* %340, align 8
-  %342 = load i64*, i64** %36, align 8
-  store i64 %338, i64* %342, align 8
-  %343 = bitcast %union.anon.2* %40 to %struct.anon.4*
-  %344 = bitcast %struct.anon.4* %343 to i32*
-  %345 = load i32, i32* %344, align 4
-  %346 = lshr i32 %345, 16
-  %347 = and i32 %346, 4095
-  %348 = call i32 @llvm.cttz.i32(i32 %347, i1 true)
-  %349 = add nsw i32 16, %348
-  %350 = trunc i32 %349 to i8
-  %351 = load i8*, i8** %35, align 8
-  store i8 %350, i8* %351, align 1
-  br label %352
+  %331 = lshr i32 %330, 28
+  %332 = trunc i32 %331 to i8
+  %333 = load i8*, i8** %35, align 8
+  store i8 %332, i8* %333, align 1
+  br label %334
 
-; <label>:352:                                    ; preds = %325, %321
-  br label %407
+; <label>:334:                                    ; preds = %279, %302
+  br label %1020
 
-; <label>:353:                                    ; preds = %302
-  %354 = bitcast %union.anon.2* %40 to %struct.anon.3*
-  %355 = bitcast %struct.anon.3* %354 to i32*
-  %356 = load i32, i32* %355, align 4
-  %357 = lshr i32 %356, 28
-  %358 = icmp eq i32 %357, 0
-  br i1 %358, label %365, label %359
-
-; <label>:359:                                    ; preds = %353
-  %360 = bitcast %union.anon.2* %40 to %struct.anon.3*
-  %361 = bitcast %struct.anon.3* %360 to i32*
-  %362 = load i32, i32* %361, align 4
-  %363 = lshr i32 %362, 28
-  %364 = icmp sgt i32 %363, 4
-  br i1 %364, label %365, label %375
-
-; <label>:365:                                    ; preds = %359, %353
-  %366 = bitcast %union.anon.2* %40 to %struct.anon.3*
-  %367 = bitcast %struct.anon.3* %366 to i32*
-  %368 = load i32, i32* %367, align 4
-  %369 = lshr i32 %368, 28
-  %370 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([40 x i8], [40 x i8]* @"??_C@_0CI@NNAIKICM@?6?5?$FLFATAL?$FN?6Illegal?5virtual_channe@", i32 0, i32 0), i32 %369)
-  %371 = sext i32 %370 to i64
-  store i64 %371, i64* @order_gurantee3, align 8
-  br label %372
-
-; <label>:372:                                    ; preds = %372, %365
-  %373 = load i64, i64* @order_gurantee3, align 8
-  %374 = add nsw i64 %373, 1
-  store i64 %374, i64* @order_gurantee3, align 8
-  br label %372
-
-; <label>:375:                                    ; preds = %359
-  %376 = load i64*, i64** %34, align 8
-  %377 = load i64, i64* %376, align 8
-  %378 = bitcast %union.anon.2* %40 to %struct.anon.3*
-  %379 = bitcast %struct.anon.3* %378 to i32*
-  %380 = load i32, i32* %379, align 4
-  %381 = and i32 %380, 65535
-  %382 = zext i32 %381 to i64
-  %383 = add nsw i64 %377, %382
-  store i64 %383, i64* %38, align 8
-  %384 = load i64, i64* %38, align 8
-  %385 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %386 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %385, i32 0, i32 4
-  %387 = load i64, i64* %386, align 8
-  %388 = mul nsw i64 %384, %387
-  %389 = bitcast %union.anon.2* %40 to %struct.anon.3*
-  %390 = bitcast %struct.anon.3* %389 to i32*
-  %391 = load i32, i32* %390, align 4
-  %392 = lshr i32 %391, 16
-  %393 = and i32 %392, 4095
-  %394 = zext i32 %393 to i64
-  %395 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %396 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %395, i32 0, i32 3
-  %397 = load i64, i64* %396, align 8
-  %398 = mul nsw i64 %394, %397
-  %399 = add nsw i64 %388, %398
-  %400 = load i64*, i64** %36, align 8
-  store i64 %399, i64* %400, align 8
-  %401 = bitcast %union.anon.2* %40 to %struct.anon.3*
-  %402 = bitcast %struct.anon.3* %401 to i32*
-  %403 = load i32, i32* %402, align 4
-  %404 = lshr i32 %403, 28
-  %405 = trunc i32 %404 to i8
-  %406 = load i8*, i8** %35, align 8
-  store i8 %405, i8* %406, align 1
-  br label %407
-
-; <label>:407:                                    ; preds = %352, %375
-  br label %1093
-
-; <label>:408:                                    ; preds = %203
-  %409 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %410 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %409, i64 0
-  %411 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %410, i32 0, i32 11
-  %412 = load i32, i32* %59, align 4
-  store i64* %411, i64** %25, align 8
-  store i8* %55, i8** %26, align 8
-  store i64* %54, i64** %27, align 8
+; <label>:335:                                    ; preds = %130
+  %336 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %337 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %336, i64 0
+  %338 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %337, i32 0, i32 11
+  %339 = load i32, i32* %56, align 4
+  store i64* %338, i64** %25, align 8
+  store i8* %52, i8** %26, align 8
+  store i64* %51, i64** %27, align 8
   store i32 1, i32* %28, align 4
-  store i32 %412, i32* %29, align 4
+  store i32 %339, i32* %29, align 4
   store i32 33552000, i32* %31, align 4
   store i32 33554432, i32* %32, align 4
-  %413 = load i32, i32* %29, align 4
-  %414 = bitcast %union.anon.0* %33 to i32*
-  store i32 %413, i32* %414, align 4
-  %415 = bitcast %union.anon.0* %33 to %struct.anon.1*
-  %416 = bitcast %struct.anon.1* %415 to i32*
-  %417 = load i32, i32* %416, align 4
-  %418 = lshr i32 %417, 31
-  %419 = icmp eq i32 %418, 1
-  br i1 %419, label %420, label %518
+  %340 = load i32, i32* %29, align 4
+  %341 = bitcast %union.anon.0* %33 to i32*
+  store i32 %340, i32* %341, align 4
+  %342 = bitcast %union.anon.0* %33 to %struct.anon.1*
+  %343 = bitcast %struct.anon.1* %342 to i32*
+  %344 = load i32, i32* %343, align 4
+  %345 = lshr i32 %344, 31
+  %346 = icmp eq i32 %345, 1
+  br i1 %346, label %347, label %445
 
-; <label>:420:                                    ; preds = %408
-  %421 = bitcast %union.anon.0* %33 to %struct.anon.1*
-  %422 = bitcast %struct.anon.1* %421 to i32*
-  %423 = load i32, i32* %422, align 4
-  %424 = lshr i32 %423, 25
-  %425 = and i32 %424, 63
-  %426 = icmp eq i32 %425, 63
-  br i1 %426, label %427, label %456
+; <label>:347:                                    ; preds = %335
+  %348 = bitcast %union.anon.0* %33 to %struct.anon.1*
+  %349 = bitcast %struct.anon.1* %348 to i32*
+  %350 = load i32, i32* %349, align 4
+  %351 = lshr i32 %350, 25
+  %352 = and i32 %351, 63
+  %353 = icmp eq i32 %352, 63
+  br i1 %353, label %354, label %383
 
-; <label>:427:                                    ; preds = %420
-  %428 = load i32, i32* %28, align 4
-  %429 = icmp eq i32 %428, 1
-  br i1 %429, label %430, label %434
+; <label>:354:                                    ; preds = %347
+  %355 = load i32, i32* %28, align 4
+  %356 = icmp eq i32 %355, 1
+  br i1 %356, label %357, label %361
 
-; <label>:430:                                    ; preds = %427
-  %431 = load i64*, i64** %25, align 8
-  %432 = load i64, i64* %431, align 8
-  %433 = add i64 %432, 33552000
-  store i64 %433, i64* %431, align 8
-  br label %455
+; <label>:357:                                    ; preds = %354
+  %358 = load i64*, i64** %25, align 8
+  %359 = load i64, i64* %358, align 8
+  %360 = add i64 %359, 33552000
+  store i64 %360, i64* %358, align 8
+  br label %382
 
-; <label>:434:                                    ; preds = %427
-  %435 = bitcast %union.anon.0* %33 to %struct.anon.1*
-  %436 = bitcast %struct.anon.1* %435 to i32*
-  %437 = load i32, i32* %436, align 4
-  %438 = and i32 %437, 33554431
-  %439 = icmp eq i32 %438, 0
-  br i1 %439, label %440, label %444
+; <label>:361:                                    ; preds = %354
+  %362 = bitcast %union.anon.0* %33 to %struct.anon.1*
+  %363 = bitcast %struct.anon.1* %362 to i32*
+  %364 = load i32, i32* %363, align 4
+  %365 = and i32 %364, 33554431
+  %366 = icmp eq i32 %365, 0
+  br i1 %366, label %367, label %371
 
-; <label>:440:                                    ; preds = %434
-  %441 = load i64*, i64** %25, align 8
-  %442 = load i64, i64* %441, align 8
-  %443 = add i64 %442, 33554432
-  store i64 %443, i64* %441, align 8
-  br label %454
+; <label>:367:                                    ; preds = %361
+  %368 = load i64*, i64** %25, align 8
+  %369 = load i64, i64* %368, align 8
+  %370 = add i64 %369, 33554432
+  store i64 %370, i64* %368, align 8
+  br label %381
 
-; <label>:444:                                    ; preds = %434
-  %445 = bitcast %union.anon.0* %33 to %struct.anon.1*
-  %446 = bitcast %struct.anon.1* %445 to i32*
-  %447 = load i32, i32* %446, align 4
-  %448 = and i32 %447, 33554431
-  %449 = zext i32 %448 to i64
-  %450 = mul i64 33554432, %449
-  %451 = load i64*, i64** %25, align 8
-  %452 = load i64, i64* %451, align 8
-  %453 = add i64 %452, %450
-  store i64 %453, i64* %451, align 8
-  br label %454
+; <label>:371:                                    ; preds = %361
+  %372 = bitcast %union.anon.0* %33 to %struct.anon.1*
+  %373 = bitcast %struct.anon.1* %372 to i32*
+  %374 = load i32, i32* %373, align 4
+  %375 = and i32 %374, 33554431
+  %376 = zext i32 %375 to i64
+  %377 = mul i64 33554432, %376
+  %378 = load i64*, i64** %25, align 8
+  %379 = load i64, i64* %378, align 8
+  %380 = add i64 %379, %377
+  store i64 %380, i64* %378, align 8
+  br label %381
 
-; <label>:454:                                    ; preds = %444, %440
-  br label %455
+; <label>:381:                                    ; preds = %371, %367
+  br label %382
 
-; <label>:455:                                    ; preds = %454, %430
-  br label %456
+; <label>:382:                                    ; preds = %381, %357
+  br label %383
 
-; <label>:456:                                    ; preds = %455, %420
-  %457 = bitcast %union.anon.0* %33 to %struct.anon.1*
-  %458 = bitcast %struct.anon.1* %457 to i32*
-  %459 = load i32, i32* %458, align 4
-  %460 = lshr i32 %459, 25
-  %461 = and i32 %460, 63
-  %462 = icmp sge i32 %461, 1
-  br i1 %462, label %463, label %494
+; <label>:383:                                    ; preds = %382, %347
+  %384 = bitcast %union.anon.0* %33 to %struct.anon.1*
+  %385 = bitcast %struct.anon.1* %384 to i32*
+  %386 = load i32, i32* %385, align 4
+  %387 = lshr i32 %386, 25
+  %388 = and i32 %387, 63
+  %389 = icmp sge i32 %388, 1
+  br i1 %389, label %390, label %421
 
-; <label>:463:                                    ; preds = %456
-  %464 = bitcast %union.anon.0* %33 to %struct.anon.1*
-  %465 = bitcast %struct.anon.1* %464 to i32*
-  %466 = load i32, i32* %465, align 4
-  %467 = lshr i32 %466, 25
-  %468 = and i32 %467, 63
-  %469 = icmp sle i32 %468, 15
-  br i1 %469, label %470, label %494
+; <label>:390:                                    ; preds = %383
+  %391 = bitcast %union.anon.0* %33 to %struct.anon.1*
+  %392 = bitcast %struct.anon.1* %391 to i32*
+  %393 = load i32, i32* %392, align 4
+  %394 = lshr i32 %393, 25
+  %395 = and i32 %394, 63
+  %396 = icmp sle i32 %395, 15
+  br i1 %396, label %397, label %421
 
-; <label>:470:                                    ; preds = %463
-  %471 = load i64*, i64** %25, align 8
-  %472 = load i64, i64* %471, align 8
-  %473 = bitcast %union.anon.0* %33 to %struct.anon.1*
-  %474 = bitcast %struct.anon.1* %473 to i32*
-  %475 = load i32, i32* %474, align 4
-  %476 = and i32 %475, 33554431
-  %477 = zext i32 %476 to i64
-  %478 = add nsw i64 %472, %477
-  store i64 %478, i64* %30, align 8
-  %479 = load i64, i64* %30, align 8
-  %480 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %481 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %480, i32 0, i32 2
-  %482 = load i64, i64* %481, align 8
-  %483 = mul nsw i64 %479, %482
-  %484 = load i64*, i64** %27, align 8
-  store i64 %483, i64* %484, align 8
-  %485 = bitcast %union.anon.0* %33 to %struct.anon.1*
-  %486 = bitcast %struct.anon.1* %485 to i32*
-  %487 = load i32, i32* %486, align 4
-  %488 = lshr i32 %487, 25
-  %489 = and i32 %488, 63
-  %490 = call i32 @llvm.cttz.i32(i32 %489, i1 true) #5
-  %491 = add nsw i32 16, %490
-  %492 = trunc i32 %491 to i8
-  %493 = load i8*, i8** %26, align 8
-  store i8 %492, i8* %493, align 1
-  br label %494
+; <label>:397:                                    ; preds = %390
+  %398 = load i64*, i64** %25, align 8
+  %399 = load i64, i64* %398, align 8
+  %400 = bitcast %union.anon.0* %33 to %struct.anon.1*
+  %401 = bitcast %struct.anon.1* %400 to i32*
+  %402 = load i32, i32* %401, align 4
+  %403 = and i32 %402, 33554431
+  %404 = zext i32 %403 to i64
+  %405 = add nsw i64 %399, %404
+  store i64 %405, i64* %30, align 8
+  %406 = load i64, i64* %30, align 8
+  %407 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %408 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %407, i32 0, i32 2
+  %409 = load i64, i64* %408, align 8
+  %410 = mul nsw i64 %406, %409
+  %411 = load i64*, i64** %27, align 8
+  store i64 %410, i64* %411, align 8
+  %412 = bitcast %union.anon.0* %33 to %struct.anon.1*
+  %413 = bitcast %struct.anon.1* %412 to i32*
+  %414 = load i32, i32* %413, align 4
+  %415 = lshr i32 %414, 25
+  %416 = and i32 %415, 63
+  %417 = call i32 @llvm.cttz.i32(i32 %416, i1 true) #4
+  %418 = add nsw i32 16, %417
+  %419 = trunc i32 %418 to i8
+  %420 = load i8*, i8** %26, align 8
+  store i8 %419, i8* %420, align 1
+  br label %421
 
-; <label>:494:                                    ; preds = %470, %463, %456
-  %495 = bitcast %union.anon.0* %33 to %struct.anon.1*
-  %496 = bitcast %struct.anon.1* %495 to i32*
-  %497 = load i32, i32* %496, align 4
-  %498 = lshr i32 %497, 25
-  %499 = and i32 %498, 63
-  %500 = icmp eq i32 %499, 0
-  br i1 %500, label %501, label %517
+; <label>:421:                                    ; preds = %397, %390, %383
+  %422 = bitcast %union.anon.0* %33 to %struct.anon.1*
+  %423 = bitcast %struct.anon.1* %422 to i32*
+  %424 = load i32, i32* %423, align 4
+  %425 = lshr i32 %424, 25
+  %426 = and i32 %425, 63
+  %427 = icmp eq i32 %426, 0
+  br i1 %427, label %428, label %444
+
+; <label>:428:                                    ; preds = %421
+  %429 = load i64*, i64** %25, align 8
+  %430 = load i64, i64* %429, align 8
+  %431 = bitcast %union.anon.0* %33 to %struct.anon.1*
+  %432 = bitcast %struct.anon.1* %431 to i32*
+  %433 = load i32, i32* %432, align 4
+  %434 = and i32 %433, 33554431
+  %435 = zext i32 %434 to i64
+  %436 = add nsw i64 %430, %435
+  store i64 %436, i64* %30, align 8
+  %437 = load i64, i64* %30, align 8
+  %438 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %439 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %438, i32 0, i32 2
+  %440 = load i64, i64* %439, align 8
+  %441 = mul nsw i64 %437, %440
+  %442 = load i64*, i64** %27, align 8
+  store i64 %441, i64* %442, align 8
+  %443 = load i8*, i8** %26, align 8
+  store i8 0, i8* %443, align 1
+  br label %444
+
+; <label>:444:                                    ; preds = %428, %421
+  br label %468
+
+; <label>:445:                                    ; preds = %335
+  %446 = load i64*, i64** %25, align 8
+  %447 = load i64, i64* %446, align 8
+  %448 = bitcast %union.anon.0* %33 to %struct.anon.1*
+  %449 = bitcast %struct.anon.1* %448 to i32*
+  %450 = load i32, i32* %449, align 4
+  %451 = and i32 %450, 33554431
+  %452 = zext i32 %451 to i64
+  %453 = add nsw i64 %447, %452
+  store i64 %453, i64* %30, align 8
+  %454 = load i64, i64* %30, align 8
+  %455 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %456 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %455, i32 0, i32 2
+  %457 = load i64, i64* %456, align 8
+  %458 = mul nsw i64 %454, %457
+  %459 = load i64*, i64** %27, align 8
+  store i64 %458, i64* %459, align 8
+  %460 = bitcast %union.anon.0* %33 to %struct.anon.1*
+  %461 = bitcast %struct.anon.1* %460 to i32*
+  %462 = load i32, i32* %461, align 4
+  %463 = lshr i32 %462, 25
+  %464 = and i32 %463, 63
+  %465 = add nsw i32 %464, 1
+  %466 = trunc i32 %465 to i8
+  %467 = load i8*, i8** %26, align 8
+  store i8 %466, i8* %467, align 1
+  br label %468
+
+; <label>:468:                                    ; preds = %444, %445
+  br label %1020
+
+; <label>:469:                                    ; preds = %130
+  %470 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %471 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %470, i64 0
+  %472 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %471, i32 0, i32 11
+  %473 = load i32, i32* %56, align 4
+  store i64* %472, i64** %18, align 8
+  store i8* %52, i8** %19, align 8
+  store i64* %51, i64** %20, align 8
+  store i32 1, i32* %21, align 4
+  store i32 %473, i32* %22, align 4
+  store i32 1024, i32* %23, align 4
+  %474 = load i32, i32* %22, align 4
+  %475 = bitcast %union.anon.5* %24 to i32*
+  store i32 %474, i32* %475, align 4
+  %476 = bitcast %union.anon.5* %24 to %struct.anon.6*
+  %477 = bitcast %struct.anon.6* %476 to i32*
+  %478 = load i32, i32* %477, align 4
+  %479 = lshr i32 %478, 31
+  %480 = icmp eq i32 %479, 1
+  br i1 %480, label %481, label %553
+
+; <label>:481:                                    ; preds = %469
+  %482 = bitcast %union.anon.5* %24 to %struct.anon.6*
+  %483 = bitcast %struct.anon.6* %482 to i32*
+  %484 = load i32, i32* %483, align 4
+  %485 = lshr i32 %484, 25
+  %486 = and i32 %485, 63
+  %487 = icmp eq i32 %486, 63
+  br i1 %487, label %488, label %512
+
+; <label>:488:                                    ; preds = %481
+  %489 = bitcast %union.anon.5* %24 to %struct.anon.6*
+  %490 = bitcast %struct.anon.6* %489 to i32*
+  %491 = load i32, i32* %490, align 4
+  %492 = and i32 %491, 1023
+  %493 = icmp eq i32 %492, 0
+  br i1 %493, label %497, label %494
+
+; <label>:494:                                    ; preds = %488
+  %495 = load i32, i32* %21, align 4
+  %496 = icmp eq i32 %495, 1
+  br i1 %496, label %497, label %501
+
+; <label>:497:                                    ; preds = %494, %488
+  %498 = load i64*, i64** %18, align 8
+  %499 = load i64, i64* %498, align 8
+  %500 = add i64 %499, 1024
+  store i64 %500, i64* %498, align 8
+  br label %511
 
 ; <label>:501:                                    ; preds = %494
-  %502 = load i64*, i64** %25, align 8
-  %503 = load i64, i64* %502, align 8
-  %504 = bitcast %union.anon.0* %33 to %struct.anon.1*
-  %505 = bitcast %struct.anon.1* %504 to i32*
-  %506 = load i32, i32* %505, align 4
-  %507 = and i32 %506, 33554431
-  %508 = zext i32 %507 to i64
-  %509 = add nsw i64 %503, %508
-  store i64 %509, i64* %30, align 8
-  %510 = load i64, i64* %30, align 8
-  %511 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %512 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %511, i32 0, i32 2
-  %513 = load i64, i64* %512, align 8
-  %514 = mul nsw i64 %510, %513
-  %515 = load i64*, i64** %27, align 8
-  store i64 %514, i64* %515, align 8
-  %516 = load i8*, i8** %26, align 8
-  store i8 0, i8* %516, align 1
-  br label %517
+  %502 = bitcast %union.anon.5* %24 to %struct.anon.6*
+  %503 = bitcast %struct.anon.6* %502 to i32*
+  %504 = load i32, i32* %503, align 4
+  %505 = and i32 %504, 1023
+  %506 = zext i32 %505 to i64
+  %507 = mul i64 1024, %506
+  %508 = load i64*, i64** %18, align 8
+  %509 = load i64, i64* %508, align 8
+  %510 = add i64 %509, %507
+  store i64 %510, i64* %508, align 8
+  br label %511
 
-; <label>:517:                                    ; preds = %501, %494
-  br label %541
+; <label>:511:                                    ; preds = %501, %497
+  br label %512
 
-; <label>:518:                                    ; preds = %408
-  %519 = load i64*, i64** %25, align 8
-  %520 = load i64, i64* %519, align 8
-  %521 = bitcast %union.anon.0* %33 to %struct.anon.1*
-  %522 = bitcast %struct.anon.1* %521 to i32*
-  %523 = load i32, i32* %522, align 4
-  %524 = and i32 %523, 33554431
-  %525 = zext i32 %524 to i64
-  %526 = add nsw i64 %520, %525
-  store i64 %526, i64* %30, align 8
-  %527 = load i64, i64* %30, align 8
-  %528 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %529 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %528, i32 0, i32 2
-  %530 = load i64, i64* %529, align 8
-  %531 = mul nsw i64 %527, %530
-  %532 = load i64*, i64** %27, align 8
-  store i64 %531, i64* %532, align 8
-  %533 = bitcast %union.anon.0* %33 to %struct.anon.1*
-  %534 = bitcast %struct.anon.1* %533 to i32*
-  %535 = load i32, i32* %534, align 4
-  %536 = lshr i32 %535, 25
-  %537 = and i32 %536, 63
-  %538 = add nsw i32 %537, 1
-  %539 = trunc i32 %538 to i8
-  %540 = load i8*, i8** %26, align 8
-  store i8 %539, i8* %540, align 1
-  br label %541
+; <label>:512:                                    ; preds = %511, %481
+  %513 = bitcast %union.anon.5* %24 to %struct.anon.6*
+  %514 = bitcast %struct.anon.6* %513 to i32*
+  %515 = load i32, i32* %514, align 4
+  %516 = lshr i32 %515, 25
+  %517 = and i32 %516, 63
+  %518 = icmp sge i32 %517, 1
+  br i1 %518, label %519, label %552
 
-; <label>:541:                                    ; preds = %517, %518
-  br label %1093
+; <label>:519:                                    ; preds = %512
+  %520 = bitcast %union.anon.5* %24 to %struct.anon.6*
+  %521 = bitcast %struct.anon.6* %520 to i32*
+  %522 = load i32, i32* %521, align 4
+  %523 = lshr i32 %522, 25
+  %524 = and i32 %523, 63
+  %525 = icmp sle i32 %524, 15
+  br i1 %525, label %526, label %552
 
-; <label>:542:                                    ; preds = %203
-  %543 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %544 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %543, i64 0
-  %545 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %544, i32 0, i32 11
-  %546 = load i32, i32* %59, align 4
-  store i64* %545, i64** %18, align 8
-  store i8* %55, i8** %19, align 8
-  store i64* %54, i64** %20, align 8
-  store i32 1, i32* %21, align 4
-  store i32 %546, i32* %22, align 4
-  store i32 1024, i32* %23, align 4
-  %547 = load i32, i32* %22, align 4
-  %548 = bitcast %union.anon.5* %24 to i32*
-  store i32 %547, i32* %548, align 4
-  %549 = bitcast %union.anon.5* %24 to %struct.anon.6*
-  %550 = bitcast %struct.anon.6* %549 to i32*
-  %551 = load i32, i32* %550, align 4
-  %552 = lshr i32 %551, 31
-  %553 = icmp eq i32 %552, 1
-  br i1 %553, label %554, label %626
+; <label>:526:                                    ; preds = %519
+  %527 = load i64*, i64** %18, align 8
+  %528 = load i64, i64* %527, align 8
+  %529 = bitcast %union.anon.5* %24 to %struct.anon.6*
+  %530 = bitcast %struct.anon.6* %529 to i32*
+  %531 = load i32, i32* %530, align 4
+  %532 = and i32 %531, 1023
+  %533 = zext i32 %532 to i64
+  %534 = add nsw i64 %528, %533
+  %535 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %536 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %535, i32 0, i32 4
+  %537 = load i64, i64* %536, align 8
+  %538 = mul nsw i64 %534, %537
+  %539 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %540 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %539, i32 0, i32 3
+  %541 = load i64, i64* %540, align 8
+  %542 = load i64*, i64** %20, align 8
+  store i64 %538, i64* %542, align 8
+  %543 = bitcast %union.anon.5* %24 to %struct.anon.6*
+  %544 = bitcast %struct.anon.6* %543 to i32*
+  %545 = load i32, i32* %544, align 4
+  %546 = lshr i32 %545, 25
+  %547 = and i32 %546, 63
+  %548 = call i32 @llvm.cttz.i32(i32 %547, i1 true) #4
+  %549 = add nsw i32 16, %548
+  %550 = trunc i32 %549 to i8
+  %551 = load i8*, i8** %19, align 8
+  store i8 %550, i8* %551, align 1
+  br label %552
 
-; <label>:554:                                    ; preds = %542
-  %555 = bitcast %union.anon.5* %24 to %struct.anon.6*
-  %556 = bitcast %struct.anon.6* %555 to i32*
-  %557 = load i32, i32* %556, align 4
-  %558 = lshr i32 %557, 25
-  %559 = and i32 %558, 63
-  %560 = icmp eq i32 %559, 63
-  br i1 %560, label %561, label %585
-
-; <label>:561:                                    ; preds = %554
-  %562 = bitcast %union.anon.5* %24 to %struct.anon.6*
-  %563 = bitcast %struct.anon.6* %562 to i32*
-  %564 = load i32, i32* %563, align 4
-  %565 = and i32 %564, 1023
-  %566 = icmp eq i32 %565, 0
-  br i1 %566, label %570, label %567
-
-; <label>:567:                                    ; preds = %561
-  %568 = load i32, i32* %21, align 4
-  %569 = icmp eq i32 %568, 1
-  br i1 %569, label %570, label %574
-
-; <label>:570:                                    ; preds = %567, %561
-  %571 = load i64*, i64** %18, align 8
-  %572 = load i64, i64* %571, align 8
-  %573 = add i64 %572, 1024
-  store i64 %573, i64* %571, align 8
-  br label %584
-
-; <label>:574:                                    ; preds = %567
-  %575 = bitcast %union.anon.5* %24 to %struct.anon.6*
-  %576 = bitcast %struct.anon.6* %575 to i32*
-  %577 = load i32, i32* %576, align 4
-  %578 = and i32 %577, 1023
-  %579 = zext i32 %578 to i64
-  %580 = mul i64 1024, %579
-  %581 = load i64*, i64** %18, align 8
-  %582 = load i64, i64* %581, align 8
-  %583 = add i64 %582, %580
-  store i64 %583, i64* %581, align 8
-  br label %584
-
-; <label>:584:                                    ; preds = %574, %570
+; <label>:552:                                    ; preds = %526, %519, %512
   br label %585
 
-; <label>:585:                                    ; preds = %584, %554
-  %586 = bitcast %union.anon.5* %24 to %struct.anon.6*
-  %587 = bitcast %struct.anon.6* %586 to i32*
-  %588 = load i32, i32* %587, align 4
-  %589 = lshr i32 %588, 25
-  %590 = and i32 %589, 63
-  %591 = icmp sge i32 %590, 1
-  br i1 %591, label %592, label %625
+; <label>:553:                                    ; preds = %469
+  %554 = load i64*, i64** %18, align 8
+  %555 = load i64, i64* %554, align 8
+  %556 = bitcast %union.anon.5* %24 to %struct.anon.6*
+  %557 = bitcast %struct.anon.6* %556 to i32*
+  %558 = load i32, i32* %557, align 4
+  %559 = and i32 %558, 1023
+  %560 = zext i32 %559 to i64
+  %561 = add nsw i64 %555, %560
+  %562 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %563 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %562, i32 0, i32 4
+  %564 = load i64, i64* %563, align 8
+  %565 = mul nsw i64 %561, %564
+  %566 = bitcast %union.anon.5* %24 to %struct.anon.6*
+  %567 = bitcast %struct.anon.6* %566 to i32*
+  %568 = load i32, i32* %567, align 4
+  %569 = lshr i32 %568, 10
+  %570 = and i32 %569, 32767
+  %571 = zext i32 %570 to i64
+  %572 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %573 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %572, i32 0, i32 3
+  %574 = load i64, i64* %573, align 8
+  %575 = mul nsw i64 %571, %574
+  %576 = add nsw i64 %565, %575
+  %577 = load i64*, i64** %20, align 8
+  store i64 %576, i64* %577, align 8
+  %578 = bitcast %union.anon.5* %24 to %struct.anon.6*
+  %579 = bitcast %struct.anon.6* %578 to i32*
+  %580 = load i32, i32* %579, align 4
+  %581 = lshr i32 %580, 25
+  %582 = and i32 %581, 63
+  %583 = trunc i32 %582 to i8
+  %584 = load i8*, i8** %19, align 8
+  store i8 %583, i8* %584, align 1
+  br label %585
 
-; <label>:592:                                    ; preds = %585
-  %593 = bitcast %union.anon.5* %24 to %struct.anon.6*
-  %594 = bitcast %struct.anon.6* %593 to i32*
+; <label>:585:                                    ; preds = %552, %553
+  br label %1020
+
+; <label>:586:                                    ; preds = %130, %130, %130
+  %587 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %588 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %587, i64 0
+  %589 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %588, i32 0, i32 11
+  %590 = load i32, i32* %56, align 4
+  store i64* %589, i64** %2, align 8
+  store i8* %52, i8** %3, align 8
+  store i64* %51, i64** %4, align 8
+  store i32 2, i32* %5, align 4
+  store i32 %590, i32* %6, align 4
+  store i32 33552000, i32* %8, align 4
+  store i32 33554432, i32* %9, align 4
+  %591 = load i32, i32* %6, align 4
+  %592 = bitcast %union.anon.0* %10 to i32*
+  store i32 %591, i32* %592, align 4
+  %593 = bitcast %union.anon.0* %10 to %struct.anon.1*
+  %594 = bitcast %struct.anon.1* %593 to i32*
   %595 = load i32, i32* %594, align 4
-  %596 = lshr i32 %595, 25
-  %597 = and i32 %596, 63
-  %598 = icmp sle i32 %597, 15
-  br i1 %598, label %599, label %625
+  %596 = lshr i32 %595, 31
+  %597 = icmp eq i32 %596, 1
+  br i1 %597, label %598, label %696
 
-; <label>:599:                                    ; preds = %592
-  %600 = load i64*, i64** %18, align 8
-  %601 = load i64, i64* %600, align 8
-  %602 = bitcast %union.anon.5* %24 to %struct.anon.6*
-  %603 = bitcast %struct.anon.6* %602 to i32*
-  %604 = load i32, i32* %603, align 4
-  %605 = and i32 %604, 1023
-  %606 = zext i32 %605 to i64
-  %607 = add nsw i64 %601, %606
-  %608 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %609 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %608, i32 0, i32 4
+; <label>:598:                                    ; preds = %586
+  %599 = bitcast %union.anon.0* %10 to %struct.anon.1*
+  %600 = bitcast %struct.anon.1* %599 to i32*
+  %601 = load i32, i32* %600, align 4
+  %602 = lshr i32 %601, 25
+  %603 = and i32 %602, 63
+  %604 = icmp eq i32 %603, 63
+  br i1 %604, label %605, label %634
+
+; <label>:605:                                    ; preds = %598
+  %606 = load i32, i32* %5, align 4
+  %607 = icmp eq i32 %606, 1
+  br i1 %607, label %608, label %612
+
+; <label>:608:                                    ; preds = %605
+  %609 = load i64*, i64** %2, align 8
   %610 = load i64, i64* %609, align 8
-  %611 = mul nsw i64 %607, %610
-  %612 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %613 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %612, i32 0, i32 3
-  %614 = load i64, i64* %613, align 8
-  %615 = load i64*, i64** %20, align 8
-  store i64 %611, i64* %615, align 8
-  %616 = bitcast %union.anon.5* %24 to %struct.anon.6*
-  %617 = bitcast %struct.anon.6* %616 to i32*
-  %618 = load i32, i32* %617, align 4
-  %619 = lshr i32 %618, 25
-  %620 = and i32 %619, 63
-  %621 = call i32 @llvm.cttz.i32(i32 %620, i1 true) #5
-  %622 = add nsw i32 16, %621
-  %623 = trunc i32 %622 to i8
-  %624 = load i8*, i8** %19, align 8
-  store i8 %623, i8* %624, align 1
-  br label %625
+  %611 = add i64 %610, 33552000
+  store i64 %611, i64* %609, align 8
+  br label %633
 
-; <label>:625:                                    ; preds = %599, %592, %585
-  br label %658
+; <label>:612:                                    ; preds = %605
+  %613 = bitcast %union.anon.0* %10 to %struct.anon.1*
+  %614 = bitcast %struct.anon.1* %613 to i32*
+  %615 = load i32, i32* %614, align 4
+  %616 = and i32 %615, 33554431
+  %617 = icmp eq i32 %616, 0
+  br i1 %617, label %618, label %622
 
-; <label>:626:                                    ; preds = %542
-  %627 = load i64*, i64** %18, align 8
-  %628 = load i64, i64* %627, align 8
-  %629 = bitcast %union.anon.5* %24 to %struct.anon.6*
-  %630 = bitcast %struct.anon.6* %629 to i32*
-  %631 = load i32, i32* %630, align 4
-  %632 = and i32 %631, 1023
-  %633 = zext i32 %632 to i64
-  %634 = add nsw i64 %628, %633
-  %635 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %636 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %635, i32 0, i32 4
-  %637 = load i64, i64* %636, align 8
-  %638 = mul nsw i64 %634, %637
-  %639 = bitcast %union.anon.5* %24 to %struct.anon.6*
-  %640 = bitcast %struct.anon.6* %639 to i32*
-  %641 = load i32, i32* %640, align 4
-  %642 = lshr i32 %641, 10
-  %643 = and i32 %642, 32767
-  %644 = zext i32 %643 to i64
-  %645 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %646 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %645, i32 0, i32 3
-  %647 = load i64, i64* %646, align 8
-  %648 = mul nsw i64 %644, %647
-  %649 = add nsw i64 %638, %648
-  %650 = load i64*, i64** %20, align 8
-  store i64 %649, i64* %650, align 8
-  %651 = bitcast %union.anon.5* %24 to %struct.anon.6*
-  %652 = bitcast %struct.anon.6* %651 to i32*
+; <label>:618:                                    ; preds = %612
+  %619 = load i64*, i64** %2, align 8
+  %620 = load i64, i64* %619, align 8
+  %621 = add i64 %620, 33554432
+  store i64 %621, i64* %619, align 8
+  br label %632
+
+; <label>:622:                                    ; preds = %612
+  %623 = bitcast %union.anon.0* %10 to %struct.anon.1*
+  %624 = bitcast %struct.anon.1* %623 to i32*
+  %625 = load i32, i32* %624, align 4
+  %626 = and i32 %625, 33554431
+  %627 = zext i32 %626 to i64
+  %628 = mul i64 33554432, %627
+  %629 = load i64*, i64** %2, align 8
+  %630 = load i64, i64* %629, align 8
+  %631 = add i64 %630, %628
+  store i64 %631, i64* %629, align 8
+  br label %632
+
+; <label>:632:                                    ; preds = %622, %618
+  br label %633
+
+; <label>:633:                                    ; preds = %632, %608
+  br label %634
+
+; <label>:634:                                    ; preds = %633, %598
+  %635 = bitcast %union.anon.0* %10 to %struct.anon.1*
+  %636 = bitcast %struct.anon.1* %635 to i32*
+  %637 = load i32, i32* %636, align 4
+  %638 = lshr i32 %637, 25
+  %639 = and i32 %638, 63
+  %640 = icmp sge i32 %639, 1
+  br i1 %640, label %641, label %672
+
+; <label>:641:                                    ; preds = %634
+  %642 = bitcast %union.anon.0* %10 to %struct.anon.1*
+  %643 = bitcast %struct.anon.1* %642 to i32*
+  %644 = load i32, i32* %643, align 4
+  %645 = lshr i32 %644, 25
+  %646 = and i32 %645, 63
+  %647 = icmp sle i32 %646, 15
+  br i1 %647, label %648, label %672
+
+; <label>:648:                                    ; preds = %641
+  %649 = load i64*, i64** %2, align 8
+  %650 = load i64, i64* %649, align 8
+  %651 = bitcast %union.anon.0* %10 to %struct.anon.1*
+  %652 = bitcast %struct.anon.1* %651 to i32*
   %653 = load i32, i32* %652, align 4
-  %654 = lshr i32 %653, 25
-  %655 = and i32 %654, 63
-  %656 = trunc i32 %655 to i8
-  %657 = load i8*, i8** %19, align 8
-  store i8 %656, i8* %657, align 1
-  br label %658
+  %654 = and i32 %653, 33554431
+  %655 = zext i32 %654 to i64
+  %656 = add nsw i64 %650, %655
+  store i64 %656, i64* %7, align 8
+  %657 = load i64, i64* %7, align 8
+  %658 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %659 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %658, i32 0, i32 2
+  %660 = load i64, i64* %659, align 8
+  %661 = mul nsw i64 %657, %660
+  %662 = load i64*, i64** %4, align 8
+  store i64 %661, i64* %662, align 8
+  %663 = bitcast %union.anon.0* %10 to %struct.anon.1*
+  %664 = bitcast %struct.anon.1* %663 to i32*
+  %665 = load i32, i32* %664, align 4
+  %666 = lshr i32 %665, 25
+  %667 = and i32 %666, 63
+  %668 = call i32 @llvm.cttz.i32(i32 %667, i1 true) #4
+  %669 = add nsw i32 16, %668
+  %670 = trunc i32 %669 to i8
+  %671 = load i8*, i8** %3, align 8
+  store i8 %670, i8* %671, align 1
+  br label %672
 
-; <label>:658:                                    ; preds = %625, %626
-  br label %1093
+; <label>:672:                                    ; preds = %648, %641, %634
+  %673 = bitcast %union.anon.0* %10 to %struct.anon.1*
+  %674 = bitcast %struct.anon.1* %673 to i32*
+  %675 = load i32, i32* %674, align 4
+  %676 = lshr i32 %675, 25
+  %677 = and i32 %676, 63
+  %678 = icmp eq i32 %677, 0
+  br i1 %678, label %679, label %695
 
-; <label>:659:                                    ; preds = %203, %203, %203
-  %660 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %661 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %660, i64 0
-  %662 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %661, i32 0, i32 11
-  %663 = load i32, i32* %59, align 4
-  store i64* %662, i64** %9, align 8
-  store i8* %55, i8** %10, align 8
-  store i64* %54, i64** %11, align 8
-  store i32 2, i32* %12, align 4
-  store i32 %663, i32* %13, align 4
-  store i32 33552000, i32* %15, align 4
-  store i32 33554432, i32* %16, align 4
-  %664 = load i32, i32* %13, align 4
-  %665 = bitcast %union.anon.0* %17 to i32*
-  store i32 %664, i32* %665, align 4
-  %666 = bitcast %union.anon.0* %17 to %struct.anon.1*
-  %667 = bitcast %struct.anon.1* %666 to i32*
-  %668 = load i32, i32* %667, align 4
-  %669 = lshr i32 %668, 31
-  %670 = icmp eq i32 %669, 1
-  br i1 %670, label %671, label %769
+; <label>:679:                                    ; preds = %672
+  %680 = load i64*, i64** %2, align 8
+  %681 = load i64, i64* %680, align 8
+  %682 = bitcast %union.anon.0* %10 to %struct.anon.1*
+  %683 = bitcast %struct.anon.1* %682 to i32*
+  %684 = load i32, i32* %683, align 4
+  %685 = and i32 %684, 33554431
+  %686 = zext i32 %685 to i64
+  %687 = add nsw i64 %681, %686
+  store i64 %687, i64* %7, align 8
+  %688 = load i64, i64* %7, align 8
+  %689 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %690 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %689, i32 0, i32 2
+  %691 = load i64, i64* %690, align 8
+  %692 = mul nsw i64 %688, %691
+  %693 = load i64*, i64** %4, align 8
+  store i64 %692, i64* %693, align 8
+  %694 = load i8*, i8** %3, align 8
+  store i8 0, i8* %694, align 1
+  br label %695
 
-; <label>:671:                                    ; preds = %659
-  %672 = bitcast %union.anon.0* %17 to %struct.anon.1*
-  %673 = bitcast %struct.anon.1* %672 to i32*
-  %674 = load i32, i32* %673, align 4
-  %675 = lshr i32 %674, 25
-  %676 = and i32 %675, 63
-  %677 = icmp eq i32 %676, 63
-  br i1 %677, label %678, label %707
+; <label>:695:                                    ; preds = %679, %672
+  br label %719
 
-; <label>:678:                                    ; preds = %671
-  %679 = load i32, i32* %12, align 4
-  %680 = icmp eq i32 %679, 1
-  br i1 %680, label %681, label %685
+; <label>:696:                                    ; preds = %586
+  %697 = load i64*, i64** %2, align 8
+  %698 = load i64, i64* %697, align 8
+  %699 = bitcast %union.anon.0* %10 to %struct.anon.1*
+  %700 = bitcast %struct.anon.1* %699 to i32*
+  %701 = load i32, i32* %700, align 4
+  %702 = and i32 %701, 33554431
+  %703 = zext i32 %702 to i64
+  %704 = add nsw i64 %698, %703
+  store i64 %704, i64* %7, align 8
+  %705 = load i64, i64* %7, align 8
+  %706 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %707 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %706, i32 0, i32 2
+  %708 = load i64, i64* %707, align 8
+  %709 = mul nsw i64 %705, %708
+  %710 = load i64*, i64** %4, align 8
+  store i64 %709, i64* %710, align 8
+  %711 = bitcast %union.anon.0* %10 to %struct.anon.1*
+  %712 = bitcast %struct.anon.1* %711 to i32*
+  %713 = load i32, i32* %712, align 4
+  %714 = lshr i32 %713, 25
+  %715 = and i32 %714, 63
+  %716 = add nsw i32 %715, 1
+  %717 = trunc i32 %716 to i8
+  %718 = load i8*, i8** %3, align 8
+  store i8 %717, i8* %718, align 1
+  br label %719
 
-; <label>:681:                                    ; preds = %678
-  %682 = load i64*, i64** %9, align 8
-  %683 = load i64, i64* %682, align 8
-  %684 = add i64 %683, 33552000
-  store i64 %684, i64* %682, align 8
-  br label %706
+; <label>:719:                                    ; preds = %695, %696
+  br label %1020
 
-; <label>:685:                                    ; preds = %678
-  %686 = bitcast %union.anon.0* %17 to %struct.anon.1*
-  %687 = bitcast %struct.anon.1* %686 to i32*
-  %688 = load i32, i32* %687, align 4
-  %689 = and i32 %688, 33554431
-  %690 = icmp eq i32 %689, 0
-  br i1 %690, label %691, label %695
+; <label>:720:                                    ; preds = %130, %130, %130
+  %721 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %722 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %721, i64 0
+  %723 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %722, i32 0, i32 11
+  %724 = load i32, i32* %56, align 4
+  store i64* %723, i64** %11, align 8
+  store i8* %52, i8** %12, align 8
+  store i64* %51, i64** %13, align 8
+  store i32 2, i32* %14, align 4
+  store i32 %724, i32* %15, align 4
+  store i32 1024, i32* %16, align 4
+  %725 = load i32, i32* %15, align 4
+  %726 = bitcast %union.anon.5* %17 to i32*
+  store i32 %725, i32* %726, align 4
+  %727 = bitcast %union.anon.5* %17 to %struct.anon.6*
+  %728 = bitcast %struct.anon.6* %727 to i32*
+  %729 = load i32, i32* %728, align 4
+  %730 = lshr i32 %729, 31
+  %731 = icmp eq i32 %730, 1
+  br i1 %731, label %732, label %804
 
-; <label>:691:                                    ; preds = %685
-  %692 = load i64*, i64** %9, align 8
-  %693 = load i64, i64* %692, align 8
-  %694 = add i64 %693, 33554432
-  store i64 %694, i64* %692, align 8
-  br label %705
+; <label>:732:                                    ; preds = %720
+  %733 = bitcast %union.anon.5* %17 to %struct.anon.6*
+  %734 = bitcast %struct.anon.6* %733 to i32*
+  %735 = load i32, i32* %734, align 4
+  %736 = lshr i32 %735, 25
+  %737 = and i32 %736, 63
+  %738 = icmp eq i32 %737, 63
+  br i1 %738, label %739, label %763
 
-; <label>:695:                                    ; preds = %685
-  %696 = bitcast %union.anon.0* %17 to %struct.anon.1*
-  %697 = bitcast %struct.anon.1* %696 to i32*
-  %698 = load i32, i32* %697, align 4
-  %699 = and i32 %698, 33554431
-  %700 = zext i32 %699 to i64
-  %701 = mul i64 33554432, %700
-  %702 = load i64*, i64** %9, align 8
-  %703 = load i64, i64* %702, align 8
-  %704 = add i64 %703, %701
-  store i64 %704, i64* %702, align 8
-  br label %705
+; <label>:739:                                    ; preds = %732
+  %740 = bitcast %union.anon.5* %17 to %struct.anon.6*
+  %741 = bitcast %struct.anon.6* %740 to i32*
+  %742 = load i32, i32* %741, align 4
+  %743 = and i32 %742, 1023
+  %744 = icmp eq i32 %743, 0
+  br i1 %744, label %748, label %745
 
-; <label>:705:                                    ; preds = %695, %691
-  br label %706
+; <label>:745:                                    ; preds = %739
+  %746 = load i32, i32* %14, align 4
+  %747 = icmp eq i32 %746, 1
+  br i1 %747, label %748, label %752
 
-; <label>:706:                                    ; preds = %705, %681
-  br label %707
-
-; <label>:707:                                    ; preds = %706, %671
-  %708 = bitcast %union.anon.0* %17 to %struct.anon.1*
-  %709 = bitcast %struct.anon.1* %708 to i32*
-  %710 = load i32, i32* %709, align 4
-  %711 = lshr i32 %710, 25
-  %712 = and i32 %711, 63
-  %713 = icmp sge i32 %712, 1
-  br i1 %713, label %714, label %745
-
-; <label>:714:                                    ; preds = %707
-  %715 = bitcast %union.anon.0* %17 to %struct.anon.1*
-  %716 = bitcast %struct.anon.1* %715 to i32*
-  %717 = load i32, i32* %716, align 4
-  %718 = lshr i32 %717, 25
-  %719 = and i32 %718, 63
-  %720 = icmp sle i32 %719, 15
-  br i1 %720, label %721, label %745
-
-; <label>:721:                                    ; preds = %714
-  %722 = load i64*, i64** %9, align 8
-  %723 = load i64, i64* %722, align 8
-  %724 = bitcast %union.anon.0* %17 to %struct.anon.1*
-  %725 = bitcast %struct.anon.1* %724 to i32*
-  %726 = load i32, i32* %725, align 4
-  %727 = and i32 %726, 33554431
-  %728 = zext i32 %727 to i64
-  %729 = add nsw i64 %723, %728
-  store i64 %729, i64* %14, align 8
-  %730 = load i64, i64* %14, align 8
-  %731 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %732 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %731, i32 0, i32 2
-  %733 = load i64, i64* %732, align 8
-  %734 = mul nsw i64 %730, %733
-  %735 = load i64*, i64** %11, align 8
-  store i64 %734, i64* %735, align 8
-  %736 = bitcast %union.anon.0* %17 to %struct.anon.1*
-  %737 = bitcast %struct.anon.1* %736 to i32*
-  %738 = load i32, i32* %737, align 4
-  %739 = lshr i32 %738, 25
-  %740 = and i32 %739, 63
-  %741 = call i32 @llvm.cttz.i32(i32 %740, i1 true) #5
-  %742 = add nsw i32 16, %741
-  %743 = trunc i32 %742 to i8
-  %744 = load i8*, i8** %10, align 8
-  store i8 %743, i8* %744, align 1
-  br label %745
-
-; <label>:745:                                    ; preds = %721, %714, %707
-  %746 = bitcast %union.anon.0* %17 to %struct.anon.1*
-  %747 = bitcast %struct.anon.1* %746 to i32*
-  %748 = load i32, i32* %747, align 4
-  %749 = lshr i32 %748, 25
-  %750 = and i32 %749, 63
-  %751 = icmp eq i32 %750, 0
-  br i1 %751, label %752, label %768
+; <label>:748:                                    ; preds = %745, %739
+  %749 = load i64*, i64** %11, align 8
+  %750 = load i64, i64* %749, align 8
+  %751 = add i64 %750, 1024
+  store i64 %751, i64* %749, align 8
+  br label %762
 
 ; <label>:752:                                    ; preds = %745
-  %753 = load i64*, i64** %9, align 8
-  %754 = load i64, i64* %753, align 8
-  %755 = bitcast %union.anon.0* %17 to %struct.anon.1*
-  %756 = bitcast %struct.anon.1* %755 to i32*
-  %757 = load i32, i32* %756, align 4
-  %758 = and i32 %757, 33554431
-  %759 = zext i32 %758 to i64
-  %760 = add nsw i64 %754, %759
-  store i64 %760, i64* %14, align 8
-  %761 = load i64, i64* %14, align 8
-  %762 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %763 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %762, i32 0, i32 2
-  %764 = load i64, i64* %763, align 8
-  %765 = mul nsw i64 %761, %764
-  %766 = load i64*, i64** %11, align 8
-  store i64 %765, i64* %766, align 8
-  %767 = load i8*, i8** %10, align 8
-  store i8 0, i8* %767, align 1
-  br label %768
+  %753 = bitcast %union.anon.5* %17 to %struct.anon.6*
+  %754 = bitcast %struct.anon.6* %753 to i32*
+  %755 = load i32, i32* %754, align 4
+  %756 = and i32 %755, 1023
+  %757 = zext i32 %756 to i64
+  %758 = mul i64 1024, %757
+  %759 = load i64*, i64** %11, align 8
+  %760 = load i64, i64* %759, align 8
+  %761 = add i64 %760, %758
+  store i64 %761, i64* %759, align 8
+  br label %762
 
-; <label>:768:                                    ; preds = %752, %745
-  br label %792
+; <label>:762:                                    ; preds = %752, %748
+  br label %763
 
-; <label>:769:                                    ; preds = %659
-  %770 = load i64*, i64** %9, align 8
-  %771 = load i64, i64* %770, align 8
-  %772 = bitcast %union.anon.0* %17 to %struct.anon.1*
-  %773 = bitcast %struct.anon.1* %772 to i32*
-  %774 = load i32, i32* %773, align 4
-  %775 = and i32 %774, 33554431
-  %776 = zext i32 %775 to i64
-  %777 = add nsw i64 %771, %776
-  store i64 %777, i64* %14, align 8
-  %778 = load i64, i64* %14, align 8
-  %779 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %780 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %779, i32 0, i32 2
-  %781 = load i64, i64* %780, align 8
-  %782 = mul nsw i64 %778, %781
-  %783 = load i64*, i64** %11, align 8
-  store i64 %782, i64* %783, align 8
-  %784 = bitcast %union.anon.0* %17 to %struct.anon.1*
-  %785 = bitcast %struct.anon.1* %784 to i32*
-  %786 = load i32, i32* %785, align 4
-  %787 = lshr i32 %786, 25
-  %788 = and i32 %787, 63
-  %789 = add nsw i32 %788, 1
-  %790 = trunc i32 %789 to i8
-  %791 = load i8*, i8** %10, align 8
-  store i8 %790, i8* %791, align 1
-  br label %792
+; <label>:763:                                    ; preds = %762, %732
+  %764 = bitcast %union.anon.5* %17 to %struct.anon.6*
+  %765 = bitcast %struct.anon.6* %764 to i32*
+  %766 = load i32, i32* %765, align 4
+  %767 = lshr i32 %766, 25
+  %768 = and i32 %767, 63
+  %769 = icmp sge i32 %768, 1
+  br i1 %769, label %770, label %803
 
-; <label>:792:                                    ; preds = %768, %769
-  br label %1093
+; <label>:770:                                    ; preds = %763
+  %771 = bitcast %union.anon.5* %17 to %struct.anon.6*
+  %772 = bitcast %struct.anon.6* %771 to i32*
+  %773 = load i32, i32* %772, align 4
+  %774 = lshr i32 %773, 25
+  %775 = and i32 %774, 63
+  %776 = icmp sle i32 %775, 15
+  br i1 %776, label %777, label %803
 
-; <label>:793:                                    ; preds = %203, %203, %203
-  %794 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %795 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %794, i64 0
-  %796 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %795, i32 0, i32 11
-  %797 = load i32, i32* %59, align 4
-  store i64* %796, i64** %2, align 8
-  store i8* %55, i8** %3, align 8
-  store i64* %54, i64** %4, align 8
-  store i32 2, i32* %5, align 4
-  store i32 %797, i32* %6, align 4
-  store i32 1024, i32* %7, align 4
-  %798 = load i32, i32* %6, align 4
-  %799 = bitcast %union.anon.5* %8 to i32*
-  store i32 %798, i32* %799, align 4
-  %800 = bitcast %union.anon.5* %8 to %struct.anon.6*
-  %801 = bitcast %struct.anon.6* %800 to i32*
-  %802 = load i32, i32* %801, align 4
-  %803 = lshr i32 %802, 31
-  %804 = icmp eq i32 %803, 1
-  br i1 %804, label %805, label %877
+; <label>:777:                                    ; preds = %770
+  %778 = load i64*, i64** %11, align 8
+  %779 = load i64, i64* %778, align 8
+  %780 = bitcast %union.anon.5* %17 to %struct.anon.6*
+  %781 = bitcast %struct.anon.6* %780 to i32*
+  %782 = load i32, i32* %781, align 4
+  %783 = and i32 %782, 1023
+  %784 = zext i32 %783 to i64
+  %785 = add nsw i64 %779, %784
+  %786 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %787 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %786, i32 0, i32 4
+  %788 = load i64, i64* %787, align 8
+  %789 = mul nsw i64 %785, %788
+  %790 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %791 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %790, i32 0, i32 3
+  %792 = load i64, i64* %791, align 8
+  %793 = load i64*, i64** %13, align 8
+  store i64 %789, i64* %793, align 8
+  %794 = bitcast %union.anon.5* %17 to %struct.anon.6*
+  %795 = bitcast %struct.anon.6* %794 to i32*
+  %796 = load i32, i32* %795, align 4
+  %797 = lshr i32 %796, 25
+  %798 = and i32 %797, 63
+  %799 = call i32 @llvm.cttz.i32(i32 %798, i1 true) #4
+  %800 = add nsw i32 16, %799
+  %801 = trunc i32 %800 to i8
+  %802 = load i8*, i8** %12, align 8
+  store i8 %801, i8* %802, align 1
+  br label %803
 
-; <label>:805:                                    ; preds = %793
-  %806 = bitcast %union.anon.5* %8 to %struct.anon.6*
-  %807 = bitcast %struct.anon.6* %806 to i32*
-  %808 = load i32, i32* %807, align 4
-  %809 = lshr i32 %808, 25
-  %810 = and i32 %809, 63
-  %811 = icmp eq i32 %810, 63
-  br i1 %811, label %812, label %836
-
-; <label>:812:                                    ; preds = %805
-  %813 = bitcast %union.anon.5* %8 to %struct.anon.6*
-  %814 = bitcast %struct.anon.6* %813 to i32*
-  %815 = load i32, i32* %814, align 4
-  %816 = and i32 %815, 1023
-  %817 = icmp eq i32 %816, 0
-  br i1 %817, label %821, label %818
-
-; <label>:818:                                    ; preds = %812
-  %819 = load i32, i32* %5, align 4
-  %820 = icmp eq i32 %819, 1
-  br i1 %820, label %821, label %825
-
-; <label>:821:                                    ; preds = %818, %812
-  %822 = load i64*, i64** %2, align 8
-  %823 = load i64, i64* %822, align 8
-  %824 = add i64 %823, 1024
-  store i64 %824, i64* %822, align 8
-  br label %835
-
-; <label>:825:                                    ; preds = %818
-  %826 = bitcast %union.anon.5* %8 to %struct.anon.6*
-  %827 = bitcast %struct.anon.6* %826 to i32*
-  %828 = load i32, i32* %827, align 4
-  %829 = and i32 %828, 1023
-  %830 = zext i32 %829 to i64
-  %831 = mul i64 1024, %830
-  %832 = load i64*, i64** %2, align 8
-  %833 = load i64, i64* %832, align 8
-  %834 = add i64 %833, %831
-  store i64 %834, i64* %832, align 8
-  br label %835
-
-; <label>:835:                                    ; preds = %825, %821
+; <label>:803:                                    ; preds = %777, %770, %763
   br label %836
 
-; <label>:836:                                    ; preds = %835, %805
-  %837 = bitcast %union.anon.5* %8 to %struct.anon.6*
-  %838 = bitcast %struct.anon.6* %837 to i32*
-  %839 = load i32, i32* %838, align 4
-  %840 = lshr i32 %839, 25
-  %841 = and i32 %840, 63
-  %842 = icmp sge i32 %841, 1
-  br i1 %842, label %843, label %876
+; <label>:804:                                    ; preds = %720
+  %805 = load i64*, i64** %11, align 8
+  %806 = load i64, i64* %805, align 8
+  %807 = bitcast %union.anon.5* %17 to %struct.anon.6*
+  %808 = bitcast %struct.anon.6* %807 to i32*
+  %809 = load i32, i32* %808, align 4
+  %810 = and i32 %809, 1023
+  %811 = zext i32 %810 to i64
+  %812 = add nsw i64 %806, %811
+  %813 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %814 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %813, i32 0, i32 4
+  %815 = load i64, i64* %814, align 8
+  %816 = mul nsw i64 %812, %815
+  %817 = bitcast %union.anon.5* %17 to %struct.anon.6*
+  %818 = bitcast %struct.anon.6* %817 to i32*
+  %819 = load i32, i32* %818, align 4
+  %820 = lshr i32 %819, 10
+  %821 = and i32 %820, 32767
+  %822 = zext i32 %821 to i64
+  %823 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %824 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %823, i32 0, i32 3
+  %825 = load i64, i64* %824, align 8
+  %826 = mul nsw i64 %822, %825
+  %827 = add nsw i64 %816, %826
+  %828 = load i64*, i64** %13, align 8
+  store i64 %827, i64* %828, align 8
+  %829 = bitcast %union.anon.5* %17 to %struct.anon.6*
+  %830 = bitcast %struct.anon.6* %829 to i32*
+  %831 = load i32, i32* %830, align 4
+  %832 = lshr i32 %831, 25
+  %833 = and i32 %832, 63
+  %834 = trunc i32 %833 to i8
+  %835 = load i8*, i8** %12, align 8
+  store i8 %834, i8* %835, align 1
+  br label %836
 
-; <label>:843:                                    ; preds = %836
-  %844 = bitcast %union.anon.5* %8 to %struct.anon.6*
-  %845 = bitcast %struct.anon.6* %844 to i32*
-  %846 = load i32, i32* %845, align 4
-  %847 = lshr i32 %846, 25
-  %848 = and i32 %847, 63
-  %849 = icmp sle i32 %848, 15
-  br i1 %849, label %850, label %876
+; <label>:836:                                    ; preds = %803, %804
+  br label %1020
 
-; <label>:850:                                    ; preds = %843
-  %851 = load i64*, i64** %2, align 8
-  %852 = load i64, i64* %851, align 8
-  %853 = bitcast %union.anon.5* %8 to %struct.anon.6*
-  %854 = bitcast %struct.anon.6* %853 to i32*
-  %855 = load i32, i32* %854, align 4
-  %856 = and i32 %855, 1023
-  %857 = zext i32 %856 to i64
-  %858 = add nsw i64 %852, %857
-  %859 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %860 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %859, i32 0, i32 4
-  %861 = load i64, i64* %860, align 8
-  %862 = mul nsw i64 %858, %861
-  %863 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %864 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %863, i32 0, i32 3
-  %865 = load i64, i64* %864, align 8
-  %866 = load i64*, i64** %4, align 8
-  store i64 %862, i64* %866, align 8
-  %867 = bitcast %union.anon.5* %8 to %struct.anon.6*
-  %868 = bitcast %struct.anon.6* %867 to i32*
-  %869 = load i32, i32* %868, align 4
-  %870 = lshr i32 %869, 25
-  %871 = and i32 %870, 63
-  %872 = call i32 @llvm.cttz.i32(i32 %871, i1 true) #5
-  %873 = add nsw i32 16, %872
-  %874 = trunc i32 %873 to i8
-  %875 = load i8*, i8** %3, align 8
-  store i8 %874, i8* %875, align 1
-  br label %876
+; <label>:837:                                    ; preds = %130
+  %838 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %839 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %838, i64 0
+  %840 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %839, i32 0, i32 13
+  %841 = load i8*, i8** %840, align 8
+  %842 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %843 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %842, i64 0
+  %844 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %843, i32 0, i32 10
+  %845 = load i64, i64* %844, align 8
+  %846 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %847 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %846, i64 0
+  %848 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %847, i32 0, i32 5
+  %849 = load i64, i64* %848, align 8
+  %850 = mul nsw i64 %845, %849
+  %851 = getelementptr inbounds i8, i8* %841, i64 %850
+  %852 = bitcast i8* %851 to %struct.TTTRRecord*
+  store %struct.TTTRRecord* %852, %struct.TTTRRecord** %58, align 8
+  %853 = load %struct.TTTRRecord*, %struct.TTTRRecord** %58, align 8
+  %854 = getelementptr inbounds %struct.TTTRRecord, %struct.TTTRRecord* %853, i32 0, i32 0
+  %855 = load i64, i64* %854, align 8
+  %856 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %857 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %856, i64 0
+  %858 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %857, i32 0, i32 2
+  %859 = load i64, i64* %858, align 8
+  %860 = mul i64 %855, %859
+  store i64 %860, i64* %51, align 8
+  %861 = load %struct.TTTRRecord*, %struct.TTTRRecord** %58, align 8
+  %862 = getelementptr inbounds %struct.TTTRRecord, %struct.TTTRRecord* %861, i32 0, i32 1
+  %863 = load i16, i16* %862, align 8
+  %864 = trunc i16 %863 to i8
+  store i8 %864, i8* %52, align 1
+  br label %1020
 
-; <label>:876:                                    ; preds = %850, %843, %836
-  br label %909
+; <label>:865:                                    ; preds = %130
+  %866 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %867 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %866, i64 0
+  %868 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %867, i32 0, i32 13
+  %869 = load i8*, i8** %868, align 8
+  %870 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %871 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %870, i64 0
+  %872 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %871, i32 0, i32 10
+  %873 = load i64, i64* %872, align 8
+  %874 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %875 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %874, i64 0
+  %876 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %875, i32 0, i32 5
+  %877 = load i64, i64* %876, align 8
+  %878 = mul nsw i64 %873, %877
+  %879 = getelementptr inbounds i8, i8* %869, i64 %878
+  %880 = bitcast i8* %879 to %struct.SITTTRStruct*
+  store %struct.SITTTRStruct* %880, %struct.SITTTRStruct** %59, align 8
+  %881 = load %struct.SITTTRStruct*, %struct.SITTTRStruct** %59, align 8
+  %882 = getelementptr inbounds %struct.SITTTRStruct, %struct.SITTTRStruct* %881, i32 0, i32 2
+  %883 = load i64, i64* %882, align 8
+  %884 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %885 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %884, i64 0
+  %886 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %885, i32 0, i32 2
+  %887 = load i64, i64* %886, align 8
+  %888 = mul i64 %883, %887
+  store i64 %888, i64* %51, align 8
+  %889 = load %struct.SITTTRStruct*, %struct.SITTTRStruct** %59, align 8
+  %890 = getelementptr inbounds %struct.SITTTRStruct, %struct.SITTTRStruct* %889, i32 0, i32 1
+  %891 = load i32, i32* %890, align 4
+  %892 = trunc i32 %891 to i8
+  store i8 %892, i8* %52, align 1
+  br label %1020
 
-; <label>:877:                                    ; preds = %793
-  %878 = load i64*, i64** %2, align 8
-  %879 = load i64, i64* %878, align 8
-  %880 = bitcast %union.anon.5* %8 to %struct.anon.6*
-  %881 = bitcast %struct.anon.6* %880 to i32*
-  %882 = load i32, i32* %881, align 4
-  %883 = and i32 %882, 1023
-  %884 = zext i32 %883 to i64
-  %885 = add nsw i64 %879, %884
-  %886 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %887 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %886, i32 0, i32 4
-  %888 = load i64, i64* %887, align 8
-  %889 = mul nsw i64 %885, %888
-  %890 = bitcast %union.anon.5* %8 to %struct.anon.6*
-  %891 = bitcast %struct.anon.6* %890 to i32*
-  %892 = load i32, i32* %891, align 4
-  %893 = lshr i32 %892, 10
-  %894 = and i32 %893, 32767
-  %895 = zext i32 %894 to i64
-  %896 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %897 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %896, i32 0, i32 3
-  %898 = load i64, i64* %897, align 8
-  %899 = mul nsw i64 %895, %898
-  %900 = add nsw i64 %889, %899
-  %901 = load i64*, i64** %4, align 8
-  store i64 %900, i64* %901, align 8
-  %902 = bitcast %union.anon.5* %8 to %struct.anon.6*
-  %903 = bitcast %struct.anon.6* %902 to i32*
-  %904 = load i32, i32* %903, align 4
-  %905 = lshr i32 %904, 25
-  %906 = and i32 %905, 63
-  %907 = trunc i32 %906 to i8
-  %908 = load i8*, i8** %3, align 8
-  store i8 %907, i8* %908, align 1
-  br label %909
+; <label>:893:                                    ; preds = %130
+  %894 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %895 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %894, i64 0
+  %896 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %895, i32 0, i32 13
+  %897 = load i8*, i8** %896, align 8
+  %898 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %899 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %898, i64 0
+  %900 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %899, i32 0, i32 10
+  %901 = load i64, i64* %900, align 8
+  %902 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %903 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %902, i64 0
+  %904 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %903, i32 0, i32 5
+  %905 = load i64, i64* %904, align 8
+  %906 = mul nsw i64 %901, %905
+  %907 = getelementptr inbounds i8, i8* %897, i64 %906
+  %908 = bitcast i8* %907 to %union.COMPTTTRRecord*
+  store %union.COMPTTTRRecord* %908, %union.COMPTTTRRecord** %60, align 8
+  %909 = load %union.COMPTTTRRecord*, %union.COMPTTTRRecord** %60, align 8
+  %910 = bitcast %union.COMPTTTRRecord* %909 to %struct.anon.7*
+  %911 = bitcast %struct.anon.7* %910 to i64*
+  %912 = load i64, i64* %911, align 8
+  %913 = and i64 %912, 137438953471
+  %914 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %915 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %914, i64 0
+  %916 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %915, i32 0, i32 2
+  %917 = load i64, i64* %916, align 8
+  %918 = mul i64 %913, %917
+  store i64 %918, i64* %51, align 8
+  %919 = load %union.COMPTTTRRecord*, %union.COMPTTTRRecord** %60, align 8
+  %920 = bitcast %union.COMPTTTRRecord* %919 to %struct.anon.7*
+  %921 = getelementptr inbounds %struct.anon.7, %struct.anon.7* %920, i32 0, i32 1
+  %922 = load i32, i32* %921, align 8
+  %923 = and i32 %922, 7
+  %924 = trunc i32 %923 to i8
+  store i8 %924, i8* %52, align 1
+  br label %1020
 
-; <label>:909:                                    ; preds = %876, %877
-  br label %1093
-
-; <label>:910:                                    ; preds = %203
-  %911 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %912 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %911, i64 0
-  %913 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %912, i32 0, i32 13
-  %914 = load i8*, i8** %913, align 8
-  %915 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %916 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %915, i64 0
-  %917 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %916, i32 0, i32 10
-  %918 = load i64, i64* %917, align 8
-  %919 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %920 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %919, i64 0
-  %921 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %920, i32 0, i32 5
-  %922 = load i64, i64* %921, align 8
-  %923 = mul nsw i64 %918, %922
-  %924 = getelementptr inbounds i8, i8* %914, i64 %923
-  %925 = bitcast i8* %924 to %struct.TTTRRecord*
-  store %struct.TTTRRecord* %925, %struct.TTTRRecord** %61, align 8
-  %926 = load %struct.TTTRRecord*, %struct.TTTRRecord** %61, align 8
-  %927 = getelementptr inbounds %struct.TTTRRecord, %struct.TTTRRecord* %926, i32 0, i32 0
-  %928 = load i64, i64* %927, align 8
-  %929 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %930 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %929, i64 0
-  %931 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %930, i32 0, i32 2
-  %932 = load i64, i64* %931, align 8
-  %933 = mul i64 %928, %932
-  store i64 %933, i64* %54, align 8
-  %934 = load %struct.TTTRRecord*, %struct.TTTRRecord** %61, align 8
-  %935 = getelementptr inbounds %struct.TTTRRecord, %struct.TTTRRecord* %934, i32 0, i32 1
-  %936 = load i16, i16* %935, align 8
-  %937 = trunc i16 %936 to i8
-  store i8 %937, i8* %55, align 1
-  br label %1093
-
-; <label>:938:                                    ; preds = %203
-  %939 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %940 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %939, i64 0
-  %941 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %940, i32 0, i32 13
-  %942 = load i8*, i8** %941, align 8
-  %943 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %944 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %943, i64 0
-  %945 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %944, i32 0, i32 10
-  %946 = load i64, i64* %945, align 8
+; <label>:925:                                    ; preds = %130
+  %926 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %927 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %926, i64 0
+  %928 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %927, i32 0, i32 13
+  %929 = load i8*, i8** %928, align 8
+  %930 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %931 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %930, i64 0
+  %932 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %931, i32 0, i32 10
+  %933 = load i64, i64* %932, align 8
+  %934 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %935 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %934, i64 0
+  %936 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %935, i32 0, i32 5
+  %937 = load i64, i64* %936, align 8
+  %938 = mul nsw i64 %933, %937
+  %939 = getelementptr inbounds i8, i8* %929, i64 %938
+  %940 = bitcast i8* %939 to %union.bh4bytesRec*
+  store %union.bh4bytesRec* %940, %union.bh4bytesRec** %61, align 8
+  %941 = load %union.bh4bytesRec*, %union.bh4bytesRec** %61, align 8
+  %942 = bitcast %union.bh4bytesRec* %941 to %struct.anon.8*
+  %943 = bitcast %struct.anon.8* %942 to i32*
+  %944 = load i32, i32* %943, align 4
+  %945 = and i32 %944, 4095
+  %946 = zext i32 %945 to i64
   %947 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
   %948 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %947, i64 0
-  %949 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %948, i32 0, i32 5
+  %949 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %948, i32 0, i32 11
   %950 = load i64, i64* %949, align 8
-  %951 = mul nsw i64 %946, %950
-  %952 = getelementptr inbounds i8, i8* %942, i64 %951
-  %953 = bitcast i8* %952 to %struct.SITTTRStruct*
-  store %struct.SITTTRStruct* %953, %struct.SITTTRStruct** %62, align 8
-  %954 = load %struct.SITTTRStruct*, %struct.SITTTRStruct** %62, align 8
-  %955 = getelementptr inbounds %struct.SITTTRStruct, %struct.SITTTRStruct* %954, i32 0, i32 2
-  %956 = load i64, i64* %955, align 8
-  %957 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %958 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %957, i64 0
-  %959 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %958, i32 0, i32 2
-  %960 = load i64, i64* %959, align 8
-  %961 = mul i64 %956, %960
-  store i64 %961, i64* %54, align 8
-  %962 = load %struct.SITTTRStruct*, %struct.SITTTRStruct** %62, align 8
-  %963 = getelementptr inbounds %struct.SITTTRStruct, %struct.SITTTRStruct* %962, i32 0, i32 1
-  %964 = load i32, i32* %963, align 4
-  %965 = trunc i32 %964 to i8
-  store i8 %965, i8* %55, align 1
-  br label %1093
+  %951 = add nsw i64 %946, %950
+  %952 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %953 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %952, i64 0
+  %954 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %953, i32 0, i32 4
+  %955 = load i64, i64* %954, align 8
+  %956 = mul nsw i64 %951, %955
+  %957 = load %union.bh4bytesRec*, %union.bh4bytesRec** %61, align 8
+  %958 = bitcast %union.bh4bytesRec* %957 to %struct.anon.8*
+  %959 = bitcast %struct.anon.8* %958 to i32*
+  %960 = load i32, i32* %959, align 4
+  %961 = lshr i32 %960, 16
+  %962 = and i32 %961, 4095
+  %963 = zext i32 %962 to i64
+  %964 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %965 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %964, i64 0
+  %966 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %965, i32 0, i32 3
+  %967 = load i64, i64* %966, align 8
+  %968 = mul nsw i64 %963, %967
+  %969 = add nsw i64 %956, %968
+  store i64 %969, i64* %51, align 8
+  %970 = load %union.bh4bytesRec*, %union.bh4bytesRec** %61, align 8
+  %971 = bitcast %union.bh4bytesRec* %970 to %struct.anon.8*
+  %972 = bitcast %struct.anon.8* %971 to i32*
+  %973 = load i32, i32* %972, align 4
+  %974 = lshr i32 %973, 31
+  %975 = icmp ne i32 %974, 0
+  br i1 %975, label %976, label %977
 
-; <label>:966:                                    ; preds = %203
-  %967 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %968 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %967, i64 0
-  %969 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %968, i32 0, i32 13
-  %970 = load i8*, i8** %969, align 8
-  %971 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %972 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %971, i64 0
-  %973 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %972, i32 0, i32 10
-  %974 = load i64, i64* %973, align 8
-  %975 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %976 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %975, i64 0
-  %977 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %976, i32 0, i32 5
-  %978 = load i64, i64* %977, align 8
-  %979 = mul nsw i64 %974, %978
-  %980 = getelementptr inbounds i8, i8* %970, i64 %979
-  %981 = bitcast i8* %980 to %union.COMPTTTRRecord*
-  store %union.COMPTTTRRecord* %981, %union.COMPTTTRRecord** %63, align 8
-  %982 = load %union.COMPTTTRRecord*, %union.COMPTTTRRecord** %63, align 8
-  %983 = bitcast %union.COMPTTTRRecord* %982 to %struct.anon.7*
-  %984 = bitcast %struct.anon.7* %983 to i64*
-  %985 = load i64, i64* %984, align 8
-  %986 = and i64 %985, 137438953471
-  %987 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %988 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %987, i64 0
-  %989 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %988, i32 0, i32 2
-  %990 = load i64, i64* %989, align 8
-  %991 = mul i64 %986, %990
-  store i64 %991, i64* %54, align 8
-  %992 = load %union.COMPTTTRRecord*, %union.COMPTTTRRecord** %63, align 8
-  %993 = bitcast %union.COMPTTTRRecord* %992 to %struct.anon.7*
-  %994 = getelementptr inbounds %struct.anon.7, %struct.anon.7* %993, i32 0, i32 1
-  %995 = load i32, i32* %994, align 8
-  %996 = and i32 %995, 7
-  %997 = trunc i32 %996 to i8
-  store i8 %997, i8* %55, align 1
-  br label %1093
+; <label>:976:                                    ; preds = %925
+  store i64 9223372036854775807, i64* %51, align 8
+  br label %977
 
-; <label>:998:                                    ; preds = %203
-  %999 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %1000 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %999, i64 0
-  %1001 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %1000, i32 0, i32 13
-  %1002 = load i8*, i8** %1001, align 8
-  %1003 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %1004 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %1003, i64 0
-  %1005 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %1004, i32 0, i32 10
-  %1006 = load i64, i64* %1005, align 8
-  %1007 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %1008 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %1007, i64 0
-  %1009 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %1008, i32 0, i32 5
-  %1010 = load i64, i64* %1009, align 8
-  %1011 = mul nsw i64 %1006, %1010
-  %1012 = getelementptr inbounds i8, i8* %1002, i64 %1011
-  %1013 = bitcast i8* %1012 to %union.bh4bytesRec*
-  store %union.bh4bytesRec* %1013, %union.bh4bytesRec** %64, align 8
-  %1014 = load %union.bh4bytesRec*, %union.bh4bytesRec** %64, align 8
-  %1015 = bitcast %union.bh4bytesRec* %1014 to %struct.anon.8*
-  %1016 = bitcast %struct.anon.8* %1015 to i32*
-  %1017 = load i32, i32* %1016, align 4
-  %1018 = and i32 %1017, 4095
-  %1019 = zext i32 %1018 to i64
-  %1020 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %1021 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %1020, i64 0
-  %1022 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %1021, i32 0, i32 11
-  %1023 = load i64, i64* %1022, align 8
-  %1024 = add nsw i64 %1019, %1023
-  %1025 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %1026 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %1025, i64 0
-  %1027 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %1026, i32 0, i32 4
-  %1028 = load i64, i64* %1027, align 8
-  %1029 = mul nsw i64 %1024, %1028
-  %1030 = load %union.bh4bytesRec*, %union.bh4bytesRec** %64, align 8
-  %1031 = bitcast %union.bh4bytesRec* %1030 to %struct.anon.8*
-  %1032 = bitcast %struct.anon.8* %1031 to i32*
-  %1033 = load i32, i32* %1032, align 4
-  %1034 = lshr i32 %1033, 16
-  %1035 = and i32 %1034, 4095
-  %1036 = zext i32 %1035 to i64
-  %1037 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %1038 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %1037, i64 0
-  %1039 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %1038, i32 0, i32 3
-  %1040 = load i64, i64* %1039, align 8
-  %1041 = mul nsw i64 %1036, %1040
-  %1042 = add nsw i64 %1029, %1041
-  store i64 %1042, i64* %54, align 8
-  %1043 = load %union.bh4bytesRec*, %union.bh4bytesRec** %64, align 8
-  %1044 = bitcast %union.bh4bytesRec* %1043 to %struct.anon.8*
-  %1045 = bitcast %struct.anon.8* %1044 to i32*
-  %1046 = load i32, i32* %1045, align 4
-  %1047 = lshr i32 %1046, 31
-  %1048 = icmp ne i32 %1047, 0
-  br i1 %1048, label %1049, label %1050
+; <label>:977:                                    ; preds = %976, %925
+  %978 = load %union.bh4bytesRec*, %union.bh4bytesRec** %61, align 8
+  %979 = bitcast %union.bh4bytesRec* %978 to %struct.anon.8*
+  %980 = bitcast %struct.anon.8* %979 to i32*
+  %981 = load i32, i32* %980, align 4
+  %982 = lshr i32 %981, 30
+  %983 = and i32 %982, 1
+  %984 = icmp ne i32 %983, 0
+  br i1 %984, label %985, label %991
 
-; <label>:1049:                                   ; preds = %998
-  store i64 9223372036854775807, i64* %54, align 8
-  br label %1050
+; <label>:985:                                    ; preds = %977
+  store i64 9223372036854775807, i64* %51, align 8
+  %986 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %987 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %986, i64 0
+  %988 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %987, i32 0, i32 11
+  %989 = load i64, i64* %988, align 8
+  %990 = add nsw i64 %989, 4096
+  store i64 %990, i64* %988, align 8
+  br label %991
 
-; <label>:1050:                                   ; preds = %1049, %998
-  %1051 = load %union.bh4bytesRec*, %union.bh4bytesRec** %64, align 8
-  %1052 = bitcast %union.bh4bytesRec* %1051 to %struct.anon.8*
-  %1053 = bitcast %struct.anon.8* %1052 to i32*
-  %1054 = load i32, i32* %1053, align 4
-  %1055 = lshr i32 %1054, 30
-  %1056 = and i32 %1055, 1
-  %1057 = icmp ne i32 %1056, 0
-  br i1 %1057, label %1058, label %1064
+; <label>:991:                                    ; preds = %985, %977
+  %992 = load %union.bh4bytesRec*, %union.bh4bytesRec** %61, align 8
+  %993 = bitcast %union.bh4bytesRec* %992 to %struct.anon.8*
+  %994 = bitcast %struct.anon.8* %993 to i32*
+  %995 = load i32, i32* %994, align 4
+  %996 = lshr i32 %995, 28
+  %997 = and i32 %996, 1
+  %998 = icmp ne i32 %997, 0
+  br i1 %998, label %999, label %1008
 
-; <label>:1058:                                   ; preds = %1050
-  store i64 9223372036854775807, i64* %54, align 8
-  %1059 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %1060 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %1059, i64 0
-  %1061 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %1060, i32 0, i32 11
-  %1062 = load i64, i64* %1061, align 8
-  %1063 = add nsw i64 %1062, 4096
-  store i64 %1063, i64* %1061, align 8
-  br label %1064
+; <label>:999:                                    ; preds = %991
+  %1000 = load %union.bh4bytesRec*, %union.bh4bytesRec** %61, align 8
+  %1001 = bitcast %union.bh4bytesRec* %1000 to %struct.anon.8*
+  %1002 = bitcast %struct.anon.8* %1001 to i32*
+  %1003 = load i32, i32* %1002, align 4
+  %1004 = lshr i32 %1003, 12
+  %1005 = and i32 %1004, 15
+  %1006 = add nsw i32 %1005, 16
+  %1007 = trunc i32 %1006 to i8
+  store i8 %1007, i8* %52, align 1
+  br label %1016
 
-; <label>:1064:                                   ; preds = %1058, %1050
-  %1065 = load %union.bh4bytesRec*, %union.bh4bytesRec** %64, align 8
-  %1066 = bitcast %union.bh4bytesRec* %1065 to %struct.anon.8*
-  %1067 = bitcast %struct.anon.8* %1066 to i32*
-  %1068 = load i32, i32* %1067, align 4
-  %1069 = lshr i32 %1068, 28
-  %1070 = and i32 %1069, 1
-  %1071 = icmp ne i32 %1070, 0
-  br i1 %1071, label %1072, label %1081
+; <label>:1008:                                   ; preds = %991
+  %1009 = load %union.bh4bytesRec*, %union.bh4bytesRec** %61, align 8
+  %1010 = bitcast %union.bh4bytesRec* %1009 to %struct.anon.8*
+  %1011 = bitcast %struct.anon.8* %1010 to i32*
+  %1012 = load i32, i32* %1011, align 4
+  %1013 = lshr i32 %1012, 12
+  %1014 = and i32 %1013, 15
+  %1015 = trunc i32 %1014 to i8
+  store i8 %1015, i8* %52, align 1
+  br label %1016
 
-; <label>:1072:                                   ; preds = %1064
-  %1073 = load %union.bh4bytesRec*, %union.bh4bytesRec** %64, align 8
-  %1074 = bitcast %union.bh4bytesRec* %1073 to %struct.anon.8*
-  %1075 = bitcast %struct.anon.8* %1074 to i32*
-  %1076 = load i32, i32* %1075, align 4
-  %1077 = lshr i32 %1076, 12
-  %1078 = and i32 %1077, 15
-  %1079 = add nsw i32 %1078, 16
-  %1080 = trunc i32 %1079 to i8
-  store i8 %1080, i8* %55, align 1
-  br label %1089
+; <label>:1016:                                   ; preds = %1008, %999
+  br label %1020
 
-; <label>:1081:                                   ; preds = %1064
-  %1082 = load %union.bh4bytesRec*, %union.bh4bytesRec** %64, align 8
-  %1083 = bitcast %union.bh4bytesRec* %1082 to %struct.anon.8*
-  %1084 = bitcast %struct.anon.8* %1083 to i32*
-  %1085 = load i32, i32* %1084, align 4
-  %1086 = lshr i32 %1085, 12
-  %1087 = and i32 %1086, 15
-  %1088 = trunc i32 %1087 to i8
-  store i8 %1088, i8* %55, align 1
-  br label %1089
+; <label>:1017:                                   ; preds = %130
+  %1018 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([44 x i8], [44 x i8]* @"??_C@_0CM@DODOIIB@?6?5?$FLERROR?$FNERROR?3?5Unsupported?5time@", i32 0, i32 0))
+  %1019 = sext i32 %1018 to i64
+  store i64 %1019, i64* @order_gurantee3, align 8
+  br label %1020
 
-; <label>:1089:                                   ; preds = %1081, %1072
-  br label %1093
+; <label>:1020:                                   ; preds = %1017, %1016, %893, %865, %837, %836, %719, %585, %468, %334, %228
+  %1021 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %1022 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %1021, i64 0
+  %1023 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %1022, i32 0, i32 10
+  %1024 = load i64, i64* %1023, align 8
+  %1025 = add nsw i64 %1024, 1
+  store i64 %1025, i64* %1023, align 8
+  %1026 = load i64, i64* %51, align 8
+  %1027 = icmp eq i64 %1026, 9223372036854775807
+  br i1 %1027, label %1028, label %1029
 
-; <label>:1090:                                   ; preds = %203
-  %1091 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([44 x i8], [44 x i8]* @"??_C@_0CM@DODOIIB@?6?5?$FLERROR?$FNERROR?3?5Unsupported?5time@", i32 0, i32 0))
-  %1092 = sext i32 %1091 to i64
-  store i64 %1092, i64* @order_gurantee3, align 8
-  br label %1093
+; <label>:1028:                                   ; preds = %1020
+  br label %62
 
-; <label>:1093:                                   ; preds = %1090, %1089, %966, %938, %910, %909, %792, %658, %541, %407, %301
-  %1094 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %1095 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %1094, i64 0
-  %1096 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %1095, i32 0, i32 10
-  %1097 = load i64, i64* %1096, align 8
-  %1098 = add nsw i64 %1097, 1
-  store i64 %1098, i64* %1096, align 8
-  %1099 = load i64, i64* %54, align 8
-  %1100 = icmp eq i64 %1099, 9223372036854775807
-  br i1 %1100, label %1101, label %1102
+; <label>:1029:                                   ; preds = %1020
+  %1030 = load i8, i8* %52, align 1
+  %1031 = load i8*, i8** %50, align 8
+  store i8 %1030, i8* %1031, align 1
+  %1032 = load i64, i64* %51, align 8
+  %1033 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %1034 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %1033, i64 0
+  %1035 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %1034, i32 0, i32 7
+  %1036 = load i64, i64* %1035, align 8
+  %1037 = add nsw i64 %1032, %1036
+  store i64 %1037, i64* %49, align 8
+  br label %1040
 
-; <label>:1101:                                   ; preds = %1093
-  br label %65
+; <label>:1038:                                   ; preds = %115, %93
+  %1039 = load i8*, i8** %50, align 8
+  store i8 -1, i8* %1039, align 1
+  store i64 9223372036854775807, i64* %49, align 8
+  br label %1040
 
-; <label>:1102:                                   ; preds = %1093
-  %1103 = load i8, i8* %55, align 1
-  %1104 = load i8*, i8** %53, align 8
-  store i8 %1103, i8* %1104, align 1
-  %1105 = load i64, i64* %54, align 8
-  %1106 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %1107 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %1106, i64 0
-  %1108 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %1107, i32 0, i32 7
-  %1109 = load i64, i64* %1108, align 8
-  %1110 = add nsw i64 %1105, %1109
-  store i64 %1110, i64* %52, align 8
-  br label %1113
-
-; <label>:1111:                                   ; preds = %186, %161
-  %1112 = load i8*, i8** %53, align 8
-  store i8 -1, i8* %1112, align 1
-  store i64 9223372036854775807, i64* %52, align 8
-  br label %1113
-
-; <label>:1113:                                   ; preds = %1111, %1102
-  %1114 = load i64, i64* %52, align 8
-  ret i64 %1114
+; <label>:1040:                                   ; preds = %1038, %1029
+  %1041 = load i64, i64* %49, align 8
+  ret i64 %1041
 }
 
 ; Function Attrs: alwaysinline uwtable
 define dso_local i32 @FileReader_init(i8*, i8*) #0 {
-  %3 = alloca i32, align 4
+  %3 = alloca i8*, align 8
   %4 = alloca i8*, align 8
-  %5 = alloca i8*, align 8
-  store i8* %1, i8** %4, align 8
-  store i8* %0, i8** %5, align 8
-  %6 = load i8*, i8** %4, align 8
-  %7 = bitcast i8* %6 to %struct.ttf_reader*
-  store %struct.ttf_reader* %7, %struct.ttf_reader** @READERs, align 8
-  %8 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %9 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %8, i64 0
-  %10 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %9, i32 0, i32 0
-  %11 = load i64, i64* %10, align 8
-  %12 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %13 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %12, i64 0
-  %14 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %13, i32 0, i32 8
-  store i64 %11, i64* %14, align 8
-  %15 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %16 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %15, i64 0
-  %17 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %16, i32 0, i32 10
-  store i64 0, i64* %17, align 8
+  store i8* %1, i8** %3, align 8
+  store i8* %0, i8** %4, align 8
+  %5 = load i8*, i8** %3, align 8
+  %6 = bitcast i8* %5 to %struct.ttf_reader*
+  store %struct.ttf_reader* %6, %struct.ttf_reader** @READERs, align 8
+  %7 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %8 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %7, i64 0
+  %9 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %8, i32 0, i32 10
+  store i64 0, i64* %9, align 8
+  %10 = load i8*, i8** %4, align 8
+  %11 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %12 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %11, i64 0
+  %13 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %12, i32 0, i32 13
+  store i8* %10, i8** %13, align 8
+  %14 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %15 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %14, i64 0
+  %16 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %15, i32 0, i32 1
+  %17 = load i64, i64* %16, align 8
   %18 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
   %19 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %18, i64 0
-  %20 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %19, i32 0, i32 9
-  store i64 0, i64* %20, align 8
-  %21 = load i8*, i8** %5, align 8
-  %22 = call %struct._iobuf* @fopen(i8* %21, i8* getelementptr inbounds ([3 x i8], [3 x i8]* @"??_C@_02JDPG@rb?$AA@", i32 0, i32 0))
-  %23 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %24 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %23, i64 0
-  %25 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %24, i32 0, i32 14
-  store %struct._iobuf* %22, %struct._iobuf** %25, align 8
-  %26 = icmp eq %struct._iobuf* %22, null
-  br i1 %26, label %27, label %30
-
-; <label>:27:                                     ; preds = %2
-  %28 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([52 x i8], [52 x i8]* @"??_C@_0DE@PLFGPKJO@?6?5?$FLERROR?$FNTime?9tag?5file?5cannot?5be@", i32 0, i32 0))
-  %29 = sext i32 %28 to i64
-  store i64 %29, i64* @order_gurantee3, align 8
-  store i32 -1, i32* %3, align 4
-  br label %70
-
-; <label>:30:                                     ; preds = %2
-  %31 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %32 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %31, i64 0
-  %33 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %32, i32 0, i32 8
-  %34 = load i64, i64* %33, align 8
-  %35 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %36 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %35, i64 0
-  %37 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %36, i32 0, i32 14
-  %38 = load %struct._iobuf*, %struct._iobuf** %37, align 8
-  %39 = call i32 @_fseeki64(%struct._iobuf* %38, i64 %34, i32 0)
-  %40 = icmp ne i32 %39, 0
-  br i1 %40, label %41, label %44
-
-; <label>:41:                                     ; preds = %30
-  %42 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([47 x i8], [47 x i8]* @"??_C@_0CP@EMJMNIIB@?6?5?$FLERROR?$FNTime?9tag?5file?5cannot?5se@", i32 0, i32 0))
-  %43 = sext i32 %42 to i64
-  store i64 %43, i64* @order_gurantee3, align 8
-  store i32 -1, i32* %3, align 4
-  br label %70
-
-; <label>:44:                                     ; preds = %30
-  %45 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %46 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %45, i64 0
-  %47 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %46, i32 0, i32 5
-  %48 = load i64, i64* %47, align 8
-  %49 = mul nsw i64 50000, %48
-  %50 = call noalias i8* @malloc(i64 %49)
-  %51 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %52 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %51, i64 0
-  %53 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %52, i32 0, i32 13
-  store i8* %50, i8** %53, align 8
-  %54 = icmp eq i8* %50, null
-  br i1 %54, label %55, label %58
-
-; <label>:55:                                     ; preds = %44
-  %56 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([79 x i8], [79 x i8]* @"??_C@_0EP@PGBLNION@?6?5?$FLERROR?$FNReading?5buffer?5for?5Time@", i32 0, i32 0))
-  %57 = sext i32 %56 to i64
-  store i64 %57, i64* @order_gurantee3, align 8
-  store i32 -1, i32* %3, align 4
-  br label %70
-
-; <label>:58:                                     ; preds = %44
-  %59 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %60 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %59, i64 0
-  %61 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %60, i32 0, i32 1
-  %62 = load i64, i64* %61, align 8
-  %63 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %64 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %63, i64 0
-  %65 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %64, i32 0, i32 0
-  %66 = load i64, i64* %65, align 8
-  %67 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %68 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([52 x i8], [52 x i8]* @"??_C@_0DE@KHGIDNIO@?6?6Reader?5?$CFx?5is?5assigned?5to?5the?5s@", i32 0, i32 0), %struct.ttf_reader* %67, i64 %66, i64 %62)
-  %69 = sext i32 %68 to i64
-  store i64 %69, i64* @order_gurantee3, align 8
-  store i32 0, i32* %3, align 4
-  br label %70
-
-; <label>:70:                                     ; preds = %58, %55, %41, %27
-  %71 = load i32, i32* %3, align 4
-  ret i32 %71
+  %20 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %19, i32 0, i32 0
+  %21 = load i64, i64* %20, align 8
+  %22 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
+  %23 = ptrtoint %struct.ttf_reader* %22 to i32
+  %24 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([52 x i8], [52 x i8]* @"??_C@_0DE@KHGIDNIO@?6?6Reader?5?$CFx?5is?5assigned?5to?5the?5s@", i32 0, i32 0), i32 %23, i64 %21, i64 %17)
+  %25 = sext i32 %24 to i64
+  store i64 %25, i64* @order_gurantee3, align 8
+  ret i32 0
 }
 
-declare dso_local %struct._iobuf* @fopen(i8*, i8*) #4
-
-declare dso_local i32 @_fseeki64(%struct._iobuf*, i64, i32) #4
-
-declare dso_local noalias i8* @malloc(i64) #4
-
-; Function Attrs: alwaysinline uwtable
-define dso_local i32 @FileReader_close(i8*) #0 {
-  %2 = alloca i32, align 4
-  %3 = alloca i8*, align 8
-  store i8* %0, i8** %3, align 8
-  %4 = load i8*, i8** %3, align 8
-  %5 = bitcast i8* %4 to %struct.ttf_reader*
-  store %struct.ttf_reader* %5, %struct.ttf_reader** @READERs, align 8
-  %6 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %7 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %6, i64 0
-  %8 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %7, i32 0, i32 14
-  %9 = load %struct._iobuf*, %struct._iobuf** %8, align 8
-  %10 = call i32 @fclose(%struct._iobuf* %9)
-  %11 = icmp ne i32 %10, 0
-  br i1 %11, label %12, label %15
-
-; <label>:12:                                     ; preds = %1
-  %13 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([52 x i8], [52 x i8]* @"??_C@_0DE@PEIEGMHF@?6?5?$FLERROR?$FNTime?9tag?5file?5cannot?5be@", i32 0, i32 0))
-  %14 = sext i32 %13 to i64
-  store i64 %14, i64* @order_gurantee3, align 8
-  store i32 -1, i32* %2, align 4
-  br label %23
-
-; <label>:15:                                     ; preds = %1
-  %16 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %17 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %16, i64 0
-  %18 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %17, i32 0, i32 13
-  %19 = load i8*, i8** %18, align 8
-  call void @free(i8* %19)
-  %20 = load %struct.ttf_reader*, %struct.ttf_reader** @READERs, align 8
-  %21 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @"??_C@_0BH@PIFINJNO@?6Reader?5?$CFx?5is?5closing?4?$AA@", i32 0, i32 0), %struct.ttf_reader* %20)
-  %22 = sext i32 %21 to i64
-  store i64 %22, i64* @order_gurantee3, align 8
-  store i32 0, i32* %2, align 4
-  br label %23
-
-; <label>:23:                                     ; preds = %15, %12
-  %24 = load i32, i32* %2, align 4
-  ret i32 %24
+; Function Attrs: alwaysinline nounwind uwtable
+define dso_local i32 @FileReader_close(i8*) #3 {
+  %2 = alloca i8*, align 8
+  store i8* %0, i8** %2, align 8
+  ret i32 0
 }
-
-declare dso_local i32 @fclose(%struct._iobuf*) #4
-
-declare dso_local void @free(i8*) #4
 
 ; Function Attrs: nounwind
-declare void @llvm.va_start(i8*) #5
+declare void @llvm.va_start(i8*) #4
 
 ; Function Attrs: noinline optnone uwtable
 define linkonce_odr dso_local i32 @_vfprintf_l(%struct._iobuf*, i8*, %struct.__crt_locale_pointers*, i8*) #2 comdat {
@@ -2509,12 +2183,12 @@ define linkonce_odr dso_local i32 @_vfprintf_l(%struct._iobuf*, i8*, %struct.__c
   ret i32 %15
 }
 
-declare dso_local %struct._iobuf* @__acrt_iob_func(i32) #4
+declare dso_local %struct._iobuf* @__acrt_iob_func(i32) #5
 
 ; Function Attrs: nounwind
-declare void @llvm.va_end(i8*) #5
+declare void @llvm.va_end(i8*) #4
 
-declare dso_local i32 @__stdio_common_vfprintf(i64, %struct._iobuf*, i8*, %struct.__crt_locale_pointers*, i8*) #4
+declare dso_local i32 @__stdio_common_vfprintf(i64, %struct._iobuf*, i8*, %struct.__crt_locale_pointers*, i8*) #5
 
 ; Function Attrs: noinline nounwind optnone uwtable
 define linkonce_odr dso_local i64* @__local_stdio_printf_options() #6 comdat {
@@ -2525,8 +2199,8 @@ attributes #0 = { alwaysinline uwtable "correctly-rounded-divide-sqrt-fp-math"="
 attributes #1 = { nounwind readnone speculatable }
 attributes #2 = { noinline optnone uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "min-legal-vector-width"="0" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
 attributes #3 = { alwaysinline nounwind uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "min-legal-vector-width"="0" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
-attributes #4 = { "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
-attributes #5 = { nounwind }
+attributes #4 = { nounwind }
+attributes #5 = { "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
 attributes #6 = { noinline nounwind optnone uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "min-legal-vector-width"="0" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
 
 !llvm.linker.options = !{!0}
