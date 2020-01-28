@@ -35,8 +35,15 @@ extern "C" {
 	long long NumRecords = 0;
 	long long RecordType = 0;
 	long long BytesofRecords = 0;
-	long long TTF_header_offset;
+	long long TTF_header_offset =0;
 }
+
+size_t MKS_inline bread(void * buffer, size_t size, size_t count, char * stream) {
+	memcpy(buffer,stream+TTF_header_offset,size*count);
+	TTF_header_offset+=size*count;
+	return size*count;
+}
+
 int MKS_inline bh_4bytes_header_parser(char Magic[4]) {
 	PINFO("Becker & Hickl SPC-134/144/154/830 timetag file has no header.");
 	SYNCRate_pspr = ((unsigned short *)Magic)[0];
@@ -62,11 +69,11 @@ int MKS_inline Swebian_header_parser() {
 	return 0;
 }
 
-int MKS_inline quTAU_FORMAT_BINARY_header_parser(FILE *fpin) {
+int MKS_inline quTAU_FORMAT_BINARY_header_parser(char *fpin) {
 
 	// read the rest 32 bytes of the header
 	char Header[32];
-	if (fread(&Header, 1, sizeof(Header), fpin) != sizeof(Header))
+	if (bread(&Header, 1, sizeof(Header), fpin) != sizeof(Header))
 	{
 		PERROR("Error when reading header, aborted.");
 		return -1;
@@ -82,15 +89,15 @@ int MKS_inline quTAU_FORMAT_BINARY_header_parser(FILE *fpin) {
 	SYNCRate_pspr = 1.249554 * 1000;
 
 	// find size
-	TTF_header_offset = ftell(fpin);
+	//TTF_header_offset = ftell(fpin);
 
 	return 0;
 }
-int MKS_inline quTAU_FORMAT_COMPRESSED_header_parser(FILE *fpin) {
+int MKS_inline quTAU_FORMAT_COMPRESSED_header_parser(char *fpin) {
 
 	// read the rest 32 bytes of the header
 	char Header[32];
-	if (fread(&Header, 1, sizeof(Header), fpin) != sizeof(Header))
+	if (bread(&Header, 1, sizeof(Header), fpin) != sizeof(Header))
 	{
 		PERROR("Error when reading header, aborted.");
 		return -1;
@@ -106,7 +113,7 @@ int MKS_inline quTAU_FORMAT_COMPRESSED_header_parser(FILE *fpin) {
 	SYNCRate_pspr = 1.249554 * 1000;
 
 	// find size
-	TTF_header_offset = ftell(fpin);
+	//TTF_header_offset = ftell(fpin);
 
 	return 0;
 }
@@ -164,14 +171,14 @@ time_t TDateTime_TimeT(double Convertee)
 #define tyBinaryBlob  0xFFFFFFFF
 
 
- int  MKS_inline PicoQuant_header_parser(FILE *fpin) {
+ int  MKS_inline PicoQuant_header_parser(char *fpin) {
 	int readResult;
 	char* AnsiBuffer;
 	WCHAR* WideBuffer;
 
 	// read version
 	char Version[8];
-	readResult = fread(&Version, 1, sizeof(Version), fpin);
+	readResult = bread(&Version, 1, sizeof(Version), fpin);
 	if (readResult != sizeof(Version))
 	{
 		PERROR("\nerror reading header, aborted.");
@@ -187,7 +194,7 @@ time_t TDateTime_TimeT(double Convertee)
 		// Only some selected items are explicitly retrieved and kept in memory because they are 
 		// needed to subsequently interpret the TTTR record data.
 
-		readResult = fread(&TagHead, 1, sizeof(TagHead), fpin);
+		readResult = bread(&TagHead, 1, sizeof(TagHead), fpin);
 		if (readResult != sizeof(TagHead))
 		{
 			PINFO("\nIncomplete File.");
@@ -195,7 +202,7 @@ time_t TDateTime_TimeT(double Convertee)
 		}
 		{
 			char readStringBuffer[40];
-			strcpy(readStringBuffer, TagHead.Ident);
+			memcpy(readStringBuffer, TagHead.Ident,sizeof(readStringBuffer));
 			if (TagHead.Idx > -1)
 			{
 				sprintf(readStringBuffer, "%s(%d)", TagHead.Ident, TagHead.Idx);
@@ -243,7 +250,8 @@ time_t TDateTime_TimeT(double Convertee)
 		case tyFloat8Array:
 			printf("<Float Array with %d Entries>", TagHead.TagValue / sizeof(double));
 			// only seek the Data, if one needs the data, it can be loaded here
-			fseek(fpin, (long)TagHead.TagValue, SEEK_CUR);
+			TTF_header_offset =  (long)TagHead.TagValue;
+			//fseek(fpin, (long)TagHead.TagValue, SEEK_CUR);
 			break;
 		case tyTDateTime:
 			time_t CreateTime;
@@ -252,7 +260,7 @@ time_t TDateTime_TimeT(double Convertee)
 			break;
 		case tyAnsiString:
 			AnsiBuffer = (char*)calloc((size_t)TagHead.TagValue, 1);
-			readResult = fread(AnsiBuffer, 1, (size_t)TagHead.TagValue, fpin);
+			readResult = bread(AnsiBuffer, 1, (size_t)TagHead.TagValue, fpin);
 			if (readResult != TagHead.TagValue)
 			{
 				printf("\nIncomplete File.");
@@ -264,7 +272,7 @@ time_t TDateTime_TimeT(double Convertee)
 			break;
 		case tyWideString:
 			WideBuffer = (WCHAR*)calloc((size_t)TagHead.TagValue, 1);
-			readResult = fread(WideBuffer, 1, (size_t)TagHead.TagValue, fpin);
+			readResult = bread(WideBuffer, 1, (size_t)TagHead.TagValue, fpin);
 			if (readResult != TagHead.TagValue)
 			{
 				printf("\nIncomplete File.");
@@ -277,7 +285,8 @@ time_t TDateTime_TimeT(double Convertee)
 		case tyBinaryBlob:
 			printf("<Binary Blob contains %d Bytes>", TagHead.TagValue);
 			// only seek the Data, if one needs the data, it can be loaded here
-			fseek(fpin, (long)TagHead.TagValue, SEEK_CUR);
+			TTF_header_offset =  (long)TagHead.TagValue;
+			//fseek(fpin, (long)TagHead.TagValue, SEEK_CUR);
 			break;
 		default:
 			printf("Illegal Type identifier found! Broken file?");
@@ -347,7 +356,7 @@ time_t TDateTime_TimeT(double Convertee)
 	BytesofRecords = 4;
 	// find size
 
-	TTF_header_offset = ftell(fpin);
+	//TTF_header_offset = ftell(fpin);
 	
 	
 	return 0;
@@ -360,20 +369,13 @@ ex:
 /////////////////////////////////////////////
 //////////////////////////////////////////////
 
-extern "C" int MKS_inline PARSE_TimeTagFileHeader(char* TTF_filename, int RecordTypetemp)
+extern "C" int MKS_inline PARSE_TimeTagFileHeader(char* fpin, int RecordTypetemp)
 {
 	int ret = -1;
-	PINFO("File name: %s", TTF_filename);
-	FILE *fpin;
-		//open Time-tagged file
-		if ((fpin = fopen(TTF_filename, "rb")) == NULL) {
-			PERROR("Can not open time-tag file, aborted.");
-			return -1;
-		}
-
+	TTF_header_offset =0; //seek to head
 
 		char Magic[8];
-		if (fread(&Magic, 1, sizeof(Magic), fpin) != sizeof(Magic)) {
+		if (bread(&Magic, 1, sizeof(Magic), fpin) != sizeof(Magic)) {
 			PERROR("Failed to read header, aborted.");
 			return -2;
 		}
@@ -416,18 +418,7 @@ extern "C" int MKS_inline PARSE_TimeTagFileHeader(char* TTF_filename, int Record
 			break;
 		}
 
-		
-		fclose(fpin);
-		// get file size
-		//int fh;
-		//_sopen_s(&fh, TTF_filename, _O_RDONLY, _SH_DENYNO, 0);
-		//TTF_filesize = _lseeki64(fh, 0L, SEEK_END);
-		//_close(fh);
-
 		PINFO("NumRecords: %lld", NumRecords);
-		
-		//if (isendlessfile)
-		//		NumRecords = ((TTF_filesize - TTF_header_offset) / BytesofRecords);
-		
+	
 		return ret;
 }

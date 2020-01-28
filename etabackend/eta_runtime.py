@@ -235,7 +235,7 @@ class ETA():
             self.send(
                 "ETA.SIMPLE_CUT: You can increase the cuts to enable multi-threading.")
 
-        ret1, parse_output = parse_header(bytearray(filename, "ascii"), format)
+        ret1, parse_output = parse_header(filename, format)
         if ret1 is not 0:
             raise ValueError(
                 "ETA.SIMPLE_CUT: File {} is not found or incorrect, err code {}.".format(filename, ret1))
@@ -268,8 +268,7 @@ class ETA():
     def incremental_cut(self, filename, cut=None, rec_per_cut=-10, format=-1, verbose=True):
         filename = str(filename)  # supporting pathlib
         if cut == None:
-            ret1, parse_output = parse_header(
-                bytearray(filename, "ascii"), format)
+            ret1, parse_output = parse_header(filename, format)
             if ret1 is not 0:
                 raise ValueError(
                     "ETA.incremental_cut: File {} is not found or incorrect, err code {}.".format(filename, ret1))
