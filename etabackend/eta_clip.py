@@ -52,7 +52,6 @@ class Clip():
             self.resuming=parse_output[ETACReaderStructIDX.resuming]
     
     def to_parser_output(self):
-        self.validate()
         return [
             self.fseekpoint,#0
             self.fendpoint ,#1
@@ -169,7 +168,7 @@ class ETA_CUT():
         if temp_clip.batch_actualread_length==0:
             if verbose:
                 self.send(
-                     "ETA.incremental_cut: The file '{}' is not long enough for the Clip. ".format(filename))eta
+                     "ETA.incremental_cut: The file '{}' is not long enough for the Clip. ".format(filename))
             return False
         else:
             if verbose:
