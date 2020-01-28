@@ -59,18 +59,17 @@ def mainloop(filename1, ReaderPTR1, vfiles, POOL_timetag1, POOL_fileid1, chn, ch
     return eta_ret
     
 def initializer(caller_parms):
-    filename = bytearray(caller_parms[-1], "ascii")
-    ReaderPTR1 = np.zeros((18*1), dtype=np.int64) # 18 for more than enough
-    ReaderPTR1[0:8] = caller_parms[0:8] # 7th for the global time shift
+    UniBuf = caller_parms.buffer
+    ReaderPTR1 = np.array( caller_parms.to_parser_output(), dtype=np.int64) # 0:8 are actually useful
     vfiles = np.zeros(({num_vslot}*4), dtype=np.int64) 
     {global_initial}
     POOL_timetag1=np.zeros(({pool_tree_size}) , dtype=np.int64)
     POOL_fileid1=np.zeros(({pool_tree_size}) , dtype=np.int8)
     chn = np.zeros((1), dtype=np.int8)
     chn_next = np.zeros((1), dtype=np.int8)
-    return (filename, ReaderPTR1, vfiles, POOL_timetag1, POOL_fileid1, chn, chn_next {tables} )
+    return (UniBuf, ReaderPTR1, vfiles, POOL_timetag1, POOL_fileid1, chn, chn_next {tables} )
     
-def thin_wrapper(filename, ReaderPTR1,vfiles,POOL_timetag1,POOL_fileid1,chn,chn_next {tables} ):
+def thin_wrapper(UniBuf, ReaderPTR1,vfiles,POOL_timetag1,POOL_fileid1,chn,chn_next {tables} ):
     status= {{ {table_list}
         "ReaderPTR1":ReaderPTR1,
         "vfiles":vfiles,
