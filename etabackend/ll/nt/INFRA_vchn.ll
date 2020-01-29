@@ -4,7 +4,7 @@ target datalayout = "e-m:w-i64:64-f80:128-n8:16:32:64-S128"
 target triple = "x86_64-pc-windows-msvc19.24.28315"
 
 %struct.circular_buf_t = type { i64*, i64, i64, i64 }
-%struct.VCHN_t = type { i8, i8, i8, i64*, i8*, %struct.circular_buf_t* }
+%struct.VCHN_t = type { i8, i8, i8, i8, i32, i64*, i8*, %struct.circular_buf_t* }
 %struct._iobuf = type { i8* }
 %struct.__crt_locale_pointers = type { %struct.__crt_locale_data*, %struct.__crt_multibyte_data* }
 %struct.__crt_locale_data = type opaque
@@ -254,14 +254,14 @@ define dso_local i32 @VFILE_init(%struct.VCHN_t*, i64, i64, i8*, i64) #1 {
   %14 = load i8*, i8** %10, align 8
   %15 = bitcast i8* %14 to i64*
   %16 = load %struct.VCHN_t*, %struct.VCHN_t** %13, align 8
-  %17 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %16, i32 0, i32 5
+  %17 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %16, i32 0, i32 7
   %18 = load %struct.circular_buf_t*, %struct.circular_buf_t** %17, align 8
   %19 = load i64, i64* %12, align 8
   %20 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %18, i64 %19
   %21 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %20, i32 0, i32 0
   store i64* %15, i64** %21, align 8
   %22 = load %struct.VCHN_t*, %struct.VCHN_t** %13, align 8
-  %23 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %22, i32 0, i32 5
+  %23 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %22, i32 0, i32 7
   %24 = load %struct.circular_buf_t*, %struct.circular_buf_t** %23, align 8
   %25 = load i64, i64* %12, align 8
   %26 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %24, i64 %25
@@ -285,14 +285,14 @@ define dso_local i32 @VFILE_init(%struct.VCHN_t*, i64, i64, i8*, i64) #1 {
 ; <label>:36:                                     ; preds = %33
   %37 = load i64, i64* %11, align 8
   %38 = load %struct.VCHN_t*, %struct.VCHN_t** %13, align 8
-  %39 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %38, i32 0, i32 5
+  %39 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %38, i32 0, i32 7
   %40 = load %struct.circular_buf_t*, %struct.circular_buf_t** %39, align 8
   %41 = load i64, i64* %12, align 8
   %42 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %40, i64 %41
   %43 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %42, i32 0, i32 3
   store i64 %37, i64* %43, align 8
   %44 = load %struct.VCHN_t*, %struct.VCHN_t** %13, align 8
-  %45 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %44, i32 0, i32 5
+  %45 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %44, i32 0, i32 7
   %46 = load %struct.circular_buf_t*, %struct.circular_buf_t** %45, align 8
   %47 = load i64, i64* %12, align 8
   %48 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %46, i64 %47
@@ -315,7 +315,7 @@ define dso_local i32 @VFILE_init(%struct.VCHN_t*, i64, i64, i8*, i64) #1 {
 ; <label>:56:                                     ; preds = %36, %51
   %57 = load i32, i32* %7, align 4
   %58 = load %struct.VCHN_t*, %struct.VCHN_t** %13, align 8
-  %59 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %58, i32 0, i32 5
+  %59 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %58, i32 0, i32 7
   %60 = load %struct.circular_buf_t*, %struct.circular_buf_t** %59, align 8
   %61 = load i64, i64* %12, align 8
   %62 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %60, i64 %61
@@ -331,7 +331,7 @@ define dso_local i32 @VFILE_init(%struct.VCHN_t*, i64, i64, i8*, i64) #1 {
 
 ; <label>:70:                                     ; preds = %33
   %71 = load %struct.VCHN_t*, %struct.VCHN_t** %13, align 8
-  %72 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %71, i32 0, i32 5
+  %72 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %71, i32 0, i32 7
   %73 = load %struct.circular_buf_t*, %struct.circular_buf_t** %72, align 8
   %74 = load i64, i64* %12, align 8
   %75 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %73, i64 %74
@@ -396,7 +396,7 @@ define dso_local i32 @POOL_update(%struct.VCHN_t*, i64, i8) #0 {
   store i8 %18, i8* %7, align 1
   %19 = load i64, i64* %5, align 8
   %20 = load %struct.VCHN_t*, %struct.VCHN_t** %6, align 8
-  %21 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %20, i32 0, i32 3
+  %21 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %20, i32 0, i32 5
   %22 = load i64*, i64** %21, align 8
   %23 = load i8, i8* %7, align 1
   %24 = zext i8 %23 to i64
@@ -404,7 +404,7 @@ define dso_local i32 @POOL_update(%struct.VCHN_t*, i64, i8) #0 {
   store i64 %19, i64* %25, align 8
   %26 = load i8, i8* %4, align 1
   %27 = load %struct.VCHN_t*, %struct.VCHN_t** %6, align 8
-  %28 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %27, i32 0, i32 4
+  %28 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %27, i32 0, i32 6
   %29 = load i8*, i8** %28, align 8
   %30 = load i8, i8* %7, align 1
   %31 = zext i8 %30 to i64
@@ -439,14 +439,14 @@ define dso_local i32 @POOL_update(%struct.VCHN_t*, i64, i8) #0 {
   %53 = trunc i32 %52 to i8
   store i8 %53, i8* %10, align 1
   %54 = load %struct.VCHN_t*, %struct.VCHN_t** %6, align 8
-  %55 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %54, i32 0, i32 3
+  %55 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %54, i32 0, i32 5
   %56 = load i64*, i64** %55, align 8
   %57 = load i8, i8* %9, align 1
   %58 = zext i8 %57 to i64
   %59 = getelementptr inbounds i64, i64* %56, i64 %58
   %60 = load i64, i64* %59, align 8
   %61 = load %struct.VCHN_t*, %struct.VCHN_t** %6, align 8
-  %62 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %61, i32 0, i32 3
+  %62 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %61, i32 0, i32 5
   %63 = load i64*, i64** %62, align 8
   %64 = load i8, i8* %10, align 1
   %65 = zext i8 %64 to i64
@@ -457,28 +457,28 @@ define dso_local i32 @POOL_update(%struct.VCHN_t*, i64, i8) #0 {
 
 ; <label>:69:                                     ; preds = %37
   %70 = load %struct.VCHN_t*, %struct.VCHN_t** %6, align 8
-  %71 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %70, i32 0, i32 3
+  %71 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %70, i32 0, i32 5
   %72 = load i64*, i64** %71, align 8
   %73 = load i8, i8* %9, align 1
   %74 = zext i8 %73 to i64
   %75 = getelementptr inbounds i64, i64* %72, i64 %74
   %76 = load i64, i64* %75, align 8
   %77 = load %struct.VCHN_t*, %struct.VCHN_t** %6, align 8
-  %78 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %77, i32 0, i32 3
+  %78 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %77, i32 0, i32 5
   %79 = load i64*, i64** %78, align 8
   %80 = load i8, i8* %8, align 1
   %81 = zext i8 %80 to i64
   %82 = getelementptr inbounds i64, i64* %79, i64 %81
   store i64 %76, i64* %82, align 8
   %83 = load %struct.VCHN_t*, %struct.VCHN_t** %6, align 8
-  %84 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %83, i32 0, i32 4
+  %84 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %83, i32 0, i32 6
   %85 = load i8*, i8** %84, align 8
   %86 = load i8, i8* %9, align 1
   %87 = zext i8 %86 to i64
   %88 = getelementptr inbounds i8, i8* %85, i64 %87
   %89 = load i8, i8* %88, align 1
   %90 = load %struct.VCHN_t*, %struct.VCHN_t** %6, align 8
-  %91 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %90, i32 0, i32 4
+  %91 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %90, i32 0, i32 6
   %92 = load i8*, i8** %91, align 8
   %93 = load i8, i8* %8, align 1
   %94 = zext i8 %93 to i64
@@ -488,28 +488,28 @@ define dso_local i32 @POOL_update(%struct.VCHN_t*, i64, i8) #0 {
 
 ; <label>:96:                                     ; preds = %37
   %97 = load %struct.VCHN_t*, %struct.VCHN_t** %6, align 8
-  %98 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %97, i32 0, i32 3
+  %98 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %97, i32 0, i32 5
   %99 = load i64*, i64** %98, align 8
   %100 = load i8, i8* %10, align 1
   %101 = zext i8 %100 to i64
   %102 = getelementptr inbounds i64, i64* %99, i64 %101
   %103 = load i64, i64* %102, align 8
   %104 = load %struct.VCHN_t*, %struct.VCHN_t** %6, align 8
-  %105 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %104, i32 0, i32 3
+  %105 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %104, i32 0, i32 5
   %106 = load i64*, i64** %105, align 8
   %107 = load i8, i8* %8, align 1
   %108 = zext i8 %107 to i64
   %109 = getelementptr inbounds i64, i64* %106, i64 %108
   store i64 %103, i64* %109, align 8
   %110 = load %struct.VCHN_t*, %struct.VCHN_t** %6, align 8
-  %111 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %110, i32 0, i32 4
+  %111 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %110, i32 0, i32 6
   %112 = load i8*, i8** %111, align 8
   %113 = load i8, i8* %10, align 1
   %114 = zext i8 %113 to i64
   %115 = getelementptr inbounds i8, i8* %112, i64 %114
   %116 = load i8, i8* %115, align 1
   %117 = load %struct.VCHN_t*, %struct.VCHN_t** %6, align 8
-  %118 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %117, i32 0, i32 4
+  %118 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %117, i32 0, i32 6
   %119 = load i8*, i8** %118, align 8
   %120 = load i8, i8* %8, align 1
   %121 = zext i8 %120 to i64
@@ -551,10 +551,10 @@ define dso_local i32 @POOL_init(%struct.VCHN_t*, i64, i64, i8*, i8*, i64) #1 {
   %20 = load i8*, i8** %10, align 8
   %21 = bitcast i8* %20 to i64*
   %22 = load %struct.VCHN_t*, %struct.VCHN_t** %13, align 8
-  %23 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %22, i32 0, i32 3
+  %23 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %22, i32 0, i32 5
   store i64* %21, i64** %23, align 8
   %24 = load %struct.VCHN_t*, %struct.VCHN_t** %13, align 8
-  %25 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %24, i32 0, i32 3
+  %25 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %24, i32 0, i32 5
   %26 = load i64*, i64** %25, align 8
   %27 = icmp eq i64* %26, null
   br i1 %27, label %28, label %31
@@ -569,10 +569,10 @@ define dso_local i32 @POOL_init(%struct.VCHN_t*, i64, i64, i8*, i8*, i64) #1 {
 ; <label>:31:                                     ; preds = %6
   %32 = load i8*, i8** %9, align 8
   %33 = load %struct.VCHN_t*, %struct.VCHN_t** %13, align 8
-  %34 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %33, i32 0, i32 4
+  %34 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %33, i32 0, i32 6
   store i8* %32, i8** %34, align 8
   %35 = load %struct.VCHN_t*, %struct.VCHN_t** %13, align 8
-  %36 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %35, i32 0, i32 4
+  %36 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %35, i32 0, i32 6
   %37 = load i8*, i8** %36, align 8
   %38 = icmp eq i8* %37, null
   br i1 %38, label %39, label %42
@@ -609,14 +609,14 @@ define dso_local i32 @POOL_init(%struct.VCHN_t*, i64, i64, i8*, i8*, i64) #1 {
 
 ; <label>:57:                                     ; preds = %52
   %58 = load %struct.VCHN_t*, %struct.VCHN_t** %13, align 8
-  %59 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %58, i32 0, i32 3
+  %59 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %58, i32 0, i32 5
   %60 = load i64*, i64** %59, align 8
   %61 = load i32, i32* %14, align 4
   %62 = sext i32 %61 to i64
   %63 = getelementptr inbounds i64, i64* %60, i64 %62
   store i64 9223372036854775807, i64* %63, align 8
   %64 = load %struct.VCHN_t*, %struct.VCHN_t** %13, align 8
-  %65 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %64, i32 0, i32 4
+  %65 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %64, i32 0, i32 6
   %66 = load i8*, i8** %65, align 8
   %67 = load i32, i32* %14, align 4
   %68 = sext i32 %67 to i64
@@ -647,7 +647,7 @@ define dso_local i32 @POOL_init(%struct.VCHN_t*, i64, i64, i8*, i8*, i64) #1 {
   %82 = load i32, i32* %15, align 4
   %83 = trunc i32 %82 to i8
   %84 = load %struct.VCHN_t*, %struct.VCHN_t** %13, align 8
-  %85 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %84, i32 0, i32 4
+  %85 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %84, i32 0, i32 6
   %86 = load i8*, i8** %85, align 8
   %87 = load %struct.VCHN_t*, %struct.VCHN_t** %13, align 8
   %88 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %87, i32 0, i32 2
@@ -725,10 +725,10 @@ define dso_local i32 @VCHN_init(%struct.VCHN_t*, i64, i64, i64, i8*) #1 {
   %30 = load i8*, i8** %7, align 8
   %31 = bitcast i8* %30 to %struct.circular_buf_t*
   %32 = load %struct.VCHN_t*, %struct.VCHN_t** %11, align 8
-  %33 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %32, i32 0, i32 5
+  %33 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %32, i32 0, i32 7
   store %struct.circular_buf_t* %31, %struct.circular_buf_t** %33, align 8
   %34 = load %struct.VCHN_t*, %struct.VCHN_t** %11, align 8
-  %35 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %34, i32 0, i32 5
+  %35 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %34, i32 0, i32 7
   %36 = load %struct.circular_buf_t*, %struct.circular_buf_t** %35, align 8
   %37 = icmp eq %struct.circular_buf_t* %36, null
   br i1 %37, label %38, label %41
@@ -821,7 +821,7 @@ define dso_local i32 @VCHN_put(%struct.VCHN_t*, i64, i8) #1 {
   store i8 %60, i8* %19, align 1
   %61 = load i64, i64* %17, align 8
   %62 = load %struct.VCHN_t*, %struct.VCHN_t** %18, align 8
-  %63 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %62, i32 0, i32 3
+  %63 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %62, i32 0, i32 5
   %64 = load i64*, i64** %63, align 8
   %65 = load i8, i8* %19, align 1
   %66 = zext i8 %65 to i64
@@ -829,7 +829,7 @@ define dso_local i32 @VCHN_put(%struct.VCHN_t*, i64, i8) #1 {
   store i64 %61, i64* %67, align 8
   %68 = load i8, i8* %16, align 1
   %69 = load %struct.VCHN_t*, %struct.VCHN_t** %18, align 8
-  %70 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %69, i32 0, i32 4
+  %70 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %69, i32 0, i32 6
   %71 = load i8*, i8** %70, align 8
   %72 = load i8, i8* %19, align 1
   %73 = zext i8 %72 to i64
@@ -864,14 +864,14 @@ define dso_local i32 @VCHN_put(%struct.VCHN_t*, i64, i8) #1 {
   %95 = trunc i32 %94 to i8
   store i8 %95, i8* %22, align 1
   %96 = load %struct.VCHN_t*, %struct.VCHN_t** %18, align 8
-  %97 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %96, i32 0, i32 3
+  %97 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %96, i32 0, i32 5
   %98 = load i64*, i64** %97, align 8
   %99 = load i8, i8* %21, align 1
   %100 = zext i8 %99 to i64
   %101 = getelementptr inbounds i64, i64* %98, i64 %100
   %102 = load i64, i64* %101, align 8
   %103 = load %struct.VCHN_t*, %struct.VCHN_t** %18, align 8
-  %104 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %103, i32 0, i32 3
+  %104 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %103, i32 0, i32 5
   %105 = load i64*, i64** %104, align 8
   %106 = load i8, i8* %22, align 1
   %107 = zext i8 %106 to i64
@@ -882,28 +882,28 @@ define dso_local i32 @VCHN_put(%struct.VCHN_t*, i64, i8) #1 {
 
 ; <label>:111:                                    ; preds = %79
   %112 = load %struct.VCHN_t*, %struct.VCHN_t** %18, align 8
-  %113 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %112, i32 0, i32 3
+  %113 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %112, i32 0, i32 5
   %114 = load i64*, i64** %113, align 8
   %115 = load i8, i8* %21, align 1
   %116 = zext i8 %115 to i64
   %117 = getelementptr inbounds i64, i64* %114, i64 %116
   %118 = load i64, i64* %117, align 8
   %119 = load %struct.VCHN_t*, %struct.VCHN_t** %18, align 8
-  %120 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %119, i32 0, i32 3
+  %120 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %119, i32 0, i32 5
   %121 = load i64*, i64** %120, align 8
   %122 = load i8, i8* %20, align 1
   %123 = zext i8 %122 to i64
   %124 = getelementptr inbounds i64, i64* %121, i64 %123
   store i64 %118, i64* %124, align 8
   %125 = load %struct.VCHN_t*, %struct.VCHN_t** %18, align 8
-  %126 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %125, i32 0, i32 4
+  %126 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %125, i32 0, i32 6
   %127 = load i8*, i8** %126, align 8
   %128 = load i8, i8* %21, align 1
   %129 = zext i8 %128 to i64
   %130 = getelementptr inbounds i8, i8* %127, i64 %129
   %131 = load i8, i8* %130, align 1
   %132 = load %struct.VCHN_t*, %struct.VCHN_t** %18, align 8
-  %133 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %132, i32 0, i32 4
+  %133 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %132, i32 0, i32 6
   %134 = load i8*, i8** %133, align 8
   %135 = load i8, i8* %20, align 1
   %136 = zext i8 %135 to i64
@@ -913,28 +913,28 @@ define dso_local i32 @VCHN_put(%struct.VCHN_t*, i64, i8) #1 {
 
 ; <label>:138:                                    ; preds = %79
   %139 = load %struct.VCHN_t*, %struct.VCHN_t** %18, align 8
-  %140 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %139, i32 0, i32 3
+  %140 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %139, i32 0, i32 5
   %141 = load i64*, i64** %140, align 8
   %142 = load i8, i8* %22, align 1
   %143 = zext i8 %142 to i64
   %144 = getelementptr inbounds i64, i64* %141, i64 %143
   %145 = load i64, i64* %144, align 8
   %146 = load %struct.VCHN_t*, %struct.VCHN_t** %18, align 8
-  %147 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %146, i32 0, i32 3
+  %147 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %146, i32 0, i32 5
   %148 = load i64*, i64** %147, align 8
   %149 = load i8, i8* %20, align 1
   %150 = zext i8 %149 to i64
   %151 = getelementptr inbounds i64, i64* %148, i64 %150
   store i64 %145, i64* %151, align 8
   %152 = load %struct.VCHN_t*, %struct.VCHN_t** %18, align 8
-  %153 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %152, i32 0, i32 4
+  %153 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %152, i32 0, i32 6
   %154 = load i8*, i8** %153, align 8
   %155 = load i8, i8* %22, align 1
   %156 = zext i8 %155 to i64
   %157 = getelementptr inbounds i8, i8* %154, i64 %156
   %158 = load i8, i8* %157, align 1
   %159 = load %struct.VCHN_t*, %struct.VCHN_t** %18, align 8
-  %160 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %159, i32 0, i32 4
+  %160 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %159, i32 0, i32 6
   %161 = load i8*, i8** %160, align 8
   %162 = load i8, i8* %20, align 1
   %163 = zext i8 %162 to i64
@@ -949,7 +949,7 @@ define dso_local i32 @VCHN_put(%struct.VCHN_t*, i64, i8) #1 {
 
 ; <label>:167:                                    ; preds = %75
   %168 = load %struct.VCHN_t*, %struct.VCHN_t** %26, align 8
-  %169 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %168, i32 0, i32 5
+  %169 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %168, i32 0, i32 7
   %170 = load %struct.circular_buf_t*, %struct.circular_buf_t** %169, align 8
   %171 = load i32, i32* %27, align 4
   %172 = sext i32 %171 to i64
@@ -985,7 +985,7 @@ define dso_local i32 @VCHN_put(%struct.VCHN_t*, i64, i8) #1 {
   %190 = trunc i32 %189 to i8
   store i8 %190, i8* %29, align 1
   %191 = load %struct.VCHN_t*, %struct.VCHN_t** %26, align 8
-  %192 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %191, i32 0, i32 3
+  %192 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %191, i32 0, i32 5
   %193 = load i64*, i64** %192, align 8
   %194 = load i8, i8* %29, align 1
   %195 = zext i8 %194 to i64
@@ -1013,7 +1013,7 @@ define dso_local i32 @VCHN_put(%struct.VCHN_t*, i64, i8) #1 {
   store i8 %211, i8* %7, align 1
   %212 = load i64, i64* %5, align 8
   %213 = load %struct.VCHN_t*, %struct.VCHN_t** %6, align 8
-  %214 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %213, i32 0, i32 3
+  %214 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %213, i32 0, i32 5
   %215 = load i64*, i64** %214, align 8
   %216 = load i8, i8* %7, align 1
   %217 = zext i8 %216 to i64
@@ -1021,7 +1021,7 @@ define dso_local i32 @VCHN_put(%struct.VCHN_t*, i64, i8) #1 {
   store i64 %212, i64* %218, align 8
   %219 = load i8, i8* %4, align 1
   %220 = load %struct.VCHN_t*, %struct.VCHN_t** %6, align 8
-  %221 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %220, i32 0, i32 4
+  %221 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %220, i32 0, i32 6
   %222 = load i8*, i8** %221, align 8
   %223 = load i8, i8* %7, align 1
   %224 = zext i8 %223 to i64
@@ -1056,14 +1056,14 @@ define dso_local i32 @VCHN_put(%struct.VCHN_t*, i64, i8) #1 {
   %246 = trunc i32 %245 to i8
   store i8 %246, i8* %10, align 1
   %247 = load %struct.VCHN_t*, %struct.VCHN_t** %6, align 8
-  %248 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %247, i32 0, i32 3
+  %248 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %247, i32 0, i32 5
   %249 = load i64*, i64** %248, align 8
   %250 = load i8, i8* %9, align 1
   %251 = zext i8 %250 to i64
   %252 = getelementptr inbounds i64, i64* %249, i64 %251
   %253 = load i64, i64* %252, align 8
   %254 = load %struct.VCHN_t*, %struct.VCHN_t** %6, align 8
-  %255 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %254, i32 0, i32 3
+  %255 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %254, i32 0, i32 5
   %256 = load i64*, i64** %255, align 8
   %257 = load i8, i8* %10, align 1
   %258 = zext i8 %257 to i64
@@ -1074,28 +1074,28 @@ define dso_local i32 @VCHN_put(%struct.VCHN_t*, i64, i8) #1 {
 
 ; <label>:262:                                    ; preds = %230
   %263 = load %struct.VCHN_t*, %struct.VCHN_t** %6, align 8
-  %264 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %263, i32 0, i32 3
+  %264 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %263, i32 0, i32 5
   %265 = load i64*, i64** %264, align 8
   %266 = load i8, i8* %9, align 1
   %267 = zext i8 %266 to i64
   %268 = getelementptr inbounds i64, i64* %265, i64 %267
   %269 = load i64, i64* %268, align 8
   %270 = load %struct.VCHN_t*, %struct.VCHN_t** %6, align 8
-  %271 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %270, i32 0, i32 3
+  %271 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %270, i32 0, i32 5
   %272 = load i64*, i64** %271, align 8
   %273 = load i8, i8* %8, align 1
   %274 = zext i8 %273 to i64
   %275 = getelementptr inbounds i64, i64* %272, i64 %274
   store i64 %269, i64* %275, align 8
   %276 = load %struct.VCHN_t*, %struct.VCHN_t** %6, align 8
-  %277 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %276, i32 0, i32 4
+  %277 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %276, i32 0, i32 6
   %278 = load i8*, i8** %277, align 8
   %279 = load i8, i8* %9, align 1
   %280 = zext i8 %279 to i64
   %281 = getelementptr inbounds i8, i8* %278, i64 %280
   %282 = load i8, i8* %281, align 1
   %283 = load %struct.VCHN_t*, %struct.VCHN_t** %6, align 8
-  %284 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %283, i32 0, i32 4
+  %284 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %283, i32 0, i32 6
   %285 = load i8*, i8** %284, align 8
   %286 = load i8, i8* %8, align 1
   %287 = zext i8 %286 to i64
@@ -1105,28 +1105,28 @@ define dso_local i32 @VCHN_put(%struct.VCHN_t*, i64, i8) #1 {
 
 ; <label>:289:                                    ; preds = %230
   %290 = load %struct.VCHN_t*, %struct.VCHN_t** %6, align 8
-  %291 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %290, i32 0, i32 3
+  %291 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %290, i32 0, i32 5
   %292 = load i64*, i64** %291, align 8
   %293 = load i8, i8* %10, align 1
   %294 = zext i8 %293 to i64
   %295 = getelementptr inbounds i64, i64* %292, i64 %294
   %296 = load i64, i64* %295, align 8
   %297 = load %struct.VCHN_t*, %struct.VCHN_t** %6, align 8
-  %298 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %297, i32 0, i32 3
+  %298 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %297, i32 0, i32 5
   %299 = load i64*, i64** %298, align 8
   %300 = load i8, i8* %8, align 1
   %301 = zext i8 %300 to i64
   %302 = getelementptr inbounds i64, i64* %299, i64 %301
   store i64 %296, i64* %302, align 8
   %303 = load %struct.VCHN_t*, %struct.VCHN_t** %6, align 8
-  %304 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %303, i32 0, i32 4
+  %304 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %303, i32 0, i32 6
   %305 = load i8*, i8** %304, align 8
   %306 = load i8, i8* %10, align 1
   %307 = zext i8 %306 to i64
   %308 = getelementptr inbounds i8, i8* %305, i64 %307
   %309 = load i8, i8* %308, align 1
   %310 = load %struct.VCHN_t*, %struct.VCHN_t** %6, align 8
-  %311 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %310, i32 0, i32 4
+  %311 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %310, i32 0, i32 6
   %312 = load i8*, i8** %311, align 8
   %313 = load i8, i8* %8, align 1
   %314 = zext i8 %313 to i64
@@ -1147,7 +1147,7 @@ define dso_local i32 @VCHN_put(%struct.VCHN_t*, i64, i8) #1 {
 
 ; <label>:320:                                    ; preds = %183
   %321 = load %struct.VCHN_t*, %struct.VCHN_t** %26, align 8
-  %322 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %321, i32 0, i32 5
+  %322 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %321, i32 0, i32 7
   %323 = load %struct.circular_buf_t*, %struct.circular_buf_t** %322, align 8
   %324 = load i32, i32* %27, align 4
   %325 = sext i32 %324 to i64
@@ -1168,7 +1168,7 @@ define dso_local i32 @VCHN_put(%struct.VCHN_t*, i64, i8) #1 {
 
 ; <label>:338:                                    ; preds = %320
   %339 = load %struct.VCHN_t*, %struct.VCHN_t** %26, align 8
-  %340 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %339, i32 0, i32 5
+  %340 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %339, i32 0, i32 7
   %341 = load %struct.circular_buf_t*, %struct.circular_buf_t** %340, align 8
   %342 = load i32, i32* %27, align 4
   %343 = sext i32 %342 to i64
@@ -1190,7 +1190,7 @@ define dso_local i32 @VCHN_put(%struct.VCHN_t*, i64, i8) #1 {
 ; <label>:353:                                    ; preds = %320
   %354 = load i64, i64* %25, align 8
   %355 = load %struct.VCHN_t*, %struct.VCHN_t** %26, align 8
-  %356 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %355, i32 0, i32 5
+  %356 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %355, i32 0, i32 7
   %357 = load %struct.circular_buf_t*, %struct.circular_buf_t** %356, align 8
   %358 = load i32, i32* %27, align 4
   %359 = sext i32 %358 to i64
@@ -1293,13 +1293,13 @@ define dso_local i64 @VCHN_next(%struct.VCHN_t*, i8*) #1 {
   store i8* %1, i8** %22, align 8
   store %struct.VCHN_t* %0, %struct.VCHN_t** %23, align 8
   %29 = load %struct.VCHN_t*, %struct.VCHN_t** %23, align 8
-  %30 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %29, i32 0, i32 3
+  %30 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %29, i32 0, i32 5
   %31 = load i64*, i64** %30, align 8
   %32 = getelementptr inbounds i64, i64* %31, i64 0
   %33 = load i64, i64* %32, align 8
   store i64 %33, i64* %24, align 8
   %34 = load %struct.VCHN_t*, %struct.VCHN_t** %23, align 8
-  %35 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %34, i32 0, i32 4
+  %35 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %34, i32 0, i32 6
   %36 = load i8*, i8** %35, align 8
   %37 = getelementptr inbounds i8, i8* %36, i64 0
   %38 = load i8, i8* %37, align 1
@@ -1332,7 +1332,7 @@ define dso_local i64 @VCHN_next(%struct.VCHN_t*, i8*) #1 {
 
 ; <label>:59:                                     ; preds = %56
   %60 = load %struct.VCHN_t*, %struct.VCHN_t** %23, align 8
-  %61 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %60, i32 0, i32 5
+  %61 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %60, i32 0, i32 7
   %62 = load %struct.circular_buf_t*, %struct.circular_buf_t** %61, align 8
   %63 = load i32, i32* %26, align 4
   %64 = sext i32 %63 to i64
@@ -1364,7 +1364,7 @@ define dso_local i64 @VCHN_next(%struct.VCHN_t*, i8*) #1 {
   store i8 %83, i8* %6, align 1
   %84 = load i64, i64* %4, align 8
   %85 = load %struct.VCHN_t*, %struct.VCHN_t** %5, align 8
-  %86 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %85, i32 0, i32 3
+  %86 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %85, i32 0, i32 5
   %87 = load i64*, i64** %86, align 8
   %88 = load i8, i8* %6, align 1
   %89 = zext i8 %88 to i64
@@ -1372,7 +1372,7 @@ define dso_local i64 @VCHN_next(%struct.VCHN_t*, i8*) #1 {
   store i64 %84, i64* %90, align 8
   %91 = load i8, i8* %3, align 1
   %92 = load %struct.VCHN_t*, %struct.VCHN_t** %5, align 8
-  %93 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %92, i32 0, i32 4
+  %93 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %92, i32 0, i32 6
   %94 = load i8*, i8** %93, align 8
   %95 = load i8, i8* %6, align 1
   %96 = zext i8 %95 to i64
@@ -1407,14 +1407,14 @@ define dso_local i64 @VCHN_next(%struct.VCHN_t*, i8*) #1 {
   %118 = trunc i32 %117 to i8
   store i8 %118, i8* %9, align 1
   %119 = load %struct.VCHN_t*, %struct.VCHN_t** %5, align 8
-  %120 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %119, i32 0, i32 3
+  %120 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %119, i32 0, i32 5
   %121 = load i64*, i64** %120, align 8
   %122 = load i8, i8* %8, align 1
   %123 = zext i8 %122 to i64
   %124 = getelementptr inbounds i64, i64* %121, i64 %123
   %125 = load i64, i64* %124, align 8
   %126 = load %struct.VCHN_t*, %struct.VCHN_t** %5, align 8
-  %127 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %126, i32 0, i32 3
+  %127 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %126, i32 0, i32 5
   %128 = load i64*, i64** %127, align 8
   %129 = load i8, i8* %9, align 1
   %130 = zext i8 %129 to i64
@@ -1425,28 +1425,28 @@ define dso_local i64 @VCHN_next(%struct.VCHN_t*, i8*) #1 {
 
 ; <label>:134:                                    ; preds = %102
   %135 = load %struct.VCHN_t*, %struct.VCHN_t** %5, align 8
-  %136 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %135, i32 0, i32 3
+  %136 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %135, i32 0, i32 5
   %137 = load i64*, i64** %136, align 8
   %138 = load i8, i8* %8, align 1
   %139 = zext i8 %138 to i64
   %140 = getelementptr inbounds i64, i64* %137, i64 %139
   %141 = load i64, i64* %140, align 8
   %142 = load %struct.VCHN_t*, %struct.VCHN_t** %5, align 8
-  %143 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %142, i32 0, i32 3
+  %143 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %142, i32 0, i32 5
   %144 = load i64*, i64** %143, align 8
   %145 = load i8, i8* %7, align 1
   %146 = zext i8 %145 to i64
   %147 = getelementptr inbounds i64, i64* %144, i64 %146
   store i64 %141, i64* %147, align 8
   %148 = load %struct.VCHN_t*, %struct.VCHN_t** %5, align 8
-  %149 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %148, i32 0, i32 4
+  %149 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %148, i32 0, i32 6
   %150 = load i8*, i8** %149, align 8
   %151 = load i8, i8* %8, align 1
   %152 = zext i8 %151 to i64
   %153 = getelementptr inbounds i8, i8* %150, i64 %152
   %154 = load i8, i8* %153, align 1
   %155 = load %struct.VCHN_t*, %struct.VCHN_t** %5, align 8
-  %156 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %155, i32 0, i32 4
+  %156 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %155, i32 0, i32 6
   %157 = load i8*, i8** %156, align 8
   %158 = load i8, i8* %7, align 1
   %159 = zext i8 %158 to i64
@@ -1456,28 +1456,28 @@ define dso_local i64 @VCHN_next(%struct.VCHN_t*, i8*) #1 {
 
 ; <label>:161:                                    ; preds = %102
   %162 = load %struct.VCHN_t*, %struct.VCHN_t** %5, align 8
-  %163 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %162, i32 0, i32 3
+  %163 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %162, i32 0, i32 5
   %164 = load i64*, i64** %163, align 8
   %165 = load i8, i8* %9, align 1
   %166 = zext i8 %165 to i64
   %167 = getelementptr inbounds i64, i64* %164, i64 %166
   %168 = load i64, i64* %167, align 8
   %169 = load %struct.VCHN_t*, %struct.VCHN_t** %5, align 8
-  %170 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %169, i32 0, i32 3
+  %170 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %169, i32 0, i32 5
   %171 = load i64*, i64** %170, align 8
   %172 = load i8, i8* %7, align 1
   %173 = zext i8 %172 to i64
   %174 = getelementptr inbounds i64, i64* %171, i64 %173
   store i64 %168, i64* %174, align 8
   %175 = load %struct.VCHN_t*, %struct.VCHN_t** %5, align 8
-  %176 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %175, i32 0, i32 4
+  %176 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %175, i32 0, i32 6
   %177 = load i8*, i8** %176, align 8
   %178 = load i8, i8* %9, align 1
   %179 = zext i8 %178 to i64
   %180 = getelementptr inbounds i8, i8* %177, i64 %179
   %181 = load i8, i8* %180, align 1
   %182 = load %struct.VCHN_t*, %struct.VCHN_t** %5, align 8
-  %183 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %182, i32 0, i32 4
+  %183 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %182, i32 0, i32 6
   %184 = load i8*, i8** %183, align 8
   %185 = load i8, i8* %7, align 1
   %186 = zext i8 %185 to i64
@@ -1495,7 +1495,7 @@ define dso_local i64 @VCHN_next(%struct.VCHN_t*, i8*) #1 {
 
 ; <label>:191:                                    ; preds = %59
   %192 = load %struct.VCHN_t*, %struct.VCHN_t** %23, align 8
-  %193 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %192, i32 0, i32 5
+  %193 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %192, i32 0, i32 7
   %194 = load %struct.circular_buf_t*, %struct.circular_buf_t** %193, align 8
   %195 = load i32, i32* %26, align 4
   %196 = sext i32 %195 to i64
@@ -1577,7 +1577,7 @@ define dso_local i64 @VCHN_next(%struct.VCHN_t*, i8*) #1 {
   store i8 %248, i8* %18, align 1
   %249 = load i64, i64* %16, align 8
   %250 = load %struct.VCHN_t*, %struct.VCHN_t** %17, align 8
-  %251 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %250, i32 0, i32 3
+  %251 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %250, i32 0, i32 5
   %252 = load i64*, i64** %251, align 8
   %253 = load i8, i8* %18, align 1
   %254 = zext i8 %253 to i64
@@ -1585,7 +1585,7 @@ define dso_local i64 @VCHN_next(%struct.VCHN_t*, i8*) #1 {
   store i64 %249, i64* %255, align 8
   %256 = load i8, i8* %15, align 1
   %257 = load %struct.VCHN_t*, %struct.VCHN_t** %17, align 8
-  %258 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %257, i32 0, i32 4
+  %258 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %257, i32 0, i32 6
   %259 = load i8*, i8** %258, align 8
   %260 = load i8, i8* %18, align 1
   %261 = zext i8 %260 to i64
@@ -1620,14 +1620,14 @@ define dso_local i64 @VCHN_next(%struct.VCHN_t*, i8*) #1 {
   %283 = trunc i32 %282 to i8
   store i8 %283, i8* %21, align 1
   %284 = load %struct.VCHN_t*, %struct.VCHN_t** %17, align 8
-  %285 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %284, i32 0, i32 3
+  %285 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %284, i32 0, i32 5
   %286 = load i64*, i64** %285, align 8
   %287 = load i8, i8* %20, align 1
   %288 = zext i8 %287 to i64
   %289 = getelementptr inbounds i64, i64* %286, i64 %288
   %290 = load i64, i64* %289, align 8
   %291 = load %struct.VCHN_t*, %struct.VCHN_t** %17, align 8
-  %292 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %291, i32 0, i32 3
+  %292 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %291, i32 0, i32 5
   %293 = load i64*, i64** %292, align 8
   %294 = load i8, i8* %21, align 1
   %295 = zext i8 %294 to i64
@@ -1638,28 +1638,28 @@ define dso_local i64 @VCHN_next(%struct.VCHN_t*, i8*) #1 {
 
 ; <label>:299:                                    ; preds = %267
   %300 = load %struct.VCHN_t*, %struct.VCHN_t** %17, align 8
-  %301 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %300, i32 0, i32 3
+  %301 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %300, i32 0, i32 5
   %302 = load i64*, i64** %301, align 8
   %303 = load i8, i8* %20, align 1
   %304 = zext i8 %303 to i64
   %305 = getelementptr inbounds i64, i64* %302, i64 %304
   %306 = load i64, i64* %305, align 8
   %307 = load %struct.VCHN_t*, %struct.VCHN_t** %17, align 8
-  %308 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %307, i32 0, i32 3
+  %308 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %307, i32 0, i32 5
   %309 = load i64*, i64** %308, align 8
   %310 = load i8, i8* %19, align 1
   %311 = zext i8 %310 to i64
   %312 = getelementptr inbounds i64, i64* %309, i64 %311
   store i64 %306, i64* %312, align 8
   %313 = load %struct.VCHN_t*, %struct.VCHN_t** %17, align 8
-  %314 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %313, i32 0, i32 4
+  %314 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %313, i32 0, i32 6
   %315 = load i8*, i8** %314, align 8
   %316 = load i8, i8* %20, align 1
   %317 = zext i8 %316 to i64
   %318 = getelementptr inbounds i8, i8* %315, i64 %317
   %319 = load i8, i8* %318, align 1
   %320 = load %struct.VCHN_t*, %struct.VCHN_t** %17, align 8
-  %321 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %320, i32 0, i32 4
+  %321 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %320, i32 0, i32 6
   %322 = load i8*, i8** %321, align 8
   %323 = load i8, i8* %19, align 1
   %324 = zext i8 %323 to i64
@@ -1669,28 +1669,28 @@ define dso_local i64 @VCHN_next(%struct.VCHN_t*, i8*) #1 {
 
 ; <label>:326:                                    ; preds = %267
   %327 = load %struct.VCHN_t*, %struct.VCHN_t** %17, align 8
-  %328 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %327, i32 0, i32 3
+  %328 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %327, i32 0, i32 5
   %329 = load i64*, i64** %328, align 8
   %330 = load i8, i8* %21, align 1
   %331 = zext i8 %330 to i64
   %332 = getelementptr inbounds i64, i64* %329, i64 %331
   %333 = load i64, i64* %332, align 8
   %334 = load %struct.VCHN_t*, %struct.VCHN_t** %17, align 8
-  %335 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %334, i32 0, i32 3
+  %335 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %334, i32 0, i32 5
   %336 = load i64*, i64** %335, align 8
   %337 = load i8, i8* %19, align 1
   %338 = zext i8 %337 to i64
   %339 = getelementptr inbounds i64, i64* %336, i64 %338
   store i64 %333, i64* %339, align 8
   %340 = load %struct.VCHN_t*, %struct.VCHN_t** %17, align 8
-  %341 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %340, i32 0, i32 4
+  %341 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %340, i32 0, i32 6
   %342 = load i8*, i8** %341, align 8
   %343 = load i8, i8* %21, align 1
   %344 = zext i8 %343 to i64
   %345 = getelementptr inbounds i8, i8* %342, i64 %344
   %346 = load i8, i8* %345, align 1
   %347 = load %struct.VCHN_t*, %struct.VCHN_t** %17, align 8
-  %348 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %347, i32 0, i32 4
+  %348 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %347, i32 0, i32 6
   %349 = load i8*, i8** %348, align 8
   %350 = load i8, i8* %19, align 1
   %351 = zext i8 %350 to i64

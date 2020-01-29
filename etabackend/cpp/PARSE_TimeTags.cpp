@@ -74,11 +74,6 @@ extern "C" {
 			long long buffer_type =0;//14 unused
 	}ttf_reader;
 
-	//DANGER: globlal
-	static ttf_reader *READERs;
-	//DANGER: globlal
-
-
 #define batchreadRecNum  50000
 	// RecordTypes
 #define rtPicoHarpT3     0x00010303    // (SubID = $00 ,RecFmt: $01) (V1), T-Mode: $03 (T3), HW: $03 (PicoHarp)
@@ -102,16 +97,16 @@ extern "C" {
 // DTimeTag * DTRes_pspr = Real time arrival of Photon after last Sync event
 //  virtual_channel: virtual_channel the Photon arrived (0 = Sync channel for T2 measurements)
 #define GotRelativeSignal( SYNC_counts,  Channel,  DTimeTag) \
-	{ oAbsTime_ps= (SYNC_counts) *READERs[0].SYNCRate_pspr + (DTimeTag)*READERs[0].DTRes_pspr; \
+	{ oAbsTime_ps= (SYNC_counts) * READER->SYNCRate_pspr + (DTimeTag) * READER->DTRes_pspr; \
 	oChannel = (Channel);\
 	 }
 
 
 	//GotAbsoluteSignal
 	//  TimeTag: Raw TimeTag from Record * TTRes_pspr = Real Time arrival of Photon
-	#define GotAbsoluteSignal(TimeTag , Channel) { oAbsTime_ps= TimeTag *READERs[0].TTRes_pspr; oChannel= Channel;}
+	#define GotAbsoluteSignal(TimeTag , Channel) { oAbsTime_ps= TimeTag * READER->TTRes_pspr; oChannel= Channel;}
 
-	void MKS_inline ProcessPHT2(unsigned int TTTRRecord, long long &oAbsTime_ps, unsigned char &oChannel, long long &oflcorrection)
+	void MKS_inline ProcessPHT2(ttf_reader* READER,unsigned int TTTRRecord, long long &oAbsTime_ps, unsigned char &oChannel, long long &oflcorrection)
 	{
 
 		const int T2WRAPAROUND = 210698240;
@@ -163,7 +158,7 @@ extern "C" {
 		}
 	}
 
-	void MKS_inline ProcessHHT2(unsigned int TTTRRecord, int HHVersion, long long &oAbsTime_ps, unsigned char &oChannel, long long &oflcorrection)
+	void MKS_inline ProcessHHT2(ttf_reader* READER,unsigned int TTTRRecord, int HHVersion, long long &oAbsTime_ps, unsigned char &oChannel, long long &oflcorrection)
 	{
 
 		long long truetime;
@@ -229,7 +224,7 @@ extern "C" {
 
 
 	// PicoHarp T3 input
-	void MKS_inline ProcessPHT3(unsigned int TTTRRecord, long long &oAbsTime_ps, unsigned char &oChannel, long long &oflcorrection)
+	void MKS_inline ProcessPHT3(ttf_reader* READER,unsigned int TTTRRecord, long long &oAbsTime_ps, unsigned char &oChannel, long long &oflcorrection)
 	{
 		long long truensync;
 		const int T3WRAPAROUND = 65536;
@@ -281,7 +276,7 @@ extern "C" {
 
 		}
 	};
-	void MKS_inline ProcessHHT3(unsigned int TTTRRecord, int HHVersion, long long &oAbsTime_ps, unsigned char &oChannel, long long &oflcorrection)
+	void MKS_inline ProcessHHT3(ttf_reader* READER,unsigned int TTTRRecord, int HHVersion, long long &oAbsTime_ps, unsigned char &oChannel, long long &oflcorrection)
 	{
 
 		const auto T3WRAPAROUND = 1024;
@@ -339,59 +334,59 @@ extern "C" {
 	/////////////////////////////////////////////////////////////////////////////////
 	
 
-	long long  MKS_inline pop_signal_from_file(unsigned char *out_Channel) {
+	long long  MKS_inline pop_signal_from_file(ttf_reader* READER, unsigned char *out_Channel) {
 		
-		//PINFO("overflowcorrection %lld \n ", READERs[0].overflowcorrection)
+		//PINFO("overflowcorrection %lld \n ", READER->overflowcorrection)
 		while (true) {
 			long long AbsTime_ps = INT64_MAX;
 			unsigned char Channel = 255;
 
 			//boundry check
-			const auto next_relpos = READERs[0].next_RecID_in_batch*READERs[0].BytesofRecords;
-			const auto next_abspos = READERs[0].fseekpoint + next_relpos;
-			const auto batch_end_abspos =  READERs[0].fseekpoint+READERs[0].batch_actualread_length;
+			const auto next_relpos = READER->next_RecID_in_batch*READER->BytesofRecords;
+			const auto next_abspos = READER->fseekpoint + next_relpos;
+			const auto batch_end_abspos =  READER->fseekpoint+READER->batch_actualread_length;
 
-			if (next_relpos >= READERs[0].batch_actualread_length)
+			if (next_relpos >= READER->batch_actualread_length)
 			{
-				PINFO("Reader %x for section [%lld %lld) paused, nextrec %lld, batchend %lld, buffer is not long enough.", (unsigned int)READERs, READERs[0].fseekpoint, READERs[0].fendpoint, next_abspos,batch_end_abspos);
+				PINFO("Reader %x for section [%lld %lld) paused, nextrec %lld, batchend %lld, buffer is not long enough.", (unsigned int)READER, READER->fseekpoint, READER->fendpoint, next_abspos,batch_end_abspos);
 				break;
 			}
-			if (next_abspos >= READERs[0].fendpoint)
+			if (next_abspos >= READER->fendpoint)
 			{
-				PINFO("Reader %x for section [%lld %lld) paused, nextrec %lld, batchend %lld, file boundry.", (unsigned int)READERs, READERs[0].fseekpoint, READERs[0].fendpoint,next_abspos,batch_end_abspos);
+				PINFO("Reader %x for section [%lld %lld) paused, nextrec %lld, batchend %lld, file boundry.", (unsigned int)READER, READER->fseekpoint, READER->fendpoint,next_abspos,batch_end_abspos);
 				break;
 			}
 
 
 			//parse binary
-			const auto TTTRRecord = ((unsigned int*)READERs[0].buffer)[READERs[0].next_RecID_in_batch];
-			switch (READERs[0].RecordType)
+			const auto TTTRRecord = ((unsigned int*)READER->buffer)[READER->next_RecID_in_batch];
+			switch (READER->RecordType)
 			{
 
 					//picoharp_parsers
 					case rtPicoHarpT2:
-						ProcessPHT2(TTTRRecord, AbsTime_ps, Channel, READERs[0].overflowcorrection);
+						ProcessPHT2(READER,TTTRRecord, AbsTime_ps, Channel, READER->overflowcorrection);
 						break;
 					case rtPicoHarpT3:
-						ProcessPHT3(TTTRRecord, AbsTime_ps, Channel, READERs[0].overflowcorrection);
+						ProcessPHT3(READER,TTTRRecord, AbsTime_ps, Channel, READER->overflowcorrection);
 						break;
 					case rtHydraHarpT2:
-						ProcessHHT2(TTTRRecord, 1, AbsTime_ps, Channel, READERs[0].overflowcorrection);
+						ProcessHHT2(READER,TTTRRecord, 1, AbsTime_ps, Channel, READER->overflowcorrection);
 						break;
 					case rtHydraHarpT3:
-						ProcessHHT3(TTTRRecord, 1, AbsTime_ps, Channel, READERs[0].overflowcorrection);
+						ProcessHHT3(READER,TTTRRecord, 1, AbsTime_ps, Channel, READER->overflowcorrection);
 						break;
 					case rtHydraHarp2T2:
 					case rtTimeHarp260NT2:
 					case rtTimeHarp260PT2:
-						ProcessHHT2(TTTRRecord, 2, AbsTime_ps, Channel, READERs[0].overflowcorrection);
+						ProcessHHT2(READER,TTTRRecord, 2, AbsTime_ps, Channel, READER->overflowcorrection);
 						break;
 
 					case rtHydraHarp2T3:
 					case rtTimeHarp260NT3:
 					case rtTimeHarp260PT3:
 
-						ProcessHHT3(TTTRRecord, 2, AbsTime_ps, Channel, READERs[0].overflowcorrection);
+						ProcessHHT3(READER,TTTRRecord, 2, AbsTime_ps, Channel, READER->overflowcorrection);
 						break;
 					case quTAG_FORMAT_BINARY: {
 
@@ -402,8 +397,8 @@ extern "C" {
 						} bits;
 						
 						TTTRRecord *TTTRRecordPtr;
-						TTTRRecordPtr = (TTTRRecord *)(READERs[0].buffer + READERs[0].next_RecID_in_batch * READERs[0].BytesofRecords);
-						AbsTime_ps = (*TTTRRecordPtr).time *READERs[0].TTRes_pspr;
+						TTTRRecordPtr = (TTTRRecord *)(READER->buffer + READER->next_RecID_in_batch * READER->BytesofRecords);
+						AbsTime_ps = (*TTTRRecordPtr).time *READER->TTRes_pspr;
 						Channel = (*TTTRRecordPtr).channel;
 						break;
 					}
@@ -415,8 +410,8 @@ extern "C" {
 							unsigned long long time;
 						};
 						SITTTRStruct *TTTRRecordPtr;
-						TTTRRecordPtr = (SITTTRStruct *)(READERs[0].buffer + READERs[0].next_RecID_in_batch * READERs[0].BytesofRecords);
-						AbsTime_ps = (*TTTRRecordPtr).time *READERs[0].TTRes_pspr;
+						TTTRRecordPtr = (SITTTRStruct *)(READER->buffer + READER->next_RecID_in_batch * READER->BytesofRecords);
+						AbsTime_ps = (*TTTRRecordPtr).time *READER->TTRes_pspr;
 						Channel = (*TTTRRecordPtr).channel;
 						break;
 					}
@@ -432,8 +427,8 @@ extern "C" {
 							} bits;
 						};
 						COMPTTTRRecord *COMPTTTRRecordPtr;
-						COMPTTTRRecordPtr = (COMPTTTRRecord *)(READERs[0].buffer + READERs[0].next_RecID_in_batch * READERs[0].BytesofRecords);
-						AbsTime_ps = (*COMPTTTRRecordPtr).bits.time *READERs[0].TTRes_pspr;
+						COMPTTTRRecordPtr = (COMPTTTRRecord *)(READER->buffer + READER->next_RecID_in_batch * READER->BytesofRecords);
+						AbsTime_ps = (*COMPTTTRRecordPtr).bits.time *READER->TTRes_pspr;
 						Channel = (*COMPTTTRRecordPtr).bits.channel;
 						break;
 					}
@@ -451,15 +446,15 @@ extern "C" {
 							} bits;
 						} ;
 						bh4bytesRec *bh4bytesRecPtr;
-						bh4bytesRecPtr = (bh4bytesRec*)(READERs[0].buffer + READERs[0].next_RecID_in_batch * READERs[0].BytesofRecords);
-						AbsTime_ps = ((*bh4bytesRecPtr).bits.macrotime + READERs[0].overflowcorrection)* READERs[0].SYNCRate_pspr
-							+ ((*bh4bytesRecPtr).bits.nanotime)* READERs[0].DTRes_pspr;
+						bh4bytesRecPtr = (bh4bytesRec*)(READER->buffer + READER->next_RecID_in_batch * READER->BytesofRecords);
+						AbsTime_ps = ((*bh4bytesRecPtr).bits.macrotime + READER->overflowcorrection)* READER->SYNCRate_pspr
+							+ ((*bh4bytesRecPtr).bits.nanotime)* READER->DTRes_pspr;
 						if ((*bh4bytesRecPtr).bits.invalid) {
 							AbsTime_ps = INT64_MAX;
 						}
 						if ((*bh4bytesRecPtr).bits.overflow) {
 							AbsTime_ps = INT64_MAX;
-							READERs[0].overflowcorrection += 4096;
+							READER->overflowcorrection += 4096;
 						}
 						if ((*bh4bytesRecPtr).bits.mark) {
 							Channel = (*bh4bytesRecPtr).bits.detector+MARKER_OFFSET;
@@ -475,7 +470,7 @@ extern "C" {
 						break;
 					}
 			}
-			READERs[0].next_RecID_in_batch++;
+			READER->next_RecID_in_batch++;
 
 
 			//overflow, try again next time
@@ -484,59 +479,27 @@ extern "C" {
 			}
 			else {
 				*out_Channel = Channel;
-				return AbsTime_ps + READERs[0].GlobalTimeShift; // add global timeshift only at the very end
+				return AbsTime_ps + READER->GlobalTimeShift; // add global timeshift only at the very end
 			}	
 		}
 		// failure case, all breaks will jump here
 		*out_Channel = 255;
 		return INT64_MAX;
 	}
-	int MKS_inline FileReader_init(char* UniBuf, void* ptr) {
-		READERs = (ttf_reader*)ptr;
+	int MKS_inline FileReader_init(ttf_reader* READER,char* UniBuf, void* ptr) {
+
 
 		// reset nextreadpos to seekpoint
-		READERs[0].next_RecID_in_batch = 0;
-		//READERs[0].batch_actualread_length = 0;
-		READERs[0].buffer = UniBuf;
-		//open file
-		/*if ((READERs[0].fpttf = fopen(filename, "rb")) == NULL)
-		{
-			PERROR("Time-tag file cannot be opened, aborting.\n");
-			return -1;
-		}
-		// seek to starting point
-		if ((_fseeki64(READERs[0].fpttf, READERs[0].batch_nextreadpos_in_file, SEEK_SET)) != NULL) {
-			PERROR("Time-tag file cannot seek, aborting.\n");
-			return -1;
-		}
-		//create buffer
-		if ((READERs[0].buffer = (char *)malloc(batchreadRecNum *READERs[0].BytesofRecords)) == NULL) {
-			PERROR("Reading buffer for Time-tag file is not assgined properly, aborting.\n");
-			return -1;
-		}
-		*/
+		READER->next_RecID_in_batch = 0;
+		READER->buffer = UniBuf;
 
-		PINFO("\nReader %x is assigned to the section [%lld %lld)\n", (unsigned int)READERs,READERs[0].fseekpoint, READERs[0].fendpoint);
+		PINFO("\nReader %x is assigned to the section [%lld %lld)\n", (unsigned int)READER,READER->fseekpoint, READER->fendpoint);
 
-		/*PINFO("TTRes_pspr %lld", READERs[0].TTRes_pspr);
-		PINFO("DTRes_pspr %lld", READERs[0].DTRes_pspr);
-		PINFO("SYNCRate_pspr %lld", READERs[0].SYNCRate_pspr);
-		PINFO("BytesofRecords %lld", READERs[0].BytesofRecords);
-		PINFO("RecordType %lld", READERs[0].RecordType);*/
-		return 0;
-	}
-	int MKS_inline FileReader_close( void* ptr) {
-		/*
-		READERs = (ttf_reader*)ptr;
-		if (fclose(READERs[0].fpttf) != NULL)
-		{
-			PERROR("Time-tag file cannot be closed, aborting.\n");
-			return -1;
-		}
-		free(READERs[0].buffer);
-		
-		PINFO("Reader %x is closing.", READERs);
-		*/
+		/*PINFO("TTRes_pspr %lld", READER->TTRes_pspr);
+		PINFO("DTRes_pspr %lld", READER->DTRes_pspr);
+		PINFO("SYNCRate_pspr %lld", READER->SYNCRate_pspr);
+		PINFO("BytesofRecords %lld", READER->BytesofRecords);
+		PINFO("RecordType %lld", READER->RecordType);*/
 		return 0;
 	}
 }

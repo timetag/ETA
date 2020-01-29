@@ -42,6 +42,8 @@ extern "C" {
 		unsigned char VCHN_RFILES;
 
 		unsigned char POOL_FILES;
+		unsigned char placeholder;
+		unsigned int placeholder2;
 		int64_t *POOL_timetag = 0;
 		unsigned char *POOL_fileid = 0;
 		circular_buf_t* VFILES;

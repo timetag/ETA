@@ -143,10 +143,9 @@ def link_jit_code(code):
     glb = {
         "jit": jit, "ffi": ffi, "nb": nb, "np": np,
         "link_libs": link_libs,
+        
+        "pop_signal_from_file": link_function("pop_signal_from_file", 2, i64ret=True),
         "FileReader_init": link_function("FileReader_init", 2),
-        "FileReader_close": link_function("FileReader_close", 1),
-        "pop_signal_from_file": link_function("pop_signal_from_file", 1, i64ret=True),
-
 
         "VFILE_init": link_function("VFILE_init", 5),
         "POOL_update": link_function("POOL_update", 3),
