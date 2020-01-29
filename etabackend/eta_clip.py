@@ -77,10 +77,11 @@ class Clip():
 class ETA_CUT():
     def __init__(self):
          pass
-
+        
+    # example generators
     def simple_cut(self, filename, cuts=1, format=-1, keep_indexes=None, reuse_last_clip=False ):
        
-        last_clip = self.incremental_cut(filename,rec_per_cut=1,format=format,wait_timeout=0,verbose=False)
+        last_clip = self.clip_from_file(filename,read_events=1,format=format,wait_timeout=0,verbose=False)
 
         self.send(
             "ETA.SIMPLE_CUT (Deprecated): The file '{filename}' will be cut into {cuts} equal size Clips. ".format(filename=filename,
@@ -98,7 +99,7 @@ class ETA_CUT():
 
             currentclip = Clip()
             currentclip.from_parser_output(last_clip.to_parser_output()) # copy information from last clip
-            self.incremental_cut(filename,modify_clip=currentclip,rec_per_cut=((NumRecords+cuts-1) // cuts) ,format=format,wait_timeout=0,verbose=False)
+            self.clip_from_file(filename,modify_clip=currentclip,read_events=((NumRecords+cuts-1) // cuts) ,format=format,wait_timeout=0,verbose=False)
             caller_parms.append(currentclip)
             last_clip=currentclip
         
@@ -111,7 +112,12 @@ class ETA_CUT():
 
         return caller_parms
 
+    
     def incremental_cut(self, filename, modify_clip=None, rec_per_cut=0, format=-1, wait_timeout=0, verbose=print):
+        return self.clip_from_file( filename, modify_clip, rec_per_cut, format, wait_timeout, verbose)
+    
+    # low-level API
+    def clip_from_file(self, filename, modify_clip=None, read_events=0, format=-1, wait_timeout=0, verbose=print):
         filename = str(filename)  # supporting pathlib
         if (verbose==True):
             verbose = print
@@ -135,13 +141,13 @@ class ETA_CUT():
         
         #use actual size of the file
         fileactualsize = os.path.getsize(filename)
-        if rec_per_cut <= 0:
-            rec_per_cut += (fileactualsize - temp_clip.fseekpoint)//temp_clip.BytesofRecords
+        if read_events <= 0:
+            read_events += (fileactualsize - temp_clip.fseekpoint)//temp_clip.BytesofRecords
         # read at least one record each time
-        if rec_per_cut <= 0:
-            rec_per_cut = 1 
+        if read_events <= 0:
+            read_events = 1 
         #update the new ending
-        temp_clip.fendpoint = temp_clip.fseekpoint + temp_clip.BytesofRecords * rec_per_cut
+        temp_clip.fendpoint = temp_clip.fseekpoint + temp_clip.BytesofRecords * read_events
        
         #wait for data
         waited_for=0.0
@@ -178,4 +184,5 @@ class ETA_CUT():
                         "ETA.incremental_cut: The file '{}' section [{},{}) is loaded into the Clip. ".format(filename, temp_clip.fseekpoint, temp_clip.fendpoint))
 
         return temp_clip.validate()
-   
+    
+    
