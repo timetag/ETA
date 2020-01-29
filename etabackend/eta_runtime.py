@@ -6,7 +6,6 @@ import os
 import sys
 import threading
 import time
-import logging
 from concurrent.futures import ThreadPoolExecutor
 
 import numpy as np
@@ -17,32 +16,18 @@ from etalang import recipe_compiler
 from parser_header import ETACReaderStructIDX
 
 
-class ETAThread(threading.Thread):
-    def __init__(self, func, args):
-        super(ETAThread, self).__init__()
-        self.func = func
-        self.args = args
-        self.result = None
-
-    def run(self):
-        self.result = self.func(*self.args)
-
-    def get_result(self):
-        return self.result
-
-
 def external_wrpper(param):
     eta_compiled_code = param.pop()
     loc = jit_linker.link_jit_code(eta_compiled_code)
     mainloop = loc["mainloop"]
-    thin_wrapper = loc["thin_wrapper"]
+    result_fetcher = loc["result_fetcher"]
     initializer = loc["initializer"]
     storage = initializer(param)
     # old = sys.stdout
     # sys.stdout = open("log.txt", 'w')
     mainloop(*storage)
     # sys.stdout = old
-    ret = thin_wrapper(*storage)
+    ret = result_fetcher(*storage)
 
     return ret
 
@@ -54,6 +39,7 @@ class ETA(ETA_CUT):
         self.recipe_metadata = None
         self.logger = logging.getLogger(__name__)
         logging.basicConfig()
+
     def send(self, text, endpoint="log"):
         self.server.send_message_to_all(json.dumps([endpoint, str(text)]))
 
@@ -104,9 +90,9 @@ class ETA(ETA_CUT):
 
     def compile_eta(self, etaobj=None, verbose=print):
         try:
-            if verbose==True:
+            if verbose == True:
                 verbose = self.send
-           
+
             self.eta_compiled_code = None
             self.usercode_vars = None
             self.recipe_metadata = None
@@ -115,7 +101,7 @@ class ETA(ETA_CUT):
             self.recipe_update()
             # clear cache
             self.mainloop = {}
-            self.thin_wrapper = {}
+            self.result_fetcher = {}
             self.initializer = {}
 
         except Exception as e:
@@ -234,7 +220,7 @@ class ETA(ETA_CUT):
 
     def run(self, array_of_clips, ctxs=None, sum_results=True, iterate_ctxs=False, group="main",
             verbose=True):
-        if (verbose==True):
+        if (verbose == True):
             verbose = self.send
         # support legacy API
         if isinstance(array_of_clips, Clip):
@@ -261,12 +247,12 @@ class ETA(ETA_CUT):
                 verbose("Compiling...")
             loc = jit_linker.link_jit_code(self.eta_compiled_code[group])
             self.mainloop[group] = loc["mainloop"]
-            self.thin_wrapper[group] = loc["thin_wrapper"]
+            self.result_fetcher[group] = loc["result_fetcher"]
             self.initializer[group] = loc["initializer"]
 
             initializer = self.initializer[group]
             mainloop = self.mainloop[group]
-            thin_wrapper = self.thin_wrapper[group]
+            result_fetcher = self.result_fetcher[group]
 
         # cache compiled code
         """
@@ -275,7 +261,7 @@ class ETA(ETA_CUT):
         first[1] = first[0] + 40
         storage = initializer(first)
         mainloop(*storage)
-        thin_wrapper(*storage)
+        result_fetcher(*storage)
         with open("llvm.txt", "w") as writeto:
             codelist = mainloop.inspect_llvm()
             for each in codelist:
@@ -285,7 +271,7 @@ class ETA(ETA_CUT):
 
         initializer = self.initializer[group]
         mainloop = self.mainloop[group]
-        thin_wrapper = self.thin_wrapper[group]
+        result_fetcher = self.result_fetcher[group]
 
         threads = []
 
@@ -314,21 +300,19 @@ class ETA(ETA_CUT):
                 vals[each_caller_parms_id][1][ETACReaderStructIDX.resuming] = 1
                 # print(vals[each_caller_parms_id][1])
         print("Executing analysis program...")
+        with ThreadPoolExecutor() as executor:
+            for val in vals:
+                thread1 = executor.submit(mainloop, *val)
+                threads.append(thread1)
+            for thread2 in threads:
+                print(thread2.result())
         for val in vals:
-            thread1 = ETAThread(func=mainloop, args=val)
-            threads.append(thread1)
-            thread1.start()
-        for thread2 in threads:
-            thread2.join()
-            print(thread2.get_result())
-
-        for val in vals:
-            rets.append(thin_wrapper(*val))
+            rets.append(result_fetcher(*val))
 
         te = time.time()
         if verbose:
             verbose('ETA.RUN: Analysis is finished in {0:.2f} seconds.'.format((te - ts)),
-                      "stopped")
+                    "stopped")
 
         if sum_results:
             if verbose:

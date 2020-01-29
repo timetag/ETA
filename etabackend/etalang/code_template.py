@@ -71,7 +71,7 @@ def initializer(caller_parms):
     chn_next = np.zeros((1), dtype=np.int8)
     return (UniBuf, ReaderPTR1,VCHN_arr, vfiles, POOL_timetag1, POOL_fileid1, chn, chn_next {tables} )
     
-def thin_wrapper(UniBuf, ReaderPTR1, VCHN_arr, vfiles, POOL_timetag1,POOL_fileid1,chn,chn_next {tables} ):
+def result_fetcher(UniBuf, ReaderPTR1, VCHN_arr, vfiles, POOL_timetag1,POOL_fileid1,chn,chn_next {tables} ):
     status= {{ {table_list}
         "ReaderPTR1":ReaderPTR1,
         "VCHN_arr":VCHN_arr,

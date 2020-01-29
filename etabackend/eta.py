@@ -26,7 +26,7 @@ except Exception as e:
 class WSSERVER(ETA):
 
     def __init__(self):
-
+        super(WSSERVER, self).__init__()
         self.ETA_VERSION = ETA_VERSION
 
         self.hostlisten = os.environ.get('ETA_LISTEN') or "127.0.0.1"
