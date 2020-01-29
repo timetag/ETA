@@ -78,7 +78,7 @@ class ETA_CUT():
     def __init__(self):
          pass
 
-    def simple_cut(self, filename, cuts=1, format=-1, keep_indexes=None ):
+    def simple_cut(self, filename, cuts=1, format=-1, keep_indexes=None, reuse_last_clip=False ):
        
         last_clip = self.incremental_cut(filename,rec_per_cut=1,format=format,wait_timeout=0,verbose=False)
 
@@ -111,8 +111,10 @@ class ETA_CUT():
 
         return caller_parms
 
-    def incremental_cut(self, filename, modify_clip=None, rec_per_cut=0, format=-1, wait_timeout=0, verbose=False):
+    def incremental_cut(self, filename, modify_clip=None, rec_per_cut=0, format=-1, wait_timeout=0, verbose=print):
         filename = str(filename)  # supporting pathlib
+        if (verbose==True):
+            verbose = print
         if modify_clip == None:
             ret1, parse_output = parse_header(filename, format)
             if ret1 is not 0:
@@ -147,12 +149,12 @@ class ETA_CUT():
             waited_for += 0.01
             if waited_for > wait_timeout:
                 if verbose:
-                    self.send(
+                    verbose(
                             "Timeout when waiting for the next cut, round to file boundry.")
                 temp_clip.fendpoint = fileactualsize
                 break
             if verbose:
-                print("Waiting for file {} to grow from {} to {} bytes.".format(filename,
+                verbose("Waiting for file {} to grow from {} to {} bytes.".format(filename,
                                                                                 fileactualsize,
                                                                                 temp_clip.fendpoint))
             time.sleep(0.01) # hard-coded checking period is probably not good.
@@ -167,12 +169,12 @@ class ETA_CUT():
         # fail when zero size
         if temp_clip.batch_actualread_length==0:
             if verbose:
-                self.send(
+                verbose(
                      "ETA.incremental_cut: The file '{}' is not long enough for the Clip. ".format(filename))
             return False
         else:
             if verbose:
-                self.send(
+                verbose(
                         "ETA.incremental_cut: The file '{}' section [{},{}) is loaded into the Clip. ".format(filename, temp_clip.fseekpoint, temp_clip.fendpoint))
 
         return temp_clip.validate()

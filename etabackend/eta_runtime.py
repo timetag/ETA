@@ -230,12 +230,13 @@ class ETA(ETA_CUT):
     def run(self, array_of_clips, ctxs=None, sum_results=True, iterate_ctxs=False, group="main",
             verbose=True,multithreading=False):
         # support legacy API
+        if isinstance(array_of_clips, Clip):
+            array_of_clips = [array_of_clips]
         if not isinstance(array_of_clips, list):
             self.send(
                 "ETA.RUN: the first parameter should be a cut descriptor. Try cuts = self.simple_cut(your_filename).", "err")
             array_of_clips = self.simple_cut(array_of_clips)
-        if isinstance(array_of_clips, Clip):
-            array_of_clips = [array_of_clips]
+        
         # start timeing
         if verbose:
             self.send(
