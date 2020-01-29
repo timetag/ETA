@@ -6,6 +6,7 @@ import os
 import sys
 import threading
 import time
+import logging
 from concurrent.futures import ThreadPoolExecutor
 
 import numpy as np
@@ -51,7 +52,8 @@ class ETA(ETA_CUT):
         self.eta_compiled_code = None
         self.usercode_vars = None
         self.recipe_metadata = None
-
+        self.logger = logging.getLogger(__name__)
+        logging.basicConfig()
     def send(self, text, endpoint="log"):
         self.server.send_message_to_all(json.dumps([endpoint, str(text)]))
 
@@ -100,17 +102,16 @@ class ETA(ETA_CUT):
             if path is not "":
                 self.recipe_set_parameter(key, path)
 
-    def compile_eta(self, etaobj=None, verbose=False):
+    def compile_eta(self, etaobj=None, verbose=print):
         try:
-            if verbose:
-                info_emitter = self.send
-            else:
-                info_emitter = print
+            if verbose==True:
+                verbose = self.send
+           
             self.eta_compiled_code = None
             self.usercode_vars = None
             self.recipe_metadata = None
             self.eta_compiled_code, self.usercode_vars, self.recipe_metadata = recipe_compiler.compile_eta(
-                etaobj, info_emitter)
+                etaobj, verbose)
             self.recipe_update()
             # clear cache
             self.mainloop = {}
@@ -233,6 +234,8 @@ class ETA(ETA_CUT):
 
     def run(self, array_of_clips, ctxs=None, sum_results=True, iterate_ctxs=False, group="main",
             verbose=True):
+        if (verbose==True):
+            verbose = self.send
         # support legacy API
         if isinstance(array_of_clips, Clip):
             array_of_clips = [array_of_clips]
@@ -254,7 +257,8 @@ class ETA(ETA_CUT):
                 "Try to eta.run() on a non-existing group {}.".format(group), "err")
             return None
         if not (group in self.mainloop):
-            print("Compiling...")
+            if verbose:
+                verbose("Compiling...")
             loc = jit_linker.link_jit_code(self.eta_compiled_code[group])
             self.mainloop[group] = loc["mainloop"]
             self.thin_wrapper[group] = loc["thin_wrapper"]
@@ -323,21 +327,23 @@ class ETA(ETA_CUT):
 
         te = time.time()
         if verbose:
-            self.send('ETA.RUN: Analysis is finished in {0:.2f} seconds.'.format((te - ts)),
+            verbose('ETA.RUN: Analysis is finished in {0:.2f} seconds.'.format((te - ts)),
                       "stopped")
 
         if sum_results:
-            print("Aggregating results.")
+            if verbose:
+                verbose("Aggregating results.")
             # reduce
             for each in range(1, len(rets)):
                 for each_graph in rets[0].keys():
                     rets[0][each_graph] += rets[each][each_graph]
             result = rets[0]
             if verbose:
-                self.send('ETA.RUN: Aggregating {} results.'.format(
+                verbose('ETA.RUN: Aggregating {} results.'.format(
                     len(rets)), "stopped")
         else:
-            print("Forwarding results.")
+            if verbose:
+                verbose("Forwarding results.")
             result = rets
 
         if iterate_ctxs:

@@ -1,30 +1,34 @@
 #!/bin/env python
+import json
+import multiprocessing
+import os
 import sys
 import traceback
-import os
-import multiprocessing
 from subprocess import run
-#multiprocessing.freeze_support()
+
 ETA_VERSION = "v0.6.6"
 try:
-    #deps check
+    # deps check
     import webinstall
     import ws_broadcast
-    from eta_runtime import *
+    from eta_runtime import ETA
 except Exception as e:
-    print("[!] It seems that ETA can not find all of its dependencies:", e,file=sys.stderr)
-    inp = input("[*] Do you want to try `pip install etabackend` to fix it? (yes) ")
+    print("[!] It seems that ETA can not find all of its dependencies:",
+          e, file=sys.stderr)
+    inp = input(
+        "[*] Do you want to try `pip install etabackend` to fix it? (yes) ")
     if 'y' in inp.lower():
-        run([sys.executable, '-m','pip', '--disable-pip-version-check','install', '--find-links=.','etabackend','--upgrade'])
+        run([sys.executable, '-m', 'pip', '--disable-pip-version-check',
+             'install', '--find-links=.', 'etabackend', '--upgrade'])
     input("Please restart ETA backend.")
+
 
 class WSSERVER(ETA):
 
     def __init__(self):
-        import logging
+
         self.ETA_VERSION = ETA_VERSION
-        self.logger = logging.getLogger(__name__)
-        logging.basicConfig()
+
         self.hostlisten = os.environ.get('ETA_LISTEN') or "127.0.0.1"
         self.hostip = os.environ.get('ETA_IP') or "localhost"
         self.hostport = os.environ.get('ETA_PORT') or "5678"
@@ -47,6 +51,7 @@ class WSSERVER(ETA):
         self.server.run_forever()
         self.eta_compiled_code = None
 
+
 def main():
     print(""" 
     ______  ______    ___ 
@@ -60,6 +65,7 @@ def main():
     print("ETA_VERSION: "+ETA_VERSION)
     #print("Using Python libraries from ", sys.path)
     ws = WSSERVER()
+
 
 if __name__ == '__main__':
     main()
