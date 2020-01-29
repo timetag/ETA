@@ -1,16 +1,20 @@
-import multiprocessing
-import time
-import threading
-import json
-import sys
-import os
-import logging
+
 import copy
-import jit_linker
-from parser_header import ETACReaderStructIDX
-from etalang import recipe_compiler
+import json
+import logging
+import os
+import sys
+import threading
+import time
+from concurrent.futures import ThreadPoolExecutor
+
 import numpy as np
-from eta_clip import ETA_CUT,Clip
+
+import jit_linker
+from eta_clip import ETA_CUT, Clip
+from etalang import recipe_compiler
+from parser_header import ETACReaderStructIDX
+
 
 class ETAThread(threading.Thread):
     def __init__(self, func, args):
@@ -47,7 +51,7 @@ class ETA(ETA_CUT):
         self.eta_compiled_code = None
         self.usercode_vars = None
         self.recipe_metadata = None
-       
+
     def send(self, text, endpoint="log"):
         self.server.send_message_to_all(json.dumps([endpoint, str(text)]))
 
@@ -228,7 +232,7 @@ class ETA(ETA_CUT):
                 self.logger.error(str(e), exc_info=True)
 
     def run(self, array_of_clips, ctxs=None, sum_results=True, iterate_ctxs=False, group="main",
-            verbose=True,multithreading=False):
+            verbose=True):
         # support legacy API
         if isinstance(array_of_clips, Clip):
             array_of_clips = [array_of_clips]
@@ -236,7 +240,7 @@ class ETA(ETA_CUT):
             self.send(
                 "ETA.RUN: the first parameter should be a cut descriptor. Try cuts = self.simple_cut(your_filename).", "err")
             array_of_clips = self.simple_cut(array_of_clips)
-        
+
         # start timeing
         if verbose:
             self.send(
@@ -244,98 +248,79 @@ class ETA(ETA_CUT):
         ts = time.time()
         vals = []
         rets = []
-        # multi-threading or single-threading
-        if not multithreading:
 
-            if not (group in self.eta_compiled_code):
-                self.send(
-                    "Try to eta.run() on a non-existing group {}.".format(group), "err")
-                return None
-            if not (group in self.mainloop):
-                print("Compiling...")
-                loc = jit_linker.link_jit_code(self.eta_compiled_code[group])
-                self.mainloop[group] = loc["mainloop"]
-                self.thin_wrapper[group] = loc["thin_wrapper"]
-                self.initializer[group] = loc["initializer"]
-
-                initializer = self.initializer[group]
-                mainloop = self.mainloop[group]
-                thin_wrapper = self.thin_wrapper[group]
-
-                # cache compiled code
-                """
-                print("Warming up...")
-                first = copy.deepcopy(cuts_params[0])
-                first[1] = first[0] + 40
-                storage = initializer(first)
-                mainloop(*storage)
-                thin_wrapper(*storage)
-                with open("llvm.txt", "w") as writeto:
-                    codelist = mainloop.inspect_llvm()
-                    for each in codelist:
-                        writeto.write(codelist[each])
-                        break
-                """
+        if not (group in self.eta_compiled_code):
+            self.send(
+                "Try to eta.run() on a non-existing group {}.".format(group), "err")
+            return None
+        if not (group in self.mainloop):
+            print("Compiling...")
+            loc = jit_linker.link_jit_code(self.eta_compiled_code[group])
+            self.mainloop[group] = loc["mainloop"]
+            self.thin_wrapper[group] = loc["thin_wrapper"]
+            self.initializer[group] = loc["initializer"]
 
             initializer = self.initializer[group]
             mainloop = self.mainloop[group]
             thin_wrapper = self.thin_wrapper[group]
 
-            threads = []
+        # cache compiled code
+        """
+        print("Warming up...")
+        first = copy.deepcopy(cuts_params[0])
+        first[1] = first[0] + 40
+        storage = initializer(first)
+        mainloop(*storage)
+        thin_wrapper(*storage)
+        with open("llvm.txt", "w") as writeto:
+            codelist = mainloop.inspect_llvm()
+            for each in codelist:
+                writeto.write(codelist[each])
+                break
+        """
 
-            if ctxs is None:
-                print("\nInitializing context.")
-                for each_clip in array_of_clips:
-                    if not ( isinstance(each_clip, Clip) and each_clip.validate()):
-                        raise ValueError(
-                            "Invalid section for cut." + str(each_clip))
-                    vals.append(initializer(each_clip))
-            else:
-                print("\nUpdating context from last_ctxs.")
-                vals = ctxs
-                for each_caller_parms_id,each_clip in enumerate(array_of_clips) :
-                    if not ( isinstance(each_clip, Clip) and each_clip.validate()):
-                        raise ValueError(
-                            "Invalid section for cut." + str(each_clip))
+        initializer = self.initializer[group]
+        mainloop = self.mainloop[group]
+        thin_wrapper = self.thin_wrapper[group]
 
-                    parser_like_arr=each_clip.to_parser_output()
-                    #replace buffer
-                    vals[each_caller_parms_id][0] = each_clip.buffer
-                    #replace to new Clip info
-                    vals[each_caller_parms_id][1][ETACReaderStructIDX.fseekpoint:ETACReaderStructIDX.GlobalTimeShift+1] = parser_like_arr[ETACReaderStructIDX.fseekpoint:ETACReaderStructIDX.GlobalTimeShift+1] # 7th for the global time shift
-                    #switch to resuming mode
-                    vals[each_caller_parms_id][1][ETACReaderStructIDX.resuming] = 1  
-                    # print(vals[each_caller_parms_id][1])
-            print("Executing analysis program...")
-            for val in vals:
-                thread1 = ETAThread(func=mainloop, args=val)
-                threads.append(thread1)
-                thread1.start()
-            for thread2 in threads:
-                thread2.join()
-                print(thread2.get_result())
+        threads = []
 
-            for val in vals:
-                rets.append(thin_wrapper(*val))
-
+        if ctxs is None:
+            print("\nInitializing context.")
+            for each_clip in array_of_clips:
+                if not (isinstance(each_clip, Clip) and each_clip.validate()):
+                    raise ValueError(
+                        "Invalid section for cut." + str(each_clip))
+                vals.append(initializer(each_clip))
         else:
+            print("\nUpdating context from last_ctxs.")
+            vals = ctxs
+            for each_caller_parms_id, each_clip in enumerate(array_of_clips):
+                if not (isinstance(each_clip, Clip) and each_clip.validate()):
+                    raise ValueError(
+                        "Invalid section for cut." + str(each_clip))
 
-            # assign code
-            for each in array_of_clips:
-                if group in self.eta_compiled_code:
-                    each.append(self.eta_compiled_code[group])
-                else:
-                    self.send(
-                        "Try to eta.run() on a non-existing group {}.".format(group), "err")
-                    return None
-            if True:
-                self.send(
-                    "WARNING: Context or program caching are not yet supported in multi-threading mode.")
-                cores = min(len(array_of_clips), multiprocessing.cpu_count())
-                self.pool = multiprocessing.Pool(cores)
-                rets = self.pool.map(external_wrpper, array_of_clips)
-                self.pool.close()
-                self.pool.join()
+                parser_like_arr = each_clip.to_parser_output()
+                # replace buffer
+                vals[each_caller_parms_id][0] = each_clip.buffer
+                # replace to new Clip info
+                vals[each_caller_parms_id][1][ETACReaderStructIDX.fseekpoint:ETACReaderStructIDX.GlobalTimeShift +
+                                              1] = parser_like_arr[ETACReaderStructIDX.fseekpoint:ETACReaderStructIDX.GlobalTimeShift+1]  # 7th for the global time shift
+                # switch to resuming mode
+                vals[each_caller_parms_id][1][ETACReaderStructIDX.resuming] = 1
+                # print(vals[each_caller_parms_id][1])
+        print("Executing analysis program...")
+        for val in vals:
+            thread1 = ETAThread(func=mainloop, args=val)
+            threads.append(thread1)
+            thread1.start()
+        for thread2 in threads:
+            thread2.join()
+            print(thread2.get_result())
+
+        for val in vals:
+            rets.append(thin_wrapper(*val))
+
         te = time.time()
         if verbose:
             self.send('ETA.RUN: Analysis is finished in {0:.2f} seconds.'.format((te - ts)),
@@ -359,18 +344,3 @@ class ETA(ETA_CUT):
             return result, vals
         else:
             return result
-"""
-	int MKS_inline read_next_minibatch() {
-		READERs[0].batch_actualread_length = fread(READERs[0].buffer, READERs[0].BytesofRecords, batchreadRecNum, READERs[0].fpttf)*READERs[0].BytesofRecords;
-		READERs[0].batch_nextreadpos_in_file += READERs[0].batch_actualread_length;
-		const long long batches_left = READERs[0].batch_nextreadpos_in_file - READERs[0].fseekpoint;
-		
-		if (batches_left % (200* batchreadRecNum*READERs[0].BytesofRecords) == 0) {
-			const long long total_batches = (READERs[0].fendpoint - READERs[0].fseekpoint);
-			const long long percentage = batches_left * 100  / total_batches;
-			PINFO("Reader %x for section [%lld %lld) %lld%% finished.", READERs, READERs[0].fseekpoint, READERs[0].fendpoint, percentage)
-		}
-		READERs[0].next_RecID_in_batch = 0; 
-		return READERs[0].batch_actualread_length;
-	}
-"""
