@@ -486,14 +486,9 @@ extern "C" {
 		*out_Channel = 255;
 		return INT64_MAX;
 	}
-	int MKS_inline FileReader_init(ttf_reader* READER,char* UniBuf, void* ptr) {
-
-
-		// reset nextreadpos to seekpoint
-		READER->next_RecID_in_batch = 0;
+	int MKS_inline FileReader_init(ttf_reader* READER,char* UniBuf) {
 		READER->buffer = UniBuf;
-
-		PINFO("\nReader %x is assigned to the section [%lld %lld)\n", (unsigned int)READER,READER->fseekpoint, READER->fendpoint);
+		PINFO("\nReader %x is pointed to record %lld on section [%lld %lld)\n", (unsigned int)READER, READER->next_RecID_in_batch, READER->fseekpoint, READER->fendpoint);
 
 		/*PINFO("TTRes_pspr %lld", READER->TTRes_pspr);
 		PINFO("DTRes_pspr %lld", READER->DTRes_pspr);

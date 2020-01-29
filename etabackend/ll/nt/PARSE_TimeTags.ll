@@ -40,7 +40,7 @@ $"??_C@_0FG@KKOHJNIC@?6Reader?5?$CFx?5for?5section?5?$FL?$CFlld?5?$CFll@" = comd
 
 $"??_C@_0CM@DODOIIB@?6?5?$FLERROR?$FNERROR?3?5Unsupported?5time@" = comdat any
 
-$"??_C@_0DE@KHGIDNIO@?6?6Reader?5?$CFx?5is?5assigned?5to?5the?5s@" = comdat any
+$"??_C@_0DO@HOPADPAA@?6?6Reader?5?$CFx?5is?5pointed?5to?5record@" = comdat any
 
 $"?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA" = comdat any
 
@@ -50,7 +50,7 @@ $"?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA" = comdat any
 @"??_C@_0GD@PFHPAIMA@?6Reader?5?$CFx?5for?5section?5?$FL?$CFlld?5?$CFll@" = linkonce_odr dso_local unnamed_addr constant [99 x i8] c"\0AReader %x for section [%lld %lld) paused, nextrec %lld, batchend %lld, buffer is not long enough.\00", comdat, align 1
 @"??_C@_0FG@KKOHJNIC@?6Reader?5?$CFx?5for?5section?5?$FL?$CFlld?5?$CFll@" = linkonce_odr dso_local unnamed_addr constant [86 x i8] c"\0AReader %x for section [%lld %lld) paused, nextrec %lld, batchend %lld, file boundry.\00", comdat, align 1
 @"??_C@_0CM@DODOIIB@?6?5?$FLERROR?$FNERROR?3?5Unsupported?5time@" = linkonce_odr dso_local unnamed_addr constant [44 x i8] c"\0A [ERROR]ERROR: Unsupported timetag format.\00", comdat, align 1
-@"??_C@_0DE@KHGIDNIO@?6?6Reader?5?$CFx?5is?5assigned?5to?5the?5s@" = linkonce_odr dso_local unnamed_addr constant [52 x i8] c"\0A\0AReader %x is assigned to the section [%lld %lld)\0A\00", comdat, align 1
+@"??_C@_0DO@HOPADPAA@?6?6Reader?5?$CFx?5is?5pointed?5to?5record@" = linkonce_odr dso_local unnamed_addr constant [62 x i8] c"\0A\0AReader %x is pointed to record %lld on section [%lld %lld)\0A\00", comdat, align 1
 @"?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA" = linkonce_odr dso_local global i64 0, comdat, align 8
 
 ; Function Attrs: alwaysinline uwtable
@@ -2093,31 +2093,29 @@ define dso_local i64 @pop_signal_from_file(%struct.ttf_reader*, i8*) #0 {
 }
 
 ; Function Attrs: alwaysinline uwtable
-define dso_local i32 @FileReader_init(%struct.ttf_reader*, i8*, i8*) #0 {
-  %4 = alloca i8*, align 8
-  %5 = alloca i8*, align 8
-  %6 = alloca %struct.ttf_reader*, align 8
-  store i8* %2, i8** %4, align 8
-  store i8* %1, i8** %5, align 8
-  store %struct.ttf_reader* %0, %struct.ttf_reader** %6, align 8
-  %7 = load %struct.ttf_reader*, %struct.ttf_reader** %6, align 8
-  %8 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %7, i32 0, i32 10
-  store i64 0, i64* %8, align 8
-  %9 = load i8*, i8** %5, align 8
-  %10 = load %struct.ttf_reader*, %struct.ttf_reader** %6, align 8
-  %11 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %10, i32 0, i32 13
-  store i8* %9, i8** %11, align 8
-  %12 = load %struct.ttf_reader*, %struct.ttf_reader** %6, align 8
-  %13 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %12, i32 0, i32 1
-  %14 = load i64, i64* %13, align 8
-  %15 = load %struct.ttf_reader*, %struct.ttf_reader** %6, align 8
-  %16 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %15, i32 0, i32 0
-  %17 = load i64, i64* %16, align 8
-  %18 = load %struct.ttf_reader*, %struct.ttf_reader** %6, align 8
-  %19 = ptrtoint %struct.ttf_reader* %18 to i32
-  %20 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([52 x i8], [52 x i8]* @"??_C@_0DE@KHGIDNIO@?6?6Reader?5?$CFx?5is?5assigned?5to?5the?5s@", i32 0, i32 0), i32 %19, i64 %17, i64 %14)
-  %21 = sext i32 %20 to i64
-  store i64 %21, i64* @order_gurantee3, align 8
+define dso_local i32 @FileReader_init(%struct.ttf_reader*, i8*) #0 {
+  %3 = alloca i8*, align 8
+  %4 = alloca %struct.ttf_reader*, align 8
+  store i8* %1, i8** %3, align 8
+  store %struct.ttf_reader* %0, %struct.ttf_reader** %4, align 8
+  %5 = load i8*, i8** %3, align 8
+  %6 = load %struct.ttf_reader*, %struct.ttf_reader** %4, align 8
+  %7 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %6, i32 0, i32 13
+  store i8* %5, i8** %7, align 8
+  %8 = load %struct.ttf_reader*, %struct.ttf_reader** %4, align 8
+  %9 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %8, i32 0, i32 1
+  %10 = load i64, i64* %9, align 8
+  %11 = load %struct.ttf_reader*, %struct.ttf_reader** %4, align 8
+  %12 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %11, i32 0, i32 0
+  %13 = load i64, i64* %12, align 8
+  %14 = load %struct.ttf_reader*, %struct.ttf_reader** %4, align 8
+  %15 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %14, i32 0, i32 10
+  %16 = load i64, i64* %15, align 8
+  %17 = load %struct.ttf_reader*, %struct.ttf_reader** %4, align 8
+  %18 = ptrtoint %struct.ttf_reader* %17 to i32
+  %19 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([62 x i8], [62 x i8]* @"??_C@_0DO@HOPADPAA@?6?6Reader?5?$CFx?5is?5pointed?5to?5record@", i32 0, i32 0), i32 %18, i64 %16, i64 %13, i64 %10)
+  %20 = sext i32 %19 to i64
+  store i64 %20, i64* @order_gurantee3, align 8
   ret i32 0
 }
 
