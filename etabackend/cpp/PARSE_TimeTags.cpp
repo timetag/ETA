@@ -494,7 +494,6 @@ extern "C" {
 	int MKS_inline FileReader_init(char* UniBuf, void* ptr) {
 		READERs = (ttf_reader*)ptr;
 
-
 		// reset nextreadpos to seekpoint
 		READERs[0].next_RecID_in_batch = 0;
 		//READERs[0].batch_actualread_length = 0;

@@ -114,9 +114,9 @@ def link_libs(typingctx):
     return sig, codegen
 
 
-def link_function(func_name="", param=1, i64=False):
+def link_function(func_name="", param=1, i64ret=False):
     typer = "int32"
-    if (i64):
+    if (i64ret):
         typer = "int64"
     code = """
 def ARB_PARAM_MAKER():
@@ -145,15 +145,15 @@ def link_jit_code(code):
         "link_libs": link_libs,
         "FileReader_init": link_function("FileReader_init", 2),
         "FileReader_close": link_function("FileReader_close", 1),
-        "pop_signal_from_file": link_function("pop_signal_from_file", 1, i64=True),
-        "VFILES_init": link_function("VFILES_init", 1),
-        "VFILE_init": link_function("VFILE_init", 4),
-        "POOL_init": link_function("POOL_init", 5),
-        "READER_BytesofRecords_get": link_global("READER_BytesofRecords"),
-        "POOL_update": link_function("POOL_update", 2, i64=False),
-        "VCHN_init": link_function("VCHN_init", 3),
-        "VCHN_next": link_function("VCHN_next", 1, i64=True),
-        "VCHN_put": link_function("VCHN_put", 2),
+        "pop_signal_from_file": link_function("pop_signal_from_file", 1, i64ret=True),
+
+
+        "VFILE_init": link_function("VFILE_init", 5),
+        "POOL_update": link_function("POOL_update", 3),
+        "POOL_init": link_function("POOL_init", 6),
+        "VCHN_init": link_function("VCHN_init", 5),
+        "VCHN_put": link_function("VCHN_put", 3),
+        "VCHN_next": link_function("VCHN_next", 2, i64ret=True),
     }
     loc = {}
 
