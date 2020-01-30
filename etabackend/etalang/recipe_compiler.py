@@ -7,17 +7,19 @@ import json
 import copy
 
 
-def compile_eta(jsobj, print):
+def compile_eta(jsobj):
     def put_into_groups(groupings_output, vis_ris_var_all):
         for each in range(len(vis_ris_var_all)):
             for group_of_instrument in vis_ris_var_all[each]["group"].split(","):
-                group_of_instrument  = group_of_instrument.strip()
-                if len(group_of_instrument)==0:
-                    group_of_instrument="main"
+                group_of_instrument = group_of_instrument.strip()
+                if len(group_of_instrument) == 0:
+                    group_of_instrument = "main"
                 if group_of_instrument in groupings_output:
-                    groupings_output[group_of_instrument].append(vis_ris_var_all[each])
+                    groupings_output[group_of_instrument].append(
+                        vis_ris_var_all[each])
                 else:
-                    groupings_output[group_of_instrument] = [vis_ris_var_all[each]]
+                    groupings_output[group_of_instrument] = [
+                        vis_ris_var_all[each]]
 
     def select_by_name(obj, name):
         for each in obj:
@@ -71,7 +73,8 @@ def compile_eta(jsobj, print):
             try:
                 config = json.loads(each["config"])
             except Exception as ex:
-                raise ValueError("The recipe is corrupted or unsupported. \n\r If you are trying a recipe from a previous version of ETA,  please refer to the Download page for updating your recipe. \n\r "+str(ex))
+                raise ValueError(
+                    "The recipe is corrupted or unsupported. \n\r If you are trying a recipe from a previous version of ETA,  please refer to the Download page for updating your recipe. \n\r "+str(ex))
             if isinstance(config, int):
                 sign_chn_count = config
                 mark_chn_count = 0
@@ -92,6 +95,7 @@ def compile_eta(jsobj, print):
         # compile vi
         vis = vi_groupings[instgroup]
         vi_code_list = []
+        
         graphnames = []
         print("Compiling group {}...".format(instgroup))
         for each in range(len(vis)):
@@ -111,34 +115,39 @@ def compile_eta(jsobj, print):
                     varvalue = eachvar["config"]
                     usercode = usercode.replace(
                         "`{}`".format(varkey), varvalue)
-            # parse user code
-
-            intp = eta_parser.Parser(usercode, [each])
+            
+            # prepare for the triggers
             vi_code_list += graph_instructions
             vi_code_list += [["PREP_code_assignment", [each]]]
-            # load embed codes
+            # parse and load user code
+            intp = eta_parser.Parser(usercode, [each])
             vi_code_list += [["LOAD_EMBEDDED_CODE",
                               [each, copy.deepcopy(intp.escaped_code)]]]
             vi_code_list += intp.instructions
+            # make global code, like resume, on graph 0, will replace the template eventually
+            if each ==0:
+                vi_code_list += [["MAKE_global_code_on_graph0",[0]]]
             vi_code_list += [["MAKE_init_for_syms",
                               [each]]]
             graphnames.append(instname)
+        
+        
         # code gen main process
         etavm = eta_vm.ETA_VM(num_rchns, graphnames)
         # execute instructions
         for each in vi_code_list:
             # print(each)
             etavm.exec_eta(each)
-
+        
         # generates infos
         num_vslot = 0
         for each in etavm.graphs:
             for a in list(each.output_chn.keys()):
                 if num_vslot < int(a):
                     num_vslot = int(a)
-            select_by_name(vis, each.name)["info"] = '📥 {}, 📤 {} '.format(#, 📊 {}
+            select_by_name(vis, each.name)["info"] = '📥 {}, 📤 {} '.format(  # , 📊 {}
                 str(list(each.input_chn.keys())),
-                str(list(each.output_chn.keys()))#, str("???")
+                str(list(each.output_chn.keys()))  # , str("???")
             )
 
             select_by_name(vis, each.name)["config"] = ""
@@ -147,10 +156,8 @@ def compile_eta(jsobj, print):
         num_vslot = max(num_vslot, 0)
 
         etavm.check_output()
-        defines = etavm.check_defines()  # defines external states for systems
-        mainloop, init_code, deinit_code, global_init_code = etavm.dump_code()
-        onefile = code_template.get_onefile_loop(defines,
-                                                 mainloop, init_code, deinit_code, global_init_code,
+        onefile = code_template.get_onefile_loop(etavm.check_defines(), # defines external states for systems
+                                                 *(etavm.dump_code()),
                                                  num_rslot=num_rslot, num_rchns=num_rchns, num_vslot=num_vslot,
                                                  mark_chn_offset_per_rslots=mark_chn_offset_per_rslots,
                                                  sign_chn_offset_per_rslots=sign_chn_offset_per_rslots)

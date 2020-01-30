@@ -412,13 +412,13 @@ extern "C" int MKS_inline PARSE_TimeTagFileHeader(char* fpin, int RecordTypetemp
 			isendlessfile = false;
 			break;
 		case -1:
-			PERROR("Unidentified time-tag format. Specify one the with parameter format=???. Aborted.");
+			PERROR("Unidentified time-tag format. Specify one the with eta.run(...format=???). Aborted. \n");
 			ret = -2;
 			BytesofRecords = 1;
 			break;
 		}
 
-		PINFO("NumRecords: %lld", NumRecords);
+		PINFO("NumRecords: %lld \n", NumRecords);
 	
 		return ret;
 }

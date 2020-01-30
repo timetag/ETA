@@ -42,7 +42,7 @@ class TABLE():
 class VFILE():
     def vfile_init(self, sym, type):
         self.EMIT_LINE("uettp_initial", """
-        eta_ret += VFILE_init(nb.int64({chn}-eta_num_rchns),nb.int64({buffer_size}),ffi.from_buffer({vfile2}),nb.int64(1))
+        eta_ret += VFILE_init(VCHN,nb.int64({chn}-eta_num_rchns),nb.int64({buffer_size}),ffi.from_buffer({vfile2}),nb.int64(1))
         """.format(vfile2=type[1], buffer_size=type[2],chn=type[3]))
 
     def VFILE(self, triggers, chn, size="2097152"):
@@ -382,7 +382,7 @@ class Graph(INTEGER, TABLE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENCE):
             raise ValueError(
                 "Ambiguous transition with condition {} on graph {}.".format(cond, self.name))
 
-    # called by eta_parser
+    # instructed by recipe_compiler and eta_parser, called by eta_vm
     #############################
 
     def PREP_code_assignment(self, maxchn=255):
@@ -407,9 +407,10 @@ class Graph(INTEGER, TABLE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENCE):
             for j in range(0, self.maxstates):
                 self.tranout_to_section[i][j] = "#cond=[{}], trans outof {}".format(
                     i, j)
-        self.init_section = "#init section for graph {}".format(self.name)
-        self.deinit_section = "#deinit section for graph {}".format(self.name)
-        self.global_init_section = "#global init section for graph {}".format(
+        self.uettp_initial_section = "#init section for graph {}".format(self.name)
+        self.uettp_beforeloop_section = "#uettp_beforeloop_section for graph {}".format(self.name)
+        self.uettp_deinit_section = "#deinit section for graph {}".format(self.name)
+        self.global_initial_section = "#global init section for graph {}".format(
             self.name)
         self.internalobj_symbols = {}
         self.register_symbols = {}
@@ -419,11 +420,13 @@ class Graph(INTEGER, TABLE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENCE):
         code = textwrap.dedent(code)
         if isinstance(trigger, str):
             if trigger == "uettp_initial":
-                self.init_section += "\n" + code
+                self.uettp_initial_section += "\n" + code
+            elif trigger == "uettp_beforeloop":
+                self.uettp_beforeloop_section += "\n" + code
             elif trigger == "uettp_deinit":
-                self.deinit_section += "\n" + code
+                self.uettp_deinit_section += "\n" + code
             elif trigger == "global_initial":
-                self.global_init_section += "\n" + code
+                self.global_initial_section += "\n" + code
             else:
                 raise ValueError("Undefiend trigger {}".format(trigger))
         else:
@@ -584,6 +587,12 @@ class Graph(INTEGER, TABLE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENCE):
                 raise ValueError(
                     "Illegal type initializer for symbol {}".format(each))
 
+    def MAKE_global_code_on_graph0(self):
+        self.INTEGER("uettp_initial", "GCONF_RESUME", initvalue=0)
+        self.EMIT_LINE("uettp_beforeloop", """
+            if GCONF_RESUME==0:
+                GCONF_RESUME=1
+            """)
     ######### Polymorphism ########
 
     def emit(self, triggers, chn, waittime=0, period=0, repeat=1):
@@ -600,11 +609,11 @@ class Graph(INTEGER, TABLE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENCE):
         if repeat > 1:
             code = """
                 for emit_times in range(0,{repeat}):
-                    eta_ret+=VCHN_put({phase}+{period}*(emit_times),nb.int8({chn}))
+                    eta_ret+=VCHN_put(VCHN,{phase}+{period}*(emit_times),nb.int8({chn}))
                 """.format(phase=phase,
                            chn=chn, waittime=int(waittime), repeat=repeat, period=period)
         else:
-            code = """eta_ret+=VCHN_put(nb.int64(AbsTime_ps+{waittime}),nb.int8({chn}))""".format(phase=phase,
+            code = """eta_ret+=VCHN_put(VCHN,nb.int64(AbsTime_ps+{waittime}),nb.int8({chn}))""".format(phase=phase,
                                                                                                   chn=chn,
                                                                                                   waittime=int(waittime))
         self.EMIT_LINE(triggers, code)
@@ -612,7 +621,7 @@ class Graph(INTEGER, TABLE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENCE):
     def cancel_emit(self, triggers, chn):
         chn = int(chn)
         self.EMIT_LINE(
-            triggers, """eta_ret+=VCHN_put(nb.int64(9223372036854775807),nb.int8({chn}))""".format(chn=chn))
+            triggers, """eta_ret+=VCHN_put(VCHN,nb.int64(9223372036854775807),nb.int8({chn}))""".format(chn=chn))
 
     def parse_multi_object(self, names):
         names = names.strip()

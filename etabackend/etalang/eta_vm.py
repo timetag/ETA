@@ -3,7 +3,7 @@ from .eta_exp import Graph
 
 
 class ETA_VM():
-    def __init__(self, chn_real , graph_names):
+    def __init__(self, chn_real, graph_names):
         # first include real slots
         self.chn_real = chn_real
         self.graphs = []
@@ -88,13 +88,16 @@ class ETA_VM():
     def dump_code(self, max_chn=255):
         init_code = ""
         for each in self.graphs:
-            init_code += "\n" + each.init_section
+            init_code += "\n" + each.uettp_initial_section
+        beforeloop_code = ""
+        for each in self.graphs:
+            beforeloop_code += "\n" + each.uettp_beforeloop_section
         deinit_code = ""
         for each in self.graphs:
-            deinit_code += "\n" + each.deinit_section
+            deinit_code += "\n" + each.uettp_deinit_section
         global_init_code = ""
         for each in self.graphs:
-            global_init_code += "\n" + each.global_init_section
+            global_init_code += "\n" + each.global_initial_section
 
         mainloop = ""
         mainloop_el = ""
@@ -121,7 +124,8 @@ class ETA_VM():
                             graph.graphid, graph.graphid)
                         now_stanza += "\n# trans form {} to {}".format(
                             last, now)
-                        now_stanza += "\nnow_{}=nb.int8({})".format(graph.graphid, now)
+                        now_stanza += "\nnow_{}=nb.int8({})".format(
+                            graph.graphid, now)
                         # condition-less
                         now_stanza += "\n" + \
                                       graph.transition_to_section[last][max_chn - 1][now]
@@ -142,4 +146,4 @@ class ETA_VM():
                 if mainloop_el == "":
                     mainloop_el = "el"
                 mainloop += chn_stanza
-        return mainloop, init_code, deinit_code, global_init_code
+        return (mainloop, init_code, beforeloop_code, deinit_code, global_init_code)

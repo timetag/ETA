@@ -130,9 +130,9 @@ $"??_C@_0CA@KMEBJAMG@?6Header?5Parser?3?5bh_spc_4bytes?5?6?$AA@" = comdat any
 
 $"??_C@_0BM@LJCIIAMF@?6Header?5Parser?3?5PicoQuant?5?6?$AA@" = comdat any
 
-$"??_C@_0FL@MMAHGOLF@?6?5?$FLERROR?$FNUnidentified?5time?9tag?5f@" = comdat any
+$"??_C@_0FP@FPIFGDME@?6?5?$FLERROR?$FNUnidentified?5time?9tag?5f@" = comdat any
 
-$"??_C@_0BC@CGILBDLI@?6NumRecords?3?5?$CFlld?$AA@" = comdat any
+$"??_C@_0BE@GKAAONIP@?6NumRecords?3?5?$CFlld?5?6?$AA@" = comdat any
 
 $"?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA" = comdat any
 
@@ -197,8 +197,8 @@ $"?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA" = comdat any
 @"??_C@_0CK@FCNMCNDN@?6Header?5Parser?3?5quTAU_FORMAT_COM@" = linkonce_odr dso_local unnamed_addr constant [42 x i8] c"\0AHeader Parser: quTAU_FORMAT_COMPRESSED \0A\00", comdat, align 1
 @"??_C@_0CA@KMEBJAMG@?6Header?5Parser?3?5bh_spc_4bytes?5?6?$AA@" = linkonce_odr dso_local unnamed_addr constant [32 x i8] c"\0AHeader Parser: bh_spc_4bytes \0A\00", comdat, align 1
 @"??_C@_0BM@LJCIIAMF@?6Header?5Parser?3?5PicoQuant?5?6?$AA@" = linkonce_odr dso_local unnamed_addr constant [28 x i8] c"\0AHeader Parser: PicoQuant \0A\00", comdat, align 1
-@"??_C@_0FL@MMAHGOLF@?6?5?$FLERROR?$FNUnidentified?5time?9tag?5f@" = linkonce_odr dso_local unnamed_addr constant [91 x i8] c"\0A [ERROR]Unidentified time-tag format. Specify one the with parameter format=???. Aborted.\00", comdat, align 1
-@"??_C@_0BC@CGILBDLI@?6NumRecords?3?5?$CFlld?$AA@" = linkonce_odr dso_local unnamed_addr constant [18 x i8] c"\0ANumRecords: %lld\00", comdat, align 1
+@"??_C@_0FP@FPIFGDME@?6?5?$FLERROR?$FNUnidentified?5time?9tag?5f@" = linkonce_odr dso_local unnamed_addr constant [95 x i8] c"\0A [ERROR]Unidentified time-tag format. Specify one the with eta.run(...format=???). Aborted. \0A\00", comdat, align 1
+@"??_C@_0BE@GKAAONIP@?6NumRecords?3?5?$CFlld?5?6?$AA@" = linkonce_odr dso_local unnamed_addr constant [20 x i8] c"\0ANumRecords: %lld \0A\00", comdat, align 1
 @"?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA" = linkonce_odr dso_local global i64 0, comdat, align 8
 
 ; Function Attrs: alwaysinline nounwind uwtable
@@ -1738,7 +1738,7 @@ define dso_local i32 @PARSE_TimeTagFileHeader(i8*, i32) #2 {
   br label %435
 
 ; <label>:432:                                    ; preds = %89
-  %433 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([91 x i8], [91 x i8]* @"??_C@_0FL@MMAHGOLF@?6?5?$FLERROR?$FNUnidentified?5time?9tag?5f@", i32 0, i32 0))
+  %433 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([95 x i8], [95 x i8]* @"??_C@_0FP@FPIFGDME@?6?5?$FLERROR?$FNUnidentified?5time?9tag?5f@", i32 0, i32 0))
   %434 = sext i32 %433 to i64
   store i64 %434, i64* @"?order_gurantee@@3_JA", align 8
   store i32 -2, i32* %51, align 4
@@ -1747,7 +1747,7 @@ define dso_local i32 @PARSE_TimeTagFileHeader(i8*, i32) #2 {
 
 ; <label>:435:                                    ; preds = %89, %432, %430, %164, %162, %124, %122
   %436 = load i64, i64* @NumRecords, align 8
-  %437 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([18 x i8], [18 x i8]* @"??_C@_0BC@CGILBDLI@?6NumRecords?3?5?$CFlld?$AA@", i32 0, i32 0), i64 %436)
+  %437 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([20 x i8], [20 x i8]* @"??_C@_0BE@GKAAONIP@?6NumRecords?3?5?$CFlld?5?6?$AA@", i32 0, i32 0), i64 %436)
   %438 = sext i32 %437 to i64
   store i64 %438, i64* @"?order_gurantee@@3_JA", align 8
   %439 = load i32, i32* %51, align 4
