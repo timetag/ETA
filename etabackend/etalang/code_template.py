@@ -59,9 +59,7 @@ def mainloop(UniBuf1, Reader_arr1, VCHN_arr, vfiles, POOL_timetag1, POOL_fileid1
     {deinit}
     return eta_ret
     
-def initializer(caller_parms):
-    UniBuf = caller_parms.buffer
-    ReaderPTR1 = np.array( caller_parms.to_parser_output(), dtype=np.int64) # 0:8 are actually useful
+def initializer():
     VCHN_arr = np.zeros(4,dtype=np.int64)
     vfiles = np.zeros(({num_vslot}*4), dtype=np.int64) 
     {global_initial}
@@ -69,7 +67,8 @@ def initializer(caller_parms):
     POOL_fileid1=np.zeros(({pool_tree_size}) , dtype=np.int8)
     chn = np.zeros((1), dtype=np.int8)
     chn_next = np.zeros((1), dtype=np.int8)
-    return (UniBuf, ReaderPTR1,VCHN_arr, vfiles, POOL_timetag1, POOL_fileid1, chn, chn_next {tables} )
+    # UniBuf, ReaderPTR1 are appened later
+    return [ None, None, VCHN_arr, vfiles, POOL_timetag1, POOL_fileid1, chn, chn_next {tables} ]
     
 def result_fetcher(UniBuf, ReaderPTR1, VCHN_arr, vfiles, POOL_timetag1,POOL_fileid1,chn,chn_next {tables} ):
     status= {{ {table_list}

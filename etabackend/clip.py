@@ -86,60 +86,67 @@ class ETA_CUT():
         pass
 
     # example generators
-    def simple_cut(self, filename, cuts=1, format=-1, keep_indexes=None, reuse_last_clip=False):
+    def simple_cut(self, filename, cuts=1,  reuse_clips=True, keep_indexes=None,  **kwargs):
+        if "verbose" in kwargs:
+            verbose = kwargs["verbose"]
+        else:
+            verbose = print
 
         last_clip = self.clip_from_file(
-            filename, read_events=1, format=format, wait_timeout=0, verbose=False)
-
-        self.send(
-            "ETA.SIMPLE_CUT (Deprecated): The file '{filename}' will be cut into {cuts} equal size Clips. ".format(filename=filename,
-                                                                                                                   cuts=cuts))
+            filename, read_events=1,  **kwargs)
+        if verbose:
+            verbose(
+                "ETA.SIMPLE_CUT: The file '{filename}' will be cut into {cuts} equal size Clips. ".format(filename=filename,
+                                                                                                          cuts=cuts))
         TTF_header_offset = last_clip.fseekpoint
         TTF_filesize = os.path.getsize(str(filename))
 
         NumRecords = (
             TTF_filesize - TTF_header_offset) // last_clip.BytesofRecords
 
-        caller_parms = []
-
         # build a clip for header
         last_clip.fendpoint = last_clip.fseekpoint
-        for i in range(cuts):
 
-            currentclip = Clip()
-            # copy information from last clip
-            currentclip.from_parser_output(last_clip.to_parser_output())
-            self.clip_from_file(filename, modify_clip=currentclip, read_events=(
-                (NumRecords+cuts-1) // cuts), format=format, wait_timeout=0, verbose=False)
-            caller_parms.append(currentclip)
-            last_clip = currentclip
+        return self.incremental_cut(filename, rec_per_cut=((NumRecords+cuts-1) // cuts), reuse_clips=reuse_clips, keep_indexes=keep_indexes, **kwargs)
 
-        if keep_indexes:
-            if type(keep_indexes) == list:
-                caller_parms = [caller_parms[i] for i in keep_indexes]
+    def incremental_cut(self, filename, modify_clip=None, rec_per_cut=1024*1024*10, reuse_clips=True, keep_indexes=None, **kwargs):
+        if "verbose" in kwargs:
+            verbose = kwargs["verbose"]
+        else:
+            verbose = print
+
+        last_clip = modify_clip
+        currentclip = True
+        counter = 0
+        TTF_filesize = os.path.getsize(str(filename))
+        while currentclip:
+            if reuse_clips:
+                currentclip = last_clip
             else:
-                raise ValueError(
-                    "ETA.SIMPLE_CUT: The third parameter, keep_indexes, should be a list . ")
+                currentclip = Clip()
+                # copy information from last clip
+                currentclip.from_parser_output(last_clip.to_parser_output())
+            currentclip = self.clip_from_file(
+                filename, modify_clip=currentclip, read_events=rec_per_cut, **kwargs)
+            if currentclip:
+                if verbose:
+                    verbose("Analysis progress: {:.2f} ({}/{})".format(
+                        (currentclip.fseekpoint/TTF_filesize)*100.0, currentclip.fseekpoint, TTF_filesize))
+                if keep_indexes:
+                    if type(keep_indexes) == list:
+                        if counter in keep_indexes:
+                            yield currentclip
+                    else:
+                        raise ValueError(
+                            "ETA.SIMPLE_CUT: The third parameter, keep_indexes, should be a list. ")
+                else:
+                    yield currentclip
+                counter += 1
+                last_clip = currentclip
+            else:
+                #file reaching end
+                break
 
-        return caller_parms
-
-    def incremental_cut(self, filename, modify_clip=None, rec_per_cut=0, format=-1, wait_timeout=0, verbose=print):
-        return self.clip_from_file(filename, modify_clip, rec_per_cut, format, wait_timeout, verbose)
-        """
-        int MKS_inline read_next_minibatch() {
-            READERs[0].batch_actualread_length = fread(READERs[0].buffer, READERs[0].BytesofRecords, batchreadRecNum, READERs[0].fpttf)*READERs[0].BytesofRecords;
-            READERs[0].batch_nextreadpos_in_file += READERs[0].batch_actualread_length;
-            const long long batches_left = READERs[0].batch_nextreadpos_in_file - READERs[0].fseekpoint;
-            
-            if (batches_left % (200* batchreadRecNum*READERs[0].BytesofRecords) == 0) {
-                const long long total_batches = (READERs[0].fendpoint - READERs[0].fseekpoint);
-                const long long percentage = batches_left * 100  / total_batches;
-                PINFO("Reader %x for section [%lld %lld) %lld%% finished.", READERs, READERs[0].fseekpoint, READERs[0].fendpoint, percentage)
-            }
-            READERs[0].next_RecID_in_batch = 0; 
-            return READERs[0].batch_actualread_length;
-        }
-        """
     # low-level API
 
     def clip_from_file(self, filename, modify_clip=None, read_events=0, format=-1, wait_timeout=0, verbose=print):
