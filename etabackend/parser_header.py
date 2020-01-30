@@ -1,4 +1,5 @@
-from jit_linker import link_libs,link_global,link_function,jit,ffi,nb
+from .jit_linker import link_libs,link_global,link_function,jit,ffi,nb
+
 BytesofRecords_get = link_global("BytesofRecords")
 TTRes_pspr_get = link_global("TTRes_pspr")
 SYNCRate_pspr_get = link_global("SYNCRate_pspr")

@@ -1,7 +1,7 @@
 import os
 import time
 
-from parser_header import parse_header
+from .parser_header import parse_header
 
 
 class Clip():

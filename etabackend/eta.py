@@ -11,9 +11,9 @@ from concurrent.futures import ThreadPoolExecutor
 
 import numpy as np
 
-import jit_linker
-from clip import ETA_CUT, Clip
-from etalang import recipe_compiler
+from . import jit_linker
+from .clip import ETA_CUT, Clip
+from .etalang import recipe_compiler
 
 
 class ETA(ETA_CUT):
