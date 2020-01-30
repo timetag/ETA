@@ -14,7 +14,6 @@ import numpy as np
 import jit_linker
 from clip import ETA_CUT, Clip
 from etalang import recipe_compiler
-from parser_header import ETACReaderStructIDX
 
 
 class ETA(ETA_CUT):
@@ -154,22 +153,22 @@ class ETA(ETA_CUT):
                 raise ValueError(
                     "Invalid section for cut." + str(feed_clip))
 
-            # feed in clips
-            parser_like_arr = feed_clip.to_parser_output()
+
             # replace buffer
             ctxs[0] = feed_clip.buffer
             if ctxs[1] is None:
                 # create a new Clip info
-                ctxs[1] = np.array(parser_like_arr, dtype=np.int64)
+                ctxs[1] = np.array(feed_clip.to_reader_input(), dtype=np.int64)
             else:
+                # switch to resuming mode
+                feed_clip.resuming = 1
+                pinfo = feed_clip.to_parser_output()
                 # replace to new Clip info
-                ctxs[1][ETACReaderStructIDX.fseekpoint:ETACReaderStructIDX.GlobalTimeShift +
-                        1] = parser_like_arr[ETACReaderStructIDX.fseekpoint:ETACReaderStructIDX.GlobalTimeShift+1]  # 7th for the global time shift
+                ctxs[1][:len(pinfo)] =  pinfo # 7th for the global time shift
 
             print("Executing analysis program...")
             ret = mainloop(*ctxs)
-            # switch to resuming mode
-            ctxs[1][ETACReaderStructIDX.resuming] = 1
+           
             loop_count += 1
 
         return ret

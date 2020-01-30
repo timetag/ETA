@@ -1,10 +1,32 @@
 import os
 import time
 
-from parser_header import ETACReaderStructIDX, parse_header
+from parser_header import parse_header
 
 
 class Clip():
+    ETACReaderStructIDX = {
+        # defined in PARSE_TimeTags.cpp#L55
+        "fseekpoint": 0,
+        "fendpoint": 1,
+
+        "TTRes_pspr": 2,
+        "DTRes_pspr": 3,
+        "SYNCRate_pspr": 4,
+        "BytesofRecords": 5,
+        "RecordType": 6,
+
+        "GlobalTimeShift": 7,
+        "CHANNEL_OFFSET": 8,
+        "MARKER_OFFSET": 9,
+        "resuming": 10,
+
+        "batch_actualread_length": 11,
+        "next_RecID_in_batch": 12,
+        "overflowcorrection": 13,
+        "buffer_status": 14,
+        "buffer": 15,
+    }
 
     def __init__(self):
         self.fseekpoint = 0  # 0
@@ -17,19 +39,17 @@ class Clip():
         self.RecordType = 0  # 6
 
         self.GlobalTimeShift = 0  # 7
-        self.UnusedConfig = 0  # 8 unused
+        self.CHANNEL_OFFSET = 0  # 8
+        self.MARKER_OFFSET = 0  # 9
+        self.resuming = 0  # 10
 
         # UniBuf info
-        self.batch_actualread_length = 0  # 9 buffer length
-        self.next_RecID_in_batch = 0  # 10 reader head
+        self.batch_actualread_length = 0  # 11 buffer length
+        self.next_RecID_in_batch = 0  # 12 reader head
+        self.overflowcorrection = 0  # 13
+        self.buffer_status = 0  # 14 unused
 
-        self.overflowcorrection = 0  # 11
-        self.resuming = 0  # 12
-        self.buffer = None  # 13
-        self.buffer_type = 0  # 14 unused
-
-        # other info
-        self.filename = None
+        self.buffer = None  # 15
 
     def validate(self):
         self.GlobalTimeShift = int(self.GlobalTimeShift)
@@ -41,44 +61,28 @@ class Clip():
         return self
 
     def from_parser_output(self, parse_output):
-        self.fseekpoint = parse_output[ETACReaderStructIDX.fseekpoint]
-        self.fendpoint = parse_output[ETACReaderStructIDX.fendpoint]
+        for k, v in self.ETACReaderStructIDX.items():
+            if v < len(parse_output):
+                setattr(self, k, parse_output[v])
 
-        self.TTRes_pspr = parse_output[ETACReaderStructIDX.TTRes_pspr]
-        self.DTRes_pspr = parse_output[ETACReaderStructIDX.DTRes_pspr]
-        self.SYNCRate_pspr = parse_output[ETACReaderStructIDX.SYNCRate_pspr]
-        self.BytesofRecords = parse_output[ETACReaderStructIDX.BytesofRecords]
-        self.RecordType = parse_output[ETACReaderStructIDX.RecordType]
-
-        self.GlobalTimeShift = parse_output[ETACReaderStructIDX.GlobalTimeShift]
-        if len(parse_output) < ETACReaderStructIDX.resuming:
-            self.resuming = 0
-        else:
-            self.resuming = parse_output[ETACReaderStructIDX.resuming]
+    def to_reader_input(self,retain=-1):
+        inv_map = {v: k for k, v in self.ETACReaderStructIDX.items()}
+        ret = []
+        if retain<0:
+            retain = len(inv_map)
+        for i in range(0, retain):
+            name = inv_map[i]
+            value = getattr(self, name)
+            if isinstance(value, float) or isinstance(value, int):
+                pass
+            else:
+                value = 0
+            print(value, "is", name)
+            ret.append(int(value))
+        return ret
 
     def to_parser_output(self):
-        return [
-            self.fseekpoint,  # 0
-            self.fendpoint,  # 1
-
-            self.TTRes_pspr,  # 2
-            self.DTRes_pspr,  # 3
-            self.SYNCRate_pspr,  # 4
-            self.BytesofRecords,  # 5
-            self.RecordType,  # 6
-
-            self.GlobalTimeShift,  # 7
-            self.UnusedConfig,  # 8 unused
-
-            # UniBuf info
-            self.batch_actualread_length,  # 9 buffer length
-            self.next_RecID_in_batch,  # 10 reader head
-
-            self.overflowcorrection,  # 11
-            self.resuming,  # 12
-            0,  # 13
-            self.buffer_type,  # 14 unused
-        ]
+        self.to_reader_input(self.ETACReaderStructIDX["resuming"]+1)
 
 
 class ETA_CUT():
@@ -125,7 +129,7 @@ class ETA_CUT():
             else:
                 currentclip = Clip()
                 # copy information from last clip
-                currentclip.from_parser_output(last_clip.to_parser_output())
+                currentclip.from_parser_output(last_clip.to_reader_input())
             currentclip = self.clip_from_file(
                 filename, modify_clip=currentclip, read_events=rec_per_cut, **kwargs)
             if currentclip:
@@ -144,7 +148,7 @@ class ETA_CUT():
                 counter += 1
                 last_clip = currentclip
             else:
-                #file reaching end
+                # file reaching end
                 break
 
     # low-level API

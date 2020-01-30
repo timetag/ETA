@@ -62,16 +62,16 @@ extern "C" {
 		long long RecordType ;//6
 
 		long long GlobalTimeShift;//7
-		long long UnusedConfig ;//8 unused
-
+		long long CHANNEL_OFFSET ;//8 
+		long long MARKER_OFFSET ;//9
+		long long resuming ;//10
 		//UniBuf info
-			long long batch_actualread_length ; //9 buffer length
-			long long next_RecID_in_batch ;//10 reader head
+			long long batch_actualread_length ; //11 buffer length
+			long long next_RecID_in_batch ;//12 reader head
+			long long overflowcorrection ;//13
+			long long buffer_status ;//14 unused
+			char *buffer =0;//15
 
-			long long overflowcorrection ;//11
-			long long resuming ;//12
-			char *buffer = 0;//13
-			long long buffer_type =0;//14 unused
 	}ttf_reader;
 
 #define batchreadRecNum  50000
@@ -90,7 +90,7 @@ extern "C" {
 #define SwebianInstrument 1 
 #define quTAG_FORMAT_COMPRESSED 2 
 #define bh_spc_4bytes 3
-#define MARKER_OFFSET 16
+
 
 //Got GotRelativeSignal
 //  DTimeTag: Arrival time of Photon after last Sync event (T3 only) 
@@ -139,7 +139,7 @@ extern "C" {
 				//However, the marker resolution is only a few tens of nanoseconds anyway,
 				//so we can just ignore the few picoseconds of error.
 				truetime = oflcorrection + Record.bits.time;
-				GotAbsoluteSignal(truetime, MARKER_OFFSET+ MarkerSHC_to_CHN(markers));
+				GotAbsoluteSignal(truetime, READER->MARKER_OFFSET+ MarkerSHC_to_CHN(markers));
 				//GotMarker( truetime, markers);
 			}
 		}
@@ -153,7 +153,7 @@ extern "C" {
 			{
 
 				truetime = oflcorrection + Record.bits.time;
-				GotAbsoluteSignal(truetime, Record.bits.channel);
+				GotAbsoluteSignal(truetime, READER->CHANNEL_OFFSET+ Record.bits.channel);
 			}
 		}
 	}
@@ -203,21 +203,21 @@ extern "C" {
 			{
 				truetime = oflcorrection + T2Rec.bits.timetag;
 				//Note that actual marker tagging accuracy is only some ns.
-				GotAbsoluteSignal(truetime, MARKER_OFFSET+ MarkerSHC_to_CHN(T2Rec.bits.channel))
+				GotAbsoluteSignal(truetime, READER->MARKER_OFFSET+ MarkerSHC_to_CHN(T2Rec.bits.channel))
 				//GotMarker(truetime, T2Rec.bits.channel);
 			}
 
 			if (T2Rec.bits.channel == 0) //sync
 			{
 				truetime = oflcorrection + T2Rec.bits.timetag;
-				GotAbsoluteSignal(truetime, 0);
+				GotAbsoluteSignal(truetime, READER->CHANNEL_OFFSET+ 0);
 			}
 		}
 		else //regular input channel
 		{
 			truetime = oflcorrection + T2Rec.bits.timetag;
 
-			GotAbsoluteSignal(truetime, T2Rec.bits.channel + 1);
+			GotAbsoluteSignal(truetime, READER->CHANNEL_OFFSET+ T2Rec.bits.channel + 1);
 		}
 
 	}
@@ -257,7 +257,7 @@ extern "C" {
 			{
 				truensync = oflcorrection + Record.bits.numsync;
 				//GotMarker( truensync, Record.special.markers);
-				GotRelativeSignal(truensync, MARKER_OFFSET+ MarkerSHC_to_CHN(Record.special.markers), 0);
+				GotRelativeSignal(truensync, READER->MARKER_OFFSET+ MarkerSHC_to_CHN(Record.special.markers), 0);
 			}
 		}
 		else
@@ -272,7 +272,7 @@ extern "C" {
 
 			truensync = oflcorrection + Record.bits.numsync;
 
-			GotRelativeSignal(truensync, Record.bits.channel, Record.bits.dtime);
+			GotRelativeSignal(truensync, READER->CHANNEL_OFFSET+Record.bits.channel, Record.bits.dtime);
 
 		}
 	};
@@ -312,7 +312,7 @@ extern "C" {
 			{
 				
 				//the time unit depends on sync period which can be obtained from the file header
-				GotRelativeSignal(oflcorrection + T3Rec.bits.nsync, MARKER_OFFSET + MarkerSHC_to_CHN(T3Rec.bits.channel), 0);
+				GotRelativeSignal(oflcorrection + T3Rec.bits.nsync, READER->MARKER_OFFSET + MarkerSHC_to_CHN(T3Rec.bits.channel), 0);
 				//GotMarker(truensync, T3Rec.bits.channel);
 
 			}
@@ -322,7 +322,7 @@ extern "C" {
 			
 			//the nsync time unit depends on sync period which can be obtained from the file header
 			//the dtime unit depends on the resolution and can also be obtained from the file header
-			GotRelativeSignal(oflcorrection + T3Rec.bits.nsync, T3Rec.bits.channel, T3Rec.bits.dtime);
+			GotRelativeSignal(oflcorrection + T3Rec.bits.nsync, READER->CHANNEL_OFFSET+T3Rec.bits.channel, T3Rec.bits.dtime);
 
 		}
 	}
@@ -385,9 +385,9 @@ extern "C" {
 					case rtHydraHarp2T3:
 					case rtTimeHarp260NT3:
 					case rtTimeHarp260PT3:
-
 						ProcessHHT3(READER,TTTRRecord, 2, AbsTime_ps, Channel, READER->overflowcorrection);
 						break;
+						
 					case quTAG_FORMAT_BINARY: {
 
 					
@@ -399,7 +399,7 @@ extern "C" {
 						TTTRRecord *TTTRRecordPtr;
 						TTTRRecordPtr = (TTTRRecord *)(READER->buffer + READER->next_RecID_in_batch * READER->BytesofRecords);
 						AbsTime_ps = (*TTTRRecordPtr).time *READER->TTRes_pspr;
-						Channel = (*TTTRRecordPtr).channel;
+						Channel = READER->CHANNEL_OFFSET+(*TTTRRecordPtr).channel;
 						break;
 					}
 					case SwebianInstrument: {
@@ -412,7 +412,7 @@ extern "C" {
 						SITTTRStruct *TTTRRecordPtr;
 						TTTRRecordPtr = (SITTTRStruct *)(READER->buffer + READER->next_RecID_in_batch * READER->BytesofRecords);
 						AbsTime_ps = (*TTTRRecordPtr).time *READER->TTRes_pspr;
-						Channel = (*TTTRRecordPtr).channel;
+						Channel = READER->CHANNEL_OFFSET+(*TTTRRecordPtr).channel;
 						break;
 					}
 					case quTAG_FORMAT_COMPRESSED: {
@@ -429,7 +429,7 @@ extern "C" {
 						COMPTTTRRecord *COMPTTTRRecordPtr;
 						COMPTTTRRecordPtr = (COMPTTTRRecord *)(READER->buffer + READER->next_RecID_in_batch * READER->BytesofRecords);
 						AbsTime_ps = (*COMPTTTRRecordPtr).bits.time *READER->TTRes_pspr;
-						Channel = (*COMPTTTRRecordPtr).bits.channel;
+						Channel = READER->CHANNEL_OFFSET+(*COMPTTTRRecordPtr).bits.channel;
 						break;
 					}
 					case bh_spc_4bytes:{
@@ -457,10 +457,10 @@ extern "C" {
 							READER->overflowcorrection += 4096;
 						}
 						if ((*bh4bytesRecPtr).bits.mark) {
-							Channel = (*bh4bytesRecPtr).bits.detector+MARKER_OFFSET;
+							Channel = (*bh4bytesRecPtr).bits.detector+READER->MARKER_OFFSET;
 						}
 						else {
-							Channel = (*bh4bytesRecPtr).bits.detector;
+							Channel = READER->CHANNEL_OFFSET+(*bh4bytesRecPtr).bits.detector;
 						}
 						break;
 					 }
