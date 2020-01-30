@@ -29,19 +29,19 @@ class Clip():
     }
 
     def __init__(self):
-        self.fseekpoint = 0  # 0
-        self.fendpoint = 0  # 1
+        self.fseekpoint = 0
+        self.fendpoint = 0
 
-        self.TTRes_pspr = 0  # 2
-        self.DTRes_pspr = 0  # 3
-        self.SYNCRate_pspr = 0  # 4
-        self.BytesofRecords = 0  # 5
-        self.RecordType = 0  # 6
+        self.TTRes_pspr = 0
+        self.DTRes_pspr = 0
+        self.SYNCRate_pspr = 0
+        self.BytesofRecords = 0
+        self.RecordType = 0
 
-        self.GlobalTimeShift = 0  # 7
-        self.CHANNEL_OFFSET = 0  # 8
-        self.MARKER_OFFSET = 0  # 9
-        self.resuming = 0  # 10
+        self.GlobalTimeShift = 0
+        self.CHANNEL_OFFSET = 0
+        self.MARKER_OFFSET = 0
+        self.resuming = 0
 
         # UniBuf info
         self.batch_actualread_length = 0  # 11 buffer length
@@ -50,6 +50,9 @@ class Clip():
         self.buffer_status = 0  # 14 unused
 
         self.buffer = None  # 15
+
+    def check_consumed(self):
+        return self.next_RecID_in_batch * self.BytesofRecords >= self.batch_actualread_length
 
     def validate(self):
         self.GlobalTimeShift = int(self.GlobalTimeShift)
@@ -61,16 +64,17 @@ class Clip():
         return self
 
     def from_parser_output(self, parse_output):
+        print("======from_parser_output======")
         for k, v in self.ETACReaderStructIDX.items():
             if v < len(parse_output):
+                print(parse_output[v], "is", k)
                 setattr(self, k, parse_output[v])
 
-    def to_reader_input(self,retain=-1):
+    def to_reader_input(self):
+        print("======to_reader_input======")
         inv_map = {v: k for k, v in self.ETACReaderStructIDX.items()}
         ret = []
-        if retain<0:
-            retain = len(inv_map)
-        for i in range(0, retain):
+        for i in range(0,  len(inv_map)):
             name = inv_map[i]
             value = getattr(self, name)
             if isinstance(value, float) or isinstance(value, int):
@@ -81,26 +85,21 @@ class Clip():
             ret.append(int(value))
         return ret
 
-    def to_parser_output(self):
-        self.to_reader_input(self.ETACReaderStructIDX["resuming"]+1)
-
 
 class ETA_CUT():
     def __init__(self):
         pass
 
     # example generators
-    def simple_cut(self, filename, cuts=1,  reuse_clips=True, keep_indexes=None,  **kwargs):
-        if "verbose" in kwargs:
-            verbose = kwargs["verbose"]
-        else:
+    def simple_cut(self, filename, cuts=1, verbose=print, **kwargs):
+        if (verbose == True):
             verbose = print
 
         last_clip = self.clip_from_file(
             filename, read_events=1,  **kwargs)
         if verbose:
             verbose(
-                "ETA.SIMPLE_CUT: The file '{filename}' will be cut into {cuts} equal size Clips. ".format(filename=filename,
+                "ETA.simple_cut: The file '{filename}' will be cut into {cuts} equal size Clips. ".format(filename=filename,
                                                                                                           cuts=cuts))
         TTF_header_offset = last_clip.fseekpoint
         TTF_filesize = os.path.getsize(str(filename))
@@ -111,12 +110,10 @@ class ETA_CUT():
         # build a clip for header
         last_clip.fendpoint = last_clip.fseekpoint
 
-        return self.incremental_cut(filename, rec_per_cut=((NumRecords+cuts-1) // cuts), reuse_clips=reuse_clips, keep_indexes=keep_indexes, **kwargs)
+        return self.incremental_cut(filename, rec_per_cut=((NumRecords+cuts-1) // cuts), modify_clip=last_clip, verbose=verbose, **kwargs)
 
-    def incremental_cut(self, filename, modify_clip=None, rec_per_cut=1024*1024*10, reuse_clips=True, keep_indexes=None, **kwargs):
-        if "verbose" in kwargs:
-            verbose = kwargs["verbose"]
-        else:
+    def incremental_cut(self, filename, modify_clip=None, rec_per_cut=1024*1024*10, reuse_clips=True, keep_indexes=None, verbose=print, **kwargs):
+        if (verbose == True):
             verbose = print
 
         last_clip = modify_clip
@@ -131,7 +128,7 @@ class ETA_CUT():
                 # copy information from last clip
                 currentclip.from_parser_output(last_clip.to_reader_input())
             currentclip = self.clip_from_file(
-                filename, modify_clip=currentclip, read_events=rec_per_cut, **kwargs)
+                filename, modify_clip=currentclip, read_events=rec_per_cut, verbose=False, **kwargs)
             if currentclip:
                 if verbose:
                     verbose("Analysis progress: {:.2f} ({}/{})".format(
@@ -142,7 +139,7 @@ class ETA_CUT():
                             yield currentclip
                     else:
                         raise ValueError(
-                            "ETA.SIMPLE_CUT: The third parameter, keep_indexes, should be a list. ")
+                            "ETA.incremental_cut: The third parameter, keep_indexes, should be a list. ")
                 else:
                     yield currentclip
                 counter += 1
@@ -161,7 +158,7 @@ class ETA_CUT():
             ret1, parse_output = parse_header(filename, format)
             if ret1 is not 0:
                 raise ValueError(
-                    "ETA.incremental_cut: File {} is not found or incorrect, err code {}.".format(filename, ret1))
+                    "ETA.clip_from_file: File {} is not found or incorrect, err code {}.".format(filename, ret1))
             temp_clip = Clip()
             temp_clip.from_parser_output(parse_output)
         else:
@@ -170,7 +167,7 @@ class ETA_CUT():
         # validate
         if not isinstance(temp_clip, Clip):
             raise ValueError(
-                "Incremental cut must take a one Clip object as input.")
+                "ETA.clip_from_file: modify_clip must take a one Clip object as input.")
 
         # moving to the end of the last read
         temp_clip.fseekpoint = temp_clip.fendpoint
@@ -194,13 +191,13 @@ class ETA_CUT():
             if waited_for > wait_timeout:
                 if verbose:
                     verbose(
-                        "Timeout when waiting for the next cut, round to file boundry.")
+                        "ETA.clip_from_file: Timeout when waiting for the next cut, round to file boundry.")
                 temp_clip.fendpoint = fileactualsize
                 break
             if verbose:
-                verbose("Waiting for file {} to grow from {} to {} bytes.".format(filename,
-                                                                                  fileactualsize,
-                                                                                  temp_clip.fendpoint))
+                verbose("ETA.clip_from_file: Waiting for file {} to grow from {} to {} bytes.".format(filename,
+                                                                                                      fileactualsize,
+                                                                                                      temp_clip.fendpoint))
             # hard-coded checking period is probably not good.
             time.sleep(0.01)
 
@@ -217,11 +214,11 @@ class ETA_CUT():
         if temp_clip.batch_actualread_length == 0:
             if verbose:
                 verbose(
-                    "ETA.incremental_cut: The file '{}' is not long enough for the Clip. ".format(filename))
+                    "ETA.clip_from_file: The file '{}' is not long enough for the Clip. ".format(filename))
             return False
         else:
             if verbose:
                 verbose(
-                    "ETA.incremental_cut: The file '{}' section [{},{}) is loaded into the Clip. ".format(filename, temp_clip.fseekpoint, temp_clip.fendpoint))
+                    "ETA.clip_from_file: The file '{}' section [{},{}) is loaded into the Clip. ".format(filename, temp_clip.fseekpoint, temp_clip.fendpoint))
 
         return temp_clip.validate()

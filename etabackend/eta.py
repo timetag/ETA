@@ -126,6 +126,7 @@ class ETA(ETA_CUT):
 
         # auto-feed loop
         loop_count = 0
+        ret = 0
         while True:
             # feeding from clip
             if isinstance(sources, types.GeneratorType):
@@ -154,20 +155,24 @@ class ETA(ETA_CUT):
                     "Invalid section for cut." + str(feed_clip))
 
 
-            # replace buffer
-            ctxs[0] = feed_clip.buffer
             if ctxs[1] is None:
                 # create a new Clip info
                 ctxs[1] = np.array(feed_clip.to_reader_input(), dtype=np.int64)
+                # replace buffer
+                ctxs[0] = feed_clip.buffer
             else:
-                # switch to resuming mode
-                feed_clip.resuming = 1
-                pinfo = feed_clip.to_parser_output()
-                # replace to new Clip info
-                ctxs[1][:len(pinfo)] =  pinfo # 7th for the global time shift
-
+                used_clip_result = Clip()
+                used_clip_result.from_parser_output(ctxs[1])
+                if used_clip_result.check_consumed():
+                    print("Auto-fill triggered.")
+                    # switch to resuming mode, might be changed in the future
+                    feed_clip.resuming = 1
+                    feed_clip.overflowcorrection = used_clip_result.overflowcorrection
+                    # replace to new Clip info
+                    ctxs[1][:] = feed_clip.to_reader_input() # 7th for the global time shift
+                    ctxs[0] = feed_clip.buffer
             print("Executing analysis program...")
-            ret = mainloop(*ctxs)
+            ret+= mainloop(*ctxs)
            
             loop_count += 1
 

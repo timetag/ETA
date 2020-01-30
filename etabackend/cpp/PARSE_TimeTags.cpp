@@ -348,14 +348,16 @@ extern "C" {
 
 			if (next_relpos >= READER->batch_actualread_length)
 			{
-				PINFO("Reader %x for section [%lld %lld) paused, nextrec %lld, batchend %lld, buffer is not long enough.", (unsigned int)READER, READER->fseekpoint, READER->fendpoint, next_abspos,batch_end_abspos);
+				PINFO("Reader %x for section [%lld %lld) paused, nextrec %lld at %lld, batchend at %lld. \n", (unsigned int)READER, READER->fseekpoint, READER->fendpoint, next_relpos,next_abspos,batch_end_abspos);
 				break;
 			}
+			/*
 			if (next_abspos >= READER->fendpoint)
 			{
-				PINFO("Reader %x for section [%lld %lld) paused, nextrec %lld, batchend %lld, file boundry.", (unsigned int)READER, READER->fseekpoint, READER->fendpoint,next_abspos,batch_end_abspos);
+				PINFO("Reader %x for section [%lld %lld) paused, nextrec %lld at %lld, batchend at %lld, file boundry.", (unsigned int)READER, READER->fseekpoint, READER->fendpoint,next_relpos,next_abspos,batch_end_abspos);
 				break;
 			}
+			*/
 
 
 			//parse binary
@@ -488,7 +490,7 @@ extern "C" {
 	}
 	int MKS_inline FileReader_init(ttf_reader* READER,char* UniBuf) {
 		READER->buffer = UniBuf;
-		PINFO("\nReader %x is pointed to record %lld on section [%lld %lld)\n", (unsigned int)READER, READER->next_RecID_in_batch, READER->fseekpoint, READER->fendpoint);
+		PINFO("Reader %x is pointed to record %lld on section [%lld %lld)\n", (unsigned int)READER, READER->next_RecID_in_batch, READER->fseekpoint, READER->fendpoint);
 
 		/*PINFO("TTRes_pspr %lld", READER->TTRes_pspr);
 		PINFO("DTRes_pspr %lld", READER->DTRes_pspr);
