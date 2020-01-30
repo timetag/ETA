@@ -64,13 +64,12 @@ extern "C" {
 		long long GlobalTimeShift;//7
 		long long CHANNEL_OFFSET ;//8 
 		long long MARKER_OFFSET ;//9
-		long long resuming ;//10
 		//UniBuf info
-			long long batch_actualread_length ; //11 buffer length
-			long long next_RecID_in_batch ;//12 reader head
-			long long overflowcorrection ;//13
-			long long buffer_status ;//14 unused
-			char *buffer =0;//15
+			long long batch_actualread_length ; //10 buffer length
+			long long next_RecID_in_batch ;//11 reader head
+			long long overflowcorrection ;//12
+			long long buffer_status ;//13 unused
+			char *buffer =0;//14
 
 	}ttf_reader;
 
@@ -348,7 +347,7 @@ extern "C" {
 
 			if (next_relpos >= READER->batch_actualread_length)
 			{
-				PINFO("Reader %x for section [%lld %lld) paused, nextrec %lld at %lld, batchend at %lld. \n", (unsigned int)READER, READER->fseekpoint, READER->fendpoint, next_relpos,next_abspos,batch_end_abspos);
+				PINFO("Reader %x paused, nextrec %lld at %lld, batchend at %lld. \n", (unsigned int)READER, next_relpos,next_abspos,batch_end_abspos);
 				break;
 			}
 			/*
@@ -490,7 +489,7 @@ extern "C" {
 	}
 	int MKS_inline FileReader_init(ttf_reader* READER,char* UniBuf) {
 		READER->buffer = UniBuf;
-		PINFO("Reader %x is pointed to record %lld on section [%lld %lld)\n", (unsigned int)READER, READER->next_RecID_in_batch, READER->fseekpoint, READER->fendpoint);
+		PINFO("Reader %x is pointed to record %lld on buffer of [0,%lld).\n", (unsigned int)READER, READER->next_RecID_in_batch, READER->batch_actualread_length);
 
 		/*PINFO("TTRes_pspr %lld", READER->TTRes_pspr);
 		PINFO("DTRes_pspr %lld", READER->DTRes_pspr);

@@ -39,7 +39,7 @@ class ETA(ETA_CUT):
             self.usercode_vars = None
             self.recipe_metadata = None
             self.eta_compiled_code, self.usercode_vars, self.recipe_metadata = recipe_compiler.compile_eta(
-                etaobj, verbose)
+                etaobj)
 
             self.recipe_update()
             # clear cache
@@ -148,7 +148,7 @@ class ETA(ETA_CUT):
                 trueending = True
             if trueending:
                 break
-            if max_autofeed and (loop_count > max_autofeed):
+            if (max_autofeed>0) and (loop_count > max_autofeed):
                 break
             if not (isinstance(feed_clip, Clip) and feed_clip.validate()):
                 raise ValueError(
@@ -205,8 +205,6 @@ class ETA(ETA_CUT):
             rets.append(result_fetcher(*ctxs))
 
         if sum_results:
-            if verbose:
-                verbose("Aggregating results.")
             # reduce
             for each in range(1, len(rets)):
                 for each_graph in rets[0].keys():
@@ -217,7 +215,7 @@ class ETA(ETA_CUT):
                     len(rets)), "stopped")
         else:
             if verbose:
-                verbose("Forwarding results.")
+                verbose("ETA.RUN: Listing results for each task.")
             result = rets
 
         return result

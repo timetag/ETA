@@ -19,13 +19,12 @@ class Clip():
         "GlobalTimeShift": 7,
         "CHANNEL_OFFSET": 8,
         "MARKER_OFFSET": 9,
-        "resuming": 10,
 
-        "batch_actualread_length": 11,
-        "next_RecID_in_batch": 12,
-        "overflowcorrection": 13,
-        "buffer_status": 14,
-        "buffer": 15,
+        "batch_actualread_length": 10,
+        "next_RecID_in_batch": 11,
+        "overflowcorrection": 12,
+        "buffer_status": 13,
+        "buffer": 14,
     }
 
     def __init__(self):
@@ -41,15 +40,14 @@ class Clip():
         self.GlobalTimeShift = 0
         self.CHANNEL_OFFSET = 0
         self.MARKER_OFFSET = 0
-        self.resuming = 0
 
         # UniBuf info
-        self.batch_actualread_length = 0  # 11 buffer length
-        self.next_RecID_in_batch = 0  # 12 reader head
-        self.overflowcorrection = 0  # 13
-        self.buffer_status = 0  # 14 unused
+        self.batch_actualread_length = 0  # buffer length
+        self.next_RecID_in_batch = 0  # reader head
+        self.overflowcorrection = 0
+        self.buffer_status = 0  # unused
 
-        self.buffer = None  # 15
+        self.buffer = None
 
     def check_consumed(self):
         return self.next_RecID_in_batch * self.BytesofRecords >= self.batch_actualread_length
@@ -64,14 +62,15 @@ class Clip():
         return self
 
     def from_parser_output(self, parse_output):
-        print("======from_parser_output======")
-        for k, v in self.ETACReaderStructIDX.items():
+        #print("======from_parser_output======")
+        for name, v in self.ETACReaderStructIDX.items():
             if v < len(parse_output):
-                print(parse_output[v], "is", k)
-                setattr(self, k, parse_output[v])
+                value = int(parse_output[v])
+                #print(value, "is", name)
+                setattr(self, name, value)
 
     def to_reader_input(self):
-        print("======to_reader_input======")
+        #print("======to_reader_input======")
         inv_map = {v: k for k, v in self.ETACReaderStructIDX.items()}
         ret = []
         for i in range(0,  len(inv_map)):
@@ -80,8 +79,9 @@ class Clip():
             if isinstance(value, float) or isinstance(value, int):
                 pass
             else:
-                value = 0
-            print(value, "is", name)
+                # print(type(value))
+                value = -1
+            #print(value, "is", name)
             ret.append(int(value))
         return ret
 
@@ -91,7 +91,7 @@ class ETA_CUT():
         pass
 
     # example generators
-    def simple_cut(self, filename, cuts=1, verbose=print, **kwargs):
+    def simple_cut(self, filename, cuts=1, reuse_clips=True, keep_indexes=None,  verbose=print, **kwargs):
         if (verbose == True):
             verbose = print
 
@@ -110,7 +110,7 @@ class ETA_CUT():
         # build a clip for header
         last_clip.fendpoint = last_clip.fseekpoint
 
-        return self.incremental_cut(filename, rec_per_cut=((NumRecords+cuts-1) // cuts), modify_clip=last_clip, verbose=verbose, **kwargs)
+        return self.incremental_cut(filename, rec_per_cut=((NumRecords+cuts-1) // cuts), modify_clip=last_clip, reuse_clips=reuse_clips, keep_indexes=keep_indexes, verbose=verbose, **kwargs)
 
     def incremental_cut(self, filename, modify_clip=None, rec_per_cut=1024*1024*10, reuse_clips=True, keep_indexes=None, verbose=print, **kwargs):
         if (verbose == True):
