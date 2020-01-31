@@ -588,6 +588,7 @@ class Graph(INTEGER, TABLE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENCE):
                     "Illegal type initializer for symbol {}".format(each))
 
     def MAKE_global_code_on_graph0(self):
+        self.INTEGER("uettp_initial", "AbsTime_ps", initvalue=0)
         self.INTEGER("uettp_initial", "GCONF_RESUME", initvalue=0)
         self.EMIT_LINE("uettp_beforeloop", """
             if GCONF_RESUME==0:
@@ -609,7 +610,7 @@ class Graph(INTEGER, TABLE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENCE):
         if repeat > 1:
             code = """
                 for emit_times in range(0,{repeat}):
-                    eta_ret+=VCHN_put(VCHN,{phase}+{period}*(emit_times),nb.int8({chn}))
+                    eta_ret+=VCHN_put(VCHN,nb.int64({phase}+{period}*(emit_times)),nb.int8({chn}))
                 """.format(phase=phase,
                            chn=chn, waittime=int(waittime), repeat=repeat, period=period)
         else:

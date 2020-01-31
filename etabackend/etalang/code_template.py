@@ -23,7 +23,7 @@ mark_chn_offset_per_rslots):
 def mainloop(UniBuf1, Reader_arr1, VCHN_arr, vfiles, POOL_timetag1, POOL_fileid1, chn, chn_next {tables}):
     link_libs()
     eta_ret = 0
-
+    
     SYNCRate_pspr = Reader_arr1[4]
     earlystop = True
     eta_num_rchns = {num_rchns}
@@ -34,7 +34,6 @@ def mainloop(UniBuf1, Reader_arr1, VCHN_arr, vfiles, POOL_timetag1, POOL_fileid1
     eta_ret += VCHN_init(VCHN,{num_rslot}, {num_rchns}, {num_vslot}, ffi.from_buffer(vfiles))
     {uettp_initial}
     eta_ret += POOL_init(VCHN,{num_rslot} + {num_vslot}, {pool_tree_size},ffi.from_buffer(POOL_timetag1), ffi.from_buffer(POOL_fileid1) ,nb.int64(GCONF_RESUME))
-    AbsTime_ps = nb.int64(0)
     
     {before_loop_code}
     READER1 = ffi.from_buffer(Reader_arr1)

@@ -191,10 +191,10 @@ class BACKEND(ETA):
                         loc = {}
                     exec(etaobj[id], glob, loc)
                 except Exception as e:
-                    if (type(e).__name__ == "TypingError"):
+                    if (str(type(e)).find("numba")>=0):
                         self.logger.error(str(e), exc_info=True)
                         self.send(
-                            "An internal ETA error has occurred when JIT linking the program.", "err")
+                            "An internal error has occurred when numba is compiling the embedded code.", "err")
                         self.send("Send your recipe to Github Issues.")
                     else:
 

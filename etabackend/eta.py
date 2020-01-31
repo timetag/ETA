@@ -164,8 +164,6 @@ class ETA(ETA_CUT):
                 used_clip_result.from_parser_output(ctxs[1])
                 if used_clip_result.check_consumed():
                     print("Auto-fill triggered.")
-                    # switch to resuming mode, might be changed in the future
-                    feed_clip.resuming = 1
                     feed_clip.overflowcorrection = used_clip_result.overflowcorrection
                     # replace to new Clip info
                     ctxs[1][:] = feed_clip.to_reader_input() # 7th for the global time shift
