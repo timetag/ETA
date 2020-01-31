@@ -1,5 +1,5 @@
 #!/bin/env python
-from . import backend
+import etabackend.backend as backend
 
 if __name__ == '__main__':
     backend.main()

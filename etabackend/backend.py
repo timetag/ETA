@@ -11,9 +11,9 @@ from subprocess import run
 ETA_VERSION = "v0.6.6"
 try:
     # deps check
-    from . import webinstall
-    from . import ws_broadcast
-    from .eta import ETA
+    import etabackend.webinstall as webinstall
+    import etabackend.ws_broadcast as ws_broadcast
+    from etabackend.eta import ETA
 except Exception as e:
     print("[!] It seems that ETA can not find all of its dependencies:",
           e, file=sys.stderr)

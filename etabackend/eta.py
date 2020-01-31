@@ -11,9 +11,9 @@ from concurrent.futures import ThreadPoolExecutor
 
 import numpy as np
 
-from . import jit_linker
-from .clip import ETA_CUT, Clip
-from .etalang import recipe_compiler
+import etabackend.jit_linker as jit_linker
+from etabackend.clip import ETA_CUT, Clip
+from etabackend.etalang import recipe_compiler
 
 
 class ETA(ETA_CUT):
@@ -222,5 +222,5 @@ class ETA(ETA_CUT):
 
 
 if __name__ == '__main__':
-    import backend
+    import etabackend.backend as backend
     backend.main()
