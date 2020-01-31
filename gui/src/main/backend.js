@@ -8,8 +8,10 @@ function show_help() {
   shell.openExternal('https://eta.readthedocs.io/en/latest/installation.html')
 }
 function check_python() {
+  let notfound=false;
   let ls = spawnSync('python', ['--version'], { detached: false });
-  if (ls.error) return false; else return true;
+  
+  if (ls.error) return python_not_found(); else return true;
 }
 function python_not_found() {
   let buttonIndex = dialog.showMessageBoxSync({
@@ -49,7 +51,7 @@ function install_backend(slient_mode) {
   }
   if (buttonIndex == 0) {
     if (!check_python()) {
-      return python_not_found();
+      return false;
     }
     //execute with shell
     let ls = spawnSync('python', ['-m', 'pip', '--disable-pip-version-check', 'install', '--find-links=.', 'etabackend', '--upgrade'], { detached: true, shell: true });
@@ -73,24 +75,40 @@ function install_backend(slient_mode) {
     return false;
   }
 }
+function check_etabackend() {
+  if (!check_python()) {
+    return false;
+  }
+  let ls = spawnSync('python', ['-m','pip','show','etabackend'], { detached: false });
+  if (ls.error) {
+    dialog.showErrorBox('Install Failed', "Can not execute python via system shell.")
+    return false;
+  }else{
+    if (ls.stderr && ls.stderr.toString().length > 1) {
+      logger.error(ls.stderr.toString())
+      if (ls.stderr.toString().indexOf("not found") >= 0) {
+        return install_backend();
+      }
+    }
+     //success
+     if (ls.stdout) logger.info(ls.stdout.toString())
+     return true;
+  }
+}
 function backend_run(install_mode) {
   if (install_mode) {
     if (install_backend(install_mode) == false) return false;
   }
-  let ls = spawnSync('python', ['-m', 'etabackend'], { detached: true, shell: true });
-  if (ls.error) {
-    return python_not_found()
-  } else {
-    if (ls.stderr && ls.stderr.toString().length > 1) {
-      logger.error(ls.stderr.toString())
-      if (ls.stderr.toString().indexOf("No module named") >= 0) {
-        return install_backend();
-      }
-    }
-    logger.info("ETA Backend quitted.")
-    if (ls.stdout) logger.info(ls.stdout.toString())
-    //success
+  if (!check_etabackend()){
     return false;
   }
+  let ls = spawnSync('python', ['-m', 'etabackend'], { detached: true, shell: true });
+  if (ls.error) {
+      dialog.showErrorBox('Install Failed', "Can not execute python via system shell.")
+      return false;
+  }
+  logger.info("ETA Backend not installed.")
+  if (ls.stdout) logger.info(ls.stdout.toString())//success
+  return false;
 }
 module.exports = backend_run;
