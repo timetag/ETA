@@ -130,10 +130,10 @@ extern "C" {
 		if (init == 1) {
 			VCHN->VFILES[vslot].size = size; ///TODO:FLEXIBLE THIGY
 			circular_buf_reset(&(VCHN->VFILES[vslot])); //set head and tail to 0
-			PINFO("Creating ring buffer %lld at %x with size %lld. ", vslot, (unsigned int)buffer, VCHN->VFILES[vslot].size);
+			PINFO("Creating ring buffer %llx at %llx with size %lld. ", (uint64_t)vslot, (uint64_t)buffer, VCHN->VFILES[vslot].size);
 		}
 		else {
-			PINFO("Resetting ring buffer %lld at %x with size %lld. ", vslot, (unsigned int) buffer, VCHN->VFILES[vslot].size);
+			PINFO("Resetting ring buffer %llx at %llx with size %lld. ", (uint64_t)vslot, (uint64_t)buffer, VCHN->VFILES[vslot].size);
 		}
 		
 		return 0;
@@ -241,7 +241,7 @@ extern "C" {
 			else {
 				//PINFO("WRITE TO %lld, %d, FILEid %d", timeinfuture, virtual_channel, FILEid)
 				if (circular_buf_full(VCHN->VFILES[VFILEid])) {
-					PFATAL("Buffer overflow! at %x", (unsigned int) VCHN->VFILES[VFILEid].buffer);
+					PFATAL("Buffer overflow! at %llx", (uint64_t)VCHN->VFILES[VFILEid].buffer);
 					return -1;
 				}
 				else {

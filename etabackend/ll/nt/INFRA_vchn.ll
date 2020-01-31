@@ -18,9 +18,9 @@ $__local_stdio_printf_options = comdat any
 
 $"??_C@_0DE@PKIJDBDO@?6?5?$FLERROR?$FNMemalloc?5failed?5for?5thi@" = comdat any
 
-$"??_C@_0DC@OAMNBBGI@?6Creating?5ring?5buffer?5?$CFlld?5at?5?$CFx@" = comdat any
+$"??_C@_0DE@FLJDMGNL@?6Creating?5ring?5buffer?5?$CFllx?5at?5?$CFl@" = comdat any
 
-$"??_C@_0DD@JLGIBEFM@?6Resetting?5ring?5buffer?5?$CFlld?5at?5?$CF@" = comdat any
+$"??_C@_0DF@JANDLKAG@?6Resetting?5ring?5buffer?5?$CFllx?5at?5?$CF@" = comdat any
 
 $"??_C@_0CF@BDINJJIB@?6?5?$FLERROR?$FNMemalloc?5failed?0?5aborti@" = comdat any
 
@@ -32,20 +32,20 @@ $"??_C@_0CI@IMIANPPE@?6VCHN_RFILES?3?5?$CFd?0VCHN_VFILES_off@" = comdat any
 
 $"??_C@_0DG@CKGFOHGH@?6?5?$FLERROR?$FNMemalloc?5failed?5for?5VFI@" = comdat any
 
-$"??_C@_0CA@PBFPHFEE@?6?5?$FLFATAL?$FNBuffer?5overflow?$CB?5at?5?$CFx?$AA@" = comdat any
+$"??_C@_0CC@MNCKPPJP@?6?5?$FLFATAL?$FNBuffer?5overflow?$CB?5at?5?$CFll@" = comdat any
 
 $"?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA" = comdat any
 
 @controlflow_guarantee = dso_local global i64 0, align 8
 @"??_C@_0DE@PKIJDBDO@?6?5?$FLERROR?$FNMemalloc?5failed?5for?5thi@" = linkonce_odr dso_local unnamed_addr constant [52 x i8] c"\0A [ERROR]Memalloc failed for this VFILE, aborting.\0A\00", comdat, align 1
-@"??_C@_0DC@OAMNBBGI@?6Creating?5ring?5buffer?5?$CFlld?5at?5?$CFx@" = linkonce_odr dso_local unnamed_addr constant [50 x i8] c"\0ACreating ring buffer %lld at %x with size %lld. \00", comdat, align 1
-@"??_C@_0DD@JLGIBEFM@?6Resetting?5ring?5buffer?5?$CFlld?5at?5?$CF@" = linkonce_odr dso_local unnamed_addr constant [51 x i8] c"\0AResetting ring buffer %lld at %x with size %lld. \00", comdat, align 1
+@"??_C@_0DE@FLJDMGNL@?6Creating?5ring?5buffer?5?$CFllx?5at?5?$CFl@" = linkonce_odr dso_local unnamed_addr constant [52 x i8] c"\0ACreating ring buffer %llx at %llx with size %lld. \00", comdat, align 1
+@"??_C@_0DF@JANDLKAG@?6Resetting?5ring?5buffer?5?$CFllx?5at?5?$CF@" = linkonce_odr dso_local unnamed_addr constant [53 x i8] c"\0AResetting ring buffer %llx at %llx with size %lld. \00", comdat, align 1
 @"??_C@_0CF@BDINJJIB@?6?5?$FLERROR?$FNMemalloc?5failed?0?5aborti@" = linkonce_odr dso_local unnamed_addr constant [37 x i8] c"\0A [ERROR]Memalloc failed, aborting.\0A\00", comdat, align 1
 @"??_C@_0O@HDHCNGNA@?6POOL_init?5?$CFd?$AA@" = linkonce_odr dso_local unnamed_addr constant [14 x i8] c"\0APOOL_init %d\00", comdat, align 1
 @"??_C@_0BG@OEIAFCBM@?6POOL_init?5resumed?5?$CFd?$AA@" = linkonce_odr dso_local unnamed_addr constant [22 x i8] c"\0APOOL_init resumed %d\00", comdat, align 1
 @"??_C@_0CI@IMIANPPE@?6VCHN_RFILES?3?5?$CFd?0VCHN_VFILES_off@" = linkonce_odr dso_local unnamed_addr constant [40 x i8] c"\0AVCHN_RFILES: %d,VCHN_VFILES_offset:%d \00", comdat, align 1
 @"??_C@_0DG@CKGFOHGH@?6?5?$FLERROR?$FNMemalloc?5failed?5for?5VFI@" = linkonce_odr dso_local unnamed_addr constant [54 x i8] c"\0A [ERROR]Memalloc failed for VFILES index, aborting.\0A\00", comdat, align 1
-@"??_C@_0CA@PBFPHFEE@?6?5?$FLFATAL?$FNBuffer?5overflow?$CB?5at?5?$CFx?$AA@" = linkonce_odr dso_local unnamed_addr constant [32 x i8] c"\0A [FATAL]Buffer overflow! at %x\00", comdat, align 1
+@"??_C@_0CC@MNCKPPJP@?6?5?$FLFATAL?$FNBuffer?5overflow?$CB?5at?5?$CFll@" = linkonce_odr dso_local unnamed_addr constant [34 x i8] c"\0A [FATAL]Buffer overflow! at %llx\00", comdat, align 1
 @"?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA" = linkonce_odr dso_local global i64 0, comdat, align 8
 
 ; Function Attrs: alwaysinline nounwind uwtable
@@ -322,9 +322,9 @@ define dso_local i32 @VFILE_init(%struct.VCHN_t*, i64, i64, i8*, i64) #1 {
   %63 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %62, i32 0, i32 3
   %64 = load i64, i64* %63, align 8
   %65 = load i8*, i8** %10, align 8
-  %66 = ptrtoint i8* %65 to i32
+  %66 = ptrtoint i8* %65 to i64
   %67 = load i64, i64* %12, align 8
-  %68 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([50 x i8], [50 x i8]* @"??_C@_0DC@OAMNBBGI@?6Creating?5ring?5buffer?5?$CFlld?5at?5?$CFx@", i32 0, i32 0), i64 %67, i32 %66, i64 %64)
+  %68 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([52 x i8], [52 x i8]* @"??_C@_0DE@FLJDMGNL@?6Creating?5ring?5buffer?5?$CFllx?5at?5?$CFl@", i32 0, i32 0), i64 %67, i64 %66, i64 %64)
   %69 = sext i32 %68 to i64
   store i64 %69, i64* @controlflow_guarantee, align 8
   br label %83
@@ -338,9 +338,9 @@ define dso_local i32 @VFILE_init(%struct.VCHN_t*, i64, i64, i8*, i64) #1 {
   %76 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %75, i32 0, i32 3
   %77 = load i64, i64* %76, align 8
   %78 = load i8*, i8** %10, align 8
-  %79 = ptrtoint i8* %78 to i32
+  %79 = ptrtoint i8* %78 to i64
   %80 = load i64, i64* %12, align 8
-  %81 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([51 x i8], [51 x i8]* @"??_C@_0DD@JLGIBEFM@?6Resetting?5ring?5buffer?5?$CFlld?5at?5?$CF@", i32 0, i32 0), i64 %80, i32 %79, i64 %77)
+  %81 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([53 x i8], [53 x i8]* @"??_C@_0DF@JANDLKAG@?6Resetting?5ring?5buffer?5?$CFllx?5at?5?$CF@", i32 0, i32 0), i64 %80, i64 %79, i64 %77)
   %82 = sext i32 %81 to i64
   store i64 %82, i64* @controlflow_guarantee, align 8
   br label %83
@@ -1175,8 +1175,8 @@ define dso_local i32 @VCHN_put(%struct.VCHN_t*, i64, i8) #1 {
   %344 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %341, i64 %343
   %345 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %344, i32 0, i32 0
   %346 = load i64*, i64** %345, align 8
-  %347 = ptrtoint i64* %346 to i32
-  %348 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([32 x i8], [32 x i8]* @"??_C@_0CA@PBFPHFEE@?6?5?$FLFATAL?$FNBuffer?5overflow?$CB?5at?5?$CFx?$AA@", i32 0, i32 0), i32 %347)
+  %347 = ptrtoint i64* %346 to i64
+  %348 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([34 x i8], [34 x i8]* @"??_C@_0CC@MNCKPPJP@?6?5?$FLFATAL?$FNBuffer?5overflow?$CB?5at?5?$CFll@", i32 0, i32 0), i64 %347)
   %349 = sext i32 %348 to i64
   store i64 %349, i64* @controlflow_guarantee, align 8
   br label %350

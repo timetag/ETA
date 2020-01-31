@@ -34,20 +34,20 @@ $"??_C@_0BO@LDGIBODO@?6?5?$FLFATAL?$FN?5Illegal?5Chan?3?5?5?$CF1u?6?$AA@" = comd
 
 $"??_C@_0CI@NNAIKICM@?6?5?$FLFATAL?$FN?6Illegal?5virtual_channe@" = comdat any
 
-$"??_C@_0DN@BPMDPKJ@?6Reader?5?$CFx?5paused?0?5nextrec?5?$CFlld?5@" = comdat any
+$"??_C@_0DP@DIBPPCHE@?6Reader?5?$CFllx?5paused?0?5nextrec?5?$CFll@" = comdat any
 
 $"??_C@_0CM@DODOIIB@?6?5?$FLERROR?$FNERROR?3?5Unsupported?5time@" = comdat any
 
-$"??_C@_0DN@JKFAPDD@?6Reader?5?$CFx?5is?5pointed?5to?5record?5@" = comdat any
+$"??_C@_0DP@DAEGMCOO@?6Reader?5?$CFllx?5is?5pointed?5to?5recor@" = comdat any
 
 $"?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA" = comdat any
 
 @order_gurantee3 = dso_local global i64 0, align 8
 @"??_C@_0BO@LDGIBODO@?6?5?$FLFATAL?$FN?5Illegal?5Chan?3?5?5?$CF1u?6?$AA@" = linkonce_odr dso_local unnamed_addr constant [30 x i8] c"\0A [FATAL] Illegal Chan:  %1u\0A\00", comdat, align 1
 @"??_C@_0CI@NNAIKICM@?6?5?$FLFATAL?$FN?6Illegal?5virtual_channe@" = linkonce_odr dso_local unnamed_addr constant [40 x i8] c"\0A [FATAL]\0AIllegal virtual_channel:  %1u\00", comdat, align 1
-@"??_C@_0DN@BPMDPKJ@?6Reader?5?$CFx?5paused?0?5nextrec?5?$CFlld?5@" = linkonce_odr dso_local unnamed_addr constant [61 x i8] c"\0AReader %x paused, nextrec %lld at %lld, batchend at %lld. \0A\00", comdat, align 1
+@"??_C@_0DP@DIBPPCHE@?6Reader?5?$CFllx?5paused?0?5nextrec?5?$CFll@" = linkonce_odr dso_local unnamed_addr constant [63 x i8] c"\0AReader %llx paused, nextrec %lld at %lld, batchend at %lld. \0A\00", comdat, align 1
 @"??_C@_0CM@DODOIIB@?6?5?$FLERROR?$FNERROR?3?5Unsupported?5time@" = linkonce_odr dso_local unnamed_addr constant [44 x i8] c"\0A [ERROR]ERROR: Unsupported timetag format.\00", comdat, align 1
-@"??_C@_0DN@JKFAPDD@?6Reader?5?$CFx?5is?5pointed?5to?5record?5@" = linkonce_odr dso_local unnamed_addr constant [61 x i8] c"\0AReader %x is pointed to record %lld on buffer of [0,%lld).\0A\00", comdat, align 1
+@"??_C@_0DP@DAEGMCOO@?6Reader?5?$CFllx?5is?5pointed?5to?5recor@" = linkonce_odr dso_local unnamed_addr constant [63 x i8] c"\0AReader %llx is pointed to record %lld on buffer of [0,%lld).\0A\00", comdat, align 1
 @"?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA" = linkonce_odr dso_local global i64 0, comdat, align 8
 
 ; Function Attrs: alwaysinline uwtable
@@ -867,8 +867,8 @@ define dso_local i64 @pop_signal_from_file(%struct.ttf_reader*, i8*) #0 {
   %97 = load i64, i64* %62, align 8
   %98 = load i64, i64* %61, align 8
   %99 = load %struct.ttf_reader*, %struct.ttf_reader** %58, align 8
-  %100 = ptrtoint %struct.ttf_reader* %99 to i32
-  %101 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([61 x i8], [61 x i8]* @"??_C@_0DN@BPMDPKJ@?6Reader?5?$CFx?5paused?0?5nextrec?5?$CFlld?5@", i32 0, i32 0), i32 %100, i64 %98, i64 %97, i64 %96)
+  %100 = ptrtoint %struct.ttf_reader* %99 to i64
+  %101 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([63 x i8], [63 x i8]* @"??_C@_0DP@DIBPPCHE@?6Reader?5?$CFllx?5paused?0?5nextrec?5?$CFll@", i32 0, i32 0), i64 %100, i64 %98, i64 %97, i64 %96)
   %102 = sext i32 %101 to i64
   store i64 %102, i64* @order_gurantee3, align 8
   br label %1073
@@ -2204,8 +2204,8 @@ define dso_local i32 @FileReader_init(%struct.ttf_reader*, i8*) #0 {
   %12 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %11, i32 0, i32 11
   %13 = load i64, i64* %12, align 8
   %14 = load %struct.ttf_reader*, %struct.ttf_reader** %4, align 8
-  %15 = ptrtoint %struct.ttf_reader* %14 to i32
-  %16 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([61 x i8], [61 x i8]* @"??_C@_0DN@JKFAPDD@?6Reader?5?$CFx?5is?5pointed?5to?5record?5@", i32 0, i32 0), i32 %15, i64 %13, i64 %10)
+  %15 = ptrtoint %struct.ttf_reader* %14 to i64
+  %16 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([63 x i8], [63 x i8]* @"??_C@_0DP@DAEGMCOO@?6Reader?5?$CFllx?5is?5pointed?5to?5recor@", i32 0, i32 0), i64 %15, i64 %13, i64 %10)
   %17 = sext i32 %16 to i64
   store i64 %17, i64* @order_gurantee3, align 8
   ret i32 0

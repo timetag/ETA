@@ -347,7 +347,7 @@ extern "C" {
 
 			if (next_relpos >= READER->batch_actualread_length)
 			{
-				PINFO("Reader %x paused, nextrec %lld at %lld, batchend at %lld. \n", (unsigned int)READER, next_relpos,next_abspos,batch_end_abspos);
+				PINFO("Reader %llx paused, nextrec %lld at %lld, batchend at %lld. \n", (uint64_t)READER, next_relpos,next_abspos,batch_end_abspos);
 				break;
 			}
 			/*
@@ -489,7 +489,7 @@ extern "C" {
 	}
 	int MKS_inline FileReader_init(ttf_reader* READER,char* UniBuf) {
 		READER->buffer = UniBuf;
-		PINFO("Reader %x is pointed to record %lld on buffer of [0,%lld).\n", (unsigned int)READER, READER->next_RecID_in_batch, READER->batch_actualread_length);
+		PINFO("Reader %llx is pointed to record %lld on buffer of [0,%lld).\n", (uint64_t)READER, READER->next_RecID_in_batch, READER->batch_actualread_length);
 
 		/*PINFO("TTRes_pspr %lld", READER->TTRes_pspr);
 		PINFO("DTRes_pspr %lld", READER->DTRes_pspr);

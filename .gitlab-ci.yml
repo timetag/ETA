@@ -1,0 +1,41 @@
+image: ubuntu:rolling
+before_script:
+    - apt-get update 
+    - apt-get install -y llvm-8
+    - apt-get install -y clang-8
+    - apt-get install -y python3
+    - apt-get install -y python3-pip
+    - python3 -V  # Print out python version for debugging
+    - pip3 install virtualenv
+    - virtualenv venv
+    - source venv/bin/activate
+
+build1:
+  stage: build
+  variables:
+      PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+  cache:
+    paths:
+        - .cache/pip
+        - venv/
+  script:
+    - ls
+    - clang-8 etabackend/cpp/PARSE_TimeTagFileHeader.cpp -S -emit-llvm 
+    - clang-8 etabackend/cpp/PARSE_TimeTags.cpp  -S -emit-llvm 
+    - clang-8 etabackend/cpp/INFRA_vchn.cpp  -S -emit-llvm
+    - mv *.ll etabackend/ll/posix
+    - python3 setup.py bdist_wheel
+    # an alternative approach is to install and run:
+    #- pip install dist/*
+    # run the command here
+  artifacts:
+    paths:
+      - dist/*.whl
+
+deploy1:
+  stage: deploy
+  when: manual
+  script:
+    - pip3 install twine
+    - twine upload dist/*.whl -u %PYPI_USERNAME% -p %PYPI_PASSWORD% --skip-existing
+        
