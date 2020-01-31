@@ -1,4 +1,3 @@
-#!/bin/env python
 import json
 import multiprocessing
 import os
