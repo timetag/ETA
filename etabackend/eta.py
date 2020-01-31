@@ -219,8 +219,3 @@ class ETA(ETA_CUT):
             result = rets
 
         return result
-
-
-if __name__ == '__main__':
-    import etabackend.backend as backend
-    backend.main()

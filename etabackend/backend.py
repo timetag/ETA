@@ -222,7 +222,3 @@ def main():
     print("ETA_VERSION: "+ETA_VERSION)
     #print("Using Python libraries from ", sys.path)
     ws = BACKEND()
-
-
-if __name__ == '__main__':
-    main()
