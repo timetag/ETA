@@ -1,4 +1,3 @@
-#!/bin/env python
 import copy
 import json
 import logging

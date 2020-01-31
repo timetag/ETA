@@ -1,4 +1,3 @@
-#!/bin/env python
 import json
 import multiprocessing
 import os
@@ -27,7 +26,7 @@ except Exception as e:
 
 class BACKEND(ETA):
 
-    def __init__(self):
+    def __init__(self, run_forever=True):
         super(BACKEND, self).__init__()
         self.ETA_VERSION = ETA_VERSION
 
@@ -50,7 +49,7 @@ class BACKEND(ETA):
         print("ETA Backend URL: ws://{}:{}".format(self.hostip, self.hostport))
         self.server.set_fn_new_client(new_client)
         self.server.set_fn_message_received(new_message)
-        self.server.run_forever()
+        if run_forever: self.server.run_forever()
         self.eta_compiled_code = None
 
     def send(self, text, endpoint="log"):
