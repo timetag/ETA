@@ -152,7 +152,7 @@ class Parser():
         instructions = []
         for define, code in zip(defines, codes):
             if define is None:
-                define = "uettp_initial"
+                define = "uettp_beforeloop"
             ret = ast_parser.code_parse(code, contex=self.contex + [define])
             for each in ret:
                 instructions.append(each)
