@@ -1,10 +1,6 @@
 import textwrap
 import ast
-
-if __name__ == "__main__":
-    import tensor
-else:
-    from . import tensor
+from . import tensor
 
 
 ### premitive types ###
@@ -21,6 +17,17 @@ class INTEGER():
     def INTEGER(self, triggers, name, initvalue=0):
         self.define_syms(name, ["integer", "sum", initvalue], register=True)
 
+    def get_INTEGER_or_literal(self,sym,getter_function=""):
+        if isinstance(sym,int):
+            return sym
+        if isinstance(sym,float):
+            return int(sym)
+        elif sym.isdigit():
+            return int(sym)
+        elif self.must_exist_syms(sym,register=True,must=False):
+            return sym
+        else:
+            raise ValueError("The parameter in Action {} must be either the name of an INTEGER Tool or a integer value.".format(getter_function))
 
 class TABLE():
     def table_init(self, sym, type):
@@ -46,10 +53,13 @@ class VFILE():
         """.format(vfile2=type[1], buffer_size=type[2],chn=type[3]))
 
     def VFILE(self, triggers, chn, size="2097152"):
+        
         # TODO: remove hard-coded VFILE size
         size = int(ast.literal_eval(size))
         name = "vchn"+str(chn)
         tablename =  name + "_vfile"
+        self.output_chn[int(chn)] = True  # add to output channel talbe
+        # self.make_output_chn(chn)
         self.define_syms(tablename, ["table", "sum", size], register=True)
         self.define_syms(name, ["vfile",tablename,size,chn])
 
@@ -319,9 +329,8 @@ class COINCIDENCE():
         if num <= 1:
             raise ValueError(
                 "Coincidence number shoud be something larger than 1.")
-        else:
-            self.output_chn[chn] = True
-            self.define_syms(name, ["coincidence", num, chn])
+        self.VFILE(chn)
+        self.define_syms(name, ["coincidence", num, chn])
 
     def coincidence_clear(self, trigger, sym):
         sym = self.assert_syms(sym, "coincidence")
@@ -346,10 +355,12 @@ class Graph(INTEGER, TABLE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENCE):
         self.graphid = gid
         # read only after making states
         self.input_chn = {}
-        self.output_chn = {}
         self.states_to_id = {}
         self.id_to_states = {}
         self.init_now = None
+        # allow write after making states
+        self.output_chn = {}
+        self.emit_consistent_delay_length = {}
 
     # called by graph_parser
     #########################
@@ -597,30 +608,36 @@ class Graph(INTEGER, TABLE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENCE):
     ######### Polymorphism ########
 
     def emit(self, triggers, chn, waittime=0, period=0, repeat=1):
-        chn = int(chn)
-        self.VFILE(triggers, chn)
-        repeat = int(repeat)
-        waittime = int(waittime)
-        period = int(period)
-        self.output_chn[chn] = True  # self.make_output_chn(chn)
-        if waittime < 0:
-            phase = "({waittime})".format(waittime=-waittime)
+        chn =  self.get_INTEGER_or_literal(chn,"emit(chn=x,...)")
+        if isinstance (chn,int):
+            self.VFILE(triggers, chn) 
+        waittime =  self.get_INTEGER_or_literal(waittime,"emit(...,waittime=x,...)")
+        if isinstance (waittime,int) and (waittime < 0):
+            #Absolut timing should not be allowed
+            raise ValueError("The emit() event should have a wait time in ps that grow in monotonic order")
+        # safety check
+        if chn in self.emit_consistent_delay_length:
+            old_waittime= self.emit_consistent_delay_length[chn]
+            if old_waittime != waittime: 
+                raise ValueError("All emit()s to the channel {} must meet the equal delay length condition, but both emit(waittime={}) and emit(waittime={}) were found.".format(chn,old_waittime,waittime))
         else:
-            phase = "(AbsTime_ps+{waittime})".format(waittime=waittime)
-        if repeat > 1:
+            self.emit_consistent_delay_length[chn] = waittime
+        phase = "(AbsTime_ps+{waittime})".format(waittime=waittime)
+        repeat = self.get_INTEGER_or_literal(repeat)
+        period = self.get_INTEGER_or_literal(period)
+        if isinstance (repeat,str) or (isinstance (repeat,int) and repeat > 1):
             code = """
                 for emit_times in range(0,{repeat}):
                     eta_ret+=VCHN_put(VCHN,nb.int64({phase}+{period}*(emit_times)),nb.int8({chn}))
                 """.format(phase=phase,
-                           chn=chn, waittime=int(waittime), repeat=repeat, period=period)
+                           chn=chn,  repeat=repeat, period=period)
         else:
-            code = """eta_ret+=VCHN_put(VCHN,nb.int64(AbsTime_ps+{waittime}),nb.int8({chn}))""".format(phase=phase,
-                                                                                                  chn=chn,
-                                                                                                  waittime=int(waittime))
+            code = """eta_ret+=VCHN_put(VCHN,nb.int64({phase}),nb.int8({chn}))""".format(phase=phase,
+                                                                                                  chn=chn)
         self.EMIT_LINE(triggers, code)
 
     def cancel_emit(self, triggers, chn):
-        chn = int(chn)
+        chn = self.get_INTEGER_or_literal(chn)
         self.EMIT_LINE(
             triggers, """eta_ret+=VCHN_put(VCHN,nb.int64(9223372036854775807),nb.int8({chn}))""".format(chn=chn))
 
