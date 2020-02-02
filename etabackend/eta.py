@@ -17,12 +17,12 @@ from etabackend.etalang import recipe_compiler
 
 class ETA(ETA_CUT):
     def __init__(self):
+        super().__init__()
+
         self.eta_compiled_code = None
         self.usercode_vars = None
         self.recipe_metadata = None
-        self.logger = logging.getLogger(__name__)
         self.executor = ThreadPoolExecutor()
-        logging.basicConfig()
 
     def recipe_update(self):
         raise NotImplementedError("recipe_update")
@@ -30,9 +30,7 @@ class ETA(ETA_CUT):
     def send(self, text, endpoint):
         raise NotImplementedError("send")
 
-    def compile_eta(self, etaobj=None, verbose=print):
-        if verbose == True:
-            verbose = self.send
+    def compile_eta(self, etaobj=None):
         try:
             self.eta_compiled_code = None
             self.usercode_vars = None
@@ -45,28 +43,18 @@ class ETA(ETA_CUT):
             self.mainloop = {}
             self.result_fetcher = {}
             self.initializer = {}
+        except Exception:
+            self.send("", "discard") #FIXME
+            self.logger.warn("Compilation failed.", exc_info=True)
+            self.logfrontend.warn("Compilation failed.", exc_info=True)
 
-        except Exception as e:
-            if not(verbose):
-                verbose = print
-            verbose("", "discard")
-            verbose('[' + str(type(e).__name__) + ']' + str(e), "err")
-            verbose("Compilation failed.")
-            self.logger.error(str(e), exc_info=True)
 
-    def compile_group(self, group="main", verbose=print):
-        if (verbose == True):
-            verbose = self.send
-
+    def compile_group(self, group="main"):
         if not (group in self.eta_compiled_code):
-            if (not verbose):
-                verbose = print
-            verbose(
-                "Can not eta.run() on a non-existing group {}.".format(group), "err")
+            self.logfrontend.warn("Can not eta.run() on a non-existing group {}.".format(group))
             return None
         if not (group in self.mainloop):
-            if verbose:
-                verbose("Compiling instrument group {}.".format(group))
+            self.logfrontend.info("Compiling instrument group {}.".format(group))
             # cache compiling results
             loc = jit_linker.link_jit_code(self.eta_compiled_code[group])
             self.mainloop[group] = loc["mainloop"]
@@ -74,55 +62,46 @@ class ETA(ETA_CUT):
             self.initializer[group] = loc["initializer"]
         return self.initializer[group], self.mainloop[group], self.result_fetcher[group]
 
-    def run(self, *vargs, resume_task=None, group="main", verbose=True, return_task=False, return_results=True, **kwargs):
-
-        if (verbose == True):
-            verbose = self.send
+    def run(self, *vargs, resume_task=None, group="main", return_task=False, return_results=True, **kwargs):
         # linking
-        initializer, mainloop, result_fetcher = self.compile_group(
-            group=group, verbose=verbose)
+        initializer, mainloop, result_fetcher = self.compile_group(group=group)
 
         # resuming task
         if resume_task is None:
-            if verbose:
-                verbose(
-                    "ETA.RUN: Starting new analysis using Instrument group {}.".format(group), "running")
+            self.logfrontend.info("ETA.RUN: Starting new analysis using Instrument group {}.".format(group))
+            self.send("", 'running') # FIXME
             (thread1, ts, ctxs, _) = (None,None,None,None)
         else:
-            if verbose:
-                verbose(
-                    "ETA.RUN: Resuming analysis using Instrument group {}.".format(group), "running")
+            self.logfrontend.info("ETA.RUN: Resuming analysis using Instrument group {}.".format(group))
+            self.send("", 'running') # FIXME
             (thread1, ts, ctxs, _) = resume_task
 
         # check for everything
         if thread1:
-            print("Waiting for the task for resumtion to complete...")
-            print(thread1.result())
-            print("Task for resumtion has completed.")
+            self.logger.info("Waiting for the task for resumtion to complete...")
+            self.logger.debug(thread1.result())
+            self.logger.info("Task for resumtion has completed.")
         if ts is None:
             ts = time.time()  # start timing
         if ctxs is None:
-            print("\nInitializing context.")
+            self.logger.info("Initializing context.")
             ctxs = initializer()
 
         thread1 = self.executor.submit(
-            self.ctx_loop, *vargs, ctxs=ctxs, mainloop=mainloop, verbose=verbose, **kwargs)
+            self.ctx_loop, *vargs, ctxs=ctxs, mainloop=mainloop, **kwargs)
 
         task = (thread1, ts, ctxs, result_fetcher)
 
         if return_results and return_task:
-            return self.aggregrate([task], verbose=verbose), task
+            return self.aggregrate([task]), task
         elif return_task:
             return task
         elif return_results:
-            return self.aggregrate([task], verbose=verbose)
+            return self.aggregrate([task])
         else:
             raise ValueError("You must return at least one thing!")
 
-    def ctx_loop(self, sources, ctxs=None, mainloop=None, verbose=True, max_autofeed=0):
-        if (verbose == True):
-            verbose = self.send
-
+    def ctx_loop(self, sources, ctxs=None, mainloop=None, max_autofeed=0):
         # auto-feed loop
         loop_count = 0
         ret = 0
@@ -137,11 +116,8 @@ class ETA(ETA_CUT):
                 feed_clip = sources
                 sources = None  # consume this source
             else:
-                if (not verbose):
-                    verbose = print
-                if verbose:
-                    verbose(
-                        "ETA.RUN: the first parameter should be list of generator functions which yields Clips. Try cg = self.incremental_cut(your_filename).", "err")
+                self.logfrontend.warn("ETA.RUN: the first parameter should be list of generator functions which yields Clips. Try cg = self.incremental_cut(your_filename).")
+            
             trueending = False
             if (not feed_clip):
                 trueending = True
@@ -163,22 +139,19 @@ class ETA(ETA_CUT):
                 used_clip_result = Clip()
                 used_clip_result.from_parser_output(ctxs[1])
                 if used_clip_result.check_consumed():
-                    print("Auto-fill triggered.")
+                    self.logger.debug("Auto-fill triggered.")
                     feed_clip.overflowcorrection = used_clip_result.overflowcorrection
                     # replace to new Clip info
                     ctxs[1][:] = feed_clip.to_reader_input() # 7th for the global time shift
                     ctxs[0] = feed_clip.buffer
-            print("Executing analysis program...")
+            self.logger.info("Executing analysis program...")
             ret+= mainloop(*ctxs)
            
             loop_count += 1
 
         return ret
 
-    def aggregrate(self, list_of_tasks, sum_results=True, verbose=True):
-        if (verbose == True):
-            verbose = self.send
-
+    def aggregrate(self, list_of_tasks, sum_results=True):
         rets = []
 
         for task in list_of_tasks:
@@ -186,9 +159,9 @@ class ETA(ETA_CUT):
             # join process
             print(thread1.result())
             te = time.time()
-            if verbose:
-                verbose('ETA.RUN: Analysis is finished in {0:.2f} seconds.'.format((te - ts)),
-                        "stopped")
+            
+            self.logfrontend.info('ETA.RUN: Analysis is finished in {0:.2f} seconds.'.format((te - ts))) 
+            self.send("", "stopped") # FIXME
 
             # debugging
             """
@@ -207,12 +180,11 @@ class ETA(ETA_CUT):
                 for each_graph in rets[0].keys():
                     rets[0][each_graph] += rets[each][each_graph]
             result = rets[0]
-            if verbose:
-                verbose('ETA.RUN: Aggregating {} results.'.format(
-                    len(rets)), "stopped")
+            self.logfrontend.info('ETA.RUN: Aggregating {} results.'.format(
+                              len(rets)))
+            self.send("", "stopped") # FIXME
         else:
-            if verbose:
-                verbose("ETA.RUN: Listing results for each task.")
+            self.logfrontend.info("ETA.RUN: Listing results for each task.")
             result = rets
 
         return result

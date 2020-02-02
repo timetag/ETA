@@ -1,7 +1,7 @@
 #!/bin/env python
 import sys
 import os
-
+import logging
 
 if __name__ == '__main__':
     PACKAGE_PARENT = '..'
@@ -17,5 +17,7 @@ if __name__ == '__main__':
         os.path.normpath(os.path.dirname(__file__)))
     if path_of_script != path_of_imported:
         raise ValueError("A wrong version of etabackend is loaded.")
+
+    logging.basicConfig(level=logging.INFO)      
 
     backend.main()

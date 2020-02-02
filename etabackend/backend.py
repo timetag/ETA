@@ -1,33 +1,30 @@
 import json
+import logging
 import multiprocessing
 import os
 import sys
 import traceback
 import time
 import threading
+
 from subprocess import run
 
 ETA_VERSION = "v0.6.6"
+
 try:
     # deps check
     import etabackend.webinstall as webinstall
     import etabackend.ws_broadcast as ws_broadcast
     from etabackend.eta import ETA
 except Exception as e:
-    print("[!] It seems that ETA can not find all of its dependencies:",
-          e, file=sys.stderr)
-    inp = input(
-        "[*] Do you want to try `pip install etabackend` to fix it? (yes) ")
-    if 'y' in inp.lower():
-        run([sys.executable, '-m', 'pip', '--disable-pip-version-check',
-             'install', '--find-links=.', 'etabackend', '--upgrade'])
-    input("Please restart ETA backend.")
-
+    logger = logging.getLogger(__name__)
+    logger.exception("[!] It seems that ETA can not find all of its dependencies. Try pip install etabackend to fix it.")
 
 class BACKEND(ETA):
 
     def __init__(self, run_forever=True):
-        super(BACKEND, self).__init__()
+        super().__init__()
+
         self.ETA_VERSION = ETA_VERSION
 
         self.hostlisten = os.environ.get('ETA_LISTEN') or "127.0.0.1"
@@ -37,22 +34,27 @@ class BACKEND(ETA):
 
         def new_message(client, server, message):
             obj = json.loads(message)
-            print("client " + str(client["address"]
-                                  ) + " start " + obj["method"])
+            self.logger.info("client " + str(client["address"]) + " start " + obj["method"])
             getattr(self, obj["method"])(*obj["args"])
 
         def new_client(client, server):
-            print("New client " + str(client["address"]) +
-                  " connected to port " + str(self.hostport) + ". ")
-        self.server = ws_broadcast.WebsocketServer(
-            int(self.hostport), host=self.hostlisten)
-        print("ETA Backend URL: ws://{}:{}".format(self.hostip, self.hostport))
+            self.logger.info("New client " + str(client["address"]) +
+                        " connected to port " + str(self.hostport) + ". ")
+        self.server = ws_broadcast.WebsocketServer(int(self.hostport), host=self.hostlisten)
+
+        self.logger.info("ETA Backend URL: ws://{}:{}".format(self.hostip, self.hostport))
+        
         self.server.set_fn_new_client(new_client)
         self.server.set_fn_message_received(new_message)
+
+        self.logfrontend.addHandler(WebClientHandler(self.send))
+
         if run_forever: self.server.run_forever()
         self.eta_compiled_code = None
 
     def send(self, text, endpoint="log"):
+        """
+        """
         self.server.send_message_to_all(json.dumps([endpoint, str(text)]))
 
     def recipe_update(self):
@@ -76,7 +78,7 @@ class BACKEND(ETA):
                 return each["config"]
 
     def recipe_set_filename(self, etaobj, id, key):
-        self.compile_eta(etaobj, verbose=False)
+        self.compile_eta(etaobj)
         if self.eta_compiled_code is not None:
             import tkinter as tk
             from tkinter.filedialog import askopenfilename
@@ -102,10 +104,9 @@ class BACKEND(ETA):
 
     def display(self, app=None):
         if app is None:
-            self.send(
-                "No display dashboard created. Use 'app = dash.Dash() to create a Dash graph.' .", "err")
+            self.logfrontend.warning("No display dashboard created. Use 'app = dash.Dash()' to create a Dash graph.")
         else:
-            self.send("ETA.DISPLAY: Starting Script Panel.")
+            self.logfrontend.info("ETA.DISPLAY: Starting Script Panel.")
             try:
                 if str(type(app)) == "<class 'dash.dash.Dash'>":
                     from flask import request
@@ -118,7 +119,7 @@ class BACKEND(ETA):
                                 'Not running with the Werkzeug Server')
                         func()
                         self.displaying = False
-                        self.send("Dashboard shutting down. ")
+                        self.logfrontend.info("Dashboard shutting down.")
                         self.send("http://localhost:5000", "discard")
                         response = app.server.make_response('Hello, World')
                         response.headers.add(
@@ -137,7 +138,7 @@ class BACKEND(ETA):
                         bokserver.unlisten()
                         bokserver.stop()
                         self.displaying = False
-                        self.send("Dashboard shutting down. ")
+                        self.logfrontend.info("Dashboard shutting down.")
                         self.send("http://localhost:5000", "discard")
 
                     import asyncio
@@ -150,36 +151,35 @@ class BACKEND(ETA):
                     thread3.daemon = True
                     thread3.start()
 
-                self.send(
-                    "ETA.DISPLAY: Script Panel is running at http://{}:5000.".format(self.hostip))
+                self.logfrontend.info("ETA.DISPLAY: Script Panel is running at http://{}:5000.".format(self.hostip))
                 self.send("http://{}:5000".format(self.hostip), "dash")
                 self.displaying = True
             except Exception as e:
-                self.send(str(e), "err")
+                self.logfrontend.error(exc_info=True)
                 self.displaying = False
                 self.logger.error(str(e), exc_info=True)
 
     def process_eta(self, etaobj=None, id="code", group="main"):
         self.send("none", "discard")  # show a neutral icon
         if self.displaying:
-            self.send(
+            self.logfrontend.info(
                 "Script Panel is serving at http://{}:5000.".format(self.hostip))
-            self.send(
+            self.logfrontend.warn(
                 "The current script is not executed, because a previously executed script is still serving the results.")
-            self.send("http://{}:5000".format(self.hostip), "dash")
+            self.send("http://{}:5000".format(self.hostip), "dash") # FIXME
         else:
             with open("server.eta", 'w') as file:
                 file.write(json.dumps(etaobj))
 
             self.eta_compiled_code = None
-            self.compile_eta(etaobj, verbose=True)
+            self.compile_eta(etaobj)
             # ETA File version check
             if self.recipe_get_parameter("ETA_VERSION") is not None and self.recipe_get_parameter("ETA_VERSION") is not self.ETA_VERSION:
-                self.send(
+                self.logfrontend.warn(
                     "ETA_VERSION: the recipe requires {} while ETA Backend is {}, you might encounter compatibility issues.".format(self.recipe_get_parameter("ETA_VERSION"), self.ETA_VERSION))
 
             if self.eta_compiled_code is not None:
-                self.send(
+                self.logfrontend.info(
                     "Executing code in Script Panel in group {}...".format(group))
                 try:
                     glob = {"eta": self, "quTAG_FORMAT_BINARY": 0, "FORMAT_SI": 1,
@@ -193,20 +193,46 @@ class BACKEND(ETA):
                 except Exception as e:
                     if (str(type(e)).find("numba")>=0):
                         self.logger.error(str(e), exc_info=True)
-                        self.send(
-                            "An internal error has occurred when numba is compiling the embedded code.", "err")
-                        self.send("Send your recipe to Github Issues.")
+                        self.logfrontend.error(
+                            "An internal error has occurred when numba is compiling the embedded code.")
                     else:
-
-                        self.send(
-                            '[' + str(type(e).__name__) + ']' + str(e), "err")
+                        self.logfrontend.error(
+                            "This error is caused by user-written code in the Script Panel, instead of ETA itself.", exc_info=True)
                         self.logger.error(str(e), exc_info=True)
-                        self.send(
-                            "This error is caused by user-written code in the Script Panel, instead of ETA itself.")
                     return
-                self.send("\n")
-                self.send(
+                self.logfrontend.info(
                     "Don't forget to save the recipe and share it!")
+
+
+class FrontendFormatter(logging.Formatter):
+
+    def formatException(self, e):
+        """
+        Hide the Stacktrace from the Message
+        FIXME Include the stacktrace in the json array.
+        """
+        return None
+
+
+class WebClientHandler(logging.Handler):
+    def __init__(self, send_function):
+        logging.Handler.__init__(self)
+        self.send = send_function
+        self.formatter = FrontendFormatter()
+
+    def _find_endpoint(self, levelname):
+        if levelname == "ERROR":
+            return "err"
+        elif levelname == "WARNING":
+            return "err"
+        elif levelname == "INFO":
+            return "log"
+
+        return "log"
+
+    def emit(self, record):
+        msg = self.format(record)
+        self.send(msg, self._find_endpoint(record.levelname))
 
 def main():
     print(""" 
@@ -218,6 +244,7 @@ def main():
                           
 ==============================
 """)
-    print("ETA_VERSION: "+ETA_VERSION)
+    logger = logging.getLogger(__name__)
+    logger.info("ETA_VERSION: "+ETA_VERSION)
     #print("Using Python libraries from ", sys.path)
     ws = BACKEND()

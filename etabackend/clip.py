@@ -1,5 +1,6 @@
 import os
 import time
+import logging
 
 from etabackend.parser_header import parse_header
 
@@ -88,34 +89,26 @@ class Clip():
 
 class ETA_CUT():
     def __init__(self):
-        pass
+        self.logger = logging.getLogger(__name__)
+        self.logfrontend = logging.getLogger("etabackend.frontend")
 
     # example generators
-    def simple_cut(self, filename, cuts=1, reuse_clips=True, keep_indexes=None,  verbose=print, **kwargs):
-        if (verbose == True):
-            verbose = print
-
+    def simple_cut(self, filename, cuts=1, reuse_clips=True, keep_indexes=None, **kwargs):
         last_clip = self.clip_from_file(
             filename, read_events=1,  **kwargs)
-        if verbose:
-            verbose(
-                "ETA.simple_cut: The file '{filename}' will be cut into {cuts} equal size Clips. ".format(filename=filename,
-                                                                                                          cuts=cuts))
+        self.logfrontend.info("ETA.simple_cut: The file '{filename}' will be cut into {cuts} equal size Clips. ".format(filename=filename,
+                                                                                                                    cuts=cuts))
         TTF_header_offset = last_clip.fseekpoint
         TTF_filesize = os.path.getsize(str(filename))
 
-        NumRecords = (
-            TTF_filesize - TTF_header_offset) // last_clip.BytesofRecords
+        NumRecords = (TTF_filesize - TTF_header_offset) // last_clip.BytesofRecords
 
         # build a clip for header
         last_clip.fendpoint = last_clip.fseekpoint
 
-        return self.incremental_cut(filename, rec_per_cut=((NumRecords+cuts-1) // cuts), modify_clip=last_clip, reuse_clips=reuse_clips, keep_indexes=keep_indexes, verbose=verbose, **kwargs)
+        return self.incremental_cut(filename, rec_per_cut=((NumRecords+cuts-1) // cuts), modify_clip=last_clip, reuse_clips=reuse_clips, keep_indexes=keep_indexes, **kwargs)
 
-    def incremental_cut(self, filename, modify_clip=None, rec_per_cut=1024*1024*10, reuse_clips=True, keep_indexes=None, verbose=print, **kwargs):
-        if (verbose == True):
-            verbose = print
-
+    def incremental_cut(self, filename, modify_clip=None, rec_per_cut=1024*1024*10, reuse_clips=True, keep_indexes=None, **kwargs):
         last_clip = modify_clip
         currentclip = True
         counter = 0
@@ -128,11 +121,9 @@ class ETA_CUT():
                 # copy information from last clip
                 currentclip.from_parser_output(last_clip.to_reader_input())
             currentclip = self.clip_from_file(
-                filename, modify_clip=currentclip, read_events=rec_per_cut, verbose=False, **kwargs)
+                filename, modify_clip=currentclip, read_events=rec_per_cut, **kwargs)
             if currentclip:
-                if verbose:
-                    verbose("Analysis progress: {:.2f} ({}/{})".format(
-                        (currentclip.fseekpoint/TTF_filesize)*100.0, currentclip.fseekpoint, TTF_filesize))
+                self.logfrontend.info("Analysis progress: {:.2f} ({}/{})".format((currentclip.fseekpoint/TTF_filesize)*100.0, currentclip.fseekpoint, TTF_filesize))
                 if keep_indexes:
                     if type(keep_indexes) == list:
                         if counter in keep_indexes:
@@ -150,10 +141,8 @@ class ETA_CUT():
 
     # low-level API
 
-    def clip_from_file(self, filename, modify_clip=None, read_events=0, format=-1, wait_timeout=0, verbose=print):
+    def clip_from_file(self, filename, modify_clip=None, read_events=0, format=-1, wait_timeout=0):
         filename = str(filename)  # supporting pathlib
-        if (verbose == True):
-            verbose = print
         if modify_clip == None:
             ret1, parse_output = parse_header(filename, format)
             if ret1 is not 0:
@@ -189,15 +178,12 @@ class ETA_CUT():
         while not fileactualsize >= temp_clip.fendpoint:
             waited_for += 0.01
             if waited_for > wait_timeout:
-                if verbose:
-                    verbose(
-                        "ETA.clip_from_file: Timeout when waiting for the next cut, round to file boundry.")
+                self.logfrontend.info("ETA.clip_from_file: Timeout when waiting for the next cut, round to file boundry.")
                 temp_clip.fendpoint = fileactualsize
                 break
-            if verbose:
-                verbose("ETA.clip_from_file: Waiting for file {} to grow from {} to {} bytes.".format(filename,
-                                                                                                      fileactualsize,
-                                                                                                      temp_clip.fendpoint))
+            self.logfrontend.info("ETA.clip_from_file: Waiting for file {} to grow from {} to {} bytes.".format(filename,
+                                                                                                            fileactualsize,
+                                                                                                            temp_clip.fendpoint))
             # hard-coded checking period is probably not good.
             time.sleep(0.01)
 
@@ -212,13 +198,9 @@ class ETA_CUT():
             temp_clip.batch_actualread_length = f.readinto(temp_clip.buffer)
         # fail when zero size
         if temp_clip.batch_actualread_length == 0:
-            if verbose:
-                verbose(
-                    "ETA.clip_from_file: The file '{}' is not long enough for the Clip. ".format(filename))
+            self.logfrontend.info("ETA.clip_from_file: The file '{}' is not long enough for the Clip. ".format(filename))
             return False
         else:
-            if verbose:
-                verbose(
-                    "ETA.clip_from_file: The file '{}' section [{},{}) is loaded into the Clip. ".format(filename, temp_clip.fseekpoint, temp_clip.fendpoint))
+            self.logfrontend.info("ETA.clip_from_file: The file '{}' section [{},{}) is loaded into the Clip. ".format(filename, temp_clip.fseekpoint, temp_clip.fendpoint))
 
         return temp_clip.validate()

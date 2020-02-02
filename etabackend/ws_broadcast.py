@@ -13,9 +13,6 @@ if sys.version_info[0] < 3:
 else:
     from socketserver import ThreadingMixIn, TCPServer, StreamRequestHandler
 
-logger = logging.getLogger(__name__)
-logging.basicConfig()
-
 '''
 +-+-+-+-+-------+-+-------------+-------------------------------+
  0                   1                   2                   3
@@ -53,7 +50,8 @@ class API():
 
     def run_forever(self):
         try:
-            logger.info("Listening on port %d for clients.." % self.port)
+            logger = logging.getLogger(__name__)
+            logger.info("Listening on port {:d} for clients..".format(self.port))
             self.serve_forever()
         except KeyboardInterrupt:
             self.server_close()
@@ -111,8 +109,7 @@ class WebsocketServer( TCPServer, API):
                 }
     """
 
-    def __init__(self, port, host='127.0.0.1', loglevel=logging.WARNING):
-        logger.setLevel(loglevel)
+    def __init__(self, port, host='127.0.0.1'):
         TCPServer.__init__(self, (host, port), WebSocketHandler)
         self.port = self.socket.getsockname()[1]
         self.allow_reuse_address = True
@@ -163,6 +160,7 @@ class WebSocketHandler(StreamRequestHandler):
 
     def __init__(self, socket, addr, server):
         self.server = server
+        self.logger = logging.getLogger(__name__)
         StreamRequestHandler.__init__(self, socket, addr, server)
 
     def setup(self):
@@ -191,8 +189,8 @@ class WebSocketHandler(StreamRequestHandler):
             b1, b2 = self.read_bytes(2)
         except SocketError as e:  # to be replaced with ConnectionResetError for py3
             if e.errno == errno.ECONNRESET:
-                logger.info("Client closed connection.")
-                print("Error: {}".format(e))
+                self.logger.info("Client closed connection.")
+                self.logger.error("Error: {}".format(e))
                 self.keep_alive = 0
                 return
             b1, b2 = 0, 0
@@ -205,18 +203,18 @@ class WebSocketHandler(StreamRequestHandler):
         payload_length = b2 & PAYLOAD_LEN
 
         if opcode == OPCODE_CLOSE_CONN:
-            logger.info("Client asked to close connection.")
+            self.logger.info("Client asked to close connection.")
             self.keep_alive = 0
             return
         if not masked:
-            logger.warn("Client must always be masked.")
+            self.logger.warn("Client must always be masked.")
             self.keep_alive = 0
             return
         if opcode == OPCODE_CONTINUATION:
-            logger.warn("Continuation frames are not supported.")
+            self.logger.warn("Continuation frames are not supported.")
             return
         elif opcode == OPCODE_BINARY:
-            logger.warn("Binary frames are not supported.")
+            self.logger.warn("Binary frames are not supported.")
             return
         elif opcode == OPCODE_TEXT:
             opcode_handler = self.server._message_received_
@@ -225,7 +223,7 @@ class WebSocketHandler(StreamRequestHandler):
         elif opcode == OPCODE_PONG:
             opcode_handler = self.server._pong_received_
         else:
-            logger.warn("Unknown opcode %#x." % opcode)
+            self.logger.warn("Unknown opcode %#x." % opcode)
             self.keep_alive = 0
             return
 
@@ -257,14 +255,14 @@ class WebSocketHandler(StreamRequestHandler):
         if isinstance(message, bytes):
             message = try_decode_UTF8(message)  # this is slower but ensures we have UTF-8
             if not message:
-                logger.warning("Can\'t send message, message is not valid UTF-8")
+                self.logger.warning("Can\'t send message, message is not valid UTF-8")
                 return False
         elif sys.version_info < (3,0) and (isinstance(message, str) or isinstance(message, unicode)):
             pass
         elif isinstance(message, str):
             pass
         else:
-            logger.warning('Can\'t send message, message has to be a string or bytes. Given type is %s' % type(message))
+            self.logger.warning('Can\'t send message, message has to be a string or bytes. Given type is {}'.format(type(message)))
             return False
 
         header = bytearray()
@@ -321,7 +319,7 @@ class WebSocketHandler(StreamRequestHandler):
         try:
             key = headers['sec-websocket-key']
         except KeyError:
-            logger.warning("Client tried to connect but was missing a key")
+            self.logger.warning("Client tried to connect but was missing a key")
             self.keep_alive = False
             return
 
@@ -354,6 +352,7 @@ def encode_to_UTF8(data):
     try:
         return data.encode('UTF-8')
     except UnicodeEncodeError as e:
+        logger = logging.getLogger(__name__)
         logger.error("Could not encode data to UTF-8 -- %s" % e)
         return False
     except Exception as e:
@@ -375,6 +374,7 @@ def try_decode_UTF8(data):
 
 class broadcast:
     def __init__(self, PORT=5678):
+        self.logger = logging.getLogger(__name__)
         self.last_sent = None
         self.sent_record = None
         self.port = PORT
@@ -386,14 +386,14 @@ class broadcast:
                     # print("client "+str(client["address"])+" asks for update")
                     # print(self.sent_record)
             else:
-                print("client " + str(client["address"]) + " asks " + message)
+                self.logger.debug("client " + str(client["address"]) + " asks " + message)
 
         def new_client(client, server):
-            print("New client " + str(client["address"]) +
-                  " connected to port " + str(PORT) + ". ")
+            self.logger.info("New client " + str(client["address"]) +
+                             " connected to port " + str(PORT) + ". ")
 
         self.server = WebsocketServer(
-            PORT, host='0.0.0.0', loglevel=logging.INFO)
+            PORT, host='0.0.0.0')
         self.server.set_fn_new_client(new_client)
         self.server.set_fn_message_received(new_message)
 
