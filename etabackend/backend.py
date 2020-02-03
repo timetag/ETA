@@ -15,7 +15,7 @@ try:
     # deps check
     import etabackend.webinstall as webinstall
     import etabackend.ws_broadcast as ws_broadcast
-    from etabackend.eta import ETA
+    from etabackend.eta import ETA, ETACompilationException
 except Exception as e:
     logger = logging.getLogger(__name__)
     logger.exception("[!] It seems that ETA can not find all of its dependencies. Try pip install etabackend to fix it.")
@@ -48,6 +48,9 @@ class BACKEND(ETA):
         self.server.set_fn_message_received(new_message)
 
         self.logfrontend.addHandler(WebClientHandler(self.send))
+        self.add_callback('running', lambda: self.send('', 'running'))
+        self.add_callback('stopped', lambda: self.send('', 'stopped'))
+        self.add_callback('update-recipe', lambda: self.recipe_update())
 
         if run_forever: self.server.run_forever()
         self.eta_compiled_code = None
@@ -78,7 +81,12 @@ class BACKEND(ETA):
                 return each["config"]
 
     def recipe_set_filename(self, etaobj, id, key):
-        self.compile_eta(etaobj)
+        try:
+            self.compile_eta(etaobj)
+        except ETACompilationException:
+            self.send('', 'discard')
+            pass
+
         if self.eta_compiled_code is not None:
             import tkinter as tk
             from tkinter.filedialog import askopenfilename
@@ -172,7 +180,12 @@ class BACKEND(ETA):
                 file.write(json.dumps(etaobj))
 
             self.eta_compiled_code = None
-            self.compile_eta(etaobj)
+            
+            try:
+                self.compile_eta(etaobj)
+            except ETACompilationException:
+                self.send('', 'discard')
+            
             # ETA File version check
             if self.recipe_get_parameter("ETA_VERSION") is not None and self.recipe_get_parameter("ETA_VERSION") is not self.ETA_VERSION:
                 self.logfrontend.warn(

@@ -14,6 +14,15 @@ import etabackend.jit_linker as jit_linker
 from etabackend.clip import ETA_CUT, Clip
 from etabackend.etalang import recipe_compiler
 
+class ETAException(Exception):
+    pass
+
+class ETACompilationException(ETAException):
+    pass
+
+class ETANonExistingGroupException(ETAException):
+    #FIXME Accept group name
+    pass
 
 class ETA(ETA_CUT):
     def __init__(self):
@@ -23,9 +32,10 @@ class ETA(ETA_CUT):
         self.usercode_vars = None
         self.recipe_metadata = None
         self.executor = ThreadPoolExecutor()
-
-    def recipe_update(self):
-        raise NotImplementedError("recipe_update")
+        self._observer = {"running": [],
+                          "stopped": [],
+                          "update-recipe": [],
+                          }
 
     def send(self, text, endpoint):
         raise NotImplementedError("send")
@@ -38,21 +48,20 @@ class ETA(ETA_CUT):
             self.eta_compiled_code, self.usercode_vars, self.recipe_metadata = recipe_compiler.compile_eta(
                 etaobj)
 
-            self.recipe_update()
+            self.notify_callback('update-recipe')
             # clear cache
             self.mainloop = {}
             self.result_fetcher = {}
             self.initializer = {}
-        except Exception:
-            self.send("", "discard") #FIXME
-            self.logger.warn("Compilation failed.", exc_info=True)
-            self.logfrontend.warn("Compilation failed.", exc_info=True)
-
+        except Exception as e:
+            self.logger.warning("Compilation failed.", exc_info=True)
+            self.logfrontend.warning("Compilation failed.", exc_info=True)
+            raise ETACompilationException from e
 
     def compile_group(self, group="main"):
         if not (group in self.eta_compiled_code):
-            self.logfrontend.warn("Can not eta.run() on a non-existing group {}.".format(group))
-            return None
+            raise ETANonExistingGroupException("Can not eta.run() on a non-existing group {}.".format(group))
+            #self.logfrontend.warning("Can not eta.run() on a non-existing group {}.".format(group)) FIXME
         if not (group in self.mainloop):
             self.logfrontend.info("Compiling instrument group {}.".format(group))
             # cache compiling results
@@ -69,11 +78,11 @@ class ETA(ETA_CUT):
         # resuming task
         if resume_task is None:
             self.logfrontend.info("ETA.RUN: Starting new analysis using Instrument group {}.".format(group))
-            self.send("", 'running') # FIXME
+            self.notify_callback('running')
             (thread1, ts, ctxs, _) = (None,None,None,None)
         else:
             self.logfrontend.info("ETA.RUN: Resuming analysis using Instrument group {}.".format(group))
-            self.send("", 'running') # FIXME
+            self.notify_callback('running')
             (thread1, ts, ctxs, _) = resume_task
 
         # check for everything
@@ -161,7 +170,7 @@ class ETA(ETA_CUT):
             te = time.time()
             
             self.logfrontend.info('ETA.RUN: Analysis is finished in {0:.2f} seconds.'.format((te - ts))) 
-            self.send("", "stopped") # FIXME
+            self.notify_callback('stopped')
 
             # debugging
             """
@@ -182,9 +191,25 @@ class ETA(ETA_CUT):
             result = rets[0]
             self.logfrontend.info('ETA.RUN: Aggregating {} results.'.format(
                               len(rets)))
-            self.send("", "stopped") # FIXME
+            self.notify_callback('stopped')
         else:
             self.logfrontend.info("ETA.RUN: Listing results for each task.")
             result = rets
 
         return result
+
+    def add_callback(self, name, func):
+        if func not in self._observer[name]:
+            self._observer[name].append(func)
+        else:
+            pass
+    
+    def del_callback(self, name, func):
+        if func in self._observer[name]:
+            self._observer[name].remove(func)
+        else:
+            pass
+    
+    def notify_callback(self, name):
+        for func in self._observer[name]:
+            func()
