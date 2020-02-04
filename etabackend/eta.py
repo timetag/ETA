@@ -37,9 +37,6 @@ class ETA(ETA_CUT):
                           "update-recipe": [],
                           }
 
-    def send(self, text, endpoint):
-        raise NotImplementedError("send")
-
     def compile_eta(self, etaobj=None):
         try:
             self.eta_compiled_code = None
