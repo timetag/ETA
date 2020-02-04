@@ -9,16 +9,9 @@ import threading
 
 from subprocess import run
 
-ETA_VERSION = "v0.6.6"
-
-try:
-    # deps check
-    import etabackend.webinstall as webinstall
-    import etabackend.ws_broadcast as ws_broadcast
-    from etabackend.eta import ETA, ETACompilationException
-except Exception as e:
-    logger = logging.getLogger(__name__)
-    logger.exception("[!] It seems that ETA can not find all of its dependencies. Try pip install etabackend to fix it.")
+import etabackend.webinstall as webinstall
+import etabackend.ws_broadcast as ws_broadcast
+from etabackend.eta import ETA, ETACompilationException
 
 class BACKEND(ETA):
 
