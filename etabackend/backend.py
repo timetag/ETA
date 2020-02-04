@@ -13,6 +13,17 @@ import etabackend.webinstall as webinstall
 import etabackend.ws_broadcast as ws_broadcast
 from etabackend.eta import ETA, ETACompilationException
 
+ETA_VERSION = "v0.6.6"
+ETA_BANNER = \
+""" 
+    ______  ______    ___ 
+   / ____/ /_  __/   /   |
+  / /___    / /     / /| |
+ / /___    / /     / ___ |
+/_____/   /_/     /_/  |_|
+                          
+==============================
+"""
 class BACKEND(ETA):
 
     def __init__(self, run_forever=True):
@@ -250,6 +261,7 @@ def main():
                           
 ==============================
 """)
+    print(ETA_BANNER)
     logger = logging.getLogger(__name__)
     logger.info("ETA_VERSION: "+ETA_VERSION)
     #print("Using Python libraries from ", sys.path)
