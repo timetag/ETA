@@ -24,11 +24,11 @@ class TestLifetimeRecipe:
 
         eta_engine = etabackend.eta.ETA()
         eta_engine.compile_eta(recipe_obj)
-        cut=eta_engine.simple_cut(test_folder / "hydraharp" / "data" / "200204_hydraharp_T3_g2_320MHz.timeres", 4)
+        cut=eta_engine.simple_cut(test_folder / "hydraharp" / "data" / "200204_HH400_T3_320MHz_HBT.timeres", 4)
         result=eta_engine.run(cut, group='compile')
 
         hist1=result["t1"]
-        with np.load(test_folder / "hydraharp" / "data" / "results" / "200204_hydraharp_T3_lifetime_320MHz.npz") as ref_data:
+        with np.load(test_folder / "hydraharp" / "data" / "results" / "200204_HH400_T3_320MHz_HBT_lifetime.npz") as ref_data:
             assert np.allclose(hist1, ref_data['hist1'])
 
     def test_lifetime_recipe_Qutag(self):
