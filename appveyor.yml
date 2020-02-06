@@ -32,13 +32,13 @@ install:
 - ps: >-
     go get github.com/itchio/gothub
     
-    gothub info -u timetag -r ETA
+    echo gothub info -u timetag -r ETA
 
     python -m pip --version
 
     python -m pip install wheel --upgrade
 
-    pip -m pip install tox --upgrade
+    python -m pip install tox --upgrade
 
     Install-Product node 8 x64
 
@@ -79,7 +79,7 @@ build_script:
     echo uploading to github
 
     gothub upload -u timetag -r ETA -t "%ETA_VER%" -f "ETA_Install-win64.zip"  -n "ETA_Install-win64.zip" --replace
-    
+
 test_script:
 - cmd: >-
     tox
