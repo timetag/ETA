@@ -10,6 +10,7 @@ environment:
   GITHUB_TOKEN:
     secure: IdgCOIno/YfkZynVnR2pBSjpkNG+4+XZneFXnqBVvxwX3MYX0EKqdzIUVPxQrkJu
   GOPATH: c:\gopath
+  TOXENV: py37
 
 init:
 - cmd: >-
@@ -29,14 +30,16 @@ init:
 
 install:
 - ps: >-
-    python -m pip --version
-
     go get github.com/itchio/gothub
     
     gothub info -u timetag -r ETA
-    
+
+    python -m pip --version
+
     python -m pip install wheel --upgrade
-    
+
+    pip -m pip install tox --upgrade
+
     Install-Product node 8 x64
 
     cd gui
@@ -73,8 +76,10 @@ build_script:
 
     7z a ETA_Install-win64.zip %APPVEYOR_BUILD_FOLDER%\gui\dist\*.exe
 
-test_script:
-- cmd: >-
     echo uploading to github
 
     gothub upload -u timetag -r ETA -t "%ETA_VER%" -f "ETA_Install-win64.zip"  -n "ETA_Install-win64.zip" --replace
+    
+test_script:
+- cmd: >-
+    tox

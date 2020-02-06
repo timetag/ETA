@@ -1,2 +1,3 @@
+include requirements.txt
 include etabackend/ll/nt/*.*
 include etabackend/ll/posix/*.*
