@@ -120,9 +120,11 @@ class ETA(ETA_CUT):
                     feed_clip = None
             elif isinstance(sources, Clip):
                 feed_clip = sources
-                sources = None  # consume this source
+                max_autofeed = 1  # stop after consuming this Clip
             else:
-                self.logfrontend.warn("ETA.RUN: the first parameter should be list of generator functions which yields Clips. Try cg = self.incremental_cut(your_filename).")
+                feed_clip = None
+            if not isinstance(feed_clip, Clip):
+                self.logfrontend.warn("ETA.RUN: the first parameter should be a generator function which yields Clips. Try cg = self.incremental_cut(your_filename).")
             
             trueending = False
             if (not feed_clip):
