@@ -58,6 +58,7 @@ class BACKEND():
         # Monkeypatch a display function to the kernel to support display in recipe.
         # FIXME This is somehow evil, but works. Should be fixed if the Display function is every fixed, it is also not so beautiful.
         self.kernel.display = self.display
+        self.kernel.send = self.send
 
         if run_forever: self.server.run_forever()
 
