@@ -40,13 +40,13 @@ class TestCorrelationRecipe:
 
         eta_engine = etabackend.eta.ETA()
         eta_engine.compile_eta(recipe_obj)
-        cut=eta_engine.simple_cut(test_folder / "hydraharp" / "data" / "200204_HH400_T3_320MHz_HBT.timeres", 4)
+        cut=eta_engine.simple_cut(test_folder / "hydraharp" / "data" / "200213_HH400_T3_80MHz_HBT.timeres", 4)
         result=eta_engine.run(cut, group='HHT3')
 
         hist1=result["h3"]
         hist2=result["h4"]
         
-        with np.load(test_folder / "hydraharp" / "data" / "results" / "200204_HH400_T3_320MHz_HBT_g2.npz") as ref_data:
+        with np.load(test_folder / "hydraharp" / "data" / "results" / "200213_HH400_T3_80MHz_HBT.npz") as ref_data:
             assert np.allclose(hist1, ref_data['hist1'])
             assert np.allclose(hist2, ref_data['hist2']) 
 

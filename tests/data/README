@@ -1,0 +1,2 @@
+This folder contains data for general tests, such as the delay line elements etc.
+Data to test a specific file format should be stored in the respective vendor/data folder.
