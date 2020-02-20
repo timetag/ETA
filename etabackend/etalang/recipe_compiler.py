@@ -97,7 +97,7 @@ def compile_eta(jsobj):
         vi_code_list = []
         
         graphnames = []
-        print("Compiling group {}...".format(instgroup))
+        #print("Compiling group {}...".format(instgroup))
         for each in range(len(vis)):
 
             instname = vis[each]["name"]
@@ -171,5 +171,5 @@ def compile_eta(jsobj):
     metadata += vis_all
 
     #print("Compilation succeeded.\n")
-    print("\n")
+    #print("\n")
     return code_per_groupings, var_per_groupings, metadata
