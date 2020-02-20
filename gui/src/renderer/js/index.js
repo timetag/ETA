@@ -219,12 +219,14 @@ d3.select('#btn_connect').on('click', function () {
             $("#exampleModalClose").toggleClass("d-none", true);
             $("#exampleModalLabel").html('<div class="loader d-inline-block"></div> <div class="d-inline-block">ETA Running...</div>');
             $("#btn_viewresult").toggleClass("d-none", true);
-            $("#remoteLOG").html($("#remoteLOG").html() + "<br/>" + ret[1]);
+            if (ret[1].length>=1)
+                $("#remoteLOG").html($("#remoteLOG").html() + "<br/>" + ret[1]);
         }
         if (ret[0] == "stopped") {
             $("#exampleModalClose").toggleClass("d-none", false);
             $("#exampleModalLabel").html('<img src="favicon.ico" style="width: 2em;"/> ETA Results');
-            $("#remoteLOG").html($("#remoteLOG").html() + "<br/>" + ret[1]);
+            if (ret[1].length>=1)
+                $("#remoteLOG").html($("#remoteLOG").html() + "<br/>" + ret[1]);
         }
         if (ret[0] == "clear") {
             $("#remoteLOG").html("");// clear log
