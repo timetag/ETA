@@ -172,6 +172,8 @@ class BACKEND():
                 self.logfrontend.error("bokeh failed to start",exc_info=True)
                 self.displaying = False
                 self.logger.error(str(e), exc_info=True)
+    def compile_eta (self, etaobj=None):
+            self.kernel.compile_eta(etaobj)
 
     def process_eta(self, etaobj=None, id="code", group="main"):
         self.send("none", "discard")  # show a neutral icon
@@ -193,7 +195,7 @@ class BACKEND():
                 self.send('', 'discard')
             
             # ETA File version check
-            if self.recipe_get_parameter("ETA_VERSION") is not None and self.recipe_get_parameter("ETA_VERSION") is not self.ETA_VERSION:
+            if self.recipe_get_parameter("ETA_VERSION") is not None and self.recipe_get_parameter("ETA_VERSION") != self.ETA_VERSION:
                 self.logfrontend.warning(
                     "ETA_VERSION: the recipe requires {} while ETA Backend is {}, you might encounter compatibility issues.".format(self.recipe_get_parameter("ETA_VERSION"), self.ETA_VERSION))
 
