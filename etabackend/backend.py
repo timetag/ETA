@@ -1,13 +1,9 @@
 import json
 import logging
-import multiprocessing
 import os
 import sys
-import traceback
 import time
-import threading
-
-from subprocess import run
+import traceback
 
 import etabackend.webinstall as webinstall
 import etabackend.ws_broadcast as ws_broadcast
@@ -125,6 +121,7 @@ class BACKEND():
         else:
             self.logfrontend.info("ETA.DISPLAY: Starting Script Panel.")
             try:
+                import threading
                 if str(type(app)) == "<class 'dash.dash.Dash'>":
                     from flask import request
 
