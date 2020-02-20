@@ -112,7 +112,7 @@ class BACKEND():
                                    ("Time Tag File", "*.*")])
             # parent=root makes sure the dialogue is inherits the roots attributes, like being on-top
             root.destroy()
-            if path is not "":
+            if path != "":
                 self.recipe_set_parameter(key, path)
 
     def display(self, app=None):

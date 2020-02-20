@@ -145,7 +145,7 @@ class ETA_CUT():
         filename = str(filename)  # supporting pathlib
         if modify_clip == None:
             ret1, parse_output = parse_header(filename, format)
-            if ret1 is not 0:
+            if ret1 != 0:
                 raise ValueError(
                     "ETA.clip_from_file: File {} is not found or incorrect, err code {}.".format(filename, ret1))
             temp_clip = Clip()
