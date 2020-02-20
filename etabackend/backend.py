@@ -169,7 +169,7 @@ class BACKEND():
                 self.send("http://{}:5000".format(self.hostip), "dash")
                 self.displaying = True
             except Exception as e:
-                self.logfrontend.error(exc_info=True)
+                self.logfrontend.error("bokeh failed to start",exc_info=True)
                 self.displaying = False
                 self.logger.error(str(e), exc_info=True)
 
