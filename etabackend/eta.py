@@ -14,15 +14,19 @@ import etabackend.jit_linker as jit_linker
 from etabackend.clip import ETA_CUT, Clip
 from etabackend.etalang import recipe_compiler
 
+
 class ETAException(Exception):
     pass
+
 
 class ETACompilationException(ETAException):
     pass
 
+
 class ETANonExistingGroupException(ETAException):
-    #FIXME Accept group name
+    # FIXME Accept group name
     pass
+
 
 class ETA(ETA_CUT):
     def __init__(self):
@@ -57,10 +61,12 @@ class ETA(ETA_CUT):
 
     def compile_group(self, group="main"):
         if not (group in self.eta_compiled_code):
-            raise ETANonExistingGroupException("Can not eta.run() on a non-existing group {}.".format(group))
-            #self.logfrontend.warning("Can not eta.run() on a non-existing group {}.".format(group)) FIXME
+            raise ETANonExistingGroupException(
+                "Can not eta.run() on a non-existing group {}.".format(group))
+            # self.logfrontend.warning("Can not eta.run() on a non-existing group {}.".format(group)) FIXME
         if not (group in self.mainloop):
-            self.logfrontend.info("Compiling instrument group {}.".format(group))
+            self.logfrontend.info(
+                "Compiling instrument group {}.".format(group))
             # cache compiling results
             loc = jit_linker.link_jit_code(self.eta_compiled_code[group])
             self.mainloop[group] = loc["mainloop"]
@@ -74,17 +80,20 @@ class ETA(ETA_CUT):
 
         # resuming task
         if resume_task is None:
-            self.logfrontend.info("ETA.RUN: Starting new analysis using Instrument group {}.".format(group))
+            self.logfrontend.info(
+                "ETA.RUN: Starting new analysis using Instrument group {}.".format(group))
             self.notify_callback('running')
-            (thread1, ts, ctxs, _) = (None,None,None,None)
+            (thread1, ts, ctxs, _) = (None, None, None, None)
         else:
-            self.logfrontend.info("ETA.RUN: Resuming analysis using Instrument group {}.".format(group))
+            self.logfrontend.info(
+                "ETA.RUN: Resuming analysis using Instrument group {}.".format(group))
             self.notify_callback('running')
             (thread1, ts, ctxs, _) = resume_task
 
-        # check for everything
         if thread1:
-            self.logger.info("Waiting for the task for resumtion to complete...")
+            # join the previous thread
+            self.logger.info(
+                "Waiting for the task for resumtion to complete...")
             self.logger.debug(thread1.result())
             self.logger.info("Task for resumtion has completed.")
         if ts is None:
@@ -93,8 +102,14 @@ class ETA(ETA_CUT):
             self.logger.info("Initializing context.")
             ctxs = initializer()
 
-        thread1 = self.executor.submit(
-            self.ctx_loop, *vargs, ctxs=ctxs, mainloop=mainloop, **kwargs)
+        if return_results:
+            # execute on MainThread
+            self.ctx_loop(*vargs, ctxs=ctxs, mainloop=mainloop, **kwargs)
+            thread1 = None
+        else:
+            # execute on ThreadPool
+            thread1 = self.executor.submit(
+                self.ctx_loop, *vargs, ctxs=ctxs, mainloop=mainloop, **kwargs)
 
         task = (thread1, ts, ctxs, result_fetcher)
 
@@ -122,20 +137,20 @@ class ETA(ETA_CUT):
                 feed_clip = sources
                 max_autofeed = 1  # stop after consuming this Clip
             else:
-                self.logfrontend.warn("ETA.RUN: the first parameter should be a generator function which yields Clips. Try cg = self.incremental_cut(your_filename).")
+                self.logfrontend.warn(
+                    "ETA.RUN: the first parameter should be a generator function which yields Clips. Try cg = self.incremental_cut(your_filename).")
                 feed_clip = None
-            
+
             trueending = False
             if (not feed_clip):
                 trueending = True
             if trueending:
                 break
-            if (max_autofeed>0) and (loop_count > max_autofeed):
+            if (max_autofeed > 0) and (loop_count > max_autofeed):
                 break
             if not (isinstance(feed_clip, Clip) and feed_clip.validate()):
                 raise ValueError(
                     "Invalid section for cut." + str(feed_clip))
-
 
             if ctxs[1] is None:
                 # create a new Clip info
@@ -149,11 +164,12 @@ class ETA(ETA_CUT):
                     self.logger.debug("Auto-fill triggered.")
                     feed_clip.overflowcorrection = used_clip_result.overflowcorrection
                     # replace to new Clip info
-                    ctxs[1][:] = feed_clip.to_reader_input() # 7th for the global time shift
+                    # 7th for the global time shift
+                    ctxs[1][:] = feed_clip.to_reader_input()
                     ctxs[0] = feed_clip.buffer
             self.logger.info("Executing analysis program...")
-            ret+= mainloop(*ctxs)
-           
+            ret += mainloop(*ctxs)
+
             loop_count += 1
 
         return ret
@@ -163,11 +179,13 @@ class ETA(ETA_CUT):
 
         for task in list_of_tasks:
             (thread1, ts,  ctxs, result_fetcher) = task
-            # join process
-            print(thread1.result())
+            if thread1:
+                # join process
+                print(thread1.result())
             te = time.time()
-            
-            self.logfrontend.info('ETA.RUN: Analysis is finished in {0:.2f} seconds.'.format((te - ts))) 
+
+            self.logfrontend.info(
+                'ETA.RUN: Analysis is finished in {0:.2f} seconds.'.format((te - ts)))
             self.notify_callback('stopped')
 
             # debugging
@@ -188,7 +206,7 @@ class ETA(ETA_CUT):
                     rets[0][each_graph] += rets[each][each_graph]
             result = rets[0]
             self.logfrontend.info('ETA.RUN: Aggregating {} results.'.format(
-                              len(rets)))
+                len(rets)))
             self.notify_callback('stopped')
         else:
             self.logfrontend.info("ETA.RUN: Listing results for each task.")
@@ -201,13 +219,13 @@ class ETA(ETA_CUT):
             self._observer[name].append(func)
         else:
             pass
-    
+
     def del_callback(self, name, func):
         if func in self._observer[name]:
             self._observer[name].remove(func)
         else:
             pass
-    
+
     def notify_callback(self, name):
         for func in self._observer[name]:
             func()
