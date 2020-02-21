@@ -11,7 +11,7 @@ from etabackend.eta import ETA, ETACompilationException
 
 ETA_VERSION = "v0.6.6"
 ETA_BANNER = \
-""" 
+    """ 
     ______  ______    ___ 
    / ____/ /_  __/   /   |
   / /___    / /     / /| |
@@ -20,6 +20,8 @@ ETA_BANNER = \
                           
 ==============================
 """
+
+
 class BACKEND():
     def __init__(self, run_forever=True):
         self.ETA_VERSION = ETA_VERSION
@@ -29,24 +31,28 @@ class BACKEND():
         self.hostlisten = os.environ.get('ETA_LISTEN') or "127.0.0.1"
         self.hostip = os.environ.get('ETA_IP') or "localhost"
         self.hostport = os.environ.get('ETA_PORT') or "5678"
+        self.hosthttpport = os.environ.get('ETA_HTTPPORT') or "5001"
         self.displaying = False
 
         def new_message(client, server, message):
             obj = json.loads(message)
-            self.logger.info("client " + str(client["address"]) + " start " + obj["method"])
+            self.logger.info(
+                "client " + str(client["address"]) + " start " + obj["method"])
             getattr(self, obj["method"])(*obj["args"])
 
         def new_client(client, server):
             self.logger.info("New client " + str(client["address"]) +
-                        " connected to port " + str(self.hostport) + ". ")
-        self.server = ws_broadcast.WebsocketServer(int(self.hostport), host=self.hostlisten)
-        self.logger.info("ETA Backend URL: ws://{}:{}".format(self.hostip, self.hostport))
-        
+                             " connected to port " + str(self.hostport) + ". ")
+        self.server = ws_broadcast.WebsocketServer(
+            int(self.hostport), host=self.hostlisten)
+        self.logger.info(
+            "ETA Backend URL: ws://{}:{}".format(self.hostip, self.hostport))
+
         self.server.set_fn_new_client(new_client)
         self.server.set_fn_message_received(new_message)
         self.logfrontend.addHandler(WebClientHandler(self.send))
 
-        self.kernel = ETA()     
+        self.kernel = ETA()
         self.kernel.add_callback('running', lambda: self.send('', 'running'))
         self.kernel.add_callback('stopped', lambda: self.send('', 'stopped'))
         self.kernel.add_callback('update-recipe', lambda: self.recipe_update())
@@ -56,10 +62,11 @@ class BACKEND():
         self.kernel.display = self.display
         self.kernel.send = self.send
 
-        if run_forever: self.server.run_forever()
+        if run_forever:
+            self.server.run_forever()
 
         self.kernel.eta_compiled_code = None
-        
+
     def send(self, text, endpoint="log"):
         """
         """
@@ -117,7 +124,8 @@ class BACKEND():
 
     def display(self, app=None):
         if app is None:
-            self.logfrontend.warning("No display dashboard created. Use 'app = dash.Dash()' to create a Dash graph.")
+            self.logfrontend.warning(
+                "No display dashboard created. Use 'app = dash.Dash()' to create a Dash graph.")
         else:
             self.logfrontend.info("ETA.DISPLAY: Starting Script Panel.")
             try:
@@ -134,14 +142,14 @@ class BACKEND():
                         func()
                         self.displaying = False
                         self.logfrontend.info("Dashboard shutting down.")
-                        self.send("http://localhost:5000", "discard")
+                        self.send("http://{}:{}".format(self.hostip,
+                                                        self.hosthttpport), "discard")
                         response = app.server.make_response('Hello, World')
                         response.headers.add(
                             'Access-Control-Allow-Origin', '*')
                         return response
-                    # TODO: hard coded ip and port for bokeh. Try making a HTTP router?
                     thread2 = threading.Thread(
-                        target=app.server.run, kwargs={'host': "0.0.0.0"})
+                        target=app.server.run, kwargs={'host': self.hostlisten, "port": int(self.hosthttpport)})
                     thread2.daemon = True
                     thread2.start()
                 else:
@@ -153,47 +161,52 @@ class BACKEND():
                         bokserver.stop()
                         self.displaying = False
                         self.logfrontend.info("Dashboard shutting down.")
-                        self.send("http://localhost:5000", "discard")
+                        self.send("http://{}:{}".format(self.hostip,
+                                                        self.hosthttpport), "discard")
 
                     import asyncio
                     asyncio.set_event_loop(asyncio.new_event_loop())
 
                     bokserver = Server(
-                        {"/": app, "/shutdown": shutdown}, address="0.0.0.0", port=5000)
+                        {"/": app, "/shutdown": shutdown}, address=self.hostlisten, port=int(self.hosthttpport))
                     bokserver.start()
                     thread3 = threading.Thread(target=bokserver.io_loop.start)
                     thread3.daemon = True
                     thread3.start()
 
-                self.logfrontend.info("ETA.DISPLAY: Script Panel is running at http://{}:5000.".format(self.hostip))
-                self.send("http://{}:5000".format(self.hostip), "dash")
+                self.logfrontend.info(
+                    "ETA.DISPLAY: Script Panel is running at http://{}:{}.".format(self.hostip, self.hosthttpport))
+                self.send("http://{}:{}".format(self.hostip,
+                                                self.hosthttpport), "dash")
                 self.displaying = True
             except Exception as e:
-                self.logfrontend.error("bokeh failed to start",exc_info=True)
+                self.logfrontend.error("bokeh failed to start", exc_info=True)
                 self.displaying = False
                 self.logger.error(str(e), exc_info=True)
-    def compile_eta (self, etaobj=None):
-            self.kernel.compile_eta(etaobj)
+
+    def compile_eta(self, etaobj=None):
+        self.kernel.compile_eta(etaobj)
 
     def process_eta(self, etaobj=None, id="code", group="main"):
         self.send("none", "discard")  # show a neutral icon
         if self.displaying:
             self.logfrontend.info(
-                "Script Panel is serving at http://{}:5000.".format(self.hostip))
+                "Script Panel is serving at http://{}:{}.".format(self.hostip, self.hosthttpport))
             self.logfrontend.warning(
                 "The current script is not executed, because a previously executed script is still serving the results.")
-            self.send("http://{}:5000".format(self.hostip), "dash") # FIXME
+            self.send("http://{}:{}".format(self.hostip,
+                                            self.hosthttpport), "dash")
         else:
             with open("server.eta", 'w') as file:
                 file.write(json.dumps(etaobj))
 
             self.kernel.eta_compiled_code = None
-            
+
             try:
                 self.kernel.compile_eta(etaobj)
             except ETACompilationException:
                 self.send('', 'discard')
-            
+
             # ETA File version check
             if self.recipe_get_parameter("ETA_VERSION") is not None and self.recipe_get_parameter("ETA_VERSION") != self.ETA_VERSION:
                 self.logfrontend.warning(
@@ -212,7 +225,7 @@ class BACKEND():
                         loc = {}
                     exec(etaobj[id], glob, loc)
                 except Exception as e:
-                    if (str(type(e)).find("numba")>=0):
+                    if (str(type(e)).find("numba") >= 0):
                         self.logger.error(str(e), exc_info=True)
                         self.logfrontend.error(
                             "An internal error has occurred when numba is compiling the embedded code.")
@@ -254,6 +267,7 @@ class WebClientHandler(logging.Handler):
     def emit(self, record):
         msg = self.format(record)
         self.send(msg, self._find_endpoint(record.levelname))
+
 
 def main():
     print(ETA_BANNER)
