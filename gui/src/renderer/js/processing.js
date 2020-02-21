@@ -45,11 +45,7 @@ document.title = editing_graph_name + " - Script Panel Designer";
 d3.select('#main_caption').text(document.title);
 
 if (get_localstorage(editing_graph) === null) {
-    aceeditor.setValue(`import numpy as np
-result = eta.run(filename, 4)
-histogram = result["h1"] #get the table from result
-np.savetxt("h1.txt",histogram) #save the txt file for the histogram
-eta.send("finished.")`);
+    aceeditor.setValue(`# Click Help to get started!`);
 }else{
 	aceeditor.setValue(get_localstorage(editing_graph));
 }
