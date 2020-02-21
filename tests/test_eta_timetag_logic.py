@@ -22,7 +22,7 @@ class TestETATimetagLogic:
 
         eta_engine = etabackend.eta.ETA()
         eta_engine.compile_eta(recipe_obj)
-        cut=eta_engine.simple_cut(test_folder / "hydraharp" / "data" / "19_HH400_T3_80MHz_HBT.timeres", 4)
+        cut=eta_engine.split_file(test_folder / "hydraharp" / "data" / "19_HH400_T3_80MHz_HBT.timeres", 4)
         result=eta_engine.run(cut, group='compile')
 
         captured = capsys.readouterr()

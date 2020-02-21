@@ -93,10 +93,10 @@ class ETA_CUT():
         self.logfrontend = logging.getLogger("etabackend.frontend")
 
     # example generators
-    def simple_cut(self, filename, cuts=1, reuse_clips=True, keep_indexes=None, **kwargs):
-        last_clip = self.clip_from_file(
+    def split_file(self, filename, cuts=1, reuse_clips=True, keep_indexes=None, **kwargs):
+        last_clip = self.clip_file(
             filename, read_events=1,  **kwargs)
-        self.logfrontend.info("ETA.simple_cut: The file '{filename}' will be cut into {cuts} equal size Clips. ".format(filename=filename,
+        self.logfrontend.info("ETA.split_file: The file '{filename}' will be cut into {cuts} equal size Clips. ".format(filename=filename,
                                                                                                                     cuts=cuts))
         TTF_header_offset = last_clip.fseekpoint
         TTF_filesize = os.path.getsize(str(filename))
@@ -106,9 +106,9 @@ class ETA_CUT():
         # build a clip for header
         last_clip.fendpoint = last_clip.fseekpoint
 
-        return self.incremental_cut(filename, rec_per_cut=((NumRecords+cuts-1) // cuts), modify_clip=last_clip, reuse_clips=reuse_clips, keep_indexes=keep_indexes, **kwargs)
+        return self.clips(filename, rec_per_cut=((NumRecords+cuts-1) // cuts), modify_clip=last_clip, reuse_clips=reuse_clips, keep_indexes=keep_indexes, **kwargs)
 
-    def incremental_cut(self, filename, modify_clip=None, rec_per_cut=1024*1024*10, reuse_clips=True, keep_indexes=None, **kwargs):
+    def clips(self, filename, modify_clip=None, rec_per_cut=1024*1024*10, reuse_clips=True, keep_indexes=None, **kwargs):
         last_clip = modify_clip
         currentclip = True
         counter = 0
@@ -120,7 +120,7 @@ class ETA_CUT():
                 currentclip = Clip()
                 # copy information from last clip
                 currentclip.from_parser_output(last_clip.to_reader_input())
-            currentclip = self.clip_from_file(
+            currentclip = self.clip_file(
                 filename, modify_clip=currentclip, read_events=rec_per_cut, **kwargs)
             if currentclip:
                 self.logfrontend.info("Analysis progress: {:.2f} ({}/{})".format((currentclip.fseekpoint/TTF_filesize)*100.0, currentclip.fseekpoint, TTF_filesize))
@@ -130,7 +130,7 @@ class ETA_CUT():
                             yield currentclip
                     else:
                         raise ValueError(
-                            "ETA.incremental_cut: The third parameter, keep_indexes, should be a list. ")
+                            "ETA.clips: The third parameter, keep_indexes, should be a list. ")
                 else:
                     yield currentclip
                 counter += 1
@@ -141,13 +141,13 @@ class ETA_CUT():
 
     # low-level API
 
-    def clip_from_file(self, filename, modify_clip=None, read_events=0, format=-1, wait_timeout=0):
+    def clip_file(self, filename, modify_clip=None, read_events=0, format=-1, wait_timeout=0):
         filename = str(filename)  # supporting pathlib
         if modify_clip == None:
             ret1, parse_output = parse_header(filename, format)
             if ret1 != 0:
                 raise ValueError(
-                    "ETA.clip_from_file: File {} is not found or incorrect, err code {}.".format(filename, ret1))
+                    "ETA.clip_file: File {} is not found or incorrect, err code {}.".format(filename, ret1))
             temp_clip = Clip()
             temp_clip.from_parser_output(parse_output)
         else:
@@ -156,7 +156,7 @@ class ETA_CUT():
         # validate
         if not isinstance(temp_clip, Clip):
             raise ValueError(
-                "ETA.clip_from_file: modify_clip must take a one Clip object as input.")
+                "ETA.clip_file: modify_clip must take a one Clip object as input.")
 
         # moving to the end of the last read
         temp_clip.fseekpoint = temp_clip.fendpoint
@@ -178,10 +178,10 @@ class ETA_CUT():
         while not fileactualsize >= temp_clip.fendpoint:
             waited_for += 0.01
             if waited_for > wait_timeout:
-                self.logfrontend.info("ETA.clip_from_file: Timeout when waiting for the next cut, round to file boundry.")
+                self.logfrontend.info("ETA.clip_file: Timeout when waiting for the next cut, round to file boundry.")
                 temp_clip.fendpoint = fileactualsize
                 break
-            self.logfrontend.info("ETA.clip_from_file: Waiting for file {} to grow from {} to {} bytes.".format(filename,
+            self.logfrontend.info("ETA.clip_file: Waiting for file {} to grow from {} to {} bytes.".format(filename,
                                                                                                             fileactualsize,
                                                                                                             temp_clip.fendpoint))
             # hard-coded checking period is probably not good.
@@ -198,9 +198,9 @@ class ETA_CUT():
             temp_clip.batch_actualread_length = f.readinto(temp_clip.buffer)
         # fail when zero size
         if temp_clip.batch_actualread_length == 0:
-            self.logfrontend.info("ETA.clip_from_file: The file '{}' is not long enough for the Clip. ".format(filename))
+            self.logfrontend.info("ETA.clip_file: The file '{}' is not long enough for the Clip. ".format(filename))
             return False
         else:
-            self.logfrontend.info("ETA.clip_from_file: The file '{}' section [{},{}) is loaded into the Clip. ".format(filename, temp_clip.fseekpoint, temp_clip.fendpoint))
+            self.logfrontend.info("ETA.clip_file: The file '{}' section [{},{}) is loaded into the Clip. ".format(filename, temp_clip.fseekpoint, temp_clip.fendpoint))
 
         return temp_clip.validate()
