@@ -7,6 +7,7 @@ before_script:
     - apt-get install -y python3-pip
     - python3 -V  # Print out python version for debugging
     - pip3 install virtualenv
+    - pip3 install tox --upgrade
     - virtualenv venv
     - source venv/bin/activate
 
@@ -14,6 +15,7 @@ build1:
   stage: build
   variables:
       PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+      TOXENV: "py37"
   cache:
     paths:
         - .cache/pip
@@ -28,6 +30,7 @@ build1:
     # an alternative approach is to install and run:
     #- pip install dist/*
     # run the command here
+    - tox
   artifacts:
     paths:
       - dist/*.whl
