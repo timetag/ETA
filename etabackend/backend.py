@@ -152,13 +152,15 @@ class BACKEND():
                         target=app.server.run, kwargs={'host': self.hostlisten, "port": int(self.hosthttpport)})
                     thread2.daemon = True
                     thread2.start()
-                else:
+                elif str(type(app)) == "<class 'function'>":
+
                     from bokeh.server.server import Server
                     global bokserver
 
                     def shutdown(doc):
                         bokserver.unlisten()
                         bokserver.stop()
+                        bokserver.io_loop.stop()
                         self.displaying = False
                         self.logfrontend.info("Dashboard shutting down.")
                         self.send("http://{}:{}".format(self.hostip,
@@ -173,9 +175,11 @@ class BACKEND():
                     thread3 = threading.Thread(target=bokserver.io_loop.start)
                     thread3.daemon = True
                     thread3.start()
-
+                else:
+                    self.logfrontend.warning(
+                        "eta.display: unknown type {} for display".format(str(type(app))))
                 self.logfrontend.info(
-                    "ETA.DISPLAY: Script Panel is running at http://{}:{}.".format(self.hostip, self.hosthttpport))
+                    "ETA.display: Script Panel is serving at http://{}:{}.".format(self.hostip, self.hosthttpport))
                 self.send("http://{}:{}".format(self.hostip,
                                                 self.hosthttpport), "dash")
                 self.displaying = True
@@ -191,7 +195,7 @@ class BACKEND():
         self.send("none", "discard")  # show a neutral icon
         if self.displaying:
             self.logfrontend.info(
-                "Script Panel is serving at http://{}:{}.".format(self.hostip, self.hosthttpport))
+                "ETA.display: Script Panel is serving at http://{}:{}.".format(self.hostip, self.hosthttpport))
             self.logfrontend.warning(
                 "The current script is not executed, because a previously executed script is still serving the results.")
             self.send("http://{}:{}".format(self.hostip,
