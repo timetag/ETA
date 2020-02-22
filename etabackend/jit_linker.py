@@ -100,7 +100,7 @@ def link_libs(typingctx):
         
         for f in listdir(ll_path):
             lib_path = Path(ll_path)/ f
-            if lib_path.is_file():
+            if lib_path.is_file() and f.find(".ll")>=0:
                 # print(lib_path)
                 with open(lib_path, "r") as fio:
                     assembly = fio.read()
