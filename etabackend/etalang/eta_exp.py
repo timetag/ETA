@@ -1,7 +1,7 @@
 import textwrap
 import ast
 from . import tensor
-
+from .. import clip
 
 ### premitive types ###
 class INTEGER():
@@ -37,14 +37,14 @@ class INTEGER():
                 self.assert_sym_type(sym,"integer",public=True)
                 return sym
             except Exception as e:
-                raise ValueError("The parameter in Action {} must be either the name of an INTEGER Tool or a integer value.".format(getter_function))
+                raise ValueError(self.error_prefix+"The parameter in Action {} must be either the name of an INTEGER Tool or a integer value.".format(getter_function))
 
 class TABLE():
     def table_init(self, sym, type):
         self.EMIT_LINE("global_initial", "{symbol}=np.zeros(({dim}), dtype=np.{type})"
                        .format(symbol=sym, dim=",".join(list(map(str, type[4:]))),type=type[2]))
         if len(type)<=4:
-            raise ValueError("The dimension for table should be defined.")
+            raise ValueError(self.error_prefix+"The dimension for table should be defined.")
         if type[3]:
              self.EMIT_LINE(
                 "uettp_initial", "ptr_{symbol}=ffi.from_buffer({symbol})".format(symbol=sym))
@@ -57,7 +57,7 @@ class TABLE():
             elif isinstance(dimension,list):
                 pass
             else:
-                raise ValueError("The dimension for table is incorrect.")
+                raise ValueError(self.error_prefix+"The dimension for table is incorrect.")
             for each in dimension:
                 base.append(str(int(each)))
         return self.define_syms(name, base, public=True)
@@ -71,13 +71,47 @@ class VFILE():
 
     def VFILE(self, triggers, chn, size="2097152"):
         # TODO: remove hard-coded VFILE size
+        chn = int(chn)
         size = int(ast.literal_eval(size))
         name = "vchn"+str(chn)
-        tablename =  name + "_vfile"
-        self.output_chn[int(chn)] = True  # add to output channel talbe
-        # self.make_output_chn(chn)
+        
+        if chn in self.source_chn_all:
+            raise ValueError(self.error_prefix+"Virtual channel {chn} has already been assigned to a RFILE in graph {graph}.".format(chn=chn,graph=self.source_chn_all[chn][0]))
+        self.virtual_chn[chn] = (self.name,self.graphid)  # add to local channel talbe
+        self.virtual_chn_all[chn] = (self.name,self.graphid) # add to global channel table
+
+        tablename = name + "_vfile"
         self.TABLE(triggers,tablename,dimension=[size])
         return self.define_syms(name, ["vfile",tablename,size,chn])
+
+class RFILE():
+    def rfile_init(self, sym, type):
+        pass
+
+    def RFILE(self, triggers, name, signalchn="[1,2,3,4]", markerchn="[]"):
+        signalchn = ast.literal_eval(signalchn)
+        markerchn = ast.literal_eval(markerchn)
+        
+        signalchn_offset = self.rfile_check_offset(triggers,name,signalchn)
+        markerchn_offset = self.rfile_check_offset(triggers,name,markerchn)
+        return self.define_syms(name, ["rfile", name, signalchn_offset, markerchn_offset])
+    
+    def rfile_check_offset(self, triggers, name, chnlist):
+        offset = 0
+        for each in chnlist:
+            offset = each
+            break
+        for (i,each) in enumerate(chnlist):
+            if offset+i!=each:
+                raise ValueError(self.error_prefix+"Channel number in RFILE {name} should be continously ascending, like [1,2,3] or [2,3,4], however {chnlist} is found.".format(name=name,chnlist = str(chnlist)))
+            if each in self.source_chn_all:
+                raise ValueError(self.error_prefix+"RFILE {name} has a illegal channel number {chn} which is used by another RFILE.".format(name=name,chn=each))
+            if each in self.virtual_chn_all:
+                raise ValueError(self.error_prefix+"RFILE {name} has a illegal channel number {chn} which is an virtual channel.".format(name=name,chn=each))
+            
+            self.source_chn[each] = (self.name,self.graphid)  # add to local channel talbe
+            self.source_chn_all[each] = (self.name,self.graphid)  # add to global channel talbe
+        return offset
 
 class RECORDER():
     def recorder_init(self, sym, type):
@@ -171,12 +205,12 @@ class HISTOGRAM():
                     elif len(each)==2:
                         each_converted = (int(float(each[0])),int(float(each[1]))) # supporting scientific notation without pre_act
                     else:
-                         raise ValueError(
+                         raise ValueError(self.error_prefix+
                         "Histogram dimension should be a tuple of (bin_num,bin_step,pre_act).")
                     base_dim_for_table.append(each_converted[0])
                     new_dims.append(each_converted)
                 else:
-                    raise ValueError(
+                    raise ValueError(self.error_prefix+
                         "Histogram dimension should be a tuple of (bin_num,bin_step,pre_act).")
         self.TABLE(triggers, name, base_dim_for_table)
         return self.define_syms(name, ["histogram", new_dims])
@@ -189,7 +223,7 @@ class HISTOGRAM():
         clock_fulltype = self.get_type_of_syms(clock_name, fulltype=True)
 
         if len(dims) != 1:
-            raise ValueError("record_all only support one dimenstion histogram")
+            raise ValueError(self.error_prefix+"record_all only support one dimenstion histogram")
         else:
             bin_num = dims[0][0]
             bin_step = dims[0][1]
@@ -238,7 +272,7 @@ class HISTOGRAM():
                   {hister}
                           """.format(buffer_name=buffer_name, hister=hister)
             else:
-                raise ValueError(
+                raise ValueError(self.error_prefix+
                     "single start mutiple stop is not currently supported.")
             self.EMIT_LINE(triggers, code)
 
@@ -250,7 +284,7 @@ class HISTOGRAM():
         boundry_checker = []
         for i in range(len(dims)):
             if i >= len(therest):
-                raise ValueError(
+                raise ValueError(self.error_prefix+
                     "Dimension mismatch. {i}th dimension is not found when recording to histogram.".format(i=i))
             # clock_preparing stage
             clock_name = therest[i]
@@ -272,7 +306,7 @@ class HISTOGRAM():
                                format(i=i, preact=preact, bin_step=bin_step))
 
             else:
-                raise ValueError(
+                raise ValueError(self.error_prefix+
                     "Object is not currently supported by record().")
         boundry_checker = " and ".join(boundry_checker)
         selector = "".join(["[histdim_{i}]".format(i=i)
@@ -327,7 +361,7 @@ class COINCIDENCE():
         num = int(ast.literal_eval(num))
         chn = int(ast.literal_eval(chn))
         if num <= 1:
-            raise ValueError(
+            raise ValueError(self.error_prefix+
                 "Coincidence number shoud be something larger than 1.")
         self.VFILE(chn)
         return self.define_syms(name, ["coincidence", num, chn])
@@ -349,17 +383,24 @@ class COINCIDENCE():
         self.EMIT_LINE(trigger, code)
 
 
-class Graph(INTEGER, TABLE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENCE):
+class Graph(INTEGER, TABLE, RFILE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENCE):
+    # clear after restarting VM
+    virtual_chn_all = {}
+    source_chn_all = {}
+    sink_chn_all = {}
     def __init__(self, name="NONAME-GRAPH", gid=0):
         self.name = name
         self.graphid = gid
+        self.error_prefix = "Error in graph {}: ".format(name)
         # read only after making states
         self.input_chn = {}
         self.states_to_id = {}
         self.id_to_states = {}
         self.init_now = None
         # allow write after making states
-        self.output_chn = {}
+        self.virtual_chn = {}
+        self.source_chn = {}
+        self.sink_chn = {}
         self.emit_consistent_delay_length = {}
 
     # called by graph_parser
@@ -376,10 +417,10 @@ class Graph(INTEGER, TABLE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENCE):
 
     def make_state(self, stateid, name):
         if not isinstance(name, str):
-            raise ValueError(
-                "State name must be a string, but a {} is found on graph {}.".format(str(type(name)), self.name))
+            raise ValueError(self.error_prefix+
+                "State name must be a string, but a {} is found.".format(str(type(name))))
         if name in self.states_to_id:
-            raise ValueError("State name should be unique, but the state '{}' is found multiple times on graph {}.".format(name,self.name))
+            raise ValueError(self.error_prefix+"State name should be unique, but the state '{}' is found multiple times.".format(name))
         self.id_to_states[stateid] = name
         
         self.states_to_id[name] = stateid
@@ -390,8 +431,8 @@ class Graph(INTEGER, TABLE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENCE):
         if self.transition_table[cond][gofrom] is None:
             self.transition_table[cond][gofrom] = goto
         else:
-            raise ValueError(
-                "Ambiguous transition with condition {} on graph {}.".format(cond, self.name))
+            raise ValueError(self.error_prefix+
+                "Ambiguous transition with condition {}.".format(cond))
 
     # instructed by recipe_compiler and eta_parser, called by eta_vm
     #############################
@@ -439,7 +480,7 @@ class Graph(INTEGER, TABLE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENCE):
             elif trigger == "global_initial":
                 self.global_initial_section += "\n" + code
             else:
-                raise ValueError("Undefiend trigger {}".format(trigger))
+                raise ValueError(self.error_prefix+"Undefiend trigger {}".format(trigger))
         else:
             outblob = trigger[0]
             if outblob:
@@ -477,7 +518,7 @@ class Graph(INTEGER, TABLE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENCE):
 
     def EMIT_CODE(self, triggers, id):
         if not (int(id) < len(self.embedded)):
-            raise ValueError(
+            raise ValueError(self.error_prefix+
                 "Calling non-existing embedded code #{}".format(id))
         self.EMIT_LINE(triggers, self.embedded[int(id)])
 
@@ -509,16 +550,16 @@ class Graph(INTEGER, TABLE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENCE):
                     sds[symbol_name] = type_desired
                     return symbol
                 else:
-                    raise ValueError("Type mismatch for symbol {}, found on graph {}.".format(
-                        symbol_name, self.name))
+                    raise ValueError(self.error_prefix+"Type mismatch for symbol {}.".format(
+                        symbol_name))
             elif isinstance(type_desired, str):
                 if type_desired == basetype:
                     return symbol
                 else:
-                    raise ValueError("Type mismatch for symbol {}, found on graph {}.".format(
-                        symbol_name, self.name))
+                    raise ValueError("Type mismatch for symbol {}.".format(
+                        symbol_name))
             else:
-                raise ValueError("Unexpected type {}".format(type_desired))
+                raise ValueError(self.error_prefix+"Unexpected type {}".format(type_desired))
         else:
             sds[symbol_name] = type_desired
             return symbol
@@ -532,7 +573,7 @@ class Graph(INTEGER, TABLE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENCE):
         if symbol_name in (sds):
             return symbol
         else:
-            raise ValueError("Undefined symbol {}".format(symbol))
+            raise ValueError(self.error_prefix+"Undefined symbol {}".format(symbol))
 
     def assert_sym_type(self, symbol, type, public=False):
         fulltype = self.get_type_of_syms(symbol, public, fulltype=True)
@@ -560,7 +601,7 @@ class Graph(INTEGER, TABLE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENCE):
             elif isinstance(sds[symbol_name], list):
                 return sds[symbol_name][0]
             else:
-                raise ValueError("Ill-typed symbol {}".format(symbol_name))
+                raise ValueError(self.error_prefix+"Ill-typed symbol {}".format(symbol_name))
 
     def get_symbol_without_indexes(self, symbol):
         symbol_name = symbol.split('[', 1)[0]
@@ -576,8 +617,8 @@ class Graph(INTEGER, TABLE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENCE):
             self.INTEGER("uettp_initial", "last_{graphid}".format(
                 graphid=self.graphid), initvalue=self.init_now)
         else:
-            raise ValueError(
-                "Init blob is not defined in graph {}.".format(self.graphid))
+            raise ValueError(self.error_prefix+
+                "Init blob is not defined.")
 
         # make publics
         for each in self.public_symbols:
@@ -587,7 +628,7 @@ class Graph(INTEGER, TABLE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENCE):
                 command(each, self.get_type_of_syms(
                     each, public=True, fulltype=True))
             else:
-                raise ValueError(
+                raise ValueError(self.error_prefix+
                     "Illegal type initializer for symbol {}".format(each))
         # init externals
         for each in self.internalobj_symbols:
@@ -597,7 +638,7 @@ class Graph(INTEGER, TABLE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENCE):
             if command:
                 command(each, self.get_type_of_syms(each, fulltype=True))
             else:
-                raise ValueError(
+                raise ValueError(self.error_prefix+
                     "Illegal type initializer for symbol {}".format(each))
 
     def MAKE_global_code_on_graph0(self,num_rslot,num_vslot,num_rchns,pool_tree_size):
@@ -613,11 +654,13 @@ class Graph(INTEGER, TABLE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENCE):
         self.TABLE("uettp_initial", "POOL_chn_arr", [pool_tree_size],type="int8",with_ptr=True)
         self.TABLE("uettp_initial", "VCHN", [5],type="int64",with_ptr=True) # hard coded size for struct 
         self.TABLE("uettp_initial", "VFILES", [num_vslot*4],type="int64",with_ptr=True) # hard coded size for struct 
-        
+        self.TABLE("uettp_initial", "READER", [num_rslot*(clip.Clip.ETACReaderStructIDX["buffer"]+1)],type="int64",with_ptr=True) 
+
         # executed earlier than MAKE_init_for_syms
         self.EMIT_LINE("uettp_beforeloop", """eta_ret += VCHN_init(ptr_VCHN,{num_rslot} + {num_vslot}, {num_rslot}, 
         {pool_tree_size},ptr_POOL_timetag_arr, ptr_POOL_fileid_arr , ptr_POOL_chn_arr ,nb.int64(GCONF_RESUME),
-        {num_rchns},ptr_VFILES)""".format(num_rslot=num_rslot, num_vslot=num_vslot,num_rchns=num_rchns,pool_tree_size=pool_tree_size))
+        {num_rchns},ptr_VFILES)""".format(num_rslot=num_rslot, num_vslot=num_vslot,
+        num_rchns=num_rchns,pool_tree_size=pool_tree_size))
 
     ######### Polymorphism ########
 
@@ -628,12 +671,12 @@ class Graph(INTEGER, TABLE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENCE):
         waittime =  self.get_INTEGER_or_literal(waittime,"emit(...,waittime=x,...)")
         if isinstance (waittime,int) and (waittime < 0):
             #Absolut timing should not be allowed
-            raise ValueError("The emit() event should have a wait time in ps that grow in monotonic order")
+            raise ValueError(self.error_prefix+"The emit() event should have a wait time in ps that grow in monotonic order")
         # safety check
         if chn in self.emit_consistent_delay_length:
             old_waittime= self.emit_consistent_delay_length[chn]
             if old_waittime != waittime: 
-                raise ValueError("All emit()s to the channel {} must meet the equal delay length condition, but both emit(waittime={}) and emit(waittime={}) were found.".format(chn,old_waittime,waittime))
+                raise ValueError(self.error_prefix+"All emit()s to the channel {} must meet the equal delay length condition, but both emit(waittime={}) and emit(waittime={}) were found.".format(chn,old_waittime,waittime))
         else:
             self.emit_consistent_delay_length[chn] = waittime
         phase = "(AbsTime_ps+{waittime})".format(waittime=waittime)
@@ -701,7 +744,7 @@ class Graph(INTEGER, TABLE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENCE):
             self.EMIT_LINE(
                 triggers, """common_start-=common_start%SYNCRate_pspr""")
         else:
-            raise ValueError(
+            raise ValueError(self.error_prefix+
                 "find start from anything other than the last sync is not yet implemented.")
         self.start(triggers, clock_names_orig, "common_start")
 
@@ -711,7 +754,7 @@ class Graph(INTEGER, TABLE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENCE):
         to_be_sorted = []
         based_on = ast.literal_eval(based_on)
         if not (based_on == "start" or based_on == "stop"):
-            raise ValueError(
+            raise ValueError(self.error_prefix+
                 "Clock sort base must be either 'start' or 'stop'")
         for i in range(len(therest)):
             # clock_preparing stage
@@ -721,7 +764,7 @@ class Graph(INTEGER, TABLE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENCE):
             if clock_type[0] == "clock" and clock_type[2] == 1:
                 to_be_sorted.append(clock_name + "_" + based_on)
             else:
-                raise ValueError(
+                raise ValueError(self.error_prefix+
                     "Object is not currently supported by record().")
 
         self.EMIT_LINE(triggers,

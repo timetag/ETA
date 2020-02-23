@@ -188,6 +188,7 @@ class BACKEND():
                 self.logger.error(str(e), exc_info=True)
 
     def compile_eta(self, etaobj=None):
+        self.send("none", "discard")  # show a neutral icon
         self.kernel.compile_eta(etaobj)
 
     def process_eta(self, etaobj=None, id="code", group="main"):

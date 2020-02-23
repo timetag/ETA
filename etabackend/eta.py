@@ -52,7 +52,6 @@ class ETA(ETA_CUT):
             self.notify_callback('update-recipe')
             # clear cache
             self.mainloop = {}
-            self.result_fetcher = {}
             self.initializer = {}
         except Exception as e:
             self.logger.warning("Compilation failed.", exc_info=True)
@@ -70,13 +69,12 @@ class ETA(ETA_CUT):
             # cache compiling results
             loc = jit_linker.link_jit_code(self.eta_compiled_code[group])
             self.mainloop[group] = loc["mainloop"]
-            self.result_fetcher[group] = loc["result_fetcher"]
             self.initializer[group] = loc["initializer"]
-        return self.initializer[group], self.mainloop[group], self.result_fetcher[group]
+        return self.initializer[group], self.mainloop[group]
 
     def run(self, *vargs, resume_task=None, group="main", return_task=False, return_results=True, **kwargs):
         # linking
-        initializer, mainloop, result_fetcher = self.compile_group(group=group)
+        initializer, mainloop = self.compile_group(group=group)
 
         # resuming task
         if resume_task is None:
@@ -111,7 +109,7 @@ class ETA(ETA_CUT):
             thread1 = self.executor.submit(
                 self.ctx_loop, *vargs, ctxs=ctxs, mainloop=mainloop, **kwargs)
 
-        task = (thread1, ts, ctxs, result_fetcher)
+        task = (thread1, ts, ctxs)
 
         if return_results and return_task:
             return self.aggregrate([task]), task
@@ -152,41 +150,23 @@ class ETA(ETA_CUT):
                 raise ValueError(
                     "Invalid section for cut." + str(feed_clip))
 
-            if ctxs[1] is None:
-                # create a new Clip info
-                ctxs[1] = np.array(feed_clip.to_reader_input(), dtype=np.int64)
-                # replace buffer
-                ctxs[0] = feed_clip.buffer
-            else:
+            for file_id in range(1):
+
+                
                 used_clip_result = Clip()
-                used_clip_result.from_parser_output(ctxs[1])
+                struct_len=used_clip_result.ETACReaderStructIDX["buffer"]+1
+                struct_start = struct_len*(file_id)
+                struct_end = struct_len*(file_id+1)
+                used_clip_result.from_parser_output(ctxs["READER"][struct_start:struct_end])
                 if used_clip_result.check_consumed():
                     self.logger.debug("Auto-fill triggered.")
                     feed_clip.overflowcorrection = used_clip_result.overflowcorrection
                     # replace to new Clip info
-                    # 7th for the global time shift
-                    ctxs[1][:] = feed_clip.to_reader_input()
-                    ctxs[0] = feed_clip.buffer
+                    ctxs["READER"][struct_start:struct_end] = feed_clip.to_reader_input()
+                    # replace buffer
+                    ctxs["UniBuf1"] = feed_clip.buffer
             self.logger.info("Executing analysis program...")
-            ret += mainloop(*ctxs)
-
-            loop_count += 1
-
-        return ret
-
-    def aggregrate(self, list_of_tasks, sum_results=True):
-        rets = []
-
-        for task in list_of_tasks:
-            (thread1, ts,  ctxs, result_fetcher) = task
-            if thread1:
-                # join process
-                print(thread1.result())
-            te = time.time()
-
-            self.logfrontend.info(
-                'ETA.RUN: Analysis is finished in {0:.2f} seconds.'.format((te - ts)))
-            self.notify_callback('stopped')
+            ret += mainloop(**ctxs)
 
             # debugging
             """
@@ -196,8 +176,26 @@ class ETA(ETA_CUT):
                     writeto.write(codelist[each])
                     break
             """
+            loop_count += 1
+
+        return ret
+
+    def aggregrate(self, list_of_tasks, sum_results=True):
+        rets = []
+
+        for task in list_of_tasks:
+            (thread1, ts,  ctxs) = task
+            if thread1:
+                # join process
+                print(thread1.result())
+            te = time.time()
+
+            self.logfrontend.info(
+                'ETA.RUN: Analysis is finished in {0:.2f} seconds.'.format((te - ts)))
+            self.notify_callback('stopped')
+
             # appending returns
-            rets.append(result_fetcher(*ctxs))
+            rets.append(ctxs)
 
         if sum_results:
             # reduce

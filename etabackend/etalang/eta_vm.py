@@ -8,9 +8,12 @@ class ETA_VM():
         self.chn_real = chn_real
         self.graphs = []
         self.graphs_name_to_id = {}
+        Graph.virtual_chn_all = {}
+        Graph.source_chn_all = {}
+        Graph.sink_chn_all = {}
         for each in graph_names:
             self.create_graph(each)
-
+    
     def create_graph(self, name):
         if not isinstance(name, str):
             raise ValueError(
@@ -45,21 +48,21 @@ class ETA_VM():
         if not did:
             raise ValueError("Unrecognized instruction {}.", functionnmae)
 
-    def check_output(self):
-        output_chn_used_by_which_graph = {}
-        for i in range(0, self.chn_real):
-            output_chn_used_by_which_graph[i] = -1
-        for graphid in range(0, len(self.graphs)):
-            for chn in self.graphs[graphid].output_chn:
-                # reserved for real devices
-                if chn in output_chn_used_by_which_graph:
-                    raise ValueError(
-                        "Graph {} trys to output to a used channel {} by Graph {}.".format(
-                            self.get_graph_name(graphid), chn,
-                            self.get_graph_name(output_chn_used_by_which_graph[chn])))
-                else:
-                    output_chn_used_by_which_graph[chn] = graphid
-        return output_chn_used_by_which_graph
+    # def check_output(self):
+    #     virtual_chn_used_by_which_graph = {}
+    #     for i in range(0, self.chn_real):
+    #         virtual_chn_used_by_which_graph[i] = -1
+    #     for graphid in range(0, len(self.graphs)):
+    #         for chn in self.graphs[graphid].virtual_chn:
+    #             # reserved for real devices
+    #             if chn in virtual_chn_used_by_which_graph:
+    #                 raise ValueError(
+    #                     "Graph {} trys to output to a used channel {} by Graph {}.".format(
+    #                         self.get_graph_name(graphid), chn,
+    #                         self.get_graph_name(virtual_chn_used_by_which_graph[chn])))
+    #             else:
+    #                 virtual_chn_used_by_which_graph[chn] = graphid
+    #     return virtual_chn_used_by_which_graph
 
     def check_input(self):
         input_chn_used_by_which_graph = {}

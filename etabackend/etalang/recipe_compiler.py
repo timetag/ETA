@@ -138,12 +138,14 @@ def compile_eta(jsobj):
         # generates infos
         num_vslot = 0
         for each in etavm.graphs:
-            for a in list(each.output_chn.keys()):
+            for a in list(each.virtual_chn.keys()):
                 if num_vslot < int(a):
                     num_vslot = int(a)
-            select_by_name(vis, each.name)["info"] = '📥 {}, 📤 {} '.format(  # , 📊 {}
+            select_by_name(vis, each.name)["info"] = '📥 {} 📤 {} 📜{} 💾{}'.format(  # , 📊 {}
                 str(list(each.input_chn.keys())),
-                str(list(each.output_chn.keys()))  # , str("???")
+                str(list(each.virtual_chn.keys())),
+                str(list(each.source_chn.keys())),
+                str(list(each.sink_chn.keys()))  # , str("???")
             )
 
             select_by_name(vis, each.name)["config"] = ""
@@ -159,7 +161,7 @@ def compile_eta(jsobj):
         # make init stage for each graph
         for each in range(len(vis)):
             etavm.exec_eta(["MAKE_init_for_syms",[each]])
-        etavm.check_output()
+        #etavm.check_output()
         onefile = code_template.get_onefile_loop(etavm.check_defines(), # defines external states for systems
                                                  *(etavm.dump_code()),
                                                  num_rslot=num_rslot, num_rchns=num_rchns, num_vslot=num_vslot,
