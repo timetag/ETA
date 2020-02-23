@@ -9,7 +9,7 @@ import etabackend.webinstall as webinstall
 import etabackend.ws_broadcast as ws_broadcast
 from etabackend.eta import ETA, ETACompilationException
 
-ETA_VERSION = "v0.6.6"
+ETA_VERSION = "v0.7.0"
 ETA_BANNER = \
     """ 
     ______  ______    ___ 
