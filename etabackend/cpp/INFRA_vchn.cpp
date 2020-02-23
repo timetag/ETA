@@ -37,16 +37,14 @@ extern "C" {
 	} circular_buf_t;
 	
 	typedef struct {
-
-		unsigned char VCHN_VFILES_offset;
-		unsigned char VCHN_RFILES;
-
-		unsigned char POOL_FILES;
-		unsigned char placeholder;
-		unsigned int placeholder2;
-		int64_t *POOL_timetag = 0;
+		
+		int64_t 	  *POOL_timetag = 0;
 		unsigned char *POOL_fileid = 0;
-		circular_buf_t* VFILES;
+		unsigned char *POOL_chn = 0;
+		circular_buf_t* VFILES; // a list of VFILES
+		unsigned char virtual_channel_offset;
+		unsigned char POOL_FILES;
+		unsigned char POOL_RFILES;
 	} VCHN_t;
 	
 	int MKS_inline circular_buf_reset(circular_buf_t * cbuf);
@@ -142,11 +140,12 @@ extern "C" {
 	// POOL
 	//////////////////////////////////////////////////////////////////////
 	
-	int MKS_inline POOL_update(VCHN_t* VCHN, int64_t timeinfuture, unsigned char FILEid) {
+	int MKS_inline POOL_update(VCHN_t* VCHN, int64_t timeinfuture, unsigned char FILEid,unsigned char chn) {
 		unsigned char index = VCHN->POOL_FILES + FILEid;
 		//save to leaf
 		VCHN->POOL_timetag[index] = timeinfuture;
 		VCHN->POOL_fileid[index] = FILEid;
+		VCHN->POOL_chn[index] = chn;
 		//PINFO("POOL_update index %d, FILEid %d, timeinfuture %lld", index,FILEid, timeinfuture)
 		while (index > 0) {
 			const unsigned char parent_leaf = (index-1) / 2;
@@ -156,40 +155,56 @@ extern "C" {
 			if (VCHN->POOL_timetag[left_leaf] < VCHN->POOL_timetag[right_leaf]) {//use smaller one as representative
 				VCHN->POOL_timetag[parent_leaf] = VCHN->POOL_timetag[left_leaf];
 				VCHN->POOL_fileid[parent_leaf] = VCHN->POOL_fileid[left_leaf];
+				VCHN->POOL_chn[parent_leaf] = VCHN->POOL_chn[left_leaf];
 			}
 			else {
 				VCHN->POOL_timetag[parent_leaf] = VCHN->POOL_timetag[right_leaf];
 				VCHN->POOL_fileid[parent_leaf] = VCHN->POOL_fileid[right_leaf];
+				VCHN->POOL_chn[parent_leaf] = VCHN->POOL_chn[right_leaf];
 			}
 			index = parent_leaf;
 		};
-		//PINFO("POOL_top %lld FILEid %d ", POOL_timetag[0], POOL_fileid[0])
+		//PINFO("POOL_top %lld FILEid %d chn %d ", POOL_timetag[0], POOL_fileid[0],POOL_chn[0])
 		
 		return 0;
 	}
 
-	int MKS_inline POOL_init(VCHN_t* VCHN, int64_t POOL_FILES1, int64_t pool_tree_size, void* POOL_timetag1, void* POOL_fileid1, int64_t resume) {
+	/////////////////////////////////////////////////////////////////////
+	// VCHN
+	//////////////////////////////////////////////////////////////////////
+
+	int MKS_inline VCHN_init(VCHN_t* VCHN, int64_t POOL_FILES, int64_t POOL_RFILES,  
+		int64_t pool_tree_size,	 void* POOL_timetag_arr, void* POOL_fileid_arr, void* POOL_chn1,  int64_t resume, 
+		int64_t virtual_channel_offset, void* VFILESptr) {
 		
-		VCHN->POOL_FILES = POOL_FILES1;
-		
-		VCHN->POOL_timetag = (int64_t *)POOL_timetag1; ;
+		VCHN->POOL_FILES = POOL_FILES;
+		VCHN->POOL_RFILES = POOL_RFILES;
+
+		VCHN->POOL_timetag = (int64_t *)POOL_timetag_arr; ;
 		if (VCHN->POOL_timetag == NULL ) {
-			PERROR("Memalloc failed, aborting.\n");
+			PERROR("Memalloc failed for POOL_timetag, aborting.\n");
 			return -1;
 		}
 		
-		VCHN->POOL_fileid = (unsigned char*)POOL_fileid1; 
+		VCHN->POOL_fileid = (unsigned char*)POOL_fileid_arr; 
 		if (VCHN->POOL_fileid == NULL) {
-			PERROR("Memalloc failed, aborting.\n");
+			PERROR("Memalloc failed for POOL_fileid, aborting.\n");
 			return -1;
 		}
-		
+
+		VCHN->POOL_chn = (unsigned char*)POOL_chn1; 
+		if (VCHN->POOL_chn == NULL) {
+			PERROR("Memalloc failed for POOL_chn, aborting.\n");
+			return -1;
+		}
+
 		if (resume == 0) {
-			PINFO("POOL_init %d", VCHN->POOL_FILES);
+			PINFO("POOL_init %d/%d", VCHN->POOL_RFILES, VCHN->POOL_FILES);
 			//init value
 			for (auto slot = 0; slot < pool_tree_size; slot++) {
 				VCHN->POOL_timetag[slot] = INT64_MAX;
-				VCHN->POOL_fileid[slot] = 0;
+				VCHN->POOL_fileid[slot] = 255;
+				VCHN->POOL_chn[slot] = 255;
 			}
 			//init leaf
 			for (auto slot = 0; slot < VCHN->POOL_FILES; slot++) {
@@ -197,21 +212,12 @@ extern "C" {
 			}
 		}
 		else {
-			PINFO("POOL_init resumed %d", VCHN->POOL_FILES);
+			PINFO("POOL_init resumed %d/%d", VCHN->POOL_RFILES, VCHN->POOL_FILES);
 		}
-		return 0;
 
-	}
-	/////////////////////////////////////////////////////////////////////
-	// VCHN
-	//////////////////////////////////////////////////////////////////////
 
-	int MKS_inline VCHN_init(VCHN_t* VCHN, int64_t rslots, int64_t rchns, int64_t vslots, void* VFILESptr) {
-		
-		VCHN->VCHN_RFILES = rslots;
-		VCHN->VCHN_VFILES_offset = rchns; 
-	
-		PINFO("VCHN_RFILES: %d,VCHN_VFILES_offset:%d ", VCHN->VCHN_RFILES, VCHN->VCHN_VFILES_offset);
+		VCHN->virtual_channel_offset = virtual_channel_offset; 
+		PINFO("virtual_channel_offset: %d ", VCHN->virtual_channel_offset);
 		VCHN->VFILES = (circular_buf_t*) VFILESptr;
 		if (VCHN->VFILES == NULL) {
 			PERROR("Memalloc failed for VFILES index, aborting.\n");
@@ -222,12 +228,12 @@ extern "C" {
 
 	int MKS_inline VCHN_put(VCHN_t* VCHN, int64_t timeinfuture, unsigned char virtual_channel) {
 		// for emit() action
-		const auto VFILEid = virtual_channel - VCHN->VCHN_VFILES_offset;
-		const auto FILEid = VFILEid + VCHN->VCHN_RFILES;
+		const auto VFILEid = virtual_channel - VCHN->virtual_channel_offset;
+		const auto FILEid = VFILEid + VCHN->POOL_RFILES;
 		//PINFO("VCHN_put FILEid %d, VFILEid %d, virtual_channel  %d , timeinfuture %lld", FILEid, VFILEid, virtual_channel, timeinfuture)
 		if (timeinfuture == INT64_MAX) {
 			//PINFO("clear future\n");
-			POOL_update(VCHN,timeinfuture, FILEid);
+			POOL_update(VCHN,timeinfuture, FILEid,virtual_channel);
 			circular_buf_reset(&(VCHN->VFILES[VFILEid]));
 			return -1;
 		}
@@ -235,7 +241,7 @@ extern "C" {
 			unsigned char  index = VCHN->POOL_FILES + FILEid;
 			if (VCHN->POOL_timetag[index] == INT64_MAX) {
 				//PINFO("REACTIVATE FILEid %d with chn %d at %lld",FILEid, virtual_channel, timeinfuture);
-				auto ret = POOL_update(VCHN,timeinfuture, FILEid);//reactivate virtual_channel;
+				auto ret = POOL_update(VCHN,timeinfuture, FILEid,virtual_channel);//reactivate virtual_channel;
 				return ret;
 			}
 			else {
@@ -256,30 +262,32 @@ extern "C" {
 		return 0;
 	}
 
-	int64_t MKS_inline VCHN_next(VCHN_t* VCHN, unsigned char* channel_out) {
+	int64_t MKS_inline VCHN_next(VCHN_t* VCHN, unsigned char* fileid_out, unsigned char* channel_out) {
 
 		//get current (min time) from pool
 		const auto AbsTime_ps = VCHN->POOL_timetag[0];
+		const auto fileid = VCHN->POOL_fileid[0];
+		const auto chn =  VCHN->POOL_chn[0];
 
-		const auto FILEid = VCHN->POOL_fileid[0];
-		const auto VFILEid = FILEid - VCHN->VCHN_RFILES;
-		*channel_out = VCHN->VCHN_VFILES_offset + VFILEid;
-		
+		// fetch new photon form vslots, depending on which is last touched
 		if (AbsTime_ps < INT64_MAX) {
+			const auto VFILEid = fileid - VCHN->POOL_RFILES;
 			if (VFILEid >= 0) {
+				//const auto chn = VCHN->virtual_channel_offset + VFILEid;
 				
-				// fetch new photon form vslots, depending on which is last touched
 				if (circular_buf_empty(VCHN->VFILES[VFILEid])) {
-					POOL_update(VCHN,INT64_MAX, FILEid);// disable FILEid
+					POOL_update(VCHN,INT64_MAX, fileid,chn);
+					// disable FILEid,chn if empty
 				}
 				else {
 					int64_t tempdata;
 					circular_buf_get(&(VCHN->VFILES[VFILEid]), &tempdata, true);
-					POOL_update(VCHN,tempdata, FILEid);
+					POOL_update(VCHN,tempdata, fileid,chn);
 				}
 			}
 		}
-		
+		*channel_out = chn;
+		*fileid_out = fileid;
 		//PINFO("VCHN_next FILEid %d, VFILEid %d, channel_out  %d , AbsTime_ps %lld", FILEid, VFILEid, *channel_out, AbsTime_ps)
 		return AbsTime_ps;
 

@@ -48,8 +48,8 @@ class TABLE():
 ### built-in types ###
 class VFILE():
     def vfile_init(self, sym, type):
-        self.EMIT_LINE("uettp_initial", """
-        eta_ret += VFILE_init(VCHN,nb.int64({chn}-eta_num_rchns),nb.int64({buffer_size}),ffi.from_buffer({vfile2}),nb.int64(1))
+        self.EMIT_LINE("uettp_beforeloop", """
+        eta_ret += VFILE_init(VCHN,nb.int64({chn}-virtual_channel_offset),nb.int64({buffer_size}),ffi.from_buffer({vfile2}),nb.int64(1))
         """.format(vfile2=type[1], buffer_size=type[2],chn=type[3]))
 
     def VFILE(self, triggers, chn, size="2097152"):
@@ -601,6 +601,7 @@ class Graph(INTEGER, TABLE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENCE):
     def MAKE_global_code_on_graph0(self):
         self.INTEGER("uettp_initial", "AbsTime_ps", initvalue=0)
         self.INTEGER("uettp_initial", "GCONF_RESUME", initvalue=0)
+        self.INTEGER("uettp_initial", "GCONF_EARLYSTOP", initvalue=1)
         self.EMIT_LINE("uettp_beforeloop", """
             if GCONF_RESUME==0:
                 GCONF_RESUME=1
