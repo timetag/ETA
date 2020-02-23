@@ -71,9 +71,9 @@ class ETA_VM():
     def check_defines(self):
         defines_used_by_which_graph = {}
         for graph in self.graphs:
-            for eachname in graph.register_symbols:
+            for eachname in graph.public_symbols:
 
-                if graph.register_symbols[eachname][0] == "table":
+                if graph.public_symbols[eachname][0] == "table":
                     each = eachname
                 else:
                     each = "scalar_" + eachname
@@ -82,7 +82,7 @@ class ETA_VM():
                     raise ValueError(
                         "Symbol {} is used by more than one graph.".format(
                             each))
-                defines_used_by_which_graph[each] = graph.register_symbols[eachname]
+                defines_used_by_which_graph[each] = graph.public_symbols[eachname]
         return defines_used_by_which_graph
 
     def dump_code(self, max_chn=255):
@@ -142,7 +142,7 @@ class ETA_VM():
                         chn_stanza += now_stanza
             if True or len(chn_stanza) > 0:
                 chn_stanza = textwrap.indent(chn_stanza, "  ")
-                mainloop += "\n{}if (chn[0]=={}):".format(mainloop_el, chn)
+                mainloop += "\n{}if (chn=={}):".format(mainloop_el, chn)
                 if mainloop_el == "":
                     mainloop_el = "el"
                 mainloop += chn_stanza
