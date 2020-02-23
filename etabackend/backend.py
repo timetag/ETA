@@ -96,7 +96,6 @@ class BACKEND():
         try:
             self.kernel.compile_eta(etaobj)
         except ETACompilationException:
-            self.send('', 'discard')
             pass
 
         if self.kernel.eta_compiled_code is not None:
@@ -209,14 +208,14 @@ class BACKEND():
             try:
                 self.kernel.compile_eta(etaobj)
             except ETACompilationException:
-                self.send('', 'discard')
-
-            # ETA File version check
-            if self.recipe_get_parameter("ETA_VERSION") is not None and self.recipe_get_parameter("ETA_VERSION") != self.ETA_VERSION:
-                self.logfrontend.warning(
-                    "ETA_VERSION: the recipe requires {} while ETA Backend is {}, you might encounter compatibility issues.".format(self.recipe_get_parameter("ETA_VERSION"), self.ETA_VERSION))
+                pass
 
             if self.kernel.eta_compiled_code is not None:
+                # ETA File version check
+                if self.recipe_get_parameter("ETA_VERSION") is not None and self.recipe_get_parameter("ETA_VERSION") != self.ETA_VERSION:
+                    self.logfrontend.warning(
+                        "ETA_VERSION: the recipe requires {} while ETA Backend is {}, you might encounter compatibility issues.".format(self.recipe_get_parameter("ETA_VERSION"), self.ETA_VERSION))
+
                 self.logfrontend.info(
                     "Executing code in Script Panel in group {}...".format(group))
                 try:
@@ -249,7 +248,7 @@ class FrontendFormatter(logging.Formatter):
         Hide the Stacktrace from the Message
         FIXME Include the stacktrace in the json array.
         """
-        return None
+        return str(e[1])
 
 
 class WebClientHandler(logging.Handler):
