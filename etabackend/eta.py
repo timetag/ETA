@@ -151,8 +151,6 @@ class ETA(ETA_CUT):
                     "Invalid section for cut." + str(feed_clip))
 
             for file_id in range(1):
-
-                
                 used_clip_result = Clip()
                 struct_len=used_clip_result.ETACReaderStructIDX["buffer"]+1
                 struct_start = struct_len*(file_id)

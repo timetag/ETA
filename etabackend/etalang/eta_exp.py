@@ -65,6 +65,7 @@ class TABLE():
 ### built-in types ###
 class VFILE():
     def vfile_init(self, sym, type):
+        
         self.EMIT_LINE("uettp_beforeloop", """
         eta_ret += VFILE_init(ptr_VCHN,nb.int64({chn}),nb.int64({buffer_size}),ffi.from_buffer({vfile2}),nb.int64(1))
         """.format(vfile2=type[1], buffer_size=type[2],chn=type[3]))
@@ -86,28 +87,41 @@ class VFILE():
 
 class RFILE():
     def rfile_init(self, sym, type):
-        pass
+        self.EMIT_LINE("global_initial", "{symbol}=None"
+                       .format(symbol=sym))
+        self.EMIT_LINE("uettp_beforeloop", """
+        eta_ret += FileReader_init(ptr_READER, {rfileid}, ffi.from_buffer({name}))
+        controller_rfile_time = FileReader_pop_event(ptr_READER,nb.int8({rfileid}),ptr_chn_next)
+        eta_ret += POOL_update(ptr_VCHN,nb.int64(controller_rfile_time),nb.int8({rfileid}),nb.int8(scalar_chn_next[0]))
+        """.format(name=type[1], rfileid=type[2],signalchn_offset=type[3],markerchn_offset=type[4]))
 
     def RFILE(self, triggers, name, signalchn="[1,2,3,4]", markerchn="[]"):
+        #print("RFILE called {}".format(triggers) )
         signalchn = ast.literal_eval(signalchn)
         markerchn = ast.literal_eval(markerchn)
         
         signalchn_offset = self.rfile_check_offset(triggers,name,signalchn)
         markerchn_offset = self.rfile_check_offset(triggers,name,markerchn)
-        return self.define_syms(name, ["rfile", name, signalchn_offset, markerchn_offset])
+        if name in self.rfile_all:
+            raise ValueError(self.error_prefix+"RFILE {} has been defined before.".format(name))
+        #assign an ID to the file
+        self.rfile_all[name] = len(self.rfile_all)
+        return self.define_syms(name, ["rfile", name, self.rfile_all[name], signalchn_offset, markerchn_offset], public=True)
     
     def rfile_check_offset(self, triggers, name, chnlist):
+        #print("==========")
         offset = 0
-        for each in chnlist:
-            offset = each
-            break
         for (i,each) in enumerate(chnlist):
+            #print(self.source_chn_all)
+            #print((i,each))
+            if i ==0:
+                offset = each
             if offset+i!=each:
                 raise ValueError(self.error_prefix+"Channel number in RFILE {name} should be continously ascending, like [1,2,3] or [2,3,4], however {chnlist} is found.".format(name=name,chnlist = str(chnlist)))
             if each in self.source_chn_all:
-                raise ValueError(self.error_prefix+"RFILE {name} has a illegal channel number {chn} which is used by another RFILE.".format(name=name,chn=each))
+                raise ValueError(self.error_prefix+"RFILE {name} has a illegal channel number {chn} which is used by another RFILE in graph {graph}.".format(name=name,chn=each,graph= self.source_chn_all[each][0]))
             if each in self.virtual_chn_all:
-                raise ValueError(self.error_prefix+"RFILE {name} has a illegal channel number {chn} which is an virtual channel.".format(name=name,chn=each))
+                raise ValueError(self.error_prefix+"RFILE {name} has a illegal channel number {chn} which is an virtual channel in graph {graph}.".format(name=name,chn=each,graph= self.virtual_chn_all[each][0]))
             
             self.source_chn[each] = (self.name,self.graphid)  # add to local channel talbe
             self.source_chn_all[each] = (self.name,self.graphid)  # add to global channel talbe
@@ -388,7 +402,8 @@ class Graph(INTEGER, TABLE, RFILE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENC
     virtual_chn_all = {}
     source_chn_all = {}
     sink_chn_all = {}
-    def __init__(self, name="NONAME-GRAPH", gid=0):
+    rfile_all = {}
+    def __init__(self, name="NONAME-GRAPH", gid=0,clear_gloabls=False):
         self.name = name
         self.graphid = gid
         self.error_prefix = "Error in graph {}: ".format(name)
@@ -402,7 +417,13 @@ class Graph(INTEGER, TABLE, RFILE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENC
         self.source_chn = {}
         self.sink_chn = {}
         self.emit_consistent_delay_length = {}
-
+        if clear_gloabls:
+            Graph.virtual_chn_all = {}
+            Graph.source_chn_all = {}
+            Graph.sink_chn_all = {}
+            Graph.rfile_all = {}
+            #print("self.source_chn_all cleaned")
+            #print(self.source_chn_all)
     # called by graph_parser
     #########################
 
@@ -641,7 +662,7 @@ class Graph(INTEGER, TABLE, RFILE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENC
                 raise ValueError(self.error_prefix+
                     "Illegal type initializer for symbol {}".format(each))
 
-    def MAKE_global_code_on_graph0(self,num_rslot,num_vslot,num_rchns,pool_tree_size):
+    def MAKE_global_code_on_graph0(self,num_rslot,num_vslot,vchn_offset,pool_tree_size):
         self.INTEGER("uettp_initial", "AbsTime_ps", initvalue=0)
         self.INTEGER("uettp_initial", "GCONF_RESUME", initvalue=255)
         self.INTEGER("uettp_initial", "GCONF_EARLYSTOP", initvalue=1, const=True)
@@ -659,8 +680,8 @@ class Graph(INTEGER, TABLE, RFILE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENC
         # executed earlier than MAKE_init_for_syms
         self.EMIT_LINE("uettp_beforeloop", """eta_ret += VCHN_init(ptr_VCHN,{num_rslot} + {num_vslot}, {num_rslot}, 
         {pool_tree_size},ptr_POOL_timetag_arr, ptr_POOL_fileid_arr , ptr_POOL_chn_arr ,nb.int64(GCONF_RESUME),
-        {num_rchns},ptr_VFILES)""".format(num_rslot=num_rslot, num_vslot=num_vslot,
-        num_rchns=num_rchns,pool_tree_size=pool_tree_size))
+        {vchn_offset},ptr_VFILES)""".format(num_rslot=num_rslot, num_vslot=num_vslot,
+        vchn_offset=vchn_offset,pool_tree_size=pool_tree_size))
 
     ######### Polymorphism ########
 

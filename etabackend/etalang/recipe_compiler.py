@@ -58,40 +58,6 @@ def compile_eta(jsobj):
     # prepare output per group
     code_per_groupings = {}
     for instgroup in vi_groupings:
-        # compile ri
-        if not(instgroup in ri_groupings):
-            raise ValueError(
-                "Group {} doesn't have any real instruments. Create an accusition device.".format(instgroup))
-        ris = ri_groupings[instgroup]
-
-        num_rslot = 0
-        num_rchns = 0
-        sign_chn_offset_per_rslots = []
-        mark_chn_offset_per_rslots = []
-        for each in ris:
-            # parse config string
-            try:
-                config = json.loads(each["config"])
-            except Exception as ex:
-                raise ValueError(
-                    "The recipe is corrupted or unsupported. \n\r If you are trying a recipe from a previous version of ETA,  please refer to the Download page for updating your recipe. \n\r "+str(ex))
-            if isinstance(config, int):
-                sign_chn_count = config
-                mark_chn_count = 0
-            elif isinstance(config, list):
-                sign_chn_count = config[0]
-                mark_chn_count = config[1]
-            # display channel number on info
-            each["info"] = "📤 " + \
-                json.dumps(
-                    [i for i in range(num_rchns, num_rchns + sign_chn_count+mark_chn_count)])
-            # assign channel number offset
-            sign_chn_offset_per_rslots.append(num_rchns)
-            num_rchns += sign_chn_count
-            mark_chn_offset_per_rslots.append(num_rchns)
-            num_rchns += mark_chn_count
-            num_rslot += 1
-
         # compile vi
         vis = vi_groupings[instgroup]
         vi_code_list = []
@@ -129,18 +95,22 @@ def compile_eta(jsobj):
         
         
         # code gen main process
-        etavm = eta_vm.ETA_VM(num_rchns, graphnames)
+        etavm = eta_vm.ETA_VM(graphnames)
         # execute instructions
         for each in vi_code_list:
             # print(each)
             etavm.exec_eta(each)
         
         # generates infos
-        num_vslot = 0
+        vchn_max = -1
+        vchn_min = 256
         for each in etavm.graphs:
+            num_rslot = len(each.rfile_all.keys())
             for a in list(each.virtual_chn.keys()):
-                if num_vslot < int(a):
-                    num_vslot = int(a)
+                if vchn_max < int(a):
+                    vchn_max = int(a)
+                if vchn_min > int(a):
+                    vchn_min = int(a)
             select_by_name(vis, each.name)["info"] = '📥 {} 📤 {} 📜{} 💾{}'.format(  # , 📊 {}
                 str(list(each.input_chn.keys())),
                 str(list(each.virtual_chn.keys())),
@@ -150,23 +120,20 @@ def compile_eta(jsobj):
 
             select_by_name(vis, each.name)["config"] = ""
             
-        # finalizing values of num_vslot, num_rslot, num_rchns
-        num_vslot -= num_rchns
-        num_vslot += 1
-        num_vslot = max(num_vslot, 0)
-
+        # finalizing values of num_vslot, num_rslot, vchn_offset
+        num_vslot = max(vchn_max-vchn_min+1, 0)
+        vchn_offset = vchn_min
+        
         # user stage ended, global stage started
         pool_tree_size = 2** int((num_rslot + num_vslot) * 2).bit_length()
-        etavm.exec_eta(["MAKE_global_code_on_graph0",[0,num_rslot,num_vslot,num_rchns,pool_tree_size]])
+        etavm.exec_eta(["MAKE_global_code_on_graph0",[0,num_rslot,num_vslot,vchn_offset,pool_tree_size]])
         # make init stage for each graph
         for each in range(len(vis)):
             etavm.exec_eta(["MAKE_init_for_syms",[each]])
         #etavm.check_output()
         onefile = code_template.get_onefile_loop(etavm.check_defines(), # defines external states for systems
                                                  *(etavm.dump_code()),
-                                                 num_rslot=num_rslot, num_rchns=num_rchns, num_vslot=num_vslot,
-                                                 mark_chn_offset_per_rslots=mark_chn_offset_per_rslots,
-                                                 sign_chn_offset_per_rslots=sign_chn_offset_per_rslots)
+                                                 num_rslot=num_rslot)
         code_per_groupings[instgroup] = onefile
 
     # update metadata
@@ -176,6 +143,5 @@ def compile_eta(jsobj):
     metadata += ris_all
     metadata += vis_all
 
-    #print("Compilation succeeded.\n")
-    #print("\n")
+ 
     return code_per_groupings, var_per_groupings, metadata

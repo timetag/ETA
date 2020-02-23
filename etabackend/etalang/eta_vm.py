@@ -3,14 +3,11 @@ from .eta_exp import Graph
 
 
 class ETA_VM():
-    def __init__(self, chn_real, graph_names):
+    def __init__(self, graph_names): #chn_real
         # first include real slots
-        self.chn_real = chn_real
+        #self.chn_real = chn_real
         self.graphs = []
         self.graphs_name_to_id = {}
-        Graph.virtual_chn_all = {}
-        Graph.source_chn_all = {}
-        Graph.sink_chn_all = {}
         for each in graph_names:
             self.create_graph(each)
     
@@ -23,7 +20,7 @@ class ETA_VM():
                 "Graph {} can not be re-defiend.".format(name))
         else:
             self.graphs_name_to_id[name] = len(self.graphs)
-            self.graphs.append(Graph(name, len(self.graphs)))
+            self.graphs.append(Graph(name, len(self.graphs),clear_gloabls=True))
 
     def get_graph_name(self, graphid):
         return self.graphs[graphid].name
@@ -76,10 +73,10 @@ class ETA_VM():
         for graph in self.graphs:
             for eachname in graph.public_symbols:
 
-                if graph.public_symbols[eachname][0] == "table":
-                    each = eachname
-                else:
+                if graph.public_symbols[eachname][0] == "integer":
                     each = "scalar_" + eachname
+                else:
+                    each = eachname
 
                 if each in defines_used_by_which_graph:
                     raise ValueError(
