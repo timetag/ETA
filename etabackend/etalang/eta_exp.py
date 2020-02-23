@@ -66,7 +66,7 @@ class TABLE():
 class VFILE():
     def vfile_init(self, sym, type):
         self.EMIT_LINE("uettp_beforeloop", """
-        eta_ret += VFILE_init(VCHN,nb.int64({chn}-virtual_channel_offset),nb.int64({buffer_size}),ffi.from_buffer({vfile2}),nb.int64(1))
+        eta_ret += VFILE_init(ptr_VCHN,nb.int64({chn}),nb.int64({buffer_size}),ffi.from_buffer({vfile2}),nb.int64(1))
         """.format(vfile2=type[1], buffer_size=type[2],chn=type[3]))
 
     def VFILE(self, triggers, chn, size="2097152"):
@@ -344,7 +344,7 @@ class COINCIDENCE():
         code = """
         {sym}|=nb.int64(1<<{thisnum})
         if {sym}== {fullint}:
-            eta_ret+=VCHN_put(nb.int64(AbsTime_ps),nb.int8({chn}))
+            eta_ret+=VCHN_put(ptr_VCHN,nb.int64(AbsTime_ps),nb.int8({chn}))
         """.format(sym=sym, thisnum=thisnum, fullint=fullint, chn=chn)
         self.EMIT_LINE(trigger, code)
 
@@ -600,14 +600,25 @@ class Graph(INTEGER, TABLE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENCE):
                 raise ValueError(
                     "Illegal type initializer for symbol {}".format(each))
 
-    def MAKE_global_code_on_graph0(self):
+    def MAKE_global_code_on_graph0(self,num_rslot,num_vslot,num_rchns,pool_tree_size):
         self.INTEGER("uettp_initial", "AbsTime_ps", initvalue=0)
         self.INTEGER("uettp_initial", "GCONF_RESUME", initvalue=255)
         self.INTEGER("uettp_initial", "GCONF_EARLYSTOP", initvalue=1, const=True)
         self.INTEGER("uettp_initial", "chn", initvalue=255,type="int8",with_ptr=True)
         self.INTEGER("uettp_initial", "chn_next", initvalue=255,type="int8",with_ptr=True)
         self.INTEGER("uettp_initial", "fileid", initvalue=255,type="int8",with_ptr=True)
-        self.EMIT_LINE("uettp_beforeloop", """#VCHN_init""")
+        
+        self.TABLE("uettp_initial", "POOL_timetag_arr", [pool_tree_size],type="int64",with_ptr=True)
+        self.TABLE("uettp_initial", "POOL_fileid_arr", [pool_tree_size],type="int8",with_ptr=True)
+        self.TABLE("uettp_initial", "POOL_chn_arr", [pool_tree_size],type="int8",with_ptr=True)
+        self.TABLE("uettp_initial", "VCHN", [5],type="int64",with_ptr=True) # hard coded size for struct 
+        self.TABLE("uettp_initial", "VFILES", [num_vslot*4],type="int64",with_ptr=True) # hard coded size for struct 
+        
+        # executed earlier than MAKE_init_for_syms
+        self.EMIT_LINE("uettp_beforeloop", """eta_ret += VCHN_init(ptr_VCHN,{num_rslot} + {num_vslot}, {num_rslot}, 
+        {pool_tree_size},ptr_POOL_timetag_arr, ptr_POOL_fileid_arr , ptr_POOL_chn_arr ,nb.int64(GCONF_RESUME),
+        {num_rchns},ptr_VFILES)""".format(num_rslot=num_rslot, num_vslot=num_vslot,num_rchns=num_rchns,pool_tree_size=pool_tree_size))
+
     ######### Polymorphism ########
 
     def emit(self, triggers, chn, waittime=0, period=0, repeat=1):
@@ -631,18 +642,18 @@ class Graph(INTEGER, TABLE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENCE):
         if isinstance (repeat,str) or (isinstance (repeat,int) and repeat > 1):
             code = """
                 for emit_times in range(0,{repeat}):
-                    eta_ret+=VCHN_put(VCHN,nb.int64({phase}+{period}*(emit_times)),nb.int8({chn}))
+                    eta_ret+=VCHN_put(ptr_VCHN,nb.int64({phase}+{period}*(emit_times)),nb.int8({chn}))
                 """.format(phase=phase,
                            chn=chn,  repeat=repeat, period=period)
         else:
-            code = """eta_ret+=VCHN_put(VCHN,nb.int64({phase}),nb.int8({chn}))""".format(phase=phase,
+            code = """eta_ret+=VCHN_put(ptr_VCHN,nb.int64({phase}),nb.int8({chn}))""".format(phase=phase,
                                                                                                   chn=chn)
         self.EMIT_LINE(triggers, code)
 
     def cancel_emit(self, triggers, chn):
         chn = self.get_INTEGER_or_literal(chn)
         self.EMIT_LINE(
-            triggers, """eta_ret+=VCHN_put(VCHN,nb.int64(9223372036854775807),nb.int8({chn}))""".format(chn=chn))
+            triggers, """eta_ret+=VCHN_put(ptr_VCHN,nb.int64(9223372036854775807),nb.int8({chn}))""".format(chn=chn))
 
     def parse_multi_object(self, names):
         names = names.strip()

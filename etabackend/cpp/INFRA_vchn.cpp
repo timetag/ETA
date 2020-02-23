@@ -132,23 +132,24 @@ extern "C"
 		return ((cbuf.head + 1) % cbuf.size) == cbuf.tail;
 	}
 
-	int MKS_inline VFILE_init(VCHN_t *VCHN, int64_t vslot, int64_t size, void *buffer, int64_t init)
+	int MKS_inline VFILE_init(VCHN_t *VCHN, int64_t channel, int64_t size, void *buffer, int64_t init)
 	{
-		VCHN->VFILES[vslot].buffer = (int64_t *)buffer; //malloc(VFILES[vslot].size * sizeof(int64_t));
-		if (VCHN->VFILES[vslot].buffer == NULL)
+		const auto VFILEid = channel - VCHN->virtual_channel_offset;
+		VCHN->VFILES[VFILEid].buffer = (int64_t *)buffer; //malloc(VFILES[VFILEid].size * sizeof(int64_t));
+		if (VCHN->VFILES[VFILEid].buffer == NULL)
 		{
 			PERROR("Memalloc failed for this VFILE, aborting.\n");
 			return -1;
 		}
 		if (init == 1)
 		{
-			VCHN->VFILES[vslot].size = size;			///TODO:FLEXIBLE THIGY
-			circular_buf_reset(&(VCHN->VFILES[vslot])); //set head and tail to 0
-			PINFO("Creating ring buffer %llx at %llx with size %lld. ", (uint64_t)vslot, (uint64_t)buffer, VCHN->VFILES[vslot].size);
+			VCHN->VFILES[VFILEid].size = size;			///TODO:FLEXIBLE THIGY
+			circular_buf_reset(&(VCHN->VFILES[VFILEid])); //set head and tail to 0
+			PINFO("Creating ring buffer %llx at %llx with size %lld. ", (uint64_t)VFILEid, (uint64_t)buffer, VCHN->VFILES[VFILEid].size);
 		}
 		else
 		{
-			PINFO("Resetting ring buffer %llx at %llx with size %lld. ", (uint64_t)vslot, (uint64_t)buffer, VCHN->VFILES[vslot].size);
+			PINFO("Resetting ring buffer %llx at %llx with size %lld. ", (uint64_t)VFILEid, (uint64_t)buffer, VCHN->VFILES[VFILEid].size);
 		}
 
 		return 0;
@@ -256,16 +257,16 @@ extern "C"
 		return 0;
 	}
 
-	int MKS_inline VCHN_put(VCHN_t *VCHN, int64_t timeinfuture, unsigned char virtual_channel)
+	int MKS_inline VCHN_put(VCHN_t *VCHN, int64_t timeinfuture, unsigned char channel)
 	{
 		// for emit() action
-		const auto VFILEid = virtual_channel - VCHN->virtual_channel_offset;
+		const auto VFILEid = channel - VCHN->virtual_channel_offset;
 		const auto FILEid = VFILEid + VCHN->POOL_RFILES;
-		//PINFO("VCHN_put FILEid %d, VFILEid %d, virtual_channel  %d , timeinfuture %lld", FILEid, VFILEid, virtual_channel, timeinfuture)
+		//PINFO("VCHN_put FILEid %d, VFILEid %d, channel  %d , timeinfuture %lld", FILEid, VFILEid, channel, timeinfuture)
 		if (timeinfuture == INT64_MAX)
 		{
 			//PINFO("clear future\n");
-			POOL_update(VCHN, timeinfuture, FILEid, virtual_channel);
+			POOL_update(VCHN, timeinfuture, FILEid, channel);
 			circular_buf_reset(&(VCHN->VFILES[VFILEid]));
 			return -1;
 		}
@@ -274,13 +275,13 @@ extern "C"
 			unsigned char index = VCHN->POOL_FILES + FILEid;
 			if (VCHN->POOL_timetag[index] == INT64_MAX)
 			{
-				//PINFO("REACTIVATE FILEid %d with chn %d at %lld",FILEid, virtual_channel, timeinfuture);
-				auto ret = POOL_update(VCHN, timeinfuture, FILEid, virtual_channel); //reactivate virtual_channel;
+				//PINFO("REACTIVATE FILEid %d with chn %d at %lld",FILEid, channel, timeinfuture);
+				auto ret = POOL_update(VCHN, timeinfuture, FILEid, channel); //reactivate channel;
 				return ret;
 			}
 			else
 			{
-				//PINFO("WRITE TO %lld, %d, FILEid %d", timeinfuture, virtual_channel, FILEid)
+				//PINFO("WRITE TO %lld, %d, FILEid %d", timeinfuture, channel, FILEid)
 				if (circular_buf_full(VCHN->VFILES[VFILEid]))
 				{
 					PFATAL("Buffer overflow! at %llx", (uint64_t)VCHN->VFILES[VFILEid].buffer);

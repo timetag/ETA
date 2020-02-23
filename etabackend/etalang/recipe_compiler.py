@@ -124,11 +124,7 @@ def compile_eta(jsobj):
             vi_code_list += [["LOAD_EMBEDDED_CODE",
                               [each, copy.deepcopy(intp.escaped_code)]]]
             vi_code_list += intp.instructions
-            # make global code, like resume, on graph 0, will replace the template eventually
-            if each ==0:
-                vi_code_list += [["MAKE_global_code_on_graph0",[0]]]
-            vi_code_list += [["MAKE_init_for_syms",
-                              [each]]]
+
             graphnames.append(instname)
         
         
@@ -151,10 +147,18 @@ def compile_eta(jsobj):
             )
 
             select_by_name(vis, each.name)["config"] = ""
+            
+        # finalizing values of num_vslot, num_rslot, num_rchns
         num_vslot -= num_rchns
         num_vslot += 1
         num_vslot = max(num_vslot, 0)
 
+        # user stage ended, global stage started
+        pool_tree_size = 2** int((num_rslot + num_vslot) * 2).bit_length()
+        etavm.exec_eta(["MAKE_global_code_on_graph0",[0,num_rslot,num_vslot,num_rchns,pool_tree_size]])
+        # make init stage for each graph
+        for each in range(len(vis)):
+            etavm.exec_eta(["MAKE_init_for_syms",[each]])
         etavm.check_output()
         onefile = code_template.get_onefile_loop(etavm.check_defines(), # defines external states for systems
                                                  *(etavm.dump_code()),

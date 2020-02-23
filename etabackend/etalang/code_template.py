@@ -20,70 +20,57 @@ mark_chn_offset_per_rslots):
 
     text = """
 @jit(nopython=True, nogil=True)#parallel=True, 
-def mainloop(UniBuf1, Reader_arr1, VCHN_arr, vfiles, POOL_timetag_arr, POOL_fileid_arr, POOL_chn_arr {tables}):
+def mainloop(UniBuf1, Reader_arr1 {tables}):
     link_libs()
     eta_ret = 0
     
     SYNCRate_pspr = Reader_arr1[4] # TODO: unhack
-    virtual_channel_offset = {num_rchns}
-    VCHN = ffi.from_buffer(VCHN_arr)
-    
     {uettp_initial}
-    eta_ret += VCHN_init(VCHN,{num_rslot} + {num_vslot}, {num_rslot}, 
-        {pool_tree_size},ffi.from_buffer(POOL_timetag_arr), ffi.from_buffer(POOL_fileid_arr) , ffi.from_buffer(POOL_chn_arr) ,nb.int64(GCONF_RESUME),
-        virtual_channel_offset,ffi.from_buffer(vfiles))
     {before_loop_code}
     READER1 = ffi.from_buffer(Reader_arr1)
     eta_ret += FileReader_init(READER1,ffi.from_buffer(UniBuf1))
 
     # TODO: for each in RFILE for first round
     controller_rfile_time = pop_signal_from_file(READER1,ptr_chn_next)
-    eta_ret += POOL_update(VCHN,nb.int64(controller_rfile_time),nb.int8(0),nb.int8(scalar_chn_next[0]))
+    eta_ret += POOL_update(ptr_VCHN,nb.int64(controller_rfile_time),nb.int8(0),nb.int8(scalar_chn_next[0]))
 
     while True:
-        AbsTime_ps =  VCHN_next(VCHN,ptr_fileid,ptr_chn)
+        AbsTime_ps = VCHN_next(ptr_VCHN,ptr_fileid,ptr_chn)
         chn = scalar_chn[0]
         fileid = scalar_fileid[0]
 
         if not(GCONF_EARLYSTOP) and AbsTime_ps == 9223372036854775807: # full stop
             break
         {looping}
+
+        FETCH_FROM_FILE=False
+        # TODO: case on file
         if chn<{num_rchns}:
-            # TODO: case on file
-            controller_rfile_time = pop_signal_from_file(READER1,ptr_chn_next)
             controller_rfile_id = 0
+            controller_READER=READER1
+            FETCH_FROM_FILE=True
+
+        if FETCH_FROM_FILE:
+            controller_rfile_time = pop_signal_from_file(controller_READER,ptr_chn_next)
             controller_rfile_chn = scalar_chn_next[0]
             if GCONF_EARLYSTOP and controller_rfile_time == 9223372036854775807: # early stop 
                 GCONF_RESUME = controller_rfile_id
                 break
             else:
-                eta_ret += POOL_update(VCHN,nb.int64(controller_rfile_time),nb.int8(controller_rfile_id),nb.int8(controller_rfile_chn))
+                eta_ret += POOL_update(ptr_VCHN,nb.int64(controller_rfile_time),nb.int8(controller_rfile_id),nb.int8(controller_rfile_chn))
     {deinit}
     return eta_ret
     
 def initializer():
-    VCHN_arr = np.zeros(5,dtype=np.int64)
-    vfiles = np.zeros(({num_vslot}*4), dtype=np.int64) 
     {global_initial}
-    POOL_timetag_arr=np.zeros(({pool_tree_size}) , dtype=np.int64)
-    POOL_fileid_arr=np.zeros(({pool_tree_size}) , dtype=np.int8)
-    POOL_chn_arr=np.zeros(({pool_tree_size}) , dtype=np.int8)
     # UniBuf, ReaderPTR1 are appened later
-    return [ None, None, VCHN_arr, vfiles, POOL_timetag_arr, POOL_fileid_arr, POOL_chn_arr {tables} ]
-    
-def result_fetcher(UniBuf, ReaderPTR1, VCHN_arr, vfiles, POOL_timetag_arr,POOL_fileid_arr,POOL_chn_arr {tables} ):
+    return [ None, None {tables} ]
+def result_fetcher(UniBuf, ReaderPTR1 {tables}):
     status= {{ {table_list}
-        "ReaderPTR1":ReaderPTR1,
-        "VCHN_arr":VCHN_arr,
-        "vfiles":vfiles,
-        "POOL_timetag_arr":POOL_timetag_arr,
-        "POOL_fileid_arr":POOL_fileid_arr,
-        "POOL_chn_arr":POOL_chn_arr,
+        "ReaderPTR1":ReaderPTR1
     }}
     return status
-
 """.format(uettp_initial=uettp_initial, before_loop_code=before_loop_code,deinit=deinit_code, looping=mainloop, global_initial=global_init_code,
-           tables=table_para, table_list=table_list,
-           num_rslot=num_rslot, num_vslot=num_vslot,pool_tree_size= 2** int((num_rslot + num_vslot) * 2).bit_length(), num_rchns=num_rchns)
+           tables=table_para, table_list=table_list, num_rchns=num_rchns)
     #input(text)
     return text
