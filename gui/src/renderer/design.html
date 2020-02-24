@@ -87,6 +87,42 @@
 
     </div>
 
+    <div class="modal fade" id="rfileModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create RFILE</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form class="needs-validation" novalidate id="rfile_table">
+                    <div class="modal-body">
+                        <label for="rfile1">Name</label>
+                        <input type="text" class="form-control" id="rfile1" required>
+                        <div class="invalid-feedback">
+                            Please provide a valid value.
+                        </div>
+                        <small class="form-text text-muted">The name of RFILE should match the keys in the sources dict.</small>
+                        <label for="rfile2">Signal Channels</label>
+                        <input type="text" class="form-control" id="rfile2" value="[0,1,2,3]" required>
+                        <div class="invalid-feedback">
+                            Please provide a valid value.
+                        </div>
+                        <label for="rfile3">Marker Channels</label>
+                        <input type="text" class="form-control" id="rfile3" value="[]"  required>
+                        <div class="invalid-feedback">
+                            Please provide a valid value.
+                        </div>
+                        <small class="form-text text-muted">Specify the channel number for mapping form file. Refer to the mannual for details.</small>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-outline-dark" id="rfile_create">Create</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
 
     <div class="modal fade" id="histogramModal" tabindex="-1" role="dialog">
@@ -254,10 +290,20 @@
                 <div class="modal-body">
 
                     <div class="row">
-                       
                         <div class="col-sm-4">
                             <div class="card">
-                                <img class="card-img-top" src="img/histograms.jpg">
+                                <img class="card-img-top" src="img/rfile.png">
+                                <div class="card-body">
+                                    <h5 class="card-title"><a href="#" id="btn_create_rfile">RFILE</a></h5>
+                                    <p class="card-text">RFILE works like a placeholder, for the physical timetagger device in the real-world, in the Virtual Instruments. </p>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <div class="card">
+                                <img class="card-img-top" src="img/histogram.png">
                                 <div class="card-body">
                                     <h5 class="card-title"><a href="#" id="btn_create_histogram">HISTOGRAM</a></h5>
                                     <p class="card-text">Histogram stores statistics with time intervals or an arbitray INTEGER.</p>
@@ -274,21 +320,22 @@
                                 </div>
                             </div>
                         </div>
+                        
+                    </div>
+
+                    <div class="row" style="padding-top: 1rem;">
                         <div class="col-sm-4">
                             <div class="card">
-                                <img class="card-img-top" src="img/coincidence.jpg">
+                                <img class="card-img-top" src="img/coincidence.png">
                                 <div class="card-body">
                                     <h5 class="card-title"><a href="#" id="btn_create_coincidence">COINCIDENCE</a></h5>
                                     <p class="card-text">Coincidence is a tool that emits a signal when all of its slots are fulfilled.</p>
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="row" style="padding-top: 1rem;">
                         <div class="col-sm-4">
                             <div class="card">
-                                <img class="card-img-top" src="img/integer.jpg">
+                                <img class="card-img-top" src="img/integer.png">
                                 <div class="card-body">
                                     <h5 class="card-title"><a href="#" id="btn_create_integer">INTEGER</a></h5>
                                     <p class="card-text">Integer is a fast storage for scalar that supports up to 64-bits.</p>
@@ -297,7 +344,7 @@
                         </div>
                         <div class="col-sm-4">
                             <div class="card">
-                                <img class="card-img-top" src="img/table.jpg">
+                                <img class="card-img-top" src="img/table.png">
                                 <div class="card-body">
                                     <h5 class="card-title"><a href="#" id="btn_create_table">TABLE</a></h5>
                                     <p class="card-text">Table is a general integer storage for vectors, matrix, or tensors.</p>

@@ -135,7 +135,7 @@ class ETA(ETA_CUT):
                     required_rfile, str(sources_user.keys())))
         else:
             self.logfrontend.warn(
-                "ETA.run: sources is not a dict, ETA will try to broadcast it to all RFILES. \n Use eta.run(sources={'file1':cg1,'file2':cg1},...) to give them seperatedly.")
+                "ETA.run: sources is not a dict. \n ETA will try to distribute it to all RFILES, which might case unexpected behavior. \n Use eta.run(sources={'file1':cg1,'file2':cg1},...) to give them seperatedly.")
             sources = sources_user
         if isinstance(sources, types.GeneratorType):
             try:

@@ -17,7 +17,7 @@ class ETA_VM():
                 "Graph name must be a string, but a {type} is found.".format(str(name)))
         if name in self.graphs_name_to_id:
             raise ValueError(
-                "Graph {} can not be re-defiend.".format(name))
+                "There are more than one Graph named `{}`, use a new name instead.".format(name))
         else:
             self.graphs_name_to_id[name] = len(self.graphs)
             self.graphs.append(Graph(name, len(self.graphs),clear_gloabls=True))

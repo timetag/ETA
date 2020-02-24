@@ -96,7 +96,7 @@ class RFILE():
             eta_ret += POOL_update(ptr_VCHN,nb.int64(controller_rfile_time),nb.int8({rfileid}),nb.int8(scalar_chn_next[0]))
         """.format(name=type[1], rfileid=type[2],signalchn_offset=type[3],markerchn_offset=type[4]))
 
-    def RFILE(self, triggers, name, signalchn="[1,2,3,4]", markerchn="[]"):
+    def RFILE(self, triggers, name, signalchn="[0,1,2,3]", markerchn="[]"):
         #print("RFILE called {}".format(triggers) )
         signalchn = ast.literal_eval(signalchn)
         markerchn = ast.literal_eval(markerchn)

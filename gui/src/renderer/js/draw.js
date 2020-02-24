@@ -256,7 +256,10 @@
           switch (name) {
             case "COINCIDENCE":
                 codegen=`COINCIDENCE(${$('#coincidence1').val()},${$('#coincidence2').val()},${$('#coincidence3').val()}) #COINCIDENCE(name,slots,chn)\n`+aceeditor.getValue();
-            break;
+                break;
+            case "RFILE":
+                codegen=`RFILE(${$('#rfile1').val()},${$('#rfile2').val()},${$('#rfile3').val()}) #RFILE(name,[vchns],[rchns])\n`+aceeditor.getValue();
+                break;
             case "CLOCK":
                 if (($('#clock2').val()==1) && ($('#clock3').val()==1)){
                     codegen=`CLOCK(${$('#clock1').val()})\n`+aceeditor.getValue();
@@ -291,6 +294,7 @@
   BIND_table("TABLE" );
   BIND_table("INTEGER" );
   BIND_table("HISTOGRAM" );
+  BIND_table("RFILE" );
   $('.modal').on('hidden.bs.modal', function(){
       $(this).find('input[type=text], input[type=password], input[type=number], input[type=email], textarea').val('');
   });
@@ -312,23 +316,6 @@
   BIND_btn_create("coincidence");
   BIND_btn_create("table");
   BIND_btn_create("integer");
-  //////dump here/////////
-  function ri_table(form) {
-    form.addEventListener('submit', function (event) {
-        if (form.checkValidity() === false) {
-            form.classList.add('was-validated');
-        } else {
-            form.classList.remove('was-validated');
-            codegen = `[${$('#ri2').val()},${$('#ri3').val()}]`;
-            $("#riModal").modal('hide');
-            create_item("ri_template", $('#ri1').val(), "main","", codegen);
-        }
-        event.preventDefault();
-        event.stopPropagation();
-    }, false);
-}
-ri_table(document.getElementById('ri_table'))
+  BIND_btn_create("rfile");
 
-/////////////////////////
-     
 }());
