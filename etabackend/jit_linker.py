@@ -144,15 +144,14 @@ def link_jit_code(code):
         "jit": jit, "ffi": ffi, "nb": nb, "np": np,
         "link_libs": link_libs,
         
-        "pop_signal_from_file": link_function("pop_signal_from_file", 2, i64ret=True),
-        "FileReader_init": link_function("FileReader_init", 2),
+        "FileReader_pop_event": link_function("FileReader_pop_event", 3, i64ret=True),
+        "FileReader_init": link_function("FileReader_init", 5),
 
         "VFILE_init": link_function("VFILE_init", 5),
-        "POOL_update": link_function("POOL_update", 3),
-        "POOL_init": link_function("POOL_init", 6),
-        "VCHN_init": link_function("VCHN_init", 5),
+        "POOL_update": link_function("POOL_update", 4),
+        "VCHN_init": link_function("VCHN_init", 10),
         "VCHN_put": link_function("VCHN_put", 3),
-        "VCHN_next": link_function("VCHN_next", 2, i64ret=True),
+        "VCHN_next": link_function("VCHN_next", 3, i64ret=True),
     }
     loc = {}
 

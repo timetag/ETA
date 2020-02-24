@@ -3,14 +3,14 @@ from .eta_exp import Graph
 
 
 class ETA_VM():
-    def __init__(self, chn_real, graph_names):
+    def __init__(self, graph_names): #chn_real
         # first include real slots
-        self.chn_real = chn_real
+        #self.chn_real = chn_real
         self.graphs = []
         self.graphs_name_to_id = {}
         for each in graph_names:
             self.create_graph(each)
-
+    
     def create_graph(self, name):
         if not isinstance(name, str):
             raise ValueError(
@@ -20,12 +20,12 @@ class ETA_VM():
                 "Graph {} can not be re-defiend.".format(name))
         else:
             self.graphs_name_to_id[name] = len(self.graphs)
-            self.graphs.append(Graph(name, len(self.graphs)))
+            self.graphs.append(Graph(name, len(self.graphs),clear_gloabls=True))
 
     def get_graph_name(self, graphid):
         return self.graphs[graphid].name
 
-    def exec_eta(self, instruction):
+    def exec_uettp(self, instruction):
         graphid = instruction[1][0]  # calling convesion
         functionnmae = instruction[0]
         if graphid > len(self.graphs):
@@ -45,44 +45,33 @@ class ETA_VM():
         if not did:
             raise ValueError("Unrecognized instruction {}.", functionnmae)
 
-    def check_output(self):
-        output_chn_used_by_which_graph = {}
-        for i in range(0, self.chn_real):
-            output_chn_used_by_which_graph[i] = -1
-        for graphid in range(0, len(self.graphs)):
-            for chn in self.graphs[graphid].output_chn:
-                # reserved for real devices
-                if chn in output_chn_used_by_which_graph:
-                    raise ValueError(
-                        "Graph {} trys to output to a used channel {} by Graph {}.".format(
-                            self.get_graph_name(graphid), chn,
-                            self.get_graph_name(output_chn_used_by_which_graph[chn])))
-                else:
-                    output_chn_used_by_which_graph[chn] = graphid
-        return output_chn_used_by_which_graph
+    def check_rfiles(self):
+        return Graph.rfile_all
 
-    def check_input(self):
+    def check_input_chn(self):
         input_chn_used_by_which_graph = {}
         for graphid in range(0, len(self.graphs)):
             for chn in self.graphs[graphid].input_chn:
                 input_chn_used_by_which_graph[chn] = graphid
         return input_chn_used_by_which_graph
 
-    def check_defines(self):
+    def check_defines(self, specific_type=None):
         defines_used_by_which_graph = {}
         for graph in self.graphs:
-            for eachname in graph.register_symbols:
-
-                if graph.register_symbols[eachname][0] == "table":
-                    each = eachname
-                else:
+            for eachname in graph.public_symbols:
+                if specific_type:
+                    if graph.public_symbols[eachname][0] != specific_type:
+                        break
+                if graph.public_symbols[eachname][0] == "integer":
                     each = "scalar_" + eachname
+                else:
+                    each = eachname
 
                 if each in defines_used_by_which_graph:
                     raise ValueError(
                         "Symbol {} is used by more than one graph.".format(
                             each))
-                defines_used_by_which_graph[each] = graph.register_symbols[eachname]
+                defines_used_by_which_graph[each] = graph.public_symbols[eachname]
         return defines_used_by_which_graph
 
     def dump_code(self, max_chn=255):
@@ -101,7 +90,7 @@ class ETA_VM():
 
         mainloop = ""
         mainloop_el = ""
-        inputs = self.check_input().keys()
+        inputs = self.check_input_chn().keys()
         for chn in inputs:
             chn_stanza = ""
             for graph in self.graphs:
@@ -142,7 +131,7 @@ class ETA_VM():
                         chn_stanza += now_stanza
             if True or len(chn_stanza) > 0:
                 chn_stanza = textwrap.indent(chn_stanza, "  ")
-                mainloop += "\n{}if (chn[0]=={}):".format(mainloop_el, chn)
+                mainloop += "\n{}if (chn=={}):".format(mainloop_el, chn)
                 if mainloop_el == "":
                     mainloop_el = "el"
                 mainloop += chn_stanza

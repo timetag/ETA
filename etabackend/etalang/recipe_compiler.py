@@ -7,7 +7,7 @@ import json
 import copy
 
 
-def compile_eta(jsobj):
+def codegen(jsobj):
     def put_into_groups(groupings_output, vis_ris_var_all):
         for each in range(len(vis_ris_var_all)):
             for group_of_instrument in vis_ris_var_all[each]["group"].split(","):
@@ -28,25 +28,29 @@ def compile_eta(jsobj):
 
     # split recipe
     vis_all = []
-    ris_all = []
     dpps_all = []
     var_all = []
     for each in json.loads(jsobj["eta_index_table"]):
         if each["id"].find("vi_") >= 0:
             vis_all.append(each)
-        elif each["id"].find("ri_") >= 0:
-            ris_all.append(each)
-        elif each["id"].find("var_") >= 0:
-            var_all.append(each)
-        else:
+        elif each["id"].find("dpp_") >= 0:
             dpps_all.append(each)
+        else:
+            # convert unrecognized to vars
+            if each["id"].find("_") >= 0:
+                each["id"] = "var" + each["id"][each["id"].find("_"):]
+            else:
+                each["id"] = "var" + each["id"]
+            var_all.append(each)
+
     # groupings for vi/ri/var
     vi_groupings = {}
-    ri_groupings = {}
     var_groupings = {}
     put_into_groups(vi_groupings, vis_all)
-    put_into_groups(ri_groupings, ris_all)
     put_into_groups(var_groupings, var_all)
+    # prepar var per group
+    rfiles_per_groupings = {}
+    # prepar var per group
     var_per_groupings = {}
     for vargroup in var_groupings:
         vars = var_groupings[vargroup]
@@ -55,47 +59,13 @@ def compile_eta(jsobj):
             key = each["name"]
             value = each["config"]
             var_per_groupings[vargroup][key] = value
-    # prepare output per group
+    # prepare code per group
     code_per_groupings = {}
     for instgroup in vi_groupings:
-        # compile ri
-        if not(instgroup in ri_groupings):
-            raise ValueError(
-                "Group {} doesn't have any real instruments. Create an accusition device.".format(instgroup))
-        ris = ri_groupings[instgroup]
-
-        num_rslot = 0
-        num_rchns = 0
-        sign_chn_offset_per_rslots = []
-        mark_chn_offset_per_rslots = []
-        for each in ris:
-            # parse config string
-            try:
-                config = json.loads(each["config"])
-            except Exception as ex:
-                raise ValueError(
-                    "The recipe is corrupted or unsupported. \n\r If you are trying a recipe from a previous version of ETA,  please refer to the Download page for updating your recipe. \n\r "+str(ex))
-            if isinstance(config, int):
-                sign_chn_count = config
-                mark_chn_count = 0
-            elif isinstance(config, list):
-                sign_chn_count = config[0]
-                mark_chn_count = config[1]
-            # display channel number on info
-            each["info"] = "📤 " + \
-                json.dumps(
-                    [i for i in range(num_rchns, num_rchns + sign_chn_count+mark_chn_count)])
-            # assign channel number offset
-            sign_chn_offset_per_rslots.append(num_rchns)
-            num_rchns += sign_chn_count
-            mark_chn_offset_per_rslots.append(num_rchns)
-            num_rchns += mark_chn_count
-            num_rslot += 1
-
         # compile vi
         vis = vi_groupings[instgroup]
         vi_code_list = []
-        
+
         graphnames = []
         #print("Compiling group {}...".format(instgroup))
         for each in range(len(vis)):
@@ -115,7 +85,7 @@ def compile_eta(jsobj):
                     varvalue = eachvar["config"]
                     usercode = usercode.replace(
                         "`{}`".format(varkey), varvalue)
-            
+
             # prepare for the triggers
             vi_code_list += graph_instructions
             vi_code_list += [["PREP_code_assignment", [each]]]
@@ -124,52 +94,63 @@ def compile_eta(jsobj):
             vi_code_list += [["LOAD_EMBEDDED_CODE",
                               [each, copy.deepcopy(intp.escaped_code)]]]
             vi_code_list += intp.instructions
-            # make global code, like resume, on graph 0, will replace the template eventually
-            if each ==0:
-                vi_code_list += [["MAKE_global_code_on_graph0",[0]]]
-            vi_code_list += [["MAKE_init_for_syms",
-                              [each]]]
+
             graphnames.append(instname)
-        
-        
+
         # code gen main process
-        etavm = eta_vm.ETA_VM(num_rchns, graphnames)
+        etavm = eta_vm.ETA_VM(graphnames)
         # execute instructions
         for each in vi_code_list:
             # print(each)
-            etavm.exec_eta(each)
-        
+            etavm.exec_uettp(each)
+
         # generates infos
-        num_vslot = 0
+
+        vchn_max = -1
+        vchn_min = 256
+        rchn_max = -1
         for each in etavm.graphs:
-            for a in list(each.output_chn.keys()):
-                if num_vslot < int(a):
-                    num_vslot = int(a)
-            select_by_name(vis, each.name)["info"] = '📥 {}, 📤 {} '.format(  # , 📊 {}
-                str(list(each.input_chn.keys())),
-                str(list(each.output_chn.keys()))  # , str("???")
-            )
-
+            num_rslot = len(each.rfile_all.keys())
+            for a in list(each.source_chn.keys()):
+                if rchn_max < int(a):
+                    rchn_max = int(a)
+            for a in list(each.virtual_chn.keys()):
+                if vchn_max < int(a):
+                    vchn_max = int(a)
+                if vchn_min > int(a):
+                    vchn_min = int(a)
+            select_by_name(vis, each.name)["info"] = ""
+            for (icon, chns) in zip(['📥', '📤', '📜', '💾'],
+                                    [each.input_chn.keys(), each.virtual_chn.keys(), each.source_chn.keys(), each.sink_chn.keys()]):
+                #  📊
+                if len(list(chns)) > 0:
+                    select_by_name(vis, each.name)[
+                        "info"] += '{}{} '.format(icon, str(list(chns)))
             select_by_name(vis, each.name)["config"] = ""
-        num_vslot -= num_rchns
-        num_vslot += 1
-        num_vslot = max(num_vslot, 0)
 
-        etavm.check_output()
-        onefile = code_template.get_onefile_loop(etavm.check_defines(), # defines external states for systems
+        # finalizing values of num_vslot, num_rslot, vchn_offset
+        num_vslot = max(vchn_max-vchn_min+1, 0)
+        vchn_offset = vchn_min
+        if rchn_max>=vchn_offset:
+            raise ValueError("All channel numbers assigned to RFILE should be smaller than any one assigned for virtual channel. \n However, the largest RFILE chn found is {}, but the smallest virtual chn is {}. There should be a clear boundray between them. ".format(rchn_max,vchn_offset))
+        # user stage ended, global stage started
+        pool_tree_size = 2 ** int((num_rslot + num_vslot) * 2).bit_length()
+        etavm.exec_uettp(["MAKE_global_code_on_graph0", [
+                         0, num_rslot, num_vslot, vchn_offset, pool_tree_size]])
+        # make init stage for each graph
+        for each in range(len(vis)):
+            etavm.exec_uettp(["MAKE_init_for_syms", [each]])
+        # etavm.check_output()
+        onefile = code_template.get_onefile_loop(etavm.check_defines(),  # defines external states for systems
                                                  *(etavm.dump_code()),
-                                                 num_rslot=num_rslot, num_rchns=num_rchns, num_vslot=num_vslot,
-                                                 mark_chn_offset_per_rslots=mark_chn_offset_per_rslots,
-                                                 sign_chn_offset_per_rslots=sign_chn_offset_per_rslots)
+                                                 num_rslot=num_rslot)
         code_per_groupings[instgroup] = onefile
+        rfiles_per_groupings[instgroup] = etavm.check_rfiles()
 
     # update metadata
     metadata = []
     metadata += var_all
     metadata += dpps_all
-    metadata += ris_all
     metadata += vis_all
 
-    #print("Compilation succeeded.\n")
-    #print("\n")
-    return code_per_groupings, var_per_groupings, metadata
+    return code_per_groupings, var_per_groupings, rfiles_per_groupings, metadata

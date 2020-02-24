@@ -109,9 +109,7 @@ d3.select('#btn_backend').on('click', function () {
     window.open("./processing.html");
 });
 
-$('#add-ri').click(function () {
-    $("#riModal").modal({ backdrop: 'static', keyboard: false });
-});
+
 $('#add-vi').click(function () {
     create_item("vi_template")
 });
@@ -121,21 +119,7 @@ $('#add-var').click(function () {
 $('#add-dpp').click(function () {
     create_item("dpp_template", "NewPanel")
 });
-function ri_table(form) {
-    form.addEventListener('submit', function (event) {
-        if (form.checkValidity() === false) {
-            form.classList.add('was-validated');
-        } else {
-            form.classList.remove('was-validated');
-            codegen = `[${$('#ri2').val()},${$('#ri3').val()}]`;
-            $("#riModal").modal('hide');
-            create_item("ri_template", $('#ri1').val(), "main","", codegen);
-        }
-        event.preventDefault();
-        event.stopPropagation();
-    }, false);
-}
-ri_table(document.getElementById('ri_table'))
+
 
 d3.select('#btn_settings').on('click', function () {
     $("#connectModal").modal({ backdrop: 'static', keyboard: false });

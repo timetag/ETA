@@ -9,7 +9,8 @@ import etabackend.webinstall as webinstall
 import etabackend.ws_broadcast as ws_broadcast
 from etabackend.eta import ETA, ETACompilationException
 
-ETA_VERSION = "v0.7.0"
+
+ETA_VERSION = "v0.7.1"
 ETA_BANNER = \
     """ 
     ______  ______    ___ 
@@ -65,7 +66,7 @@ class BACKEND():
         if run_forever:
             self.server.run_forever()
 
-        self.kernel.eta_compiled_code = None
+        self.kernel.clear_cache()
 
     def send(self, text, endpoint="log"):
         """
@@ -73,22 +74,22 @@ class BACKEND():
         self.server.send_message_to_all(json.dumps([endpoint, str(text)]))
 
     def recipe_update(self):
-        self.send(json.dumps(self.kernel.recipe_metadata), "table")
+        self.send(json.dumps(self.kernel.compilecache_table), "table")
 
     def recipe_set_parameter(self, key, value):
         create = True
-        for each in self.kernel.recipe_metadata:
+        for each in self.kernel.compilecache_table:
             if each["name"].strip() == key:
                 each["config"] = value
                 create = False
 
         if create:
-            self.kernel.recipe_metadata.append({"id": "var_template"+str(
+            self.kernel.compilecache_table.append({"id": "var_template"+str(
                 int(time.time())), "name": key, "group": "main", "info": "", "config": value})
         self.recipe_update()
 
     def recipe_get_parameter(self, key):
-        for each in self.kernel.recipe_metadata:
+        for each in self.kernel.compilecache_table:
             if each["name"].strip() == key:
                 return each["config"]
 
@@ -98,7 +99,7 @@ class BACKEND():
         except ETACompilationException:
             pass
 
-        if self.kernel.eta_compiled_code is not None:
+        if self.kernel.compilecache_code is not None:
             import tkinter as tk
             from tkinter.filedialog import askopenfilename
             root = tk.Tk()
@@ -188,6 +189,7 @@ class BACKEND():
                 self.logger.error(str(e), exc_info=True)
 
     def compile_eta(self, etaobj=None):
+        self.send("none", "discard")  # show a neutral icon
         self.kernel.compile_eta(etaobj)
 
     def process_eta(self, etaobj=None, id="code", group="main"):
@@ -203,27 +205,28 @@ class BACKEND():
             with open("server.eta", 'w') as file:
                 file.write(json.dumps(etaobj))
 
-            self.kernel.eta_compiled_code = None
+            self.kernel.clear_cache()
 
             try:
                 self.kernel.compile_eta(etaobj)
             except ETACompilationException:
                 pass
 
-            if self.kernel.eta_compiled_code is not None:
+
+            if self.kernel.compilecache_code is not None:
                 # ETA File version check
                 if self.recipe_get_parameter("ETA_VERSION") is not None and self.recipe_get_parameter("ETA_VERSION") != self.ETA_VERSION:
                     self.logfrontend.warning(
                         "ETA_VERSION: the recipe requires {} while ETA Backend is {}, you might encounter compatibility issues.".format(self.recipe_get_parameter("ETA_VERSION"), self.ETA_VERSION))
-
+                    
                 self.logfrontend.info(
                     "Executing code in Script Panel in group {}...".format(group))
                 try:
                     glob = {"eta": self.kernel, "quTAG_FORMAT_BINARY": 0, "FORMAT_SI": 1,
                             "quTAG_FORMAT_COMPRESSED": 2, "bh_spc_4bytes": 3}
                     # side configuration panel
-                    if group in self.kernel.usercode_vars:
-                        loc = self.kernel.usercode_vars[group]
+                    if group in self.kernel.compilecache_vars:
+                        loc = self.kernel.compilecache_vars[group]
                     else:
                         loc = {}
                     exec(etaobj[id], glob, loc)

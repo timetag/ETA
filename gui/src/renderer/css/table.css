@@ -41,14 +41,14 @@ td:focus {
     text-rendering: auto;
 }
 .viicon:before{
-color: #f00;
-content: "\f20e";
-font-family: Font Awesome\ 5 Brands;
+  color: #4a87be;
+  content: "\f233";
+  font-family: Font Awesome\ 5 Brands;
 }
 .riicon:before{
-    color: #4a87be;
-content: "\f233";
-font-family: Font Awesome\ 5 Free;
+  color: #f00;
+  content: "\f20e";
+  font-family: Font Awesome\ 5 Free;
 }
 .dppicon:before{
     color: #41ace3;
