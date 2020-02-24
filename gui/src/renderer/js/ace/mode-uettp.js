@@ -7,11 +7,11 @@ var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
 var PythonHighlightRules = function() {
 
     var keywords = (
-       "CLOCK|HISTOGRAM|EMITTER|INTEGER|BUFFER|TABLE|COINCIDENCE"
+       "CLOCK|HISTOGRAM|EMITTER|INTEGER|BUFFER|TABLE|COINCIDENCE|RFILE|VFILE|WFILE|RECORDER"
     );
 
     var builtinConstants = (
-       "record|start|stop|emit|fill|find_start|find_stop|clear|record_all|sort"
+       "record|start|stop|emit|cancel_emit|fill|infer_start_from_stop|find_stop|clear|record_all|sort|interrupt"
     );
 
     var builtinFunctions = (
