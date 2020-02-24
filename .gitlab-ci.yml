@@ -40,5 +40,5 @@ deploy1:
   when: manual
   script:
     - pip3 install twine
-    - twine upload dist/*.whl -u %PYPI_USERNAME% -p %PYPI_PASSWORD% --skip-existing
+    - twine upload dist/*.whl --skip-existing
         

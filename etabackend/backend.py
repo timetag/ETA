@@ -9,6 +9,7 @@ import etabackend.webinstall as webinstall
 import etabackend.ws_broadcast as ws_broadcast
 from etabackend.eta import ETA, ETACompilationException
 
+
 ETA_VERSION = "v0.7.1"
 ETA_BANNER = \
     """ 
@@ -211,12 +212,13 @@ class BACKEND():
             except ETACompilationException:
                 pass
 
+
             if self.kernel.compilecache_code is not None:
                 # ETA File version check
                 if self.recipe_get_parameter("ETA_VERSION") is not None and self.recipe_get_parameter("ETA_VERSION") != self.ETA_VERSION:
                     self.logfrontend.warning(
                         "ETA_VERSION: the recipe requires {} while ETA Backend is {}, you might encounter compatibility issues.".format(self.recipe_get_parameter("ETA_VERSION"), self.ETA_VERSION))
-
+                    
                 self.logfrontend.info(
                     "Executing code in Script Panel in group {}...".format(group))
                 try:
