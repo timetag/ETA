@@ -378,7 +378,7 @@ class COINCIDENCE():
         if num <= 1:
             raise ValueError(self.error_prefix+
                 "Coincidence number shoud be something larger than 1.")
-        self.VFILE(chn)
+        self.VFILE(triggers,chn)
         return self.define_syms(name, ["coincidence", num, chn])
 
     def coincidence_clear(self, trigger, sym):
