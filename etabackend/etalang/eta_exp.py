@@ -66,7 +66,7 @@ class TABLE():
 class VFILE():
     def vfile_init(self, sym, type):
         
-        self.EMIT_LINE("uettp_beforeloop", """
+        self.EMIT_LINE("uettp_calling", """
         eta_ret += VFILE_init(ptr_VCHN,nb.int64({chn}),nb.int64({buffer_size}),ffi.from_buffer({vfile2}),nb.int64(1))
         """.format(vfile2=type[1], buffer_size=type[2],chn=type[3]))
 
@@ -89,7 +89,7 @@ class RFILE():
     def rfile_init(self, sym, type):
         self.EMIT_LINE("global_initial", "{symbol}=None"
                        .format(symbol=sym))
-        self.EMIT_LINE("uettp_beforeloop", """
+        self.EMIT_LINE("uettp_calling", """
         eta_ret += FileReader_init(ptr_READER, {rfileid}, nb.int8({signalchn_offset}), nb.int8({markerchn_offset}),  ffi.from_buffer({name}))
         if GCONF_RESUME == {rfileid} or GCONF_RESUME == 255:
             controller_rfile_time = FileReader_pop_event(ptr_READER,nb.int8({rfileid}),ptr_chn_next)
@@ -481,9 +481,10 @@ class Graph(INTEGER, TABLE, RFILE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENC
             for j in range(0, self.maxstates):
                 self.tranout_to_section[i][j] = "#cond=[{}], trans outof {}".format(
                     i, j)
-        self.uettp_initial_section = "#init section for graph {}".format(self.name)
-        self.uettp_beforeloop_section = "#uettp_beforeloop_section for graph {}".format(self.name)
-        self.uettp_deinit_section = "#deinit section for graph {}".format(self.name)
+        self.uettp_initial_section = "#uettp_initial_section section for graph {}".format(self.name)
+        self.uettp_calling_section = "#uettp_calling_section for graph {}".format(self.name)
+        self.uettp_beforeloop_section = "#uettp_beforeloop_section section for graph {}".format(self.name)
+        self.uettp_deinit_section = "#uettp_deinit_section section for graph {}".format(self.name)
         self.global_initial_section = "#global init section for graph {}".format(
             self.name)
         self.internalobj_symbols = {}
@@ -495,6 +496,8 @@ class Graph(INTEGER, TABLE, RFILE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENC
         if isinstance(trigger, str):
             if trigger == "uettp_initial":
                 self.uettp_initial_section += "\n" + code
+            elif trigger == "uettp_calling":
+                self.uettp_calling_section += "\n" + code
             elif trigger == "uettp_beforeloop":
                 self.uettp_beforeloop_section += "\n" + code
             elif trigger == "uettp_deinit":
@@ -678,7 +681,7 @@ class Graph(INTEGER, TABLE, RFILE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENC
         self.TABLE("uettp_initial", "READER", [num_rslot*(clip.Clip.ETACReaderStructIDX["buffer"]+1)],type="int64",with_ptr=True) 
 
         # executed earlier than MAKE_init_for_syms
-        self.EMIT_LINE("uettp_beforeloop", """eta_ret += VCHN_init(ptr_VCHN,{num_rslot} + {num_vslot}, {num_rslot}, 
+        self.EMIT_LINE("uettp_calling", """eta_ret += VCHN_init(ptr_VCHN,{num_rslot} + {num_vslot}, {num_rslot}, 
         {pool_tree_size},ptr_POOL_timetag_arr, ptr_POOL_fileid_arr , ptr_POOL_chn_arr ,nb.int64(GCONF_RESUME),
         {vchn_offset},ptr_VFILES)""".format(num_rslot=num_rslot, num_vslot=num_vslot,
         vchn_offset=vchn_offset,pool_tree_size=pool_tree_size))

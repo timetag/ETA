@@ -1,18 +1,4 @@
-import textwrap, sys
-
-
-def get_onefile_loop(histograms, mainloop, uettp_initial,before_loop_code, deinit_code, global_init_code, 
-num_rslot):
-
-    before_loop_code  = textwrap.indent(before_loop_code, "    ")
-    uettp_initial = textwrap.indent(uettp_initial, "    ")
-    deinit_code = textwrap.indent(deinit_code, "    ")
-    mainloop = textwrap.indent(mainloop, "        ")
-    global_init_code = textwrap.indent(global_init_code, "    ")
-
-    table_list = ",".join(['"' + each + '":' + each for each in histograms])
-    table_para = ",".join(histograms)
-
+def get_onefile_loop(args):
     text = """
 @jit(nopython=True, nogil=True)#parallel=True, 
 def mainloop( {tables}):
@@ -20,7 +6,8 @@ def mainloop( {tables}):
     eta_ret = 0
     
     {uettp_initial}
-    {before_loop_code}
+    {init_llvm}
+    {beforeloop_code}
     if READER.size>4:
         SYNCRate_pspr = READER[4] # TODO: unhack
     while True:
@@ -43,7 +30,6 @@ def mainloop( {tables}):
 def initializer():
     {global_initial}
     return {{ {table_list} }}
-""".format(uettp_initial=uettp_initial, before_loop_code=before_loop_code,deinit=deinit_code, looping=mainloop, global_initial=global_init_code,
-           tables=table_para, table_list=table_list, num_rslot=num_rslot)
+""".format(**args)
     #input(text)
     return text

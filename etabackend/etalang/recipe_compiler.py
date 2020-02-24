@@ -73,11 +73,13 @@ def codegen(jsobj):
             instname = vis[each]["name"]
             instid = vis[each]["id"]
 
-            if not (instid in jsobj):
+            try:
+                usercode, graph_instructions = graph_parser.compile_graph(
+                    jsobj[instid], automata=each)
+            except:
                 raise ValueError(
                     "ETA file is corrupted. Graph for {} is not found.".format(instname))
-            usercode, graph_instructions = graph_parser.compile_graph(
-                jsobj[instid], automata=each)
+
             # apply vars to user code
             if instgroup in var_groupings:
                 for eachvar in var_groupings[instgroup]:
@@ -131,8 +133,8 @@ def codegen(jsobj):
         # finalizing values of num_vslot, num_rslot, vchn_offset
         num_vslot = max(vchn_max-vchn_min+1, 0)
         vchn_offset = vchn_min
-        if rchn_max>=vchn_offset:
-            raise ValueError("All channel numbers assigned to RFILE should be smaller than any one assigned for virtual channel. \n However, the largest RFILE chn found is {}, but the smallest virtual chn is {}. There should be a clear boundary between them. ".format(rchn_max,vchn_offset))
+        if rchn_max >= vchn_offset:
+            raise ValueError("All channel numbers assigned to RFILE should be smaller than any one assigned for virtual channel. \n However, the largest RFILE chn found is {}, but the smallest virtual chn is {}. There should be a clear boundary between them. ".format(rchn_max, vchn_offset))
         # user stage ended, global stage started
         pool_tree_size = 2 ** int((num_rslot + num_vslot) * 2).bit_length()
         etavm.exec_uettp(["MAKE_global_code_on_graph0", [
@@ -141,10 +143,9 @@ def codegen(jsobj):
         for each in range(len(vis)):
             etavm.exec_uettp(["MAKE_init_for_syms", [each]])
         # etavm.check_output()
-        onefile = code_template.get_onefile_loop(etavm.check_defines(),  # defines external states for systems
-                                                 *(etavm.dump_code()),
-                                                 num_rslot=num_rslot)
-        code_per_groupings[instgroup] = onefile
+        dc = etavm.dump_code()
+        dc["num_rslot"] = num_rslot
+        code_per_groupings[instgroup] = code_template.get_onefile_loop(dc)
         rfiles_per_groupings[instgroup] = etavm.check_rfiles()
 
     # update metadata

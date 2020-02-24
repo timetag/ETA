@@ -175,36 +175,7 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="riModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Create Acquisition Device</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form class="needs-validation" novalidate id="ri_table">
-                    <div class="modal-body">
-                        <label for="ri1">Name</label>
-                        <input type="text" class="form-control" id="ri1" required>
-                        <div class="invalid-feedback">
-                            Please provide a valid name.
-                        </div>
-                        <label for="ri2">Detector Channels</label>
-                        <input type="number" class="form-control" id="ri2" required value="4">
-                        <label for="ri3">Marker Channels</label>
-                        <input type="number" class="form-control" id="ri3" required value="0">
-
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-outline-dark" id="ri_create">Create</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
+    
     <div class="modal fade" id="connectModal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -267,6 +238,9 @@
                         </div>
                         <div class="custom-control custom-radio">
                             <input class="custom-control-input" type="radio" id="radio5" name="recipe" value="Lifetime" /><label class="custom-control-label" for="radio5">Lifetime Measurement</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" id="radio6" name="recipe" value="Simulation" /><label class="custom-control-label" for="radio6">Simulation</label>
                         </div>
                         <h> <a href="https://eta.readthedocs.io/en/latest/recipes.html" target="_blank">Learn more about the pre-made recipies...</a></h>
                     </div>

@@ -3,14 +3,12 @@ from .eta_exp import Graph
 
 
 class ETA_VM():
-    def __init__(self, graph_names): #chn_real
-        # first include real slots
-        #self.chn_real = chn_real
+    def __init__(self, graph_names):
         self.graphs = []
         self.graphs_name_to_id = {}
         for each in graph_names:
             self.create_graph(each)
-    
+
     def create_graph(self, name):
         if not isinstance(name, str):
             raise ValueError(
@@ -20,7 +18,8 @@ class ETA_VM():
                 "There are more than one Graph named `{}`, use a new name instead.".format(name))
         else:
             self.graphs_name_to_id[name] = len(self.graphs)
-            self.graphs.append(Graph(name, len(self.graphs),clear_gloabls=True))
+            self.graphs.append(
+                Graph(name, len(self.graphs), clear_gloabls=True))
 
     def get_graph_name(self, graphid):
         return self.graphs[graphid].name
@@ -74,20 +73,7 @@ class ETA_VM():
                 defines_used_by_which_graph[each] = graph.public_symbols[eachname]
         return defines_used_by_which_graph
 
-    def dump_code(self, max_chn=255):
-        init_code = ""
-        for each in self.graphs:
-            init_code += "\n" + each.uettp_initial_section
-        beforeloop_code = ""
-        for each in self.graphs:
-            beforeloop_code += "\n" + each.uettp_beforeloop_section
-        deinit_code = ""
-        for each in self.graphs:
-            deinit_code += "\n" + each.uettp_deinit_section
-        global_init_code = ""
-        for each in self.graphs:
-            global_init_code += "\n" + each.global_initial_section
-
+    def dump_code(self,  max_chn=255):
         mainloop = ""
         mainloop_el = ""
         inputs = self.check_input_chn().keys()
@@ -135,4 +121,14 @@ class ETA_VM():
                 if mainloop_el == "":
                     mainloop_el = "el"
                 mainloop += chn_stanza
-        return (mainloop, init_code, beforeloop_code, deinit_code, global_init_code)
+        ret = {
+            "looping": textwrap.indent(mainloop, "        "),
+            "uettp_initial": textwrap.indent("\n".join([each.uettp_initial_section for each in self.graphs]), "    "),
+            "init_llvm": textwrap.indent("\n".join([each.uettp_calling_section for each in self.graphs]), "    "),
+            "beforeloop_code": textwrap.indent("\n".join([each.uettp_beforeloop_section for each in self.graphs]), "    "),
+            "deinit": textwrap.indent("\n".join([each.uettp_deinit_section for each in self.graphs]),  "    "),
+            "global_initial": textwrap.indent("\n".join([each.global_initial_section for each in self.graphs]), "    "),
+            "table_list": ",".join(['"' + each + '":' + each for each in self.check_defines()]),
+            "tables": ",".join(self.check_defines())
+        }
+        return ret
