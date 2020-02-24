@@ -161,7 +161,7 @@ class ETA(ETA_CUT):
                 feed_clip = None
         return feed_clip
 
-    def ctx_loop(self, sources, ctxs=None, mainloop=None, required_rfiles=None, max_autofeed=0, stop_on_source=True):
+    def ctx_loop(self, sources, ctxs=None, mainloop=None, required_rfiles=None, max_autofeed=0, stop_with_source=True):
         # auto-feed loop
         loop_count = 0
         ret = 0
@@ -184,10 +184,10 @@ class ETA(ETA_CUT):
                     # feeding from clip
                     feed_clip = self.fetch_clip(
                         sources, rfile_name, max_autofeed)
-                    if stop_on_source and (not feed_clip):
+                    if stop_with_source and (not feed_clip):
                         self.logger.info(
                             "Analysis program early-stopped, stop at the end of Clips in one of the sources.")
-                        break
+                        return ret
                     feed_clip.overflowcorrection = used_clip_result.overflowcorrection
                     # replace to new Clip info
                     ctxs["READER"][struct_start:struct_end] = feed_clip.to_reader_input()
