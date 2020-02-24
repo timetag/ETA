@@ -125,41 +125,53 @@ class ETA(ETA_CUT):
         else:
             raise ValueError("You must return at least one thing!")
 
+    def fetch_clip(self, sources_user, required_rfile, max_autofeed):
+        # feeding from clip
+        if isinstance(sources_user, dict):
+            if required_rfile in sources_user:
+                sources = sources_user[required_rfile]
+            else:
+                raise ValueError("ETA.run: Can not find the required RFILE {} in the sources dict, the given dict only contains {}.".format(
+                    required_rfile, str(sources_user.keys())))
+        else:
+            self.logfrontend.warn(
+                "ETA.run: sources is not a dict, ETA will try to broadcast it to all RFILES. \n Use eta.run(sources={'file1':cg1,'file2':cg1},...) to give them seperatedly.")
+            sources = sources_user
+        if isinstance(sources, types.GeneratorType):
+            try:
+                feed_clip = next(sources)
+            except StopIteration:
+                feed_clip = None
+        elif isinstance(sources, Clip):
+            feed_clip = sources
+            self.logfrontend.warn(
+                "ETA.run: sources should be a dict of generator functions which yields Clips. \n Use cg = self.clips(your_path) to make one.")
+            if max_autofeed <= 0:
+                raise ValueError(
+                    "Using a raw Clip, instead of a generator that yields Clips, will cause ETA to run forever, as generators will StopIteration, but the raw Clip will never. Please set up a max_autofeed.")
+        if feed_clip:
+            if not (isinstance(feed_clip, Clip)):
+                self.logfrontend.warn(
+                    "ETA.run: sources should be a dict of generator functions which yields Clips. \n Use cg = self.clips(your_path) to make one.")
+                raise ValueError(
+                    "Invalid object retruned from the generator in the sources. RFILE {} requires a generator function instead.".format(required_rfile))
+            if not(feed_clip.validate()):
+                self.logfrontend.warn(
+                    "ETA.run: invalid Clip given for RFILE {}, maybe it has been used before.".format(required_rfile))
+                feed_clip = None
+        return feed_clip
+
     def ctx_loop(self, sources, ctxs=None, mainloop=None, required_rfiles=None, max_autofeed=0, stop_on_source=True):
         # auto-feed loop
         loop_count = 0
         ret = 0
         while True:
-            # feeding from clip
-            if isinstance(sources, types.GeneratorType):
-                try:
-                    feed_clip = next(sources)
-                except StopIteration:
-                    feed_clip = None
-            elif isinstance(sources, Clip):
-                feed_clip = sources
-                max_autofeed = 1  # stop after consuming this Clip
-            else:
-                self.logfrontend.warn(
-                    "ETA.RUN: the first parameter should be a generator function which yields Clips. Try cg = self.clips(your_filename).")
-                feed_clip = None
-
-            trueending = False
-            if (not feed_clip):
-                trueending = True
-            if stop_on_source and trueending:
-                self.logger.info(
-                    "Analysis program early-stopped, stop at the end of Clips in one of the sources.")
-                break
             if (max_autofeed > 0) and (loop_count > max_autofeed):
                 self.logger.info(
                     "Analysis program early-stopped, exceeding max_autofeed.")
                 break
-            if not (isinstance(feed_clip, Clip) and feed_clip.validate()):
-                raise ValueError(
-                    "Invalid section for cut." + str(feed_clip))
-
-            for (rfile_name,rfile_id) in required_rfiles.items():
+            for (rfile_name, rfile_id) in required_rfiles.items():
+                # check for existing clips
                 used_clip_result = Clip()
                 struct_len = used_clip_result.ETACReaderStructIDX["buffer"]+1
                 struct_start = struct_len*(rfile_id)
@@ -167,12 +179,21 @@ class ETA(ETA_CUT):
                 used_clip_result.from_parser_output(
                     ctxs["READER"][struct_start:struct_end])
                 if used_clip_result.check_consumed():
-                    self.logger.debug("Auto-fill triggered on {}".format(rfile_name))
+                    self.logger.debug(
+                        "Auto-fill triggered on {}".format(rfile_name))
+                    # feeding from clip
+                    feed_clip = self.fetch_clip(
+                        sources, rfile_name, max_autofeed)
+                    if stop_on_source and (not feed_clip):
+                        self.logger.info(
+                            "Analysis program early-stopped, stop at the end of Clips in one of the sources.")
+                        break
                     feed_clip.overflowcorrection = used_clip_result.overflowcorrection
                     # replace to new Clip info
                     ctxs["READER"][struct_start:struct_end] = feed_clip.to_reader_input()
                     # replace buffer
                     ctxs[rfile_name] = feed_clip.buffer
+
             self.logger.info("Executing analysis program...")
             ret += mainloop(**ctxs)
             # check final stop

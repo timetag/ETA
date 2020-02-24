@@ -105,10 +105,15 @@ def codegen(jsobj):
             etavm.exec_uettp(each)
 
         # generates infos
+
         vchn_max = -1
         vchn_min = 256
+        rchn_max = -1
         for each in etavm.graphs:
             num_rslot = len(each.rfile_all.keys())
+            for a in list(each.source_chn.keys()):
+                if rchn_max < int(a):
+                    rchn_max = int(a)
             for a in list(each.virtual_chn.keys()):
                 if vchn_max < int(a):
                     vchn_max = int(a)
@@ -126,7 +131,8 @@ def codegen(jsobj):
         # finalizing values of num_vslot, num_rslot, vchn_offset
         num_vslot = max(vchn_max-vchn_min+1, 0)
         vchn_offset = vchn_min
-
+        if rchn_max>=vchn_offset:
+            raise ValueError("All channel numbers assigned to RFILE should be smaller than any one assigned for virtual channel. \n However, the largest RFILE chn found is {}, but the smallest virtual chn is {}. There should be a clear boundray between them. ".format(rchn_max,vchn_offset))
         # user stage ended, global stage started
         pool_tree_size = 2 ** int((num_rslot + num_vslot) * 2).bit_length()
         etavm.exec_uettp(["MAKE_global_code_on_graph0", [
