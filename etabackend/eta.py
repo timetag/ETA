@@ -32,21 +32,24 @@ class ETA(ETA_CUT):
     def __init__(self):
         super().__init__()
 
-        self.eta_compiled_code = None
-        self.usercode_vars = None
-        self.recipe_metadata = None
+        self.clear_cache()
         self.executor = ThreadPoolExecutor()
         self._observer = {"running": [],
                           "stopped": [],
                           "update-recipe": [],
                           }
 
+    def clear_cache(self):
+        self.compilecache_code = None
+        self.compilecache_vars = None
+        self.compilecache_table = None
+        self.compilecache_rfiles = None
+
     def compile_eta(self, etaobj=None):
         try:
-            self.eta_compiled_code = None
-            self.usercode_vars = None
-            self.recipe_metadata = None
-            self.eta_compiled_code, self.usercode_vars, self.recipe_metadata = recipe_compiler.compile_eta(
+            # make sure to clear all of them
+            self.clear_cache()
+            self.compilecache_code, self.compilecache_vars, self.compilecache_rfiles, self.compilecache_table = recipe_compiler.codegen(
                 etaobj)
 
             self.notify_callback('update-recipe')
@@ -59,7 +62,7 @@ class ETA(ETA_CUT):
             raise ETACompilationException from e
 
     def compile_group(self, group="main"):
-        if not (group in self.eta_compiled_code):
+        if not (group in self.compilecache_code):
             raise ETANonExistingGroupException(
                 "Can not eta.run() on a non-existing group {}.".format(group))
             # self.logfrontend.warning("Can not eta.run() on a non-existing group {}.".format(group)) FIXME
@@ -67,7 +70,7 @@ class ETA(ETA_CUT):
             self.logfrontend.info(
                 "Compiling instrument group {}.".format(group))
             # cache compiling results
-            loc = jit_linker.link_jit_code(self.eta_compiled_code[group])
+            loc = jit_linker.link_jit_code(self.compilecache_code[group])
             self.mainloop[group] = loc["mainloop"]
             self.initializer[group] = loc["initializer"]
         return self.initializer[group], self.mainloop[group]
@@ -75,7 +78,8 @@ class ETA(ETA_CUT):
     def run(self, *vargs, resume_task=None, group="main", return_task=False, return_results=True, **kwargs):
         # linking
         initializer, mainloop = self.compile_group(group=group)
-
+        # getting rfiles
+        rfiles = self.compilecache_rfiles[group]
         # resuming task
         if resume_task is None:
             self.logfrontend.info(
@@ -102,12 +106,13 @@ class ETA(ETA_CUT):
 
         if return_results:
             # execute on MainThread
-            self.ctx_loop(*vargs, ctxs=ctxs, mainloop=mainloop, **kwargs)
+            self.ctx_loop(*vargs, ctxs=ctxs, mainloop=mainloop,
+                          required_rfiles=rfiles, **kwargs)
             thread1 = None
         else:
             # execute on ThreadPool
             thread1 = self.executor.submit(
-                self.ctx_loop, *vargs, ctxs=ctxs, mainloop=mainloop, **kwargs)
+                self.ctx_loop, *vargs, ctxs=ctxs, mainloop=mainloop, required_rfiles=rfiles, **kwargs)
 
         task = (thread1, ts, ctxs)
 
@@ -120,7 +125,7 @@ class ETA(ETA_CUT):
         else:
             raise ValueError("You must return at least one thing!")
 
-    def ctx_loop(self, sources, ctxs=None, mainloop=None, max_autofeed=0):
+    def ctx_loop(self, sources, ctxs=None, mainloop=None, required_rfiles=None, max_autofeed=0, stop_on_source=True):
         # auto-feed loop
         loop_count = 0
         ret = 0
@@ -142,30 +147,38 @@ class ETA(ETA_CUT):
             trueending = False
             if (not feed_clip):
                 trueending = True
-            if trueending:
+            if stop_on_source and trueending:
+                self.logger.info(
+                    "Analysis program early-stopped, stop at the end of Clips in one of the sources.")
                 break
             if (max_autofeed > 0) and (loop_count > max_autofeed):
+                self.logger.info(
+                    "Analysis program early-stopped, exceeding max_autofeed.")
                 break
             if not (isinstance(feed_clip, Clip) and feed_clip.validate()):
                 raise ValueError(
                     "Invalid section for cut." + str(feed_clip))
 
-            for file_id in range(1):
+            for (rfile_name,rfile_id) in required_rfiles.items():
                 used_clip_result = Clip()
-                struct_len=used_clip_result.ETACReaderStructIDX["buffer"]+1
-                struct_start = struct_len*(file_id)
-                struct_end = struct_len*(file_id+1)
-                used_clip_result.from_parser_output(ctxs["READER"][struct_start:struct_end])
+                struct_len = used_clip_result.ETACReaderStructIDX["buffer"]+1
+                struct_start = struct_len*(rfile_id)
+                struct_end = struct_len*(rfile_id+1)
+                used_clip_result.from_parser_output(
+                    ctxs["READER"][struct_start:struct_end])
                 if used_clip_result.check_consumed():
-                    self.logger.debug("Auto-fill triggered.")
+                    self.logger.debug("Auto-fill triggered on {}".format(rfile_name))
                     feed_clip.overflowcorrection = used_clip_result.overflowcorrection
                     # replace to new Clip info
                     ctxs["READER"][struct_start:struct_end] = feed_clip.to_reader_input()
                     # replace buffer
-                    ctxs["UniBuf1"] = feed_clip.buffer
+                    ctxs[rfile_name] = feed_clip.buffer
             self.logger.info("Executing analysis program...")
             ret += mainloop(**ctxs)
-
+            # check final stop
+            if ctxs["scalar_AbsTime_ps"][0] == 9223372036854775807:
+                self.logger.info("Analysis program ended.")
+                break
             # debugging
             """
             with open("llvm.txt", "w") as writeto:

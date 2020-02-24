@@ -90,9 +90,10 @@ class RFILE():
         self.EMIT_LINE("global_initial", "{symbol}=None"
                        .format(symbol=sym))
         self.EMIT_LINE("uettp_beforeloop", """
-        eta_ret += FileReader_init(ptr_READER, {rfileid}, ffi.from_buffer({name}))
-        controller_rfile_time = FileReader_pop_event(ptr_READER,nb.int8({rfileid}),ptr_chn_next)
-        eta_ret += POOL_update(ptr_VCHN,nb.int64(controller_rfile_time),nb.int8({rfileid}),nb.int8(scalar_chn_next[0]))
+        eta_ret += FileReader_init(ptr_READER, {rfileid}, nb.int8({signalchn_offset}), nb.int8({markerchn_offset}),  ffi.from_buffer({name}))
+        if GCONF_RESUME == {rfileid} or GCONF_RESUME == 255:
+            controller_rfile_time = FileReader_pop_event(ptr_READER,nb.int8({rfileid}),ptr_chn_next)
+            eta_ret += POOL_update(ptr_VCHN,nb.int64(controller_rfile_time),nb.int8({rfileid}),nb.int8(scalar_chn_next[0]))
         """.format(name=type[1], rfileid=type[2],signalchn_offset=type[3],markerchn_offset=type[4]))
 
     def RFILE(self, triggers, name, signalchn="[1,2,3,4]", markerchn="[]"):
@@ -665,7 +666,6 @@ class Graph(INTEGER, TABLE, RFILE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENC
     def MAKE_global_code_on_graph0(self,num_rslot,num_vslot,vchn_offset,pool_tree_size):
         self.INTEGER("uettp_initial", "AbsTime_ps", initvalue=0)
         self.INTEGER("uettp_initial", "GCONF_RESUME", initvalue=255)
-        self.INTEGER("uettp_initial", "GCONF_EARLYSTOP", initvalue=1, const=True)
         self.INTEGER("uettp_initial", "chn", initvalue=255,type="int8",with_ptr=True)
         self.INTEGER("uettp_initial", "chn_next", initvalue=255,type="int8",with_ptr=True)
         self.INTEGER("uettp_initial", "fileid", initvalue=255,type="int8",with_ptr=True)

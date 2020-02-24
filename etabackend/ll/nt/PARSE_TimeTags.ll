@@ -2196,34 +2196,48 @@ define dso_local i64 @FileReader_pop_event(%struct.ttf_reader*, i8, i8*) #0 {
 }
 
 ; Function Attrs: alwaysinline uwtable
-define dso_local i32 @FileReader_init(%struct.ttf_reader*, i8, i8*) #0 {
-  %4 = alloca i8*, align 8
-  %5 = alloca i8, align 1
-  %6 = alloca %struct.ttf_reader*, align 8
-  %7 = alloca %struct.ttf_reader*, align 8
-  store i8* %2, i8** %4, align 8
-  store i8 %1, i8* %5, align 1
-  store %struct.ttf_reader* %0, %struct.ttf_reader** %6, align 8
-  %8 = load %struct.ttf_reader*, %struct.ttf_reader** %6, align 8
-  %9 = load i8, i8* %5, align 1
-  %10 = zext i8 %9 to i64
-  %11 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %8, i64 %10
-  store %struct.ttf_reader* %11, %struct.ttf_reader** %7, align 8
-  %12 = load i8*, i8** %4, align 8
-  %13 = load %struct.ttf_reader*, %struct.ttf_reader** %7, align 8
-  %14 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %13, i32 0, i32 14
-  store i8* %12, i8** %14, align 8
-  %15 = load %struct.ttf_reader*, %struct.ttf_reader** %7, align 8
-  %16 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %15, i32 0, i32 10
-  %17 = load i64, i64* %16, align 8
-  %18 = load %struct.ttf_reader*, %struct.ttf_reader** %7, align 8
-  %19 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %18, i32 0, i32 11
-  %20 = load i64, i64* %19, align 8
-  %21 = load %struct.ttf_reader*, %struct.ttf_reader** %7, align 8
-  %22 = ptrtoint %struct.ttf_reader* %21 to i64
-  %23 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([63 x i8], [63 x i8]* @"??_C@_0DP@DAEGMCOO@?6Reader?5?$CFllx?5is?5pointed?5to?5recor@", i32 0, i32 0), i64 %22, i64 %20, i64 %17)
-  %24 = sext i32 %23 to i64
-  store i64 %24, i64* @order_gurantee3, align 8
+define dso_local i32 @FileReader_init(%struct.ttf_reader*, i8, i8, i8, i8*) #0 {
+  %6 = alloca i8*, align 8
+  %7 = alloca i8, align 1
+  %8 = alloca i8, align 1
+  %9 = alloca i8, align 1
+  %10 = alloca %struct.ttf_reader*, align 8
+  %11 = alloca %struct.ttf_reader*, align 8
+  store i8* %4, i8** %6, align 8
+  store i8 %3, i8* %7, align 1
+  store i8 %2, i8* %8, align 1
+  store i8 %1, i8* %9, align 1
+  store %struct.ttf_reader* %0, %struct.ttf_reader** %10, align 8
+  %12 = load %struct.ttf_reader*, %struct.ttf_reader** %10, align 8
+  %13 = load i8, i8* %9, align 1
+  %14 = zext i8 %13 to i64
+  %15 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %12, i64 %14
+  store %struct.ttf_reader* %15, %struct.ttf_reader** %11, align 8
+  %16 = load i8*, i8** %6, align 8
+  %17 = load %struct.ttf_reader*, %struct.ttf_reader** %11, align 8
+  %18 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %17, i32 0, i32 14
+  store i8* %16, i8** %18, align 8
+  %19 = load i8, i8* %8, align 1
+  %20 = zext i8 %19 to i64
+  %21 = load %struct.ttf_reader*, %struct.ttf_reader** %11, align 8
+  %22 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %21, i32 0, i32 8
+  store i64 %20, i64* %22, align 8
+  %23 = load i8, i8* %7, align 1
+  %24 = zext i8 %23 to i64
+  %25 = load %struct.ttf_reader*, %struct.ttf_reader** %11, align 8
+  %26 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %25, i32 0, i32 9
+  store i64 %24, i64* %26, align 8
+  %27 = load %struct.ttf_reader*, %struct.ttf_reader** %11, align 8
+  %28 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %27, i32 0, i32 10
+  %29 = load i64, i64* %28, align 8
+  %30 = load %struct.ttf_reader*, %struct.ttf_reader** %11, align 8
+  %31 = getelementptr inbounds %struct.ttf_reader, %struct.ttf_reader* %30, i32 0, i32 11
+  %32 = load i64, i64* %31, align 8
+  %33 = load %struct.ttf_reader*, %struct.ttf_reader** %11, align 8
+  %34 = ptrtoint %struct.ttf_reader* %33 to i64
+  %35 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([63 x i8], [63 x i8]* @"??_C@_0DP@DAEGMCOO@?6Reader?5?$CFllx?5is?5pointed?5to?5recor@", i32 0, i32 0), i64 %34, i64 %32, i64 %29)
+  %36 = sext i32 %35 to i64
+  store i64 %36, i64* @order_gurantee3, align 8
   ret i32 0
 }
 

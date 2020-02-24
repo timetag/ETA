@@ -25,7 +25,7 @@ class ETA_VM():
     def get_graph_name(self, graphid):
         return self.graphs[graphid].name
 
-    def exec_eta(self, instruction):
+    def exec_uettp(self, instruction):
         graphid = instruction[1][0]  # calling convesion
         functionnmae = instruction[0]
         if graphid > len(self.graphs):
@@ -45,34 +45,23 @@ class ETA_VM():
         if not did:
             raise ValueError("Unrecognized instruction {}.", functionnmae)
 
-    # def check_output(self):
-    #     virtual_chn_used_by_which_graph = {}
-    #     for i in range(0, self.chn_real):
-    #         virtual_chn_used_by_which_graph[i] = -1
-    #     for graphid in range(0, len(self.graphs)):
-    #         for chn in self.graphs[graphid].virtual_chn:
-    #             # reserved for real devices
-    #             if chn in virtual_chn_used_by_which_graph:
-    #                 raise ValueError(
-    #                     "Graph {} trys to output to a used channel {} by Graph {}.".format(
-    #                         self.get_graph_name(graphid), chn,
-    #                         self.get_graph_name(virtual_chn_used_by_which_graph[chn])))
-    #             else:
-    #                 virtual_chn_used_by_which_graph[chn] = graphid
-    #     return virtual_chn_used_by_which_graph
+    def check_rfiles(self):
+        return Graph.rfile_all
 
-    def check_input(self):
+    def check_input_chn(self):
         input_chn_used_by_which_graph = {}
         for graphid in range(0, len(self.graphs)):
             for chn in self.graphs[graphid].input_chn:
                 input_chn_used_by_which_graph[chn] = graphid
         return input_chn_used_by_which_graph
 
-    def check_defines(self):
+    def check_defines(self, specific_type=None):
         defines_used_by_which_graph = {}
         for graph in self.graphs:
             for eachname in graph.public_symbols:
-
+                if specific_type:
+                    if graph.public_symbols[eachname][0] != specific_type:
+                        break
                 if graph.public_symbols[eachname][0] == "integer":
                     each = "scalar_" + eachname
                 else:
@@ -101,7 +90,7 @@ class ETA_VM():
 
         mainloop = ""
         mainloop_el = ""
-        inputs = self.check_input().keys()
+        inputs = self.check_input_chn().keys()
         for chn in inputs:
             chn_stanza = ""
             for graph in self.graphs:

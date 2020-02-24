@@ -145,7 +145,7 @@ def link_jit_code(code):
         "link_libs": link_libs,
         
         "FileReader_pop_event": link_function("FileReader_pop_event", 3, i64ret=True),
-        "FileReader_init": link_function("FileReader_init", 3),
+        "FileReader_init": link_function("FileReader_init", 5),
 
         "VFILE_init": link_function("VFILE_init", 5),
         "POOL_update": link_function("POOL_update", 4),

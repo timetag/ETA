@@ -7,7 +7,7 @@ import json
 import copy
 
 
-def compile_eta(jsobj):
+def codegen(jsobj):
     def put_into_groups(groupings_output, vis_ris_var_all):
         for each in range(len(vis_ris_var_all)):
             for group_of_instrument in vis_ris_var_all[each]["group"].split(","):
@@ -28,25 +28,29 @@ def compile_eta(jsobj):
 
     # split recipe
     vis_all = []
-    ris_all = []
     dpps_all = []
     var_all = []
     for each in json.loads(jsobj["eta_index_table"]):
         if each["id"].find("vi_") >= 0:
             vis_all.append(each)
-        elif each["id"].find("ri_") >= 0:
-            ris_all.append(each)
-        elif each["id"].find("var_") >= 0:
-            var_all.append(each)
-        else:
+        elif each["id"].find("dpp_") >= 0:
             dpps_all.append(each)
+        else:
+            # convert unrecognized to vars
+            if each["id"].find("_") >= 0:
+                each["id"] = "var" + each["id"][each["id"].find("_"):]
+            else:
+                each["id"] = "var" + each["id"]
+            var_all.append(each)
+
     # groupings for vi/ri/var
     vi_groupings = {}
-    ri_groupings = {}
     var_groupings = {}
     put_into_groups(vi_groupings, vis_all)
-    put_into_groups(ri_groupings, ris_all)
     put_into_groups(var_groupings, var_all)
+    # prepar var per group
+    rfiles_per_groupings = {}
+    # prepar var per group
     var_per_groupings = {}
     for vargroup in var_groupings:
         vars = var_groupings[vargroup]
@@ -55,13 +59,13 @@ def compile_eta(jsobj):
             key = each["name"]
             value = each["config"]
             var_per_groupings[vargroup][key] = value
-    # prepare output per group
+    # prepare code per group
     code_per_groupings = {}
     for instgroup in vi_groupings:
         # compile vi
         vis = vi_groupings[instgroup]
         vi_code_list = []
-        
+
         graphnames = []
         #print("Compiling group {}...".format(instgroup))
         for each in range(len(vis)):
@@ -81,7 +85,7 @@ def compile_eta(jsobj):
                     varvalue = eachvar["config"]
                     usercode = usercode.replace(
                         "`{}`".format(varkey), varvalue)
-            
+
             # prepare for the triggers
             vi_code_list += graph_instructions
             vi_code_list += [["PREP_code_assignment", [each]]]
@@ -92,15 +96,14 @@ def compile_eta(jsobj):
             vi_code_list += intp.instructions
 
             graphnames.append(instname)
-        
-        
+
         # code gen main process
         etavm = eta_vm.ETA_VM(graphnames)
         # execute instructions
         for each in vi_code_list:
             # print(each)
-            etavm.exec_eta(each)
-        
+            etavm.exec_uettp(each)
+
         # generates infos
         vchn_max = -1
         vchn_min = 256
@@ -111,37 +114,37 @@ def compile_eta(jsobj):
                     vchn_max = int(a)
                 if vchn_min > int(a):
                     vchn_min = int(a)
-            select_by_name(vis, each.name)["info"] = '📥 {} 📤 {} 📜{} 💾{}'.format(  # , 📊 {}
-                str(list(each.input_chn.keys())),
-                str(list(each.virtual_chn.keys())),
-                str(list(each.source_chn.keys())),
-                str(list(each.sink_chn.keys()))  # , str("???")
-            )
-
+            select_by_name(vis, each.name)["info"] = ""
+            for (icon, chns) in zip(['📥', '📤', '📜', '💾'],
+                                    [each.input_chn.keys(), each.virtual_chn.keys(), each.source_chn.keys(), each.sink_chn.keys()]):
+                #  📊
+                if len(list(chns)) > 0:
+                    select_by_name(vis, each.name)[
+                        "info"] += '{}{} '.format(icon, str(list(chns)))
             select_by_name(vis, each.name)["config"] = ""
-            
+
         # finalizing values of num_vslot, num_rslot, vchn_offset
         num_vslot = max(vchn_max-vchn_min+1, 0)
         vchn_offset = vchn_min
-        
+
         # user stage ended, global stage started
-        pool_tree_size = 2** int((num_rslot + num_vslot) * 2).bit_length()
-        etavm.exec_eta(["MAKE_global_code_on_graph0",[0,num_rslot,num_vslot,vchn_offset,pool_tree_size]])
+        pool_tree_size = 2 ** int((num_rslot + num_vslot) * 2).bit_length()
+        etavm.exec_uettp(["MAKE_global_code_on_graph0", [
+                         0, num_rslot, num_vslot, vchn_offset, pool_tree_size]])
         # make init stage for each graph
         for each in range(len(vis)):
-            etavm.exec_eta(["MAKE_init_for_syms",[each]])
-        #etavm.check_output()
-        onefile = code_template.get_onefile_loop(etavm.check_defines(), # defines external states for systems
+            etavm.exec_uettp(["MAKE_init_for_syms", [each]])
+        # etavm.check_output()
+        onefile = code_template.get_onefile_loop(etavm.check_defines(),  # defines external states for systems
                                                  *(etavm.dump_code()),
                                                  num_rslot=num_rslot)
         code_per_groupings[instgroup] = onefile
+        rfiles_per_groupings[instgroup] = etavm.check_rfiles()
 
     # update metadata
     metadata = []
     metadata += var_all
     metadata += dpps_all
-    metadata += ris_all
     metadata += vis_all
 
- 
-    return code_per_groupings, var_per_groupings, metadata
+    return code_per_groupings, var_per_groupings, rfiles_per_groupings, metadata

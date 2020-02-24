@@ -487,9 +487,11 @@ extern "C" {
 		*out_Channel = 255;
 		return INT64_MAX;
 	}
-	int MKS_inline FileReader_init(ttf_reader* READER_list, unsigned char RFILEid, char* UniBuf) {
+	int MKS_inline FileReader_init(ttf_reader* READER_list, unsigned char RFILEid,unsigned char signalchn_offset,unsigned char markerchn_offset, char* UniBuf) {
 		auto READER = &(READER_list[RFILEid]);
 		READER->buffer = UniBuf;
+		READER->CHANNEL_OFFSET = signalchn_offset;
+		READER->MARKER_OFFSET = markerchn_offset;
 		PINFO("Reader %llx is pointed to record %lld on buffer of [0,%lld).\n", (uint64_t)READER, READER->next_RecID_in_batch, READER->batch_actualread_length);
 
 		/*PINFO("TTRes_pspr %lld", READER->TTRes_pspr);
