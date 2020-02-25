@@ -21,7 +21,7 @@ class TestETATimetagLogic:
                 recipe_obj = json.load(filehandle)
 
         eta_engine = etabackend.eta.ETA()
-        eta_engine.compile_eta(recipe_obj)
+        eta_engine.load_eta(recipe_obj)
         cut=eta_engine.split_file(test_folder / "hydraharp" / "data" / "19_HH400_T3_80MHz_HBT.timeres", 4)
         result=eta_engine.run(cut, group='compile')
 
