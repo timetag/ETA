@@ -134,7 +134,7 @@ app.on('ready', () => {
   autoUpdater.autoDownload = false
 
   autoUpdater.on('error', (error) => {
-    dialog.showErrorBox('Update Error', error == null ? "unknown" : (error).toString())
+    //dialog.showErrorBox('Update Error', error == null ? "unknown" : (error).toString())
   })
 
   autoUpdater.on('update-available', () => {
