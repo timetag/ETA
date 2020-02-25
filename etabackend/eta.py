@@ -106,12 +106,12 @@ class ETA(ETA_CUT):
             self.logfrontend.info(
                 "ETA.run: Starting new analysis using Instrument group {}.".format(group))
             self.notify_callback('running')
-            (thread1, ts, ctxs, _) = (None, None, None, None)
+            (thread1, ts, ctxs) = (None, None, None)
         else:
             self.logfrontend.info(
                 "ETA.run: Resuming analysis using Instrument group {}.".format(group))
             self.notify_callback('running')
-            (thread1, ts, ctxs, _) = resume_task
+            (thread1, ts, ctxs) = resume_task
 
         if thread1:
             # join the previous thread
@@ -165,8 +165,6 @@ class ETA(ETA_CUT):
                 feed_clip = None
         elif isinstance(sources, Clip):
             feed_clip = sources
-            self.logfrontend.warn(
-                "ETA.run: sources should be a dict of generator functions which yields Clips. \n Use cg = self.clips(your_path) to make one.")
             if max_autofeed <= 0:
                 raise ValueError(
                     "Using a raw Clip, instead of a generator that yields Clips, will cause ETA to run forever, as generators will StopIteration, but the raw Clip will never. Please set up a max_autofeed.")
