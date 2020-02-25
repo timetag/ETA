@@ -12,6 +12,7 @@ import numpy as np
 
 import etabackend.etalang.jit_linker as jit_linker
 from etabackend.clip import ETA_CUT, Clip
+from etabackend.recipe import Recipe
 from etabackend.etalang import recipe_compiler
 
 
@@ -29,6 +30,7 @@ class ETANonExistingGroupException(ETAException):
 
 
 class ETA(ETA_CUT):
+
     def __init__(self):
         super().__init__()
 
@@ -38,27 +40,32 @@ class ETA(ETA_CUT):
                           "stopped": [],
                           "update-recipe": [],
                           }
+        # timetag formats
+        self.quTAG_FORMAT_BINARY = 0
+        self.FORMAT_SI = 1
+        self.quTAG_FORMAT_COMPRESSED = 2
+        self.bh_spc_4bytes = 3
 
     def clear_cache(self):
+        self.recipe = None
         self.compilecache_code = None
         self.compilecache_vars = None
-        self.compilecache_table = None
         self.compilecache_rfiles = None
+        self.mainloop = {}
+        self.initializer = {}
 
-    def compile_eta(self, etaobj=None):
+    def load_eta(self, jsonobj=None, compile=True):
+        # make sure to clear all of them
+        self.clear_cache()
         try:
-            # make sure to clear all of them
-            self.clear_cache()
-            self.compilecache_code, self.compilecache_vars, self.compilecache_rfiles, self.compilecache_table = recipe_compiler.codegen(
-                etaobj)
-
-            self.notify_callback('update-recipe')
-            # clear cache
-            self.mainloop = {}
-            self.initializer = {}
+            self.recipe = Recipe(jsonobj)
+            if compile:
+                self.compilecache_code, self.compilecache_vars, self.compilecache_rfiles = recipe_compiler.codegen(
+                    self.recipe)
+                self.notify_callback('update-recipe')
         except Exception as e:
-            self.logger.warning("Compilation failed.", exc_info=True)
-            self.logfrontend.warning("Compilation failed.", exc_info=True)
+            self.logger.warning("Load recipe failed.", exc_info=True)
+            self.logfrontend.warning("Load recipe failed.", exc_info=True)
             raise ETACompilationException from e
 
     def compile_group(self, group="main"):

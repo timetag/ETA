@@ -66,7 +66,6 @@ class BACKEND():
         if run_forever:
             self.server.run_forever()
 
-        self.kernel.clear_cache()
 
     def send(self, text, endpoint="log"):
         """
@@ -74,32 +73,12 @@ class BACKEND():
         self.server.send_message_to_all(json.dumps([endpoint, str(text)]))
 
     def recipe_update(self):
-        self.send(json.dumps(self.kernel.compilecache_table), "table")
-
-    def recipe_set_parameter(self, key, value):
-        create = True
-        for each in self.kernel.compilecache_table:
-            if each["name"].strip() == key:
-                each["config"] = value
-                create = False
-
-        if create:
-            self.kernel.compilecache_table.append({"id": "var_template"+str(
-                int(time.time())), "name": key, "group": "main", "info": "", "config": value})
-        self.recipe_update()
-
-    def recipe_get_parameter(self, key):
-        for each in self.kernel.compilecache_table:
-            if each["name"].strip() == key:
-                return each["config"]
+        self.send(self.kernel.recipe.get_table(), "table")
 
     def recipe_set_filename(self, etaobj, id, key):
-        try:
-            self.kernel.compile_eta(etaobj)
-        except ETACompilationException:
-            pass
 
-        if self.kernel.compilecache_code is not None:
+        try:
+            self.kernel.load_eta(etaobj, compile=False)
             import tkinter as tk
             from tkinter.filedialog import askopenfilename
             root = tk.Tk()
@@ -120,7 +99,11 @@ class BACKEND():
             # parent=root makes sure the dialogue is inherits the roots attributes, like being on-top
             root.destroy()
             if path != "":
-                self.recipe_set_parameter(key, path)
+                self.kernel.recipe.set_parameter(key, path)
+            self.recipe_update()
+
+        except Exception as e:
+            self.logger.error(str(e), exc_info=True)
 
     def display(self, app=None):
         if app is None:
@@ -190,7 +173,7 @@ class BACKEND():
 
     def compile_eta(self, etaobj=None):
         self.send("none", "discard")  # show a neutral icon
-        self.kernel.compile_eta(etaobj)
+        self.kernel.load_eta(etaobj)
 
     def process_eta(self, etaobj=None, id="code", group="main"):
         self.send("none", "discard")  # show a neutral icon
@@ -202,34 +185,28 @@ class BACKEND():
             self.send("http://{}:{}".format(self.hostip,
                                             self.hosthttpport), "dash")
         else:
-            with open("server.eta", 'w') as file:
-                file.write(json.dumps(etaobj))
-
-            self.kernel.clear_cache()
-
             try:
-                self.kernel.compile_eta(etaobj)
+                self.kernel.load_eta(etaobj)
             except ETACompilationException:
                 pass
 
-
             if self.kernel.compilecache_code is not None:
                 # ETA File version check
-                if self.recipe_get_parameter("ETA_VERSION") is not None and self.recipe_get_parameter("ETA_VERSION") != self.ETA_VERSION:
+                if self.kernel.recipe.get_parameter("ETA_VERSION") is not None and self.kernel.recipe.get_parameter("ETA_VERSION") != self.ETA_VERSION:
                     self.logfrontend.warning(
-                        "ETA_VERSION: the recipe requires {} while ETA Backend is {}, you might encounter compatibility issues.".format(self.recipe_get_parameter("ETA_VERSION"), self.ETA_VERSION))
-                    
+                        "ETA_VERSION: the recipe requires {} while ETA Backend is {}, you might encounter compatibility issues.".format(self.kernel.recipe.get_parameter("ETA_VERSION"), self.ETA_VERSION))
+
                 self.logfrontend.info(
                     "Executing code in Script Panel in group {}...".format(group))
                 try:
-                    glob = {"eta": self.kernel, "quTAG_FORMAT_BINARY": 0, "FORMAT_SI": 1,
-                            "quTAG_FORMAT_COMPRESSED": 2, "bh_spc_4bytes": 3}
+                    glob = {"eta": self.kernel}
                     # side configuration panel
                     if group in self.kernel.compilecache_vars:
                         loc = self.kernel.compilecache_vars[group]
                     else:
                         loc = {}
                     exec(etaobj[id], glob, loc)
+                    self.recipe_update()
                 except Exception as e:
                     if (str(type(e)).find("numba") >= 0):
                         self.logger.error(str(e), exc_info=True)

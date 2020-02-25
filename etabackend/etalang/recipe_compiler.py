@@ -2,45 +2,33 @@ from . import eta_vm
 from . import eta_parser
 from . import graph_parser
 import textwrap
-import json
+
 import copy
 
 
-def codegen(jsobj):
-    def put_into_groups(groupings_output, vis_ris_var_all):
-        for each in range(len(vis_ris_var_all)):
-            for group_of_instrument in vis_ris_var_all[each]["group"].split(","):
-                group_of_instrument = group_of_instrument.strip()
-                if len(group_of_instrument) == 0:
-                    group_of_instrument = "main"
-                if group_of_instrument in groupings_output:
-                    groupings_output[group_of_instrument].append(
-                        vis_ris_var_all[each])
-                else:
-                    groupings_output[group_of_instrument] = [
-                        vis_ris_var_all[each]]
-
-    def select_by_name(obj, name):
-        for each in obj:
-            if each["name"] == name:
-                return each
-
-    # split recipe
-    vis_all = []
-    dpps_all = []
-    var_all = []
-    for each in json.loads(jsobj["eta_index_table"]):
-        if each["id"].find("vi_") >= 0:
-            vis_all.append(each)
-        elif each["id"].find("dpp_") >= 0:
-            dpps_all.append(each)
-        else:
-            # convert unrecognized to vars
-            if each["id"].find("_") >= 0:
-                each["id"] = "var" + each["id"][each["id"].find("_"):]
+def put_into_groups(groupings_output, vis_ris_var_all):
+    for each in range(len(vis_ris_var_all)):
+        for group_of_instrument in vis_ris_var_all[each]["group"].split(","):
+            group_of_instrument = group_of_instrument.strip()
+            if len(group_of_instrument) == 0:
+                group_of_instrument = "main"
+            if group_of_instrument in groupings_output:
+                groupings_output[group_of_instrument].append(
+                    vis_ris_var_all[each])
             else:
-                each["id"] = "var" + each["id"]
-            var_all.append(each)
+                groupings_output[group_of_instrument] = [
+                    vis_ris_var_all[each]]
+
+
+def select_by_name(obj, name):
+    for each in obj:
+        if each["name"] == name:
+            return each
+
+
+def codegen(recipe_obj):
+    # split recipe
+    vis_all, var_all = recipe_obj.vis_table, recipe_obj.var_table
 
     # groupings for vi/ri/var
     vi_groupings = {}
@@ -74,7 +62,7 @@ def codegen(jsobj):
 
             try:
                 usercode, graph_instructions = graph_parser.compile_graph(
-                    jsobj[instid], automata=each)
+                    recipe_obj.vis[instid], automata=each)
             except:
                 raise ValueError(
                     "ETA file is corrupted. Graph for {} is not found.".format(instname))
@@ -146,11 +134,7 @@ def codegen(jsobj):
         dc["num_rslot"] = num_rslot
         code_per_groupings[instgroup] = dc
         rfiles_per_groupings[instgroup] = etavm.check_rfiles()
-
-    # update metadata
-    metadata = []
-    metadata += var_all
-    metadata += dpps_all
-    metadata += vis_all
-
-    return code_per_groupings, var_per_groupings, rfiles_per_groupings, metadata
+    
+    # update recipe_obj
+    recipe_obj.vis_table, recipe_obj.var_table = vis_all, var_all
+    return code_per_groupings, var_per_groupings, rfiles_per_groupings

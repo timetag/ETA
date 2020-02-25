@@ -97,7 +97,7 @@ def link_global(name, do_get=True, type=nb.int64):
 
 
 @nb.extending.intrinsic
-def link_libs(typingctx):
+def link_libs(typingctx=None):
     sig = nb.typing.signature(nb.int32)
 
     def codegen(context, builder, sig, args):
