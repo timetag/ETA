@@ -52,14 +52,14 @@ class Backend():
         self.logfrontend.addHandler(WebClientHandler(self.send))
 
         self.kernel = ETA()
-        self.kernel.add_callback('running', lambda: self.send('', 'running'))
-        self.kernel.add_callback('stopped', lambda: self.send('', 'stopped'))
+        self.kernel.add_callback('running', lambda: self.schedule_send('', 'running'))
+        self.kernel.add_callback('stopped', lambda: self.schedule_send('', 'stopped'))
         self.kernel.add_callback('update-recipe', lambda: self.recipe_update())
 
         # Monkeypatch a display function to the kernel to support display in recipe.
         # FIXME This is somehow evil, but works. Should be fixed if the Display function is every fixed, it is also not so beautiful.
         self.kernel.display = self.display
-        self.kernel.send = self.send
+        self.kernel.send = self.schedule_send
 
         self.logger.info("ETA URL: http://{}:{}".format(self.hostip, self.hostport))
 
@@ -92,19 +92,19 @@ class Backend():
         
         return ws
 
-    async def send_all(self, text, endpoint="log"):
+    async def send(self, text, endpoint="log"):
         """ Sends a websocket message to all clients.
         """
         for _ws in self.app['websockets']:
             await _ws.send_json([endpoint, str(text)])
-
-    def send(self, text, endpoint="log"):
-        """ Sends a websocket message to all clients creating a new asyncio task.
+    
+    def schedule_send(self, text, endpoint="log"):
+        """ Schedules a send on the websocket.
         """
-        asyncio.create_task(self.send_all(text, endpoint))
+        asyncio.create_task(self.send(text, endpoint))
             
     def recipe_update(self):
-        self.send(self.kernel.recipe.get_table(), "table")
+        self.schedule_send(self.kernel.recipe.get_table(), "table")
 
     def recipe_set_filename(self, etaobj, id, key):
         try:
@@ -155,8 +155,8 @@ class Backend():
                         func()
                         self.displaying = False
                         self.logfrontend.info("Dashboard shutting down.")
-                        self.send("http://{}:{}".format(self.hostip,
-                                                        self.hosthttpport), "discard")
+                        self.schedule_send("http://{}:{}".format(self.hostip,
+                                                                 self.hosthttpport), "discard")
                         response = app.server.make_response('Hello, World')
                         response.headers.add(
                             'Access-Control-Allow-Origin', '*')
@@ -176,8 +176,8 @@ class Backend():
                         bokserver.io_loop.stop()
                         self.displaying = False
                         self.logfrontend.info("Dashboard shutting down.")
-                        self.send("http://{}:{}".format(self.hostip,
-                                                        self.hosthttpport), "discard")
+                        self.schedule_send("http://{}:{}".format(self.hostip,
+                                                                 self.hosthttpport), "discard")
 
                     import asyncio
                     asyncio.set_event_loop(asyncio.new_event_loop())
@@ -193,8 +193,8 @@ class Backend():
                         "eta.display: unknown type {} for display".format(str(type(app))))
                 self.logfrontend.info(
                     "ETA.display: Script Panel is serving at http://{}:{}.".format(self.hostip, self.hosthttpport))
-                self.send("http://{}:{}".format(self.hostip,
-                                                self.hosthttpport), "dash")
+                self.schedule_send("http://{}:{}".format(self.hostip,
+                                                         self.hosthttpport), "dash")
                 self.displaying = True
             except Exception as e:
                 self.logfrontend.error("bokeh failed to start", exc_info=True)
@@ -202,18 +202,18 @@ class Backend():
                 self.logger.error(str(e), exc_info=True)
 
     def compile_eta(self, etaobj=None):
-        self.send("none", "discard")  # show a neutral icon
+        self.schedule_send("none", "discard")  # show a neutral icon
         self.kernel.load_eta(etaobj)
 
     def process_eta(self, etaobj=None, id="code", group="main"):
-        self.send("none", "discard")  # show a neutral icon
+        self.schedule_send("none", "discard")  # show a neutral icon
         if self.displaying:
             self.logfrontend.info(
                 "ETA.display: Script Panel is serving at http://{}:{}.".format(self.hostip, self.hosthttpport))
             self.logfrontend.warning(
                 "The current script is not executed, because a previously executed script is still serving the results.")
-            self.send("http://{}:{}".format(self.hostip,
-                                            self.hosthttpport), "dash")
+            self.schedule_send("http://{}:{}".format(self.hostip,
+                                                     self.hosthttpport), "dash")
         else:
             try:
                 self.kernel.load_eta(etaobj)
