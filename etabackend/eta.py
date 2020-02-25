@@ -10,7 +10,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 import numpy as np
 
-import etabackend.jit_linker as jit_linker
+import etabackend.etalang.jit_linker as jit_linker
 from etabackend.clip import ETA_CUT, Clip
 from etabackend.etalang import recipe_compiler
 

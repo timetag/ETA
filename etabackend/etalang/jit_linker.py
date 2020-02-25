@@ -1,19 +1,22 @@
-from llvmlite import ir, binding as ll
-import numba as nb
-from numba import jit
-import numpy as np
+import ast
+import inspect
+import os
+import sys
 from os import listdir
 from pathlib import Path
+from textwrap import dedent
+
 import cffi
-import sys
-import os
+import numba as nb
+import numpy as np
+from llvmlite import binding as ll
+from llvmlite import ir
+from numba import jit
 
 ffi = cffi.FFI()
-#if getattr(sys, 'frozen', False):
-#   ll_path = Path(sys._MEIPASS).resolve() / "ll"
-#else:
-ll_path = Path(__file__).resolve().parent/"ll"/ os.name
-    # ll code is binded to the path of the py file
+
+
+
 
 def compile_library(context, asm, libname='compiled_module'):
     library = context.codegen().create_library(libname)
@@ -52,7 +55,8 @@ def link_global(name, do_get=True, type=nb.int64):
         def codegen(context, builder, sig, args):
             library = compile_library(
                 context, llvm_global_get.replace("test", name))
-            context.active_code_library.add_linking_library(library) # no more weird hack to get the library linked
+            # no more weird hack to get the library linked
+            context.active_code_library.add_linking_library(library)
             argtypes = [context.get_argument_type(aty) for aty in sig.args]
             restype = context.get_argument_type(sig.return_type)
             fnty = ir.FunctionType(restype, argtypes)
@@ -72,7 +76,8 @@ def link_global(name, do_get=True, type=nb.int64):
             code = llvm_global_set.replace("test", name)
             library = compile_library(
                 context, code)
-            context.active_code_library.add_linking_library(library) # no more weird hack to get the library linked
+            # no more weird hack to get the library linked
+            context.active_code_library.add_linking_library(library)
             argtypes = [context.get_argument_type(aty) for aty in sig.args]
             restype = context.get_argument_type(sig.return_type)
             fnty = ir.FunctionType(restype, argtypes)
@@ -97,16 +102,19 @@ def link_libs(typingctx):
 
     def codegen(context, builder, sig, args):
         # print("===== linking =====")
-        
+        ll_path = Path(__file__).resolve().parent.parent/"ll" / os.name
         for f in listdir(ll_path):
-            lib_path = Path(ll_path)/ f
-            if lib_path.is_file() and f.find(".ll")>=0:
+            lib_path = Path(ll_path) / f
+            if lib_path.is_file() and f.find(".ll") >= 0:
                 # print(lib_path)
                 with open(lib_path, "r") as fio:
                     assembly = fio.read()
-                    assembly = assembly.replace("""!llvm.linker.options = !{!0}""","")# hack: remove useless linker options for LLVM7 
-                    library = compile_library(context, assembly, str(lib_path.resolve()))
-                context.active_code_library.add_linking_library(library) # no more weird hack to get the library linked
+                    assembly = assembly.replace(
+                        """!llvm.linker.options = !{!0}""", "")  # hack: remove useless linker options for LLVM7
+                    library = compile_library(
+                        context, assembly, str(lib_path.resolve()))
+                # no more weird hack to get the library linked
+                context.active_code_library.add_linking_library(library)
 
         # print("===== done =====")
         return context.get_constant(nb.int32, 42)
@@ -139,11 +147,11 @@ def ARB_PARAM_MAKER():
     return locals()["ARB_PARAM_MAKER"]()
 
 
-def link_jit_code(code):
+def link_jit_code(args):
     glb = {
         "jit": jit, "ffi": ffi, "nb": nb, "np": np,
         "link_libs": link_libs,
-        
+
         "FileReader_pop_event": link_function("FileReader_pop_event", 3, i64ret=True),
         "FileReader_init": link_function("FileReader_init", 5),
 
@@ -155,6 +163,49 @@ def link_jit_code(code):
     }
     loc = {}
 
-    exec(code, glb, loc)
+    # init
+    FileReader_pop_event, POOL_update, VCHN_next = (
+        lambda *vargs: 0,)*3
+    scalar_chn_next, READER, scalar_chn, scalar_fileid = (np.zeros(0),)*4
+    uettp_initial, init_llvm, deinit, looping, beforeloop_code,  num_rslot, global_initial, table_list, ptr_VCHN, ptr_fileid, ptr_chn, ptr_READER, ptr_chn_next = (
+        0,)*13
 
+    @jit(nopython=True, nogil=True)  # parallel=True,
+    def mainloop(tables):
+        link_libs()
+        eta_ret = 0
+
+        uettp_initial
+        init_llvm
+        beforeloop_code
+        if READER.size > 4:
+            SYNCRate_pspr = READER[4]  # TODO: unhack
+        while True:
+            AbsTime_ps = VCHN_next(ptr_VCHN, ptr_fileid, ptr_chn)
+            chn = scalar_chn[0]
+            fileid = scalar_fileid[0]
+            if AbsTime_ps == 9223372036854775807:  # full stop
+                break
+            looping
+            if fileid < num_rslot:
+                controller_rfile_time = FileReader_pop_event(
+                    ptr_READER, nb.int8(fileid), ptr_chn_next)
+                if controller_rfile_time == 9223372036854775807:  # early stop
+                    GCONF_RESUME = fileid
+                    break
+                else:
+                    eta_ret += POOL_update(ptr_VCHN, nb.int64(controller_rfile_time),
+                                           nb.int8(fileid), nb.int8(scalar_chn_next[0]))
+        deinit
+        return eta_ret
+
+    def initializer():
+        global_initial
+        return {table_list}
+
+    ret = dedent(inspect.getsource(mainloop))
+    ret += dedent(inspect.getsource(initializer))
+    for k, v in args.items():
+        ret = ret.replace(k, str(v))
+    exec(ret, glb, loc)
     return loc

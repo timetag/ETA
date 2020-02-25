@@ -1,7 +1,6 @@
 from . import eta_vm
 from . import eta_parser
 from . import graph_parser
-from . import code_template
 import textwrap
 import json
 import copy
@@ -145,7 +144,7 @@ def codegen(jsobj):
         # etavm.check_output()
         dc = etavm.dump_code()
         dc["num_rslot"] = num_rslot
-        code_per_groupings[instgroup] = code_template.get_onefile_loop(dc)
+        code_per_groupings[instgroup] = dc
         rfiles_per_groupings[instgroup] = etavm.check_rfiles()
 
     # update metadata
