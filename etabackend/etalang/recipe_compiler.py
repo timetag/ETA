@@ -47,7 +47,7 @@ def codegen(recipe_obj):
             value = each["config"]
             var_per_groupings[vargroup][key] = value
     # prepare code per group
-    code_per_groupings = {}
+    nfunc_per_groupings = {}
     for instgroup in vi_groupings:
         # compile vi
         vis = vi_groupings[instgroup]
@@ -132,9 +132,9 @@ def codegen(recipe_obj):
         # etavm.check_output()
         dc = etavm.dump_code()
         dc["num_rslot"] = num_rslot
-        code_per_groupings[instgroup] = dc
+        nfunc_per_groupings[instgroup] = dc
         rfiles_per_groupings[instgroup] = etavm.check_rfiles()
     
     # update recipe_obj
     recipe_obj.vis_table, recipe_obj.var_table = vis_all, var_all
-    return code_per_groupings, var_per_groupings, rfiles_per_groupings
+    return nfunc_per_groupings, var_per_groupings, rfiles_per_groupings

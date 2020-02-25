@@ -3,17 +3,16 @@ import json
 import logging
 import os
 import sys
-import types
-
 import time
+import types
 from concurrent.futures import ThreadPoolExecutor
 
 import numpy as np
+from deepdiff import DeepDiff
 
-import etabackend.etalang.jit_linker as jit_linker
 from etabackend.clip import ETA_CUT, Clip
+from etabackend.etalang import jit_linker, recipe_compiler
 from etabackend.recipe import Recipe
-from etabackend.etalang import recipe_compiler
 
 
 class ETAException(Exception):
@@ -34,7 +33,6 @@ class ETA(ETA_CUT):
     def __init__(self):
         super().__init__()
 
-        self.clear_cache()
         self.executor = ThreadPoolExecutor()
         self._observer = {"running": [],
                           "stopped": [],
@@ -45,23 +43,36 @@ class ETA(ETA_CUT):
         self.FORMAT_SI = 1
         self.quTAG_FORMAT_COMPRESSED = 2
         self.bh_spc_4bytes = 3
+        self.flush_cache()
 
-    def clear_cache(self):
+    def flush_cache(self):
         self.recipe = None
-        self.compilecache_code = None
+        self.compilecache_nfunc = None
         self.compilecache_vars = None
         self.compilecache_rfiles = None
-        self.mainloop = {}
-        self.initializer = {}
+        self.compilecache_mainloop = {}
+        self.compilecache_initializer = {}
+
+    def update_cache(self, *vars):
+        old_dc = self.compilecache_nfunc
+        old_mainloop = self.compilecache_mainloop
+        old_initializer = self.compilecache_initializer
+        # clear up
+        (self.compilecache_nfunc, self.compilecache_vars, self.compilecache_rfiles) = vars
+        self.compilecache_mainloop, self.compilecache_initializer = {}, {}
+        # recover from old
+        for k, v in self.compilecache_nfunc.items():
+            if k in old_mainloop and k in old_dc and k in old_initializer:
+                if not(DeepDiff(v, old_dc[k])):
+                    self.compilecache_mainloop[k] = old_mainloop[k]
+                    self.compilecache_initializer[k] = old_initializer[k]
 
     def load_eta(self, jsonobj=None, compile=True):
-        # make sure to clear all of them
-        self.clear_cache()
         try:
             self.recipe = Recipe(jsonobj)
             if compile:
-                self.compilecache_code, self.compilecache_vars, self.compilecache_rfiles = recipe_compiler.codegen(
-                    self.recipe)
+                self.update_cache(*recipe_compiler.codegen(
+                    self.recipe))
                 self.notify_callback('update-recipe')
         except Exception as e:
             self.logger.warning("Load recipe failed.", exc_info=True)
@@ -69,18 +80,21 @@ class ETA(ETA_CUT):
             raise ETACompilationException from e
 
     def compile_group(self, group="main"):
-        if not (group in self.compilecache_code):
+        if not (group in self.compilecache_nfunc):
             raise ETANonExistingGroupException(
                 "Can not eta.run() on a non-existing group {}.".format(group))
             # self.logfrontend.warning("Can not eta.run() on a non-existing group {}.".format(group)) FIXME
-        if not (group in self.mainloop):
+        if not (group in self.compilecache_mainloop):
             self.logfrontend.info(
-                "Compiling instrument group {}.".format(group))
+                "ETA.run: Compiling instrument group {}.".format(group))
             # cache compiling results
-            loc = jit_linker.link_jit_code(self.compilecache_code[group])
-            self.mainloop[group] = loc["mainloop"]
-            self.initializer[group] = loc["initializer"]
-        return self.initializer[group], self.mainloop[group]
+            loc = jit_linker.link_jit_code(self.compilecache_nfunc[group])
+            self.compilecache_mainloop[group] = loc["mainloop"]
+            self.compilecache_initializer[group] = loc["initializer"]
+        else:
+            self.logfrontend.info(
+                "ETA.run: Using cached instrument group {}.".format(group))
+        return self.compilecache_initializer[group], self.compilecache_mainloop[group]
 
     def run(self, *vargs, resume_task=None, group="main", return_task=False, return_results=True, **kwargs):
         # linking
@@ -90,12 +104,12 @@ class ETA(ETA_CUT):
         # resuming task
         if resume_task is None:
             self.logfrontend.info(
-                "ETA.RUN: Starting new analysis using Instrument group {}.".format(group))
+                "ETA.run: Starting new analysis using Instrument group {}.".format(group))
             self.notify_callback('running')
             (thread1, ts, ctxs, _) = (None, None, None, None)
         else:
             self.logfrontend.info(
-                "ETA.RUN: Resuming analysis using Instrument group {}.".format(group))
+                "ETA.run: Resuming analysis using Instrument group {}.".format(group))
             self.notify_callback('running')
             (thread1, ts, ctxs, _) = resume_task
 
@@ -230,7 +244,7 @@ class ETA(ETA_CUT):
             te = time.time()
 
             self.logfrontend.info(
-                'ETA.RUN: Analysis is finished in {0:.2f} seconds.'.format((te - ts)))
+                'ETA.run: Analysis is finished in {0:.2f} seconds.'.format((te - ts)))
             self.notify_callback('stopped')
 
             # appending returns
@@ -242,11 +256,11 @@ class ETA(ETA_CUT):
                 for each_graph in rets[0].keys():
                     rets[0][each_graph] += rets[each][each_graph]
             result = rets[0]
-            self.logfrontend.info('ETA.RUN: Aggregating {} results.'.format(
+            self.logfrontend.info('ETA.run: Aggregating {} results.'.format(
                 len(rets)))
             self.notify_callback('stopped')
         else:
-            self.logfrontend.info("ETA.RUN: Listing results for each task.")
+            self.logfrontend.info("ETA.run: Listing results for each task.")
             result = rets
 
         return result

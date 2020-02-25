@@ -190,7 +190,7 @@ class BACKEND():
             except ETACompilationException:
                 pass
 
-            if self.kernel.compilecache_code is not None:
+            if self.kernel.compilecache_nfunc is not None:
                 # ETA File version check
                 if self.kernel.recipe.get_parameter("ETA_VERSION") is not None and self.kernel.recipe.get_parameter("ETA_VERSION") != self.ETA_VERSION:
                     self.logfrontend.warning(
