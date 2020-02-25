@@ -4,6 +4,11 @@ import os
 import sys
 import time
 import traceback
+import pathlib
+
+import asyncio
+import aiohttp
+from aiohttp import web
 
 import etabackend.webinstall as webinstall
 import etabackend.ws_broadcast as ws_broadcast
@@ -22,8 +27,9 @@ ETA_BANNER = \
 ==============================
 """
 
+BASE_DIR = pathlib.Path(__file__).parent
 
-class BACKEND():
+class Backend():
     def __init__(self, run_forever=True):
         self.ETA_VERSION = ETA_VERSION
         self.logger = logging.getLogger(__name__)
@@ -35,22 +41,14 @@ class BACKEND():
         self.hosthttpport = os.environ.get('ETA_HTTPPORT') or "5001"
         self.displaying = False
 
-        def new_message(client, server, message):
-            obj = json.loads(message)
-            self.logger.info(
-                "client " + str(client["address"]) + " start " + obj["method"])
-            getattr(self, obj["method"])(*obj["args"])
-
-        def new_client(client, server):
-            self.logger.info("New client " + str(client["address"]) +
-                             " connected to port " + str(self.hostport) + ". ")
-        self.server = ws_broadcast.WebsocketServer(
-            int(self.hostport), host=self.hostlisten)
-        self.logger.info(
-            "ETA Backend URL: ws://{}:{}".format(self.hostip, self.hostport))
-
-        self.server.set_fn_new_client(new_client)
-        self.server.set_fn_message_received(new_message)
+        self.app = web.Application(logger=logging.getLogger("etabackend.aiohttp"))
+        self.app['websockets'] = []
+        self.app.add_routes([web.get('/', self.web_redirect),
+                             web.get('/ws', self.websocket_handler),
+                             web.get('/index.html', self.web_index, name='default'),
+                             web.static('/', BASE_DIR / 'static/', append_version=True),
+                            ])
+                            
         self.logfrontend.addHandler(WebClientHandler(self.send))
 
         self.kernel = ETA()
@@ -63,20 +61,52 @@ class BACKEND():
         self.kernel.display = self.display
         self.kernel.send = self.send
 
-        if run_forever:
-            self.server.run_forever()
+        self.logger.info("ETA URL: http://{}:{}".format(self.hostip, self.hostport))
 
+        if run_forever:
+            web.run_app(self.app, host=self.hostip, port=self.hostport,)
+   
+    async def web_redirect(self, request):
+        location = request.app.router['default'].url_for()
+        raise web.HTTPFound(location=location)
+    
+    async def web_index(self, request):
+        return web.FileResponse(BASE_DIR / 'templates/index.html')
+    
+    async def websocket_handler(self, request):
+        ws = web.WebSocketResponse(autoping=True)
+        await ws.prepare(request)
+        request.app['websockets'].append(ws)
+
+        self.logger.info(f"New websocket client {request.host} connected to port {self.hostport}.")
+
+        async for msg in ws:
+            if msg.type == aiohttp.WSMsgType.TEXT:
+                obj = msg.json()
+                self.logger.info(f"client {request.host} starts {obj['method']}")
+                getattr(self, obj["method"])(*obj["args"])
+            elif msg.type == aiohttp.WSMsgType.ERROR:
+                self.logger.warning(f"Websocket connection closed with exception {ws.exception()}")
+        request.app['websockets'].remove(ws)
+        self.logger.info(f"Client {request.host} disconnected.")
+        
+        return ws
+
+    async def send_all(self, text, endpoint="log"):
+        """ Sends a websocket message to all clients.
+        """
+        for _ws in self.app['websockets']:
+            await _ws.send_json([endpoint, str(text)])
 
     def send(self, text, endpoint="log"):
+        """ Sends a websocket message to all clients creating a new asyncio task.
         """
-        """
-        self.server.send_message_to_all(json.dumps([endpoint, str(text)]))
-
+        asyncio.create_task(self.send_all(text, endpoint))
+            
     def recipe_update(self):
         self.send(self.kernel.recipe.get_table(), "table")
 
     def recipe_set_filename(self, etaobj, id, key):
-
         try:
             self.kernel.load_eta(etaobj, compile=False)
             import tkinter as tk
@@ -257,4 +287,4 @@ def main():
     logger = logging.getLogger(__name__)
     logger.info("ETA_VERSION: "+ETA_VERSION)
     #print("Using Python libraries from ", sys.path)
-    ws = BACKEND()
+    ws = Backend()
