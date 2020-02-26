@@ -1,4 +1,4 @@
 include requirements.txt
 include etabackend/ll/nt/*.*
 include etabackend/ll/posix/*.*
-include etabackend/static
+graft etabackend/static

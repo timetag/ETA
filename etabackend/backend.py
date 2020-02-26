@@ -43,7 +43,8 @@ class Backend():
         self.displaying = False
 
         # Fix for tornado webserver
-        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+        if hasattr(asyncio,"WindowsSelectorEventLoopPolicy"):
+            asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
         self.app = web.Application(logger=logging.getLogger("etabackend.aiohttp"))
         self.app['websockets'] = []
@@ -75,7 +76,7 @@ class Backend():
         raise web.HTTPFound(location=location)
     
     async def web_index(self, request):
-        return web.FileResponse(BASE_DIR / 'static/index.html')
+        return web.FileResponse(BASE_DIR / 'static' / 'index.html')
     
     async def websocket_handler(self, request):
         ws = web.WebSocketResponse(autoping=False)
