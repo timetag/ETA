@@ -1,0 +1,16 @@
+matplotlib>=3.0.3
+cffi>=1.12.3
+numpy>=1.16.2
+astunparse>=1.6.2
+llvmlite>=0.28.0
+numba>=0.43.1
+dash
+dash-renderer
+dash-html-components
+dash-core-components
+plotly
+bokeh
+lmfit
+scipy
+pandas
+aiohttp
