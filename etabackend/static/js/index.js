@@ -135,7 +135,7 @@ document.querySelector("#create_new_form").addEventListener("submit", function (
     $("#create_new_Modal").modal('hide');
     var data = new FormData(document.querySelector("#create_new_form"));
     for (const entry of data) {
-        $.getJSON('./js/recipes/' + entry[1] + ".eta", function (data) {
+        $.getJSON('./recipes/' + entry[1] + ".eta", function (data) {
             on_file_loaded(entry[1], data);
         });
 
