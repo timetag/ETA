@@ -9,7 +9,7 @@ import numpy as np
 import etabackend.eta
 
 test_folder = Path(__file__).parent.parent
-recipe_folder = Path(__file__).parent.parent.parent / "etabackend" / "src" / "static" / "recipes"
+recipe_folder = Path(__file__).parent.parent.parent / "etabackend" / "static" / "recipes"
 
 
 class TestLifetimeRecipe:

@@ -8,14 +8,22 @@
 
 <body>
     <script>
+        function go() {
+            var host = document.getElementById("host").value;
+            if (host) localStorage.setItem("etabackend_host", host);
+
+            document.getElementById("prompt").hidden = true;
+            setTimeout(try_connect, 1);
+        }
         function error_handle() {
             var host = localStorage.getItem("etabackend_host");
             if (!host) host = "localhost:5678"; // TODO get envs from Electron and use template here.
-            host = prompt("Please launch ETA Backend and specify its host and port, like localhost:5678.", host)
-            if (host) localStorage.setItem("etabackend_host", host);
-            setTimeout(try_connect, 1);
+            document.getElementById("connecting").hidden = true;
+            document.getElementById("prompt").hidden = false;
+            document.getElementById("host").value = host;
         }
         function try_connect() {
+            document.getElementById("connecting").hidden = false;
             var host = localStorage.getItem("etabackend_host");
             if (!host) host = "localhost:5678"; // TODO get envs from Electron and use template here.
             try {
@@ -39,7 +47,16 @@
         setTimeout(try_connect, 1);
 
     </script>
-    Connecting to ETA Backend...
+    <div id="connecting" hidden="true">
+        Connecting to ETA Backend...
+    </div>
+
+    <div id="prompt" hidden="true">
+        Please launch ETA Backend and specify its host and port, like localhost:5678.
+        <form>
+            Host and Port: <input id="host" type="text">
+            <button onclick="go()">Go</button></form>
+    </div>
 </body>
 
 </html>
