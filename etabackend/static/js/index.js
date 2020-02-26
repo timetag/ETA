@@ -158,7 +158,12 @@ d3.select('#btn_connect').on('click', function () {
         return;
     }
     try {
-        ws = new ReconnectingWebSocket(d3.select('#ws').property("value"))
+        ws_url = d3.select('#ws').property("value");
+        if (ws_url.length<=0){
+            ws_url  = "ws://" +  window.location.host+"/ws";
+        }
+        d3.select('#ws').property("value",ws_url);
+        ws = new ReconnectingWebSocket(ws_url);
     } catch (error) {
         d3.select('#ws').classed("is-valid", false);
         d3.select('#ws').classed("is-invalid", true);

@@ -1,9 +1,7 @@
-from . import eta_vm
-from . import eta_parser
-from . import graph_parser
-import textwrap
-
+import ast
 import copy
+
+from . import eta_parser, eta_vm, graph_parser
 
 
 def put_into_groups(groupings_output, vis_ris_var_all):
@@ -131,7 +129,7 @@ def codegen(recipe_obj):
             etavm.exec_uettp(["MAKE_init_for_syms", [each]])
         # etavm.check_output()
         dc = etavm.dump_code()
-        dc["num_rslot"] = num_rslot
+        dc["num_rslot"] = ast.parse(str(num_rslot))
         nfunc_per_groupings[instgroup] = dc
         rfiles_per_groupings[instgroup] = etavm.check_rfiles()
     

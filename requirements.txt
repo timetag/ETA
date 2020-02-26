@@ -13,4 +13,4 @@ bokeh
 lmfit
 scipy
 pandas
-deepdiff
+aiohttp

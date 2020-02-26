@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>ETA</title>
+
+</head>
+
+<body>
+    <script>
+        function error_handle() {
+            var host = localStorage.getItem("etabackend_host");
+            if (!host) host = "localhost:5678"; // TODO get envs from Electron and use template here.
+            host = prompt("Please launch ETA Backend and specify its host and port, like localhost:5678.", host)
+            if (host) localStorage.setItem("etabackend_host", host);
+            setTimeout(try_connect, 1);
+        }
+        function try_connect() {
+            var host = localStorage.getItem("etabackend_host");
+            if (!host) host = "localhost:5678"; // TODO get envs from Electron and use template here.
+            try {
+                var ws_url = "ws://" + host + "/ws";
+                var ws = new WebSocket(ws_url);
+                ws.onopen = function (t) {
+                    localStorage.setItem("etabackend_host", host);
+                    window.location.href = "http://" + host;
+                    return;
+                }
+                ws.onerror = function (t) {
+                    error_handle();
+                    ws.close();
+                }
+            } catch (error) {
+                console.log(error);
+                error_handle();
+                return;
+            }
+        }
+        setTimeout(try_connect, 1);
+
+    </script>
+    Connecting to ETA Backend...
+</body>
+
+</html>

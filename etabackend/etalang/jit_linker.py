@@ -16,6 +16,30 @@ from numba import jit
 ffi = cffi.FFI()
 
 
+class IRTransformer(ast.NodeTransformer):
+    def __init__(self, contex={}):
+        self.contex = contex
+
+    def visit_Expr(self, node):
+        ret = node
+        if type(node.value) == ast.Name:
+            if node.value.id in self.contex:
+                ret = self.contex[node.value.id].body
+        return ret
+
+    def visit_Name(self, node):
+        ret = node
+        if node.id in self.contex:
+            expr = self.contex[node.id].body[0]
+            if isinstance(expr, ast.Expr):
+                ret = expr.value
+        return ret
+
+    def visit_FunctionDef(self, node):
+        if node.name in self.contex:
+            node.args = self.contex[node.name].body[0].args
+
+        return self.generic_visit(node)
 
 
 def compile_library(context, asm, libname='compiled_module'):
@@ -123,28 +147,42 @@ def link_libs(typingctx=None):
 
 
 def link_function(func_name="", param=1, i64ret=False):
-    typer = "int32"
+    typer = "nb.int32"
     if (i64ret):
-        typer = "int64"
-    code = """
-def ARB_PARAM_MAKER():
-    def codegen(context, builder, sig, args):
-        argtypes = [context.get_argument_type(aty) for aty in sig.args]
-        restype = context.get_argument_type(sig.return_type)
-        fnty = ir.FunctionType(restype, argtypes)
-        fn = nb.cgutils.insert_pure_function(
-            builder.module, fnty, name="{func_name}")
-        retval = context.call_external_function(builder, fn, sig.args, args)
-        #print(fn)
-        return retval
-    @nb.extending.intrinsic
-    def ARB_PARAM(typingctx, {para}):
-        sig = nb.typing.signature(nb.{typer}, {para})
-        return sig, codegen
-    return ARB_PARAM
-""".format(para=",".join(["a{}".format(i) for i in range(0, param)]), func_name=func_name, typer=typer)
-    exec(code, globals(), locals())
-    return locals()["ARB_PARAM_MAKER"]()
+        typer = "nb.int64"
+    para = ",".join(["a{}".format(i) for i in range(0, param)])
+
+    args = {
+        "ARB_PARAM": ast.parse("def ARB_PARAM(typingctx, {para}): pass".format(para=para)),
+        "func_name": ast.parse("'{}'".format(func_name)),
+        "makesig": ast.parse("sig = nb.typing.signature({typer}, {para})".format(typer=typer, para=para)),
+    }
+    sig = None
+    makesig = None
+
+    def ARB_PARAM_MAKER():
+        def codegen(context, builder, sig, args):
+            argtypes = [context.get_argument_type(aty) for aty in sig.args]
+            restype = context.get_argument_type(sig.return_type)
+            fnty = ir.FunctionType(restype, argtypes)
+            fn = nb.cgutils.insert_pure_function(
+                builder.module, fnty, name=func_name)
+            retval = context.call_external_function(
+                builder, fn, sig.args, args)
+            return retval
+
+        @nb.extending.intrinsic
+        def ARB_PARAM():
+            makesig
+            return sig, codegen
+        return ARB_PARAM
+
+    ret = ast.parse(dedent(inspect.getsource(ARB_PARAM_MAKER)))
+    transformer = IRTransformer(contex=args)
+    transformer.visit(ret)
+    loc = {}
+    exec(compile(ret, filename="<link_function>", mode="exec"), globals(), loc)
+    return loc["ARB_PARAM_MAKER"]()
 
 
 def link_jit_code(args):
@@ -201,11 +239,26 @@ def link_jit_code(args):
 
     def initializer():
         global_initial
-        return {table_list}
+        return table_list
 
     ret = dedent(inspect.getsource(mainloop))
     ret += dedent(inspect.getsource(initializer))
-    for k, v in args.items():
-        ret = ret.replace(k, str(v))
-    exec(ret, glb, loc)
+    transformer = IRTransformer(contex=args)
+    ret = ast.parse(ret)
+    transformer.visit(ret)
+    exec(compile(ret, filename="<eta>", mode="exec"), glb, loc)
     return loc
+
+
+def cmp_dc(a, b):
+    try:
+        for k, v in a.items():
+            if isinstance(v, ast.AST):
+                if not(ast.dump(v) == ast.dump(b[k])):
+                    return False
+            else:
+                if v != b[k]:
+                    return False
+        return True
+    except Exception:
+        return False

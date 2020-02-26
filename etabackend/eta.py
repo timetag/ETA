@@ -8,7 +8,6 @@ import types
 from concurrent.futures import ThreadPoolExecutor
 
 import numpy as np
-from deepdiff import DeepDiff
 
 from etabackend.clip import ETA_CUT, Clip
 from etabackend.etalang import jit_linker, recipe_compiler
@@ -58,12 +57,13 @@ class ETA(ETA_CUT):
         old_mainloop = self.compilecache_mainloop
         old_initializer = self.compilecache_initializer
         # clear up
-        (self.compilecache_nfunc, self.compilecache_vars, self.compilecache_rfiles) = vars
+        (self.compilecache_nfunc, self.compilecache_vars,
+         self.compilecache_rfiles) = vars
         self.compilecache_mainloop, self.compilecache_initializer = {}, {}
         # recover from old
         for k, v in self.compilecache_nfunc.items():
             if k in old_mainloop and k in old_dc and k in old_initializer:
-                if not(DeepDiff(v, old_dc[k])):
+                if jit_linker.cmp_dc(v, old_dc[k]):
                     self.compilecache_mainloop[k] = old_mainloop[k]
                     self.compilecache_initializer[k] = old_initializer[k]
 

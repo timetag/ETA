@@ -75,7 +75,7 @@ class Backend():
         raise web.HTTPFound(location=location)
     
     async def web_index(self, request):
-        return web.FileResponse(BASE_DIR / 'templates/index.html')
+        return web.FileResponse(BASE_DIR / 'static/index.html')
     
     async def websocket_handler(self, request):
         ws = web.WebSocketResponse(autoping=False)
