@@ -2,11 +2,11 @@
 <html>
 
 <head>
+    <meta charset="utf-8">
     <title>ETA</title>
-
 </head>
 
-<body>
+<body style="-webkit-user-select: none;">
     <script>
         function go() {
             var host = document.getElementById("host").value;
@@ -52,10 +52,15 @@
     </div>
 
     <div id="prompt" hidden="true">
-        Please launch ETA Backend and specify its host and port, like localhost:5678.
+        <h></h>Please launch ETA Backend and specify its host and port, like localhost:5678. <br/>
+        <a href="https://eta.readthedocs.io/en/latest/installation.html" target="_blank" >How to install ETA?</a>
+        <br/>
+        <br/>
         <form>
             Host and Port: <input id="host" type="text">
-            <button onclick="go()">Go</button></form>
+            <button onclick="go()">Go</button>
+        </form>
+  
     </div>
 </body>
 
