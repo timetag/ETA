@@ -12,4 +12,4 @@
 
 
 
-<b>| What is ETA:</b> [timetag.github.io](https://timetag.github.io) <b>| Use ETA:</b> [Documentation](https://eta.readthedocs.io/en/latest/) <b>| Get ETA:</b> [Releases](https://github.com/timetag/ETA/releases) <b>|</b>
+<b>| What is ETA:</b> [timetag.github.io](https://timetag.github.io) <b>| Use ETA:</b> [Documentation](https://eta.readthedocs.io/en/latest/) <b>| Get ETA:</b> [Installation](https://eta.readthedocs.io/en/latest/installation.html) <b>|</b>
