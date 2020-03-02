@@ -1,5 +1,7 @@
 import ast
+import cmath
 import inspect
+import math
 import os
 import sys
 from os import listdir
@@ -187,7 +189,7 @@ def link_function(func_name="", param=1, i64ret=False):
 
 def link_jit_code(args):
     glb = {
-        "jit": jit, "ffi": ffi, "nb": nb, "np": np,
+        "jit": jit, "ffi": ffi, "nb": nb, "np": np, "math": math, "cmath": cmath,
         "link_libs": link_libs,
 
         "FileReader_pop_event": link_function("FileReader_pop_event", 3, i64ret=True),
