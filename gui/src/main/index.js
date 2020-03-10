@@ -47,6 +47,20 @@ if (backend_mode==false &&  install_mode ==false){
   }
 }
 
+function ask_for_restarting_backend(){
+  dialog.showMessageBox({
+    type: 'info',
+    title: 'Launch ETA Backend',
+    message: 'Do you want to run the ETA Backend on the current computer?',
+    buttons: ['Yes', 'No']
+  }, (buttonIndex) => {
+    if (buttonIndex === 0) {
+      while (backend_run(install_mode)){};
+    }
+    else {
+    }
+  })
+}
 
 // GUI related part
 function createMainWindow() {
@@ -82,8 +96,9 @@ function createMainWindow() {
     win.webContents.on('new-window', onWindowOpen)
     win.webContents.on('did-fail-load', (event, code, desc, url, isMainFrame) => {
       // downloading a file will emit this event and log this to the console
-      dialog.showErrorBox('Fail to load',"ETA GUI can not load resources from the backend. Try restarting the backend.")
+      dialog.showErrorBox('Lost connection',"ETA GUI can not load resources from the backend. Try restarting the backend.")
       win.close()
+      ask_for_restarting_backend()
     })
     event.newGuest = win
   }
