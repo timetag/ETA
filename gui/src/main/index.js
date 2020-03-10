@@ -51,7 +51,7 @@ function ask_for_restarting_backend(){
   dialog.showMessageBox({
     type: 'info',
     title: 'Launch ETA Backend',
-    message: 'Do you want to run the ETA Backend on the current computer?',
+    message: 'Do you want to run ETA Backend on this computer?',
     buttons: ['Yes', 'No']
   }, (buttonIndex) => {
     if (buttonIndex === 0) {
@@ -95,9 +95,8 @@ function createMainWindow() {
     win.loadURL(url)
     win.webContents.on('new-window', onWindowOpen)
     win.webContents.on('did-fail-load', (event, code, desc, url, isMainFrame) => {
-      // downloading a file will emit this event and log this to the console
-      dialog.showErrorBox('Lost connection',"ETA GUI can not load resources from the backend. Try restarting the backend.")
       win.close()
+      dialog.showErrorBox('Lost connection',"ETA GUI can not load resources from the backend. Try restarting the backend.")
       ask_for_restarting_backend()
     })
     event.newGuest = win
