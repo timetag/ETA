@@ -69,7 +69,7 @@ class Backend():
         self.logger.info("ETA URL: http://{}:{}".format(self.hostip, self.hostport))
         self.loop = asyncio.get_event_loop()
         if run_forever:
-            web.run_app(self.app, host=self.hostip, port=self.hostport)
+            web.run_app(self.app, host=self.hostip, port=self.hostport, access_log=None)
 
     async def web_redirect(self, request):
         location = request.app.router['default'].url_for()
