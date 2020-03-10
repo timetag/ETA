@@ -135,7 +135,7 @@ document.querySelector("#create_new_form").addEventListener("submit", function (
     $("#create_new_Modal").modal('hide');
     var data = new FormData(document.querySelector("#create_new_form"));
     for (const entry of data) {
-        $.getJSON('./js/recipes/' + entry[1] + ".eta", function (data) {
+        $.getJSON('./recipes/' + entry[1] + ".eta", function (data) {
             on_file_loaded(entry[1], data);
         });
 
@@ -158,7 +158,12 @@ d3.select('#btn_connect').on('click', function () {
         return;
     }
     try {
-        ws = new ReconnectingWebSocket(d3.select('#ws').property("value"))
+        ws_url = d3.select('#ws').property("value");
+        if (ws_url.length<=0){
+            ws_url  = "ws://" +  window.location.host+"/ws";
+        }
+        d3.select('#ws').property("value",ws_url);
+        ws = new ReconnectingWebSocket(ws_url);
     } catch (error) {
         d3.select('#ws').classed("is-valid", false);
         d3.select('#ws').classed("is-invalid", true);

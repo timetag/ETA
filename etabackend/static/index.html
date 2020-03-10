@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="shortcut icon" href="favicon.ico" />
+
+    <link href="css/fontawesome/css/fontawesome-all.min.css" rel="stylesheet">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/table.css">
+    <link rel="stylesheet" type="text/css" href="css/frame.css">
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+
+    <script>
+        if (typeof module === 'object') {
+            window.module = module;
+            module = undefined;
+        }
+    </script>
+    <script src='js/lib/reconnecting-websocket.min.js'></script>
+    <script src='js/lib/jquery.min.js'></script>
+    <!-- Helper libraries -->
+    <script src="js/lib/bootstrap.min.js"></script>
+    <script src="js/lib/d3.min.js"></script>
+    <!-- SaveAs -->
+    <script src="js/lib/Blob.js"></script>
+    <script src="js/lib/FileSaver.min.js"></script>
+    <!-- Local storage -->
+    <script src="js/jsondrop.js"></script>
+    <script src="js/lib/jstorage.js"></script>
+    <script src="js/helper.js"></script>
+    <script src="js/table.js"></script>
+    <script>
+        if (window.module) module = window.module;
+    </script>
+    <title>ETA</title>
+</head>
+
+<body id="body">
+    <div id="top_panel">
+        <span class="caption">ETA</span>
+        <a href="#" class="menu-link" id="btn_new_exp">New</a>
+        <a href="#" class="menu-link" id="btn_load_exp">Open</a>
+        <a href="#" class="menu-link" id="btn_save_exp">Save As</a>
+        <a href="#" class="menu-link" id="btn_settings">Settings</a>
+        <a href="#" class="menu-link" id="btn_compile">VI Checking</a>
+        <a href="help.html" class="menu-link"  target="_blank" >Help</a>
+    </div>
+    <div id="svg_container">
+        <h2 id="exp_tilte" class="bd-text-purple-bright">Experiment Setup</h2>
+        <div id="table" class="table-editable">
+
+            <table class="table">
+                <tr class="header">
+                    <th class="d-none">ID</th>
+                    <th>Name</th>
+                    <th>Group</th>
+                    <th>Info</th>
+                    <th>Config</th>
+                    <th width="230em"></th>
+                    <th width="150em"></th>
+                </tr>
+
+                <!-- This is our clonable table line -->
+                <tr class="d-none vi_template">
+                    <td class="d-none inst_code">invalid</td>
+                    <td class="inst_name save_trig_blur viicon" contenteditable="true"></td>
+                    <td class="inst_comp save_trig_blur" contenteditable="true"></td>
+                    <td class="inst_tables"></td>
+                    <td class="inst_tables"></td>
+                    <td>
+                        <button class="table-design  btn-sm btn btn-outline-dark">Instrument Designer</button>
+                    </td>
+                    <td>
+                        <span class="table-remove fas fa-trash-alt save_trig_click"></span>
+                        <span class="table-copy fas fa-copy save_trig_click "></span>
+                        <span class="table-up  fas fa-arrow-up save_trig_click "></span>
+                        <span class="table-down  fas fa-arrow-down save_trig_click"></span>
+                    </td>
+                </tr>
+
+                <tr class="d-none ri_template">
+                    <td class="d-none inst_code">invalid</td>
+                    <td class="inst_name save_trig_blur riicon" contenteditable="true"></td>
+                    <td class="inst_comp save_trig_blur" contenteditable="true"></td>
+                    <td class="inst_tables"></td>
+                    <td class="inst_tables save_trig_blur" contenteditable="true">N/A</td>
+                    <td></td>
+                    <td>
+                        <span class="table-remove fas fa-trash-alt save_trig_click"></span>
+                        <span class="table-copy fas fa-copy save_trig_click "></span>
+                        <span class="table-up  fas fa-arrow-up save_trig_click "></span>
+                        <span class="table-down  fas fa-arrow-down save_trig_click"></span>
+                    </td>
+                </tr>
+
+                <tr class="d-none dpp_template">
+                    <td class="d-none inst_code">invalid</td>
+                    <td class="inst_name save_trig_blur dppicon" contenteditable="true"></td>
+                    <td class="inst_comp save_trig_blur" contenteditable="true"></td>
+
+                    <td class="inst_tables"></td>
+                    <td class="inst_tables"></td>
+                    <td>
+                        <button class=" btn-sm btn btn-outline-dark table-dpp ">Code</button>
+                        <button class=" btn-sm btn btn-outline-dark font-weight-bold table-run ">Run</button>
+                    </td>
+                    <td>
+                        <span class="table-remove fas fa-trash-alt save_trig_click"></span>
+                        <span class="table-copy fas fa-copy save_trig_click "></span>
+                        <span class="table-up  fas fa-arrow-up save_trig_click "></span>
+                        <span class="table-down  fas fa-arrow-down save_trig_click"></span>
+                    </td>
+                </tr>
+                <tr class="d-none var_template">
+                    <td class="d-none inst_code">invalid</td>
+                    <td class="inst_name save_trig_blur varicon" contenteditable="true"></td>
+                    <td class="inst_comp save_trig_blur" contenteditable="true"></td>
+
+                    <td class="inst_tables">
+                        <td class="inst_tables save_trig_blur" contenteditable="true"></td>
+                    </td>
+                    <td>
+                        <span class="table-openfile far  fa-folder-open save_trig_click"></span>
+                    </td>
+                    <td>
+                        <span class="table-remove fas fa-trash-alt save_trig_click"></span>
+                        <span class="table-copy fas fa-copy save_trig_click "></span>
+                        <span class="table-up  fas fa-arrow-up save_trig_click "></span>
+                        <span class="table-down  fas fa-arrow-down save_trig_click"></span>
+                    </td>
+                </tr>
+            </table>
+
+
+        </div>
+
+        <div class="row" style="margin-right: 0px; margin-left: 0px; ">
+            <div class="px-2">
+                <button id="add-vi" class="btn btn-outline-dark save_trig_click">
+                    <i class="inst_name viicon"></i> Virtual Instrument</button>
+            </div>
+            <div class="px-2">
+                <button id="add-dpp" class="btn btn-outline-dark  save_trig_click">
+                    <i class="inst_name dppicon"></i> Script Panel</button>
+            </div>
+            <div class="px-2">
+                <button id="add-var" class="btn btn-outline-dark save_trig_click">
+                    <i class="inst_name varicon"></i> Parameter</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="remoteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">ETA Backend</h5>
+                    <button type="button" id="exampleModalClose" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="remoteLOG"> </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-dark btn_discard d-none" id="btn_discardresult">Discard</button>
+                    <button type="button" class="btn btn-outline-dark d-none font-weight-bold" id="btn_viewresult">View Result</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal fade" id="connectModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Settings</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="expcfg">
+
+                    <label for="exp_name">Experiment Name</label>
+                    <input id="exp_name" class="form-control" type="text" value="noname" required>
+                    <div class="invalid-feedback">
+                        Please input experiment name.
+                    </div>
+
+                    <label for="ws">ETA Backend URL</label>
+
+                    <input id="ws" class="form-control " type="url" value="" required>
+                    <div class="invalid-feedback">
+                        Connection to ETA backend is lost.
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-outline-dark" id="btn_connect">Connect</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="create_new_Modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">New Experiment</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="create_new_form">
+                    <div class="modal-body">
+                        <h5>What do you want to start with?</h5>
+                        <h>Save the current file before continue.</h>
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" id="radio0" name="recipe" value="unnamed"  /><label  class="custom-control-label" for="radio0">Blank</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" id="radio1" name="recipe" value="Countrate"  /><label  class="custom-control-label" for="radio1">Count Rate</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" id="radio2" name="recipe" value="Correlation" checked /><label class="custom-control-label" for="radio2">Correlation</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" id="radio3" name="recipe" value="Two-Time_Correlation" /><label  class="custom-control-label" for="radio3">Two-time Correlation</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" id="radio4" name="recipe" value="Lifetime" /><label class="custom-control-label" for="radio4">Lifetime Measurement</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" id="radio5" name="recipe" value="Simulation" /><label class="custom-control-label" for="radio5">Simulation</label>
+                        </div>
+                        <h> <a href="https://eta.readthedocs.io/en/latest/recipes.html" target="_blank">Learn more about the pre-made recipies...</a></h>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-outline-dark" id="btn_create_new">Create</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="js/index.js"></script>
+</body>
+
+</html>

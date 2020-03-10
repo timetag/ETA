@@ -67,7 +67,7 @@ function createMainWindow() {
   // general callback
   const onWindowOpen = (event, url, frameName) => {
     event.preventDefault()
-    var showinframe = (url.indexOf("http") >= 0)
+    var showinframe = (url.indexOf("https:") >= 0)
     const win = new BrowserWindow({
       resizable: true,
       backgroundColor: showinframe ? '#FFFFFF' : '#000000',

@@ -9,7 +9,7 @@ import numpy as np
 import etabackend.eta
 
 test_folder = Path(__file__).parent.parent
-recipe_folder = Path(__file__).parent.parent.parent / "gui" / "src" / "renderer" / "js" / "recipes"
+recipe_folder = Path(__file__).parent.parent.parent / "etabackend" / "static" / "recipes"
 
 
 class TestCorrelationRecipe:

@@ -11,8 +11,8 @@ class TestETAStartup:
         os.environ['ETA_PORT'] = '5678'
 
         caplog.set_level(logging.INFO)
-        etabackend.backend.BACKEND(run_forever=False)
-        assert "ETA Backend URL: ws://localhost:5678" in caplog.text
+        etabackend.backend.Backend(run_forever=False)
+        assert "localhost:5678" in caplog.text
 
     def test_client_connect(self, caplog):
         pass

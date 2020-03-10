@@ -1,6 +1,6 @@
 import textwrap
 from .eta_exp import Graph
-
+import ast
 
 class ETA_VM():
     def __init__(self, graph_names):
@@ -122,13 +122,16 @@ class ETA_VM():
                     mainloop_el = "el"
                 mainloop += chn_stanza
         ret = {
-            "looping": textwrap.indent(mainloop, "        "),
-            "uettp_initial": textwrap.indent("\n".join([each.uettp_initial_section for each in self.graphs]), "    "),
-            "init_llvm": textwrap.indent("\n".join([each.uettp_calling_section for each in self.graphs]), "    "),
-            "beforeloop_code": textwrap.indent("\n".join([each.uettp_beforeloop_section for each in self.graphs]), "    "),
-            "deinit": textwrap.indent("\n".join([each.uettp_deinit_section for each in self.graphs]),  "    "),
-            "global_initial": textwrap.indent("\n".join([each.global_initial_section for each in self.graphs]), "    "),
-            "table_list": ",".join(['"' + each + '":' + each for each in self.check_defines()]),
-            "tables": ",".join(self.check_defines())
+            "looping": mainloop,
+            "uettp_initial": "\n".join([each.uettp_initial_section for each in self.graphs]),
+            "init_llvm": "\n".join([each.uettp_calling_section for each in self.graphs]),
+            "beforeloop_code": "\n".join([each.uettp_beforeloop_section for each in self.graphs]),
+            "deinit": "\n".join([each.uettp_deinit_section for each in self.graphs]),
+            "global_initial": "\n".join([each.global_initial_section for each in self.graphs]),
+            "table_list": "{"+",".join(['"' + each + '":' + each for each in self.check_defines()])+"}",
+            "mainloop": "def m("+",".join(self.check_defines())+"): pass"
         }
+        for each in ret.keys():
+            if isinstance(ret[each],str):
+                ret[each]= ast.parse(ret[each])
         return ret

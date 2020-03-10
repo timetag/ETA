@@ -5,7 +5,6 @@ try:
     # Check dependencies
     import etabackend.backend as backend
     import etabackend.webinstall as webinstall
-    import etabackend.ws_broadcast as ws_broadcast
     from etabackend.eta import ETA, ETACompilationException
 except Exception as e:
     logger = logging.getLogger(__name__)
