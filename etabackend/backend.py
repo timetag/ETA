@@ -11,6 +11,7 @@ import pathlib
 import asyncio
 import aiohttp
 from aiohttp import web
+import weakref
 
 from bokeh.server.server import Server
 
@@ -47,7 +48,7 @@ class Backend():
             asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
         self.app = web.Application(logger=logging.getLogger("etabackend.aiohttp"))
-        self.app['websockets'] = []
+        self.app['websockets'] = weakref.WeakSet()
         self.app.add_routes([web.get('/', self.web_redirect),
                              web.get('/index.html', self.web_index, name='default'),
                              web.get('/ws', self.websocket_handler),
@@ -68,8 +69,10 @@ class Backend():
 
         self.logger.info("ETA URL: http://{}:{}".format(self.hostip, self.hostport))
         self.loop = asyncio.get_event_loop()
+
+        self.app.on_shutdown.append(self.on_shutdown)
         if run_forever:
-            web.run_app(self.app, host=self.hostip, port=self.hostport, access_log=None)
+            web.run_app(self.app, host=self.hostip, port=self.hostport, shutdown_timeout=1, access_log=None)
 
     async def web_redirect(self, request):
         location = request.app.router['default'].url_for()
@@ -81,21 +84,27 @@ class Backend():
     async def websocket_handler(self, request):
         ws = web.WebSocketResponse(autoping=False)
         await ws.prepare(request)
-        request.app['websockets'].append(ws)
+        request.app['websockets'].add(ws)
 
         self.logger.info(f"New websocket client {request.host} connected to port {self.hostport}.")
+        try:
+            async for msg in ws:
+                if msg.type == aiohttp.WSMsgType.TEXT:
+                    obj = msg.json()
+                    self.logger.info(f"client {request.host} starts {obj['method']}")
+                    await getattr(self, obj["method"])(*obj["args"])
+                elif msg.type == aiohttp.WSMsgType.ERROR:
+                    self.logger.warning(f"Websocket connection closed with exception {ws.exception()}")
+        finally:
+            request.app['websockets'].discard(ws)
+            self.logger.info(f"Client {request.host} disconnected.")
 
-        async for msg in ws:
-            if msg.type == aiohttp.WSMsgType.TEXT:
-                obj = msg.json()
-                self.logger.info(f"client {request.host} starts {obj['method']}")
-                await getattr(self, obj["method"])(*obj["args"])
-            elif msg.type == aiohttp.WSMsgType.ERROR:
-                self.logger.warning(f"Websocket connection closed with exception {ws.exception()}")
-        request.app['websockets'].remove(ws)
-        self.logger.info(f"Client {request.host} disconnected.")
-        
         return ws
+
+    async def on_shutdown(self, app):
+        for ws in set(app['websockets']):
+            await ws.close(code=aiohttp.WSCloseCode.GOING_AWAY,
+                           message='Server shutdown')
 
     async def send(self, text, endpoint="log"):
         """ Sends a websocket message to all clients.
