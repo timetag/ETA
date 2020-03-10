@@ -63,7 +63,10 @@ function createMainWindow() {
   window.on('closed', () => {
     mainWindow = null
   })
-
+  const onDidFailLoad = (event, code, desc, url, isMainFrame) => {
+    // downloading a file will emit this event and log this to the console
+    dialog.showErrorBox('Fail to load',"It seems that ETA GUI can not connect to the backend. Try restarting the backend.")
+  }
   // general callback
   const onWindowOpen = (event, url, frameName) => {
     event.preventDefault()
@@ -81,6 +84,7 @@ function createMainWindow() {
     win.setMenuBarVisibility(false) // removing menu
     win.loadURL(url)
     win.webContents.on('new-window', onWindowOpen)
+    win.webContents.on('did-fail-load', onDidFailLoad)
     event.newGuest = win
   }
 
