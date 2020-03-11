@@ -172,11 +172,8 @@ class Backend():
                                                   self.hostdashport), "dash")
         else:
             loop = asyncio.get_running_loop()
-            try:
-                await loop.run_in_executor(None, lambda: self.kernel.load_eta(etaobj))
-            except ETACompilationException:
-                pass
-
+            await loop.run_in_executor(None, lambda: self.kernel.load_eta(etaobj))
+            
             if self.kernel.compilecache_nfunc is not None:
                 # ETA File version check
                 if self.kernel.recipe.get_parameter("ETA_VERSION") is not None and self.kernel.recipe.get_parameter("ETA_VERSION") != self.ETA_VERSION:
