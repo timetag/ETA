@@ -23,17 +23,15 @@ typedef unsigned long DWORD;
 			controlflow_guarantee += 1;                           \
 		};                                                        \
 	}
-#define PERROR(...)                                               \
-	{                                                             \
-		controlflow_guarantee = printf("\n [ERROR]" __VA_ARGS__); \
-	}
+#define PERROR(...) {controlflow_guarantee=printf( "\n [ERROR]"  __VA_ARGS__ );}
 #ifdef __debugging__
-#define PINFO(...)  {order_gurantee3=printf("\n" __VA_ARGS__);}
+#define PINFO(...)  {controlflow_guarantee=printf("\n" __VA_ARGS__);}
 #else
 #define PINFO(...)  {}
 #endif
+	
 extern "C"
-{
+{	
 	//DANGER: globlal
 	int64_t controlflow_guarantee = 0;
 
@@ -225,7 +223,7 @@ extern "C"
 			return -1;
 		}
 
-		if (resume >= VCHN->POOL_RFILES)
+		if (resume == 255)
 		{
 			PINFO("POOL_init %d/%d, first run %lld", VCHN->POOL_RFILES, VCHN->POOL_FILES, resume);
 			//init value

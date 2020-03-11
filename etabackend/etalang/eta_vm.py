@@ -12,7 +12,7 @@ class ETA_VM():
     def create_graph(self, name):
         if not isinstance(name, str):
             raise ValueError(
-                "Graph name must be a string, but a {type} is found.".format(str(name)))
+                "Graph name must be a string, but a {} is found.".format(str(name)))
         if name in self.graphs_name_to_id:
             raise ValueError(
                 "There are more than one Graph named `{}`, use a new name instead.".format(name))
@@ -29,7 +29,7 @@ class ETA_VM():
         functionnmae = instruction[0]
         if graphid > len(self.graphs):
             raise ValueError(
-                "try to execute command on a non-existing graph. ", instruction)
+                "try to execute {} on a non-existing graph. ".format(instruction))
         did = False
         command = getattr(self, functionnmae, None)
         if command:
@@ -42,7 +42,7 @@ class ETA_VM():
             command(*construct)
             did = True
         if not did:
-            raise ValueError("Unrecognized instruction {}.", functionnmae)
+            raise ValueError("Unrecognized instruction {}.".format(functionnmae))
 
     def check_rfiles(self):
         return Graph.rfile_all
@@ -99,7 +99,7 @@ class ETA_VM():
                             graph.graphid, graph.graphid)
                         now_stanza += "\n# trans form {} to {}".format(
                             last, now)
-                        now_stanza += "\nnow_{}=nb.int8({})".format(
+                        now_stanza += "\nnow_{}=nb.uint8({})".format(
                             graph.graphid, now)
                         # condition-less
                         now_stanza += "\n" + \

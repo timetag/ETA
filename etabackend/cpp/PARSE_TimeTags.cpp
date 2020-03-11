@@ -37,16 +37,17 @@ unsigned int MarkerSHC_to_CHN(int n) {
 #include <stddef.h>
 #include <stdbool.h>
 typedef unsigned long  DWORD;
-#define PFATAL(...) {order_gurantee3=printf( "\n [FATAL]"  __VA_ARGS__ );while(1){order_gurantee3+=1;};}
-#define PERROR(...) {order_gurantee3=printf( "\n [ERROR]"  __VA_ARGS__ );}
+#define PFATAL(...) {order_gurantee=printf( "\n [FATAL]"  __VA_ARGS__ );while(1){order_gurantee+=1;};}
+#define PERROR(...) {order_gurantee=printf( "\n [ERROR]"  __VA_ARGS__ );}
 #ifdef __debugging__
-#define PINFO(...)  {order_gurantee3=printf("\n" __VA_ARGS__);}
+#define PINFO(...)  {order_gurantee=printf("\n" __VA_ARGS__);}
 #else
 #define PINFO(...)  {}
 #endif
+long long order_gurantee = 0;
+
 extern "C" {
 
-	long long order_gurantee3 = 0;
 
 	typedef struct {
 		// CLIP info

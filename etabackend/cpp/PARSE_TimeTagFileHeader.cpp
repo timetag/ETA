@@ -23,16 +23,13 @@ Zuzeng Lin, KTH, Nov 2017
 #include "string.h"
 #include "time.h"
 typedef wchar_t WCHAR;
-long long order_gurantee = 0;
-#define PERROR(...)                                        \
-	{                                                      \
-		order_gurantee = PINFO("\n [ERROR]" __VA_ARGS__); \
-	}
+#define PERROR(...) {order_gurantee3=printf( "\n [ERROR]"  __VA_ARGS__ );}
 #ifdef __debugging__
-#define PINFO(...)  {order_gurantee3=PINFO("\n" __VA_ARGS__);}
+#define PINFO(...)  {order_gurantee3=printf(__VA_ARGS__);}
 #else
 #define PINFO(...)  {}
 #endif
+long long order_gurantee3 = 0;
 
 typedef struct
 {

@@ -77,7 +77,7 @@ def codegen(recipe_obj):
             vi_code_list += graph_instructions
             vi_code_list += [["PREP_code_assignment", [each]]]
             # parse and load user code
-            intp = eta_parser.Parser(usercode, [each])
+            intp = eta_parser.Parser(usercode, each, instname)
             vi_code_list += [["LOAD_EMBEDDED_CODE",
                               [each, copy.deepcopy(intp.escaped_code)]]]
             vi_code_list += intp.instructions
@@ -89,8 +89,10 @@ def codegen(recipe_obj):
         # execute instructions
         for each in vi_code_list:
             # print(each)
-            etavm.exec_uettp(each)
-
+            try:
+                etavm.exec_uettp(each)
+            except Exception as e:
+                raise ValueError("Error when compiling ETA expression in graph {}:{}".format(graphnames[each[1][0]],e))
         # generates infos
 
         vchn_max = -1

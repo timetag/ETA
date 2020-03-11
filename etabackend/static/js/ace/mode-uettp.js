@@ -11,7 +11,7 @@ var PythonHighlightRules = function() {
     );
 
     var builtinConstants = (
-       "record|start|stop|emit|cancel_emit|fill|infer_start_from_stop|find_stop|clear|record_all|sort|interrupt"
+       "record|start|stop|emit|cancel_emit|fill|infer_start_from_stop|find_stop|clear|record_all|sort|interrupt|abort"
     );
 
     var builtinFunctions = (

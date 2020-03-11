@@ -55,7 +55,7 @@ function ask_for_restarting_backend(){
     buttons: ['Yes', 'No']
   }, (buttonIndex) => {
     if (buttonIndex === 0) {
-      while (backend_run(install_mode)){};
+        backend_run(install_mode);
     }
     else {
     }

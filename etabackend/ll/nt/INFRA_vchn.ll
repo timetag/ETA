@@ -588,7 +588,7 @@ define dso_local i32 @VCHN_init(%struct.VCHN_t*, i64, i64, i64, i8*, i8*, i8*, i
   %42 = sext i32 %41 to i64
   store i64 %42, i64* @controlflow_guarantee, align 8
   store i32 -1, i32* %11, align 4
-  br label %144
+  br label %140
 
 ; <label>:43:                                     ; preds = %10
   %44 = load i8*, i8** %16, align 8
@@ -606,7 +606,7 @@ define dso_local i32 @VCHN_init(%struct.VCHN_t*, i64, i64, i64, i8*, i8*, i8*, i
   %53 = sext i32 %52 to i64
   store i64 %53, i64* @controlflow_guarantee, align 8
   store i32 -1, i32* %11, align 4
-  br label %144
+  br label %140
 
 ; <label>:54:                                     ; preds = %43
   %55 = load i8*, i8** %15, align 8
@@ -624,131 +624,127 @@ define dso_local i32 @VCHN_init(%struct.VCHN_t*, i64, i64, i64, i8*, i8*, i8*, i
   %64 = sext i32 %63 to i64
   store i64 %64, i64* @controlflow_guarantee, align 8
   store i32 -1, i32* %11, align 4
-  br label %144
+  br label %140
 
 ; <label>:65:                                     ; preds = %54
   %66 = load i64, i64* %14, align 8
-  %67 = load %struct.VCHN_t*, %struct.VCHN_t** %21, align 8
-  %68 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %67, i32 0, i32 6
-  %69 = load i8, i8* %68, align 2
-  %70 = zext i8 %69 to i64
-  %71 = icmp sge i64 %66, %70
-  br i1 %71, label %72, label %126
+  %67 = icmp eq i64 %66, 255
+  br i1 %67, label %68, label %122
 
-; <label>:72:                                     ; preds = %65
+; <label>:68:                                     ; preds = %65
   store i32 0, i32* %22, align 4
-  br label %73
+  br label %69
 
-; <label>:73:                                     ; preds = %97, %72
-  %74 = load i32, i32* %22, align 4
-  %75 = sext i32 %74 to i64
-  %76 = load i64, i64* %18, align 8
-  %77 = icmp slt i64 %75, %76
-  br i1 %77, label %78, label %100
+; <label>:69:                                     ; preds = %93, %68
+  %70 = load i32, i32* %22, align 4
+  %71 = sext i32 %70 to i64
+  %72 = load i64, i64* %18, align 8
+  %73 = icmp slt i64 %71, %72
+  br i1 %73, label %74, label %96
 
-; <label>:78:                                     ; preds = %73
-  %79 = load %struct.VCHN_t*, %struct.VCHN_t** %21, align 8
-  %80 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %79, i32 0, i32 0
-  %81 = load i64*, i64** %80, align 8
-  %82 = load i32, i32* %22, align 4
-  %83 = sext i32 %82 to i64
-  %84 = getelementptr inbounds i64, i64* %81, i64 %83
-  store i64 9223372036854775807, i64* %84, align 8
-  %85 = load %struct.VCHN_t*, %struct.VCHN_t** %21, align 8
-  %86 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %85, i32 0, i32 1
-  %87 = load i8*, i8** %86, align 8
-  %88 = load i32, i32* %22, align 4
-  %89 = sext i32 %88 to i64
-  %90 = getelementptr inbounds i8, i8* %87, i64 %89
-  store i8 -1, i8* %90, align 1
-  %91 = load %struct.VCHN_t*, %struct.VCHN_t** %21, align 8
-  %92 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %91, i32 0, i32 2
-  %93 = load i8*, i8** %92, align 8
+; <label>:74:                                     ; preds = %69
+  %75 = load %struct.VCHN_t*, %struct.VCHN_t** %21, align 8
+  %76 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %75, i32 0, i32 0
+  %77 = load i64*, i64** %76, align 8
+  %78 = load i32, i32* %22, align 4
+  %79 = sext i32 %78 to i64
+  %80 = getelementptr inbounds i64, i64* %77, i64 %79
+  store i64 9223372036854775807, i64* %80, align 8
+  %81 = load %struct.VCHN_t*, %struct.VCHN_t** %21, align 8
+  %82 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %81, i32 0, i32 1
+  %83 = load i8*, i8** %82, align 8
+  %84 = load i32, i32* %22, align 4
+  %85 = sext i32 %84 to i64
+  %86 = getelementptr inbounds i8, i8* %83, i64 %85
+  store i8 -1, i8* %86, align 1
+  %87 = load %struct.VCHN_t*, %struct.VCHN_t** %21, align 8
+  %88 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %87, i32 0, i32 2
+  %89 = load i8*, i8** %88, align 8
+  %90 = load i32, i32* %22, align 4
+  %91 = sext i32 %90 to i64
+  %92 = getelementptr inbounds i8, i8* %89, i64 %91
+  store i8 -1, i8* %92, align 1
+  br label %93
+
+; <label>:93:                                     ; preds = %74
   %94 = load i32, i32* %22, align 4
-  %95 = sext i32 %94 to i64
-  %96 = getelementptr inbounds i8, i8* %93, i64 %95
-  store i8 -1, i8* %96, align 1
+  %95 = add nsw i32 %94, 1
+  store i32 %95, i32* %22, align 4
+  br label %69
+
+; <label>:96:                                     ; preds = %69
+  store i32 0, i32* %23, align 4
   br label %97
 
-; <label>:97:                                     ; preds = %78
-  %98 = load i32, i32* %22, align 4
-  %99 = add nsw i32 %98, 1
-  store i32 %99, i32* %22, align 4
-  br label %73
+; <label>:97:                                     ; preds = %118, %96
+  %98 = load i32, i32* %23, align 4
+  %99 = load %struct.VCHN_t*, %struct.VCHN_t** %21, align 8
+  %100 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %99, i32 0, i32 5
+  %101 = load i8, i8* %100, align 1
+  %102 = zext i8 %101 to i32
+  %103 = icmp slt i32 %98, %102
+  br i1 %103, label %104, label %121
 
-; <label>:100:                                    ; preds = %73
-  store i32 0, i32* %23, align 4
-  br label %101
+; <label>:104:                                    ; preds = %97
+  %105 = load i32, i32* %23, align 4
+  %106 = trunc i32 %105 to i8
+  %107 = load %struct.VCHN_t*, %struct.VCHN_t** %21, align 8
+  %108 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %107, i32 0, i32 1
+  %109 = load i8*, i8** %108, align 8
+  %110 = load %struct.VCHN_t*, %struct.VCHN_t** %21, align 8
+  %111 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %110, i32 0, i32 5
+  %112 = load i8, i8* %111, align 1
+  %113 = zext i8 %112 to i32
+  %114 = load i32, i32* %23, align 4
+  %115 = add nsw i32 %113, %114
+  %116 = sext i32 %115 to i64
+  %117 = getelementptr inbounds i8, i8* %109, i64 %116
+  store i8 %106, i8* %117, align 1
+  br label %118
 
-; <label>:101:                                    ; preds = %122, %100
-  %102 = load i32, i32* %23, align 4
-  %103 = load %struct.VCHN_t*, %struct.VCHN_t** %21, align 8
-  %104 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %103, i32 0, i32 5
-  %105 = load i8, i8* %104, align 1
-  %106 = zext i8 %105 to i32
-  %107 = icmp slt i32 %102, %106
-  br i1 %107, label %108, label %125
+; <label>:118:                                    ; preds = %104
+  %119 = load i32, i32* %23, align 4
+  %120 = add nsw i32 %119, 1
+  store i32 %120, i32* %23, align 4
+  br label %97
 
-; <label>:108:                                    ; preds = %101
-  %109 = load i32, i32* %23, align 4
-  %110 = trunc i32 %109 to i8
-  %111 = load %struct.VCHN_t*, %struct.VCHN_t** %21, align 8
-  %112 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %111, i32 0, i32 1
-  %113 = load i8*, i8** %112, align 8
-  %114 = load %struct.VCHN_t*, %struct.VCHN_t** %21, align 8
-  %115 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %114, i32 0, i32 5
-  %116 = load i8, i8* %115, align 1
-  %117 = zext i8 %116 to i32
-  %118 = load i32, i32* %23, align 4
-  %119 = add nsw i32 %117, %118
-  %120 = sext i32 %119 to i64
-  %121 = getelementptr inbounds i8, i8* %113, i64 %120
-  store i8 %110, i8* %121, align 1
-  br label %122
+; <label>:121:                                    ; preds = %97
+  br label %123
 
-; <label>:122:                                    ; preds = %108
-  %123 = load i32, i32* %23, align 4
-  %124 = add nsw i32 %123, 1
-  store i32 %124, i32* %23, align 4
-  br label %101
+; <label>:122:                                    ; preds = %65
+  br label %123
 
-; <label>:125:                                    ; preds = %101
-  br label %127
-
-; <label>:126:                                    ; preds = %65
-  br label %127
-
-; <label>:127:                                    ; preds = %126, %125
-  %128 = load i64, i64* %13, align 8
-  %129 = trunc i64 %128 to i8
+; <label>:123:                                    ; preds = %122, %121
+  %124 = load i64, i64* %13, align 8
+  %125 = trunc i64 %124 to i8
+  %126 = load %struct.VCHN_t*, %struct.VCHN_t** %21, align 8
+  %127 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %126, i32 0, i32 4
+  store i8 %125, i8* %127, align 8
+  %128 = load i8*, i8** %12, align 8
+  %129 = bitcast i8* %128 to %struct.circular_buf_t*
   %130 = load %struct.VCHN_t*, %struct.VCHN_t** %21, align 8
-  %131 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %130, i32 0, i32 4
-  store i8 %129, i8* %131, align 8
-  %132 = load i8*, i8** %12, align 8
-  %133 = bitcast i8* %132 to %struct.circular_buf_t*
-  %134 = load %struct.VCHN_t*, %struct.VCHN_t** %21, align 8
-  %135 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %134, i32 0, i32 3
-  store %struct.circular_buf_t* %133, %struct.circular_buf_t** %135, align 8
-  %136 = load %struct.VCHN_t*, %struct.VCHN_t** %21, align 8
-  %137 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %136, i32 0, i32 3
-  %138 = load %struct.circular_buf_t*, %struct.circular_buf_t** %137, align 8
-  %139 = icmp eq %struct.circular_buf_t* %138, null
-  br i1 %139, label %140, label %143
+  %131 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %130, i32 0, i32 3
+  store %struct.circular_buf_t* %129, %struct.circular_buf_t** %131, align 8
+  %132 = load %struct.VCHN_t*, %struct.VCHN_t** %21, align 8
+  %133 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %132, i32 0, i32 3
+  %134 = load %struct.circular_buf_t*, %struct.circular_buf_t** %133, align 8
+  %135 = icmp eq %struct.circular_buf_t* %134, null
+  br i1 %135, label %136, label %139
 
-; <label>:140:                                    ; preds = %127
-  %141 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([54 x i8], [54 x i8]* @"??_C@_0DG@CKGFOHGH@?6?5?$FLERROR?$FNMemalloc?5failed?5for?5VFI@", i32 0, i32 0))
-  %142 = sext i32 %141 to i64
-  store i64 %142, i64* @controlflow_guarantee, align 8
+; <label>:136:                                    ; preds = %123
+  %137 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([54 x i8], [54 x i8]* @"??_C@_0DG@CKGFOHGH@?6?5?$FLERROR?$FNMemalloc?5failed?5for?5VFI@", i32 0, i32 0))
+  %138 = sext i32 %137 to i64
+  store i64 %138, i64* @controlflow_guarantee, align 8
   store i32 -1, i32* %11, align 4
-  br label %144
+  br label %140
 
-; <label>:143:                                    ; preds = %127
+; <label>:139:                                    ; preds = %123
   store i32 0, i32* %11, align 4
-  br label %144
+  br label %140
 
-; <label>:144:                                    ; preds = %143, %140, %62, %51, %40
-  %145 = load i32, i32* %11, align 4
-  ret i32 %145
+; <label>:140:                                    ; preds = %139, %136, %62, %51, %40
+  %141 = load i32, i32* %11, align 4
+  ret i32 %141
 }
 
 ; Function Attrs: alwaysinline uwtable

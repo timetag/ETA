@@ -102,10 +102,10 @@ class RFILE():
         self.EMIT_LINE("global_initial", "{symbol}=None"
                        .format(symbol=sym))
         self.EMIT_LINE("uettp_calling", """
-        eta_ret += FileReader_init(ptr_READER, {rfileid}, nb.int8({signalchn_offset}), nb.int8({markerchn_offset}),  ffi.from_buffer({name}))
-        if GCONF_RESUME == {rfileid} or GCONF_RESUME == 255:
-            controller_rfile_time = FileReader_pop_event(ptr_READER,nb.int8({rfileid}),ptr_chn_next)
-            eta_ret += POOL_update(ptr_VCHN,nb.int64(controller_rfile_time),nb.int8({rfileid}),nb.int8(scalar_chn_next[0]))
+        eta_ret += FileReader_init(ptr_READER, {rfileid}, nb.uint8({signalchn_offset}), nb.uint8({markerchn_offset}),  ffi.from_buffer({name}))
+        if fileid == {rfileid} or fileid == 255:
+            controller_rfile_time = FileReader_pop_event(ptr_READER,nb.uint8({rfileid}),ptr_chn_next)
+            eta_ret += POOL_update(ptr_VCHN,nb.int64(controller_rfile_time),nb.uint8({rfileid}),nb.uint8(scalar_chn_next[0]))
         """.format(name=type[1], rfileid=type[2], signalchn_offset=type[3], markerchn_offset=type[4]))
 
     def RFILE(self, triggers, name, signalchn="[0,1,2,3]", markerchn="[]"):
@@ -423,7 +423,7 @@ class COINCIDENCE():
         code = """
         {sym}|=nb.int64(1<<{thisnum})
         if {sym}== {fullint}:
-            eta_ret+=VCHN_put(ptr_VCHN,nb.int64(AbsTime_ps),nb.int8({chn}))
+            eta_ret+=VCHN_put(ptr_VCHN,nb.int64(AbsTime_ps),nb.uint8({chn}))
         """.format(sym=sym, thisnum=thisnum, fullint=fullint, chn=chn)
         self.EMIT_LINE(trigger, code)
 
@@ -708,20 +708,19 @@ class Graph(INTEGER, TABLE, RFILE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENC
 
     def MAKE_global_code_on_graph0(self, num_rslot, num_vslot, vchn_offset, pool_tree_size):
         self.INTEGER("uettp_initial", "AbsTime_ps", initvalue=0)
-        self.INTEGER("uettp_initial", "GCONF_RESUME", initvalue=255)
+        self.INTEGER("uettp_initial", "fileid", initvalue=255, type="uint8", with_ptr=True)
         self.INTEGER("uettp_initial", "chn", initvalue=255,
-                     type="int8", with_ptr=True)
+                     type="uint8", with_ptr=True)
         self.INTEGER("uettp_initial", "chn_next",
-                     initvalue=255, type="int8", with_ptr=True)
-        self.INTEGER("uettp_initial", "fileid", initvalue=255,
-                     type="int8", with_ptr=True)
+                     initvalue=255, type="uint8", with_ptr=True)
+        self.INTEGER("uettp_initial", "interrupt", initvalue=0, type="uint8", const=True)
 
         self.TABLE("uettp_initial", "POOL_timetag_arr", [
                    pool_tree_size], type="int64", with_ptr=True)
         self.TABLE("uettp_initial", "POOL_fileid_arr", [
-                   pool_tree_size], type="int8", with_ptr=True)
+                   pool_tree_size], type="uint8", with_ptr=True)
         self.TABLE("uettp_initial", "POOL_chn_arr", [
-                   pool_tree_size], type="int8", with_ptr=True)
+                   pool_tree_size], type="uint8", with_ptr=True)
         # hard coded size for struct
         self.TABLE("uettp_initial", "VCHN", [5], type="int64", with_ptr=True)
         # hard coded size for struct
@@ -732,7 +731,7 @@ class Graph(INTEGER, TABLE, RFILE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENC
 
         # executed earlier than MAKE_init_for_syms
         self.EMIT_LINE("uettp_calling", """eta_ret += VCHN_init(ptr_VCHN,{num_rslot} + {num_vslot}, {num_rslot}, 
-        {pool_tree_size},ptr_POOL_timetag_arr, ptr_POOL_fileid_arr , ptr_POOL_chn_arr ,nb.int64(GCONF_RESUME),
+        {pool_tree_size},ptr_POOL_timetag_arr, ptr_POOL_fileid_arr , ptr_POOL_chn_arr ,nb.int64(fileid),
         {vchn_offset},ptr_VFILES)""".format(num_rslot=num_rslot, num_vslot=num_vslot,
                                             vchn_offset=vchn_offset, pool_tree_size=pool_tree_size))
 
@@ -762,18 +761,28 @@ class Graph(INTEGER, TABLE, RFILE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENC
         if isinstance(repeat, str) or (isinstance(repeat, int) and repeat > 1):
             code = """
                 for emit_times in range(0,{repeat}):
-                    eta_ret+=VCHN_put(ptr_VCHN,nb.int64({phase}+{period}*(emit_times)),nb.int8({chn}))
+                    eta_ret+=VCHN_put(ptr_VCHN,nb.int64({phase}+{period}*(emit_times)),nb.uint8({chn}))
                 """.format(phase=phase,
                            chn=chn,  repeat=repeat, period=period)
         else:
-            code = """eta_ret+=VCHN_put(ptr_VCHN,nb.int64({phase}),nb.int8({chn}))""".format(phase=phase,
+            code = """eta_ret+=VCHN_put(ptr_VCHN,nb.int64({phase}),nb.uint8({chn}))""".format(phase=phase,
                                                                                              chn=chn)
         self.EMIT_LINE(triggers, code)
 
     def cancel_emit(self, triggers, chn):
         chn = self.get_INTEGER_or_literal(chn)
         self.EMIT_LINE(
-            triggers, """eta_ret+=VCHN_put(ptr_VCHN,nb.int64(9223372036854775807),nb.int8({chn}))""".format(chn=chn))
+            triggers, """eta_ret+=VCHN_put(ptr_VCHN,nb.int64(9223372036854775807),nb.uint8({chn}))""".format(chn=chn))
+    
+    def interrupt(self,triggers):
+        if isinstance(triggers,list):
+            self.EMIT_LINE(
+                triggers, """interrupt=1""")
+
+    def abort(self,triggers):
+        if isinstance(triggers,list):
+            self.EMIT_LINE(
+                triggers, """AbsTime_ps = 9223372036854775807;interrupt=1""")
 
     def parse_multi_object(self, names):
         names = names.strip()

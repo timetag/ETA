@@ -207,8 +207,8 @@ def link_jit_code(args):
     FileReader_pop_event, POOL_update, VCHN_next = (
         lambda *vargs: 0,)*3
     scalar_chn_next, READER, scalar_chn, scalar_fileid = (np.zeros(0),)*4
-    uettp_initial, init_llvm, deinit, looping, beforeloop_code,  num_rslot, global_initial, table_list, ptr_VCHN, ptr_fileid, ptr_chn, ptr_READER, ptr_chn_next = (
-        0,)*13
+    uettp_initial, init_llvm, deinit, looping, beforeloop_code,  num_rslot, global_initial, table_list, ptr_VCHN, ptr_fileid, ptr_chn, ptr_READER, ptr_chn_next, interrupt = (
+        0,)*14
 
     @jit(nopython=True, nogil=True)  # parallel=True,
     def mainloop(tables):
@@ -225,17 +225,20 @@ def link_jit_code(args):
             chn = scalar_chn[0]
             fileid = scalar_fileid[0]
             if AbsTime_ps == 9223372036854775807:  # full stop
+                print("!!!!!VCHN FUCKED UP!!!!!!")
                 break
             looping
+            if interrupt:
+                eta_ret += interrupt
+                break
             if fileid < num_rslot:
                 controller_rfile_time = FileReader_pop_event(
-                    ptr_READER, nb.int8(fileid), ptr_chn_next)
+                    ptr_READER, nb.uint8(fileid), ptr_chn_next)
                 if controller_rfile_time == 9223372036854775807:  # early stop
-                    GCONF_RESUME = fileid
                     break
                 else:
                     eta_ret += POOL_update(ptr_VCHN, nb.int64(controller_rfile_time),
-                                           nb.int8(fileid), nb.int8(scalar_chn_next[0]))
+                                           nb.uint8(fileid), nb.uint8(scalar_chn_next[0]))
         deinit
         return eta_ret
 
@@ -265,9 +268,10 @@ def cmp_dc(a, b):
     except Exception:
         return False
         
-PARSE_TimeTagFileHeader = link_function("PARSE_TimeTagFileHeader",2)
+PARSE_TimeTagFileHeader = link_function("PARSE_TimeTagFileHeader", 2)
 @jit(nopython=True, nogil=True)
 def PARSE_TimeTagFileHeader_wrapper(PARSER, UniBuf):
     link_libs()
-    ret1 = PARSE_TimeTagFileHeader(ffi.from_buffer(PARSER), ffi.from_buffer(UniBuf))
+    ret1 = PARSE_TimeTagFileHeader(
+        ffi.from_buffer(PARSER), ffi.from_buffer(UniBuf))
     return ret1

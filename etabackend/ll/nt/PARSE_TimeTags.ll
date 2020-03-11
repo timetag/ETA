@@ -38,7 +38,7 @@ $"??_C@_0CM@DODOIIB@?6?5?$FLERROR?$FNERROR?3?5Unsupported?5time@" = comdat any
 
 $"?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA" = comdat any
 
-@order_gurantee3 = dso_local global i64 0, align 8
+@"?order_gurantee@@3_JA" = dso_local global i64 0, align 8
 @"??_C@_0BO@LDGIBODO@?6?5?$FLFATAL?$FN?5Illegal?5Chan?3?5?5?$CF1u?6?$AA@" = linkonce_odr dso_local unnamed_addr constant [30 x i8] c"\0A [FATAL] Illegal Chan:  %1u\0A\00", comdat, align 1
 @"??_C@_0CI@NNAIKICM@?6?5?$FLFATAL?$FN?6Illegal?5virtual_channe@" = linkonce_odr dso_local unnamed_addr constant [40 x i8] c"\0A [FATAL]\0AIllegal virtual_channel:  %1u\00", comdat, align 1
 @"??_C@_0CM@DODOIIB@?6?5?$FLERROR?$FNERROR?3?5Unsupported?5time@" = linkonce_odr dso_local unnamed_addr constant [44 x i8] c"\0A [ERROR]ERROR: Unsupported timetag format.\00", comdat, align 1
@@ -136,13 +136,13 @@ define dso_local void @ProcessPHT2(%struct.ttf_reader*, i32, i64* dereferenceabl
   %69 = lshr i32 %68, 28
   %70 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([30 x i8], [30 x i8]* @"??_C@_0BO@LDGIBODO@?6?5?$FLFATAL?$FN?5Illegal?5Chan?3?5?5?$CF1u?6?$AA@", i32 0, i32 0), i32 %69)
   %71 = sext i32 %70 to i64
-  store i64 %71, i64* @order_gurantee3, align 8
+  store i64 %71, i64* @"?order_gurantee@@3_JA", align 8
   br label %72
 
 ; <label>:72:                                     ; preds = %65, %72
-  %73 = load i64, i64* @order_gurantee3, align 8
+  %73 = load i64, i64* @"?order_gurantee@@3_JA", align 8
   %74 = add nsw i64 %73, 1
-  store i64 %74, i64* @order_gurantee3, align 8
+  store i64 %74, i64* @"?order_gurantee@@3_JA", align 8
   br label %72
 
 ; <label>:75:                                     ; preds = %59
@@ -522,13 +522,13 @@ define dso_local void @ProcessPHT3(%struct.ttf_reader*, i32, i64* dereferenceabl
   %82 = lshr i32 %81, 28
   %83 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([40 x i8], [40 x i8]* @"??_C@_0CI@NNAIKICM@?6?5?$FLFATAL?$FN?6Illegal?5virtual_channe@", i32 0, i32 0), i32 %82)
   %84 = sext i32 %83 to i64
-  store i64 %84, i64* @order_gurantee3, align 8
+  store i64 %84, i64* @"?order_gurantee@@3_JA", align 8
   br label %85
 
 ; <label>:85:                                     ; preds = %78, %85
-  %86 = load i64, i64* @order_gurantee3, align 8
+  %86 = load i64, i64* @"?order_gurantee@@3_JA", align 8
   %87 = add nsw i64 %86, 1
-  store i64 %87, i64* @order_gurantee3, align 8
+  store i64 %87, i64* @"?order_gurantee@@3_JA", align 8
   br label %85
 
 ; <label>:88:                                     ; preds = %72
@@ -984,13 +984,13 @@ define dso_local i64 @FileReader_pop_event(%struct.ttf_reader*, i8, i8*) #0 {
   %175 = lshr i32 %174, 28
   %176 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([30 x i8], [30 x i8]* @"??_C@_0BO@LDGIBODO@?6?5?$FLFATAL?$FN?5Illegal?5Chan?3?5?5?$CF1u?6?$AA@", i32 0, i32 0), i32 %175)
   %177 = sext i32 %176 to i64
-  store i64 %177, i64* @order_gurantee3, align 8
+  store i64 %177, i64* @"?order_gurantee@@3_JA", align 8
   br label %178
 
 ; <label>:178:                                    ; preds = %178, %171
-  %179 = load i64, i64* @order_gurantee3, align 8
+  %179 = load i64, i64* @"?order_gurantee@@3_JA", align 8
   %180 = add nsw i64 %179, 1
-  store i64 %180, i64* @order_gurantee3, align 8
+  store i64 %180, i64* @"?order_gurantee@@3_JA", align 8
   br label %178
 
 ; <label>:181:                                    ; preds = %165
@@ -1126,13 +1126,13 @@ define dso_local i64 @FileReader_pop_event(%struct.ttf_reader*, i8, i8*) #0 {
   %279 = lshr i32 %278, 28
   %280 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([40 x i8], [40 x i8]* @"??_C@_0CI@NNAIKICM@?6?5?$FLFATAL?$FN?6Illegal?5virtual_channe@", i32 0, i32 0), i32 %279)
   %281 = sext i32 %280 to i64
-  store i64 %281, i64* @order_gurantee3, align 8
+  store i64 %281, i64* @"?order_gurantee@@3_JA", align 8
   br label %282
 
 ; <label>:282:                                    ; preds = %282, %275
-  %283 = load i64, i64* @order_gurantee3, align 8
+  %283 = load i64, i64* @"?order_gurantee@@3_JA", align 8
   %284 = add nsw i64 %283, 1
-  store i64 %284, i64* @order_gurantee3, align 8
+  store i64 %284, i64* @"?order_gurantee@@3_JA", align 8
   br label %282
 
 ; <label>:285:                                    ; preds = %269
@@ -2142,7 +2142,7 @@ define dso_local i64 @FileReader_pop_event(%struct.ttf_reader*, i8, i8*) #0 {
 ; <label>:1054:                                   ; preds = %103
   %1055 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([44 x i8], [44 x i8]* @"??_C@_0CM@DODOIIB@?6?5?$FLERROR?$FNERROR?3?5Unsupported?5time@", i32 0, i32 0))
   %1056 = sext i32 %1055 to i64
-  store i64 %1056, i64* @order_gurantee3, align 8
+  store i64 %1056, i64* @"?order_gurantee@@3_JA", align 8
   br label %1057
 
 ; <label>:1057:                                   ; preds = %1054, %1053, %927, %898, %869, %868, %742, %595, %469, %322, %207

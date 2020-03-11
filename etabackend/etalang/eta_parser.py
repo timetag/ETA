@@ -3,8 +3,9 @@ from . import ast_parser
 
 
 class Parser():
-    def __init__(self, code, contex=[]):
-        self.contex = contex
+    def __init__(self, code, instid, instname):
+        self.contex = [instid]
+        self.instname = instname
         self.code = code
         self.escaped_str = []
         self.escaped_code = []
@@ -130,9 +131,9 @@ class Parser():
         for each in self.code.split("\n"):
 
             if each.find(":") > 0:
-                if each.find("#")>=0:
+                if each.find("#") >= 0:
                     each = each[:each.find("#")]
-                #print(each)
+                # print(each)
                 # code with trigger
                 (ret1, ret2) = self.parse_define(each)
 
@@ -153,7 +154,11 @@ class Parser():
         for define, code in zip(defines, codes):
             if define is None:
                 define = "uettp_beforeloop"
-            ret = ast_parser.code_parse(code, contex=self.contex + [define])
+            try:
+                ret = ast_parser.code_parse(
+                    code, contex=self.contex + [define])
+            except Exception as e:
+                raise ValueError("Illegal ETA expression in graph {}:{} ".format(self.instname,e) )
             for each in ret:
                 instructions.append(each)
 
