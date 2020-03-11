@@ -102,6 +102,8 @@ class Clip():
                 "Clip.parse_header: File {} is incorrect, err code {}.".format(filename, ret1))
         self.from_parser_output(PARSER)
 
+    def get_pos(self):
+        return self.fseekpoint+self.next_RecID_in_batch*self.BytesofRecords
 
 class ETA_CUT():
     def __init__(self):
