@@ -96,19 +96,20 @@ class ETA_CUT():
         self.logfrontend = logging.getLogger("etabackend.frontend")
 
     # example generators
-    def split_file(self, filename, cuts=1, read_events=1, reuse_clips=True, keep_indexes=None, **kwargs):
+    def split_file(self, filename, cuts=1, reuse_clips=True, keep_indexes=None, **kwargs):
+        # build a clip for header
         last_clip = self.clip_file(
-            filename, read_events=read_events,  **kwargs)
-        self.logfrontend.info("ETA.split_file: The file '{filename}' will be cut into {cuts} equal size Clips. ".format(filename=filename,
-                                                                                                                        cuts=cuts))
+            filename, read_events=1,  **kwargs)
         TTF_header_offset = last_clip.fseekpoint
+        # reset the clip
+        last_clip.fseekpoint = last_clip.headeroffset
+        last_clip.batch_actualread_length = 0
         TTF_filesize = os.path.getsize(str(filename))
 
         NumRecords = (
             TTF_filesize - TTF_header_offset) // last_clip.BytesofRecords
-
-        # build a clip for header
-        last_clip.fseekpoint = last_clip.headeroffset
+        self.logfrontend.info("ETA.split_file: The file '{filename}' will be cut into {cuts} equal size Clips. ".format(filename=filename,
+                                                                                                                        cuts=cuts))
         return self.clips(filename, read_events=((NumRecords+cuts-1) // cuts), modify_clip=last_clip, reuse_clips=reuse_clips, keep_indexes=keep_indexes, **kwargs)
 
     def clips(self, filename, modify_clip=None, read_events=1024*1024*10, reuse_clips=True, keep_indexes=None, **kwargs):
@@ -177,11 +178,11 @@ class ETA_CUT():
         # read at least one record each time
         if read_events <= 0:
             read_events = 1
-        
+
         # compute the desired file size
         filedesiredsize = temp_clip.fseekpoint + \
             temp_clip.BytesofRecords * read_events
-        
+
         # wait for data
         waited_for = 0.0
         while not fileactualsize >= filedesiredsize:
@@ -198,9 +199,9 @@ class ETA_CUT():
             time.sleep(0.01)
 
         # make buffer
-        if temp_clip.fseekpoint>fileactualsize:
+        if temp_clip.fseekpoint > fileactualsize:
             self.logfrontend.info(
-                "ETA.clip_file: Can not seek to {} in the file '{}' for the Clip. ".format(temp_clip.fseekpoint,filename))
+                "ETA.clip_file: Can not seek to {} in the file '{}' for the Clip. ".format(temp_clip.fseekpoint, filename))
             return False
         if (temp_clip.buffer == None or len(temp_clip.buffer) != filedesiredsize-temp_clip.fseekpoint):
             # reuser buffer as much as possible
