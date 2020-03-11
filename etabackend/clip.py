@@ -1,8 +1,8 @@
+import logging
 import os
 import time
-import logging
 
-from etabackend.parser_header import parse_header
+from etabackend.etalang.jit_linker import PARSE_TimeTagFileHeader_wrapper, np
 
 
 class Clip():
@@ -71,6 +71,8 @@ class Clip():
             if v < len(parse_output):
                 value = int(parse_output[v])
                 #print(value, "is", name)
+                if name == "buffer":
+                    value = None
                 setattr(self, name, value)
 
     def to_reader_input(self):
@@ -88,6 +90,17 @@ class Clip():
             #print(value, "is", name)
             ret.append(int(value))
         return ret
+
+    def parse_header(self, filename):
+        fileheader = bytearray(1024*20)  # 20KB header
+        with open(filename, "rb") as f:
+            f.readinto(fileheader)
+        PARSER = np.array(self.to_reader_input(), np.int64)
+        ret1 = PARSE_TimeTagFileHeader_wrapper(PARSER, fileheader)
+        if ret1 != 0:
+            raise ValueError(
+                "Clip.parse_header: File {} is incorrect, err code {}.".format(filename, ret1))
+        self.from_parser_output(PARSER)
 
 
 class ETA_CUT():
@@ -135,8 +148,8 @@ class ETA_CUT():
                     break
                 seek_event = keep_indexes[counter]*read_events
             else:
-                seek_event = -1 # auto slide window
-                #seek_event = counter * read_events # remove me
+                seek_event = -1  # auto slide window
+                # seek_event = counter * read_events # remove me
             currentclip = self.clip_file(
                 filename, modify_clip=currentclip, read_events=read_events, seek_event=seek_event, **kwargs)
             if currentclip:
@@ -154,12 +167,9 @@ class ETA_CUT():
     def clip_file(self, filename, modify_clip=None, read_events=0, seek_event=-1, format=-1, wait_timeout=0):
         filename = str(filename)  # supporting pathlib
         if modify_clip == None:
-            ret1, parse_output = parse_header(filename, format)
-            if ret1 != 0:
-                raise ValueError(
-                    "ETA.clip_file: File {} is not found or incorrect, err code {}.".format(filename, ret1))
             temp_clip = Clip()
-            temp_clip.from_parser_output(parse_output)
+            temp_clip.RecordType = format
+            temp_clip.parse_header(filename)
         else:
             temp_clip = modify_clip
 

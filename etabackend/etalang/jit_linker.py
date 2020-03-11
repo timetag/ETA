@@ -264,3 +264,10 @@ def cmp_dc(a, b):
         return True
     except Exception:
         return False
+        
+PARSE_TimeTagFileHeader = link_function("PARSE_TimeTagFileHeader",2)
+@jit(nopython=True, nogil=True)
+def PARSE_TimeTagFileHeader_wrapper(PARSER, UniBuf):
+    link_libs()
+    ret1 = PARSE_TimeTagFileHeader(ffi.from_buffer(PARSER), ffi.from_buffer(UniBuf))
+    return ret1
