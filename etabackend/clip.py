@@ -103,7 +103,7 @@ class Clip():
         self.from_parser_output(PARSER)
 
     def get_pos(self):
-        return self.fseekpoint+self.next_RecID_in_batch*self.BytesofRecords
+        return (self.fseekpoint-self.headeroffset)//self.BytesofRecords+self.next_RecID_in_batch
 
 class ETA_CUT():
     def __init__(self):
