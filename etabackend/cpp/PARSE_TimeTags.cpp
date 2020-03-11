@@ -8,7 +8,6 @@ Zuzeng Lin, KTH, 2017-2018
 #define MKS_inline __attribute__((always_inline))
 #define MarkerSHC_to_CHN(SHC) (__builtin_ctz(SHC))
 #else
-
 unsigned int MarkerSHC_to_CHN(int n) {
 	unsigned int bits = 0, x = n;
 
@@ -31,10 +30,6 @@ unsigned int MarkerSHC_to_CHN(int n) {
 #define MKS_inline 
 #endif // _MSC_VER
 
-#ifdef __linux__
-#define _fseeki64 fseeko64 
-#endif
-
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -44,8 +39,11 @@ unsigned int MarkerSHC_to_CHN(int n) {
 typedef unsigned long  DWORD;
 #define PFATAL(...) {order_gurantee3=printf( "\n [FATAL]"  __VA_ARGS__ );while(1){order_gurantee3+=1;};}
 #define PERROR(...) {order_gurantee3=printf( "\n [ERROR]"  __VA_ARGS__ );}
+#ifdef __debugging__
 #define PINFO(...)  {order_gurantee3=printf("\n" __VA_ARGS__);}
-
+#else
+#define PINFO(...)  {}
+#endif
 extern "C" {
 
 	long long order_gurantee3 = 0;

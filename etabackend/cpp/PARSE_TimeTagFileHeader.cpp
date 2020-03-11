@@ -143,23 +143,15 @@ int MKS_inline quTAU_FORMAT_COMPRESSED_header_parser(header_info *PARSER, char *
 #define rtTimeHarp260PT3 0x00010306 // (SubID = $00 ,RecFmt: $01) (V1), T-Mode: $02 (T3), HW: $06 (TimeHarp260P)
 #define rtTimeHarp260PT2 0x00010206 // (SubID = $00 ,RecFmt: $01) (V1), T-Mode: $02 (T2), HW: $06 (TimeHarp260P)
 
-// A Tag entry
-struct TgHd
-{
-	char Ident[32];		// Identifier of the tag
-	int Idx;			// Index for multiple tags or -1
-	unsigned int Typ;   // Type of tag ty..... see const section
-	long long TagValue; // Value of tag.
-} TagHead;
-
-// TDateTime (in file) to time_t (standard C) conversion
-const int EpochDiff = 25569; // days between 30/12/1899 and 01/01/1970
-const int SecsInDay = 86400; // number of seconds in a day
 time_t TDateTime_TimeT(double Convertee)
 {
+	// TDateTime (in file) to time_t (standard C) conversion
+	const int EpochDiff = 25569; // days between 30/12/1899 and 01/01/1970
+	const int SecsInDay = 86400; // number of seconds in a day
 	time_t Result((long)(((Convertee)-EpochDiff) * SecsInDay));
 	return Result;
 }
+
 // some important Tag Idents (TTagHead.Ident) that we will need to read the most common content of a PTU file
 // check the output of this program and consult the tag dictionary if you need more
 #define TTTRTagTTTRRecType "TTResultFormat_TTTRRecType"
@@ -182,6 +174,16 @@ time_t TDateTime_TimeT(double Convertee)
 
 int MKS_inline PicoQuant_header_parser(header_info *PARSER, char *fpin)
 {
+
+	// A Tag entry
+	struct TgHd
+	{
+		char Ident[32];		// Identifier of the tag
+		int Idx;			// Index for multiple tags or -1
+		unsigned int Typ;   // Type of tag ty..... see const section
+		long long TagValue; // Value of tag.
+	} TagHead;
+
 	int readResult;
 	char *AnsiBuffer;
 	WCHAR *WideBuffer;
@@ -360,15 +362,12 @@ int MKS_inline PicoQuant_header_parser(header_info *PARSER, char *fpin)
 	// set SYNC rate
 	if (IsT2)
 	{
-		PARSER->SYNCRate_pspr = 12.49554 * 1000;
+		PARSER->SYNCRate_pspr = 1;
 	}
 	else
 		PARSER->SYNCRate_pspr = PARSER->TTRes_pspr;
 
 	PARSER->BytesofRecords = 4;
-	// find size
-
-	//PARSER->headeroffset = ftell(fpin);
 
 	return 0;
 close:
