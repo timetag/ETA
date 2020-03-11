@@ -106,12 +106,12 @@ class ETA(ETA_CUT):
             self.logfrontend.info(
                 "ETA.run: Starting new analysis using Instrument group {}.".format(group))
             self.notify_callback('running')
-            (thread1, ts, ctxs) = (None, None, None)
+            (thread1, ts, ctxs, _) = (None, None, None, None)
         else:
             self.logfrontend.info(
                 "ETA.run: Resuming analysis using Instrument group {}.".format(group))
             self.notify_callback('running')
-            (thread1, ts, ctxs) = resume_task
+            (thread1, ts, ctxs, _) = resume_task
 
         if thread1:
             # join the previous thread
@@ -135,7 +135,7 @@ class ETA(ETA_CUT):
             thread1 = self.executor.submit(
                 self.ctx_loop, *vargs, ctxs=ctxs, mainloop=mainloop, required_rfiles=rfiles, **kwargs)
 
-        task = (thread1, ts, ctxs)
+        task = (thread1, ts, ctxs, rfiles)
 
         if return_results and return_task:
             return self.aggregrate([task]), task
@@ -155,7 +155,7 @@ class ETA(ETA_CUT):
                 raise ValueError("ETA.run: Can not find the required RFILE {} in the sources dict, the given dict only contains {}.".format(
                     required_rfile, str(sources_user.keys())))
         else:
-            self.logfrontend.warn(
+            self.logfrontend.info(
                 "ETA.run: sources is not a dict. \n ETA will try to distribute it to all RFILES, which might case unexpected behavior. \n Use eta.run(sources={'file1':cg1,'file2':cg1},...) to give them seperatedly.")
             sources = sources_user
         if isinstance(sources, types.GeneratorType):
@@ -185,18 +185,13 @@ class ETA(ETA_CUT):
         loop_count = 0
         ret = 0
         while True:
-            if (max_autofeed > 0) and (loop_count > max_autofeed):
+            if (max_autofeed > 0) and (loop_count >= max_autofeed):
                 self.logger.info(
                     "Analysis program early-stopped, exceeding max_autofeed.")
                 break
             for (rfile_name, rfile_id) in required_rfiles.items():
                 # check for existing clips
-                used_clip_result = Clip()
-                struct_len = used_clip_result.ETACReaderStructIDX["buffer"]+1
-                struct_start = struct_len*(rfile_id)
-                struct_end = struct_len*(rfile_id+1)
-                used_clip_result.from_parser_output(
-                    ctxs["READER"][struct_start:struct_end])
+                used_clip_result, struct_start, struct_end = self.clip_from_ctxs(rfile_id, ctxs)
                 if used_clip_result.check_consumed():
                     self.logger.debug(
                         "Auto-fill triggered on {}".format(rfile_name))
@@ -231,11 +226,20 @@ class ETA(ETA_CUT):
 
         return ret
 
+    def clip_from_ctxs(self, rfile_id, ctxs):
+        used_clip_result = Clip()
+        struct_len = used_clip_result.ETACReaderStructIDX["buffer"]+1
+        struct_start = struct_len*(rfile_id)
+        struct_end = struct_len*(rfile_id+1)
+        used_clip_result.from_parser_output(
+            ctxs["READER"][struct_start:struct_end])
+        return used_clip_result, struct_start, struct_end
+
     def aggregrate(self, list_of_tasks, sum_results=True):
         rets = []
 
         for task in list_of_tasks:
-            (thread1, ts,  ctxs) = task
+            (thread1, ts, ctxs, required_rfiles) = task
             if thread1:
                 # join process
                 print(thread1.result())
@@ -250,10 +254,18 @@ class ETA(ETA_CUT):
 
         if sum_results:
             # reduce
-            for each in range(1, len(rets)):
-                for each_graph in rets[0].keys():
-                    rets[0][each_graph] += rets[each][each_graph]
+            for each_graph in rets[0].keys():
+                if not(each_graph=="RECORDER" or (each_graph in required_rfiles)):
+                    for each in range(1, len(rets)):
+                        rets[0][each_graph] += rets[each][each_graph]
+                else:
+                    pass
             result = rets[0]
+            # emit rfiles
+            for (rfile_name, rfile_id) in required_rfiles.items():
+                if rfile_name in result:
+                    used_clip_result, _, _ = self.clip_from_ctxs(rfile_id, result)
+                    result[rfile_name] =  used_clip_result.validate(check_buffer=False)
             self.logfrontend.info('ETA.run: Aggregating {} results.'.format(
                 len(rets)))
             self.notify_callback('stopped')

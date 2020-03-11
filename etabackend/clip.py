@@ -53,15 +53,15 @@ class Clip():
     def check_consumed(self):
         return self.next_RecID_in_batch * self.BytesofRecords >= self.batch_actualread_length
 
-    def validate(self):
+    def validate(self,check_buffer= True):
         self.GlobalTimeShift = int(self.GlobalTimeShift)
         self.TTRes_pspr = int(self.TTRes_pspr)
         self.DTRes_pspr = int(self.DTRes_pspr)
         self.SYNCRate_pspr = int(self.SYNCRate_pspr)
-        if self.batch_actualread_length > len(self.buffer):
+        if check_buffer and self.batch_actualread_length > len(self.buffer):
             raise ValueError(
                 "batch_actualread_length is larger than the size of buffer")
-        if self.batch_actualread_length == 0:
+        if self.BytesofRecords==0 or self.batch_actualread_length == 0:
             return None
         return self
 
