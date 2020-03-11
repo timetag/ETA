@@ -4,188 +4,51 @@ target datalayout = "e-m:w-i64:64-f80:128-n8:16:32:64-S128"
 target triple = "x86_64-pc-windows-msvc19.24.28315"
 
 %struct.header_info = type { i64, i64, i64, i64, i64, i64, i64 }
-%struct._iobuf = type { i8* }
+%struct.TgHd = type { [32 x i8], i32, i32, i64 }
 %struct.__crt_locale_pointers = type { %struct.__crt_locale_data*, %struct.__crt_multibyte_data* }
 %struct.__crt_locale_data = type opaque
 %struct.__crt_multibyte_data = type opaque
-%struct.TgHd = type { [32 x i8], i32, i32, i64 }
-%struct.tm = type { i32, i32, i32, i32, i32, i32, i32, i32, i32 }
-
-$printf = comdat any
+%struct._iobuf = type { i8* }
 
 $sprintf = comdat any
 
 $wprintf = comdat any
 
-$_vfprintf_l = comdat any
-
-$__local_stdio_printf_options = comdat any
-
 $_vsprintf_l = comdat any
 
 $_vsnprintf_l = comdat any
 
+$__local_stdio_printf_options = comdat any
+
 $_vfwprintf_l = comdat any
-
-$"??_C@_0EA@FDLFOLNG@?6Becker?5?$CG?5Hickl?5SPC?9134?1144?1154?1@" = comdat any
-
-$"??_C@_0CD@BELPJBEF@?6PARSER?9?$DORecordType?3?5bh_spc_4byt@" = comdat any
-
-$"??_C@_0DA@FODAHEFK@?6Swebian?5Instrument?5timetag?5file@" = comdat any
-
-$"??_C@_0DA@NCKJEHJH@?6PARSER?9?$DORecordType?3?5SwebianInst@" = comdat any
-
-$"??_C@_0CN@NEMBOFCA@?6?5?$FLERROR?$FNError?5when?5reading?5head@" = comdat any
-
-$"??_C@_0DH@LIKDKBGP@?6quTAU_FORMAT_BINARY?5file?5header@" = comdat any
-
-$"??_C@_0DC@HCDGCALK@?6PARSER?9?$DORecordType?3?5quTAU_FORMA@" = comdat any
-
-$"??_C@_0DL@ILPAIDLG@?6quTAU_FORMAT_COMPRESSED?5file?5he@" = comdat any
-
-$"??_C@_0DF@LMNGPACF@?6PARSER?9?$DORecordType?3?5quTAU_FORMA@" = comdat any
-
-$"??_C@_0CJ@BKHAGGLC@?6?5?$FLERROR?$FN?6error?5reading?5header?0?5@" = comdat any
-
-$"??_C@_0BH@PAEBLGPJ@?6PTU?5file?5Header?3?5?$CFs?5?6?$AA@" = comdat any
-
-$"??_C@_0BD@GFPKCHLP@?6?6Incomplete?5File?4?$AA@" = comdat any
 
 $"??_C@_06BPGFIOAL@?$CFs?$CI?$CFd?$CJ?$AA@" = comdat any
 
-$"??_C@_06PHODKAKM@?6?$CF?940s?$AA@" = comdat any
-
-$"??_C@_0M@HECCAEGL@?$DMempty?5Tag?$DO?$AA@" = comdat any
-
-$"??_C@_04HPMIDMKH@True?$AA@" = comdat any
-
-$"??_C@_05MKDOIIA@False?$AA@" = comdat any
-
-$"??_C@_02DKCKIIND@?$CFs?$AA@" = comdat any
-
-$"??_C@_04BFAHMMK@?$CFlld?$AA@" = comdat any
-
 $"??_C@_0BL@NBAMDLKF@TTResultFormat_TTTRRecType?$AA@" = comdat any
-
-$"??_C@_09DGLOBCMH@0x?$CF16?416X?$AA@" = comdat any
-
-$"??_C@_02LDDGBJKG@?$CFE?$AA@" = comdat any
 
 $"??_C@_0BE@MLJFPCOI@MeasDesc_Resolution?$AA@" = comdat any
 
 $"??_C@_0BK@JGMIOCJJ@MeasDesc_GlobalResolution?$AA@" = comdat any
 
-$"??_C@_0BO@ENEJMDLG@?$DMFloat?5Array?5with?5?$CFd?5Entries?$DO?$AA@" = comdat any
-
-$"??_C@_01LOCGONAA@?$AA?$AA@" = comdat any
-
-$"??_C@_0BC@KFPMDKOJ@?6Incomplete?5File?4?$AA@" = comdat any
-
 $"??_C@_15GANGMFKL@?$AA?$CF?$AAs?$AA?$AA@" = comdat any
 
-$"??_C@_0CA@FNNAPBCN@?$DMBinary?5Blob?5contains?5?$CFd?5Bytes?$DO?$AA@" = comdat any
-
-$"??_C@_0CM@NLBAOIPI@Illegal?5Type?5identifier?5found?$CB?5B@" = comdat any
-
 $"??_C@_0L@BKLBDFDP@Header_End?$AA@" = comdat any
-
-$"??_C@_0BL@HPPLJEMK@?6?6?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?6?$AA@" = comdat any
-
-$"??_C@_0BD@EHFANJBB@?6PicoHarp?5T2?5data?6?$AA@" = comdat any
-
-$"??_C@_0BH@NKCKBLM@?6HydraHarp?5V1?5T2?5data?6?$AA@" = comdat any
-
-$"??_C@_0BH@JEEAMHLN@?6HydraHarp?5V2?5T2?5data?6?$AA@" = comdat any
-
-$"??_C@_0BH@DICKBJCF@?6TimeHarp260N?5T2?5data?6?$AA@" = comdat any
-
-$"??_C@_0BH@MEKKPGOI@?6TimeHarp260P?5T2?5data?6?$AA@" = comdat any
-
-$"??_C@_0BD@ILPKNJIP@?6PicoHarp?5T3?5data?6?$AA@" = comdat any
-
-$"??_C@_0BH@MBAIKBCC@?6HydraHarp?5V1?5T3?5data?6?$AA@" = comdat any
-
-$"??_C@_0BH@FIOKMHCD@?6HydraHarp?5V2?5T3?5data?6?$AA@" = comdat any
-
-$"??_C@_0BH@PEIABJLL@?6TimeHarp260N?5T3?5data?6?$AA@" = comdat any
-
-$"??_C@_0BH@IAAPGHG@?6TimeHarp260P?5T3?5data?6?$AA@" = comdat any
-
-$"??_C@_0CM@KKBPPLIM@?6Unknown?5time?9tag?5record?5type?3?50@" = comdat any
-
-$"??_C@_0CJ@FCCDKPDO@?6?5?$FLERROR?$FNFailed?5to?5read?5header?0?5@" = comdat any
 
 $"??_C@_06OMFAFKCA@PQTTTR?$AA@" = comdat any
 
 $"??_C@_04CHFOFOOE@?$IH?$LD?$JB?z?$AA@" = comdat any
 
-$"??_C@_0CG@HMLPIAGM@?6Header?5Parser?3?5quTAU_FORMAT_BIN@" = comdat any
-
-$"??_C@_0CF@NEHPJAOD@?6Header?5Parser?3?5Swebian?5Instrume@" = comdat any
-
-$"??_C@_0CK@FCNMCNDN@?6Header?5Parser?3?5quTAU_FORMAT_COM@" = comdat any
-
-$"??_C@_0CA@KMEBJAMG@?6Header?5Parser?3?5bh_spc_4bytes?5?6?$AA@" = comdat any
-
-$"??_C@_0BM@LJCIIAMF@?6Header?5Parser?3?5PicoQuant?5?6?$AA@" = comdat any
-
-$"??_C@_0FP@FPIFGDME@?6?5?$FLERROR?$FNUnidentified?5time?9tag?5f@" = comdat any
-
 $"?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA" = comdat any
 
 @"?order_gurantee@@3_JA" = dso_local global i64 0, align 8
-@"??_C@_0EA@FDLFOLNG@?6Becker?5?$CG?5Hickl?5SPC?9134?1144?1154?1@" = linkonce_odr dso_local unnamed_addr constant [64 x i8] c"\0ABecker & Hickl SPC-134/144/154/830 timetag file has no header.\00", comdat, align 1
-@"??_C@_0CD@BELPJBEF@?6PARSER?9?$DORecordType?3?5bh_spc_4byt@" = linkonce_odr dso_local unnamed_addr constant [35 x i8] c"\0APARSER->RecordType: bh_spc_4bytes\00", comdat, align 1
-@"??_C@_0DA@FODAHEFK@?6Swebian?5Instrument?5timetag?5file@" = linkonce_odr dso_local unnamed_addr constant [48 x i8] c"\0ASwebian Instrument timetag file has no header.\00", comdat, align 1
-@"??_C@_0DA@NCKJEHJH@?6PARSER?9?$DORecordType?3?5SwebianInst@" = linkonce_odr dso_local unnamed_addr constant [48 x i8] c"\0APARSER->RecordType: SwebianInstrument 16-bytes\00", comdat, align 1
-@"??_C@_0CN@NEMBOFCA@?6?5?$FLERROR?$FNError?5when?5reading?5head@" = linkonce_odr dso_local unnamed_addr constant [45 x i8] c"\0A [ERROR]Error when reading header, aborted.\00", comdat, align 1
-@"??_C@_0DH@LIKDKBGP@?6quTAU_FORMAT_BINARY?5file?5header@" = linkonce_odr dso_local unnamed_addr constant [55 x i8] c"\0AquTAU_FORMAT_BINARY file header is read, but ignored.\00", comdat, align 1
-@"??_C@_0DC@HCDGCALK@?6PARSER?9?$DORecordType?3?5quTAU_FORMA@" = linkonce_odr dso_local unnamed_addr constant [50 x i8] c"\0APARSER->RecordType: quTAU_FORMAT_BINARY 10-bytes\00", comdat, align 1
-@"??_C@_0DL@ILPAIDLG@?6quTAU_FORMAT_COMPRESSED?5file?5he@" = linkonce_odr dso_local unnamed_addr constant [59 x i8] c"\0AquTAU_FORMAT_COMPRESSED file header is read, but ignored.\00", comdat, align 1
-@"??_C@_0DF@LMNGPACF@?6PARSER?9?$DORecordType?3?5quTAU_FORMA@" = linkonce_odr dso_local unnamed_addr constant [53 x i8] c"\0APARSER->RecordType: quTAU_FORMAT_COMPRESSED 5-bytes\00", comdat, align 1
-@"??_C@_0CJ@BKHAGGLC@?6?5?$FLERROR?$FN?6error?5reading?5header?0?5@" = linkonce_odr dso_local unnamed_addr constant [41 x i8] c"\0A [ERROR]\0Aerror reading header, aborted.\00", comdat, align 1
-@"??_C@_0BH@PAEBLGPJ@?6PTU?5file?5Header?3?5?$CFs?5?6?$AA@" = linkonce_odr dso_local unnamed_addr constant [23 x i8] c"\0APTU file Header: %s \0A\00", comdat, align 1
-@"??_C@_0BD@GFPKCHLP@?6?6Incomplete?5File?4?$AA@" = linkonce_odr dso_local unnamed_addr constant [19 x i8] c"\0A\0AIncomplete File.\00", comdat, align 1
 @"??_C@_06BPGFIOAL@?$CFs?$CI?$CFd?$CJ?$AA@" = linkonce_odr dso_local unnamed_addr constant [7 x i8] c"%s(%d)\00", comdat, align 1
-@"??_C@_06PHODKAKM@?6?$CF?940s?$AA@" = linkonce_odr dso_local unnamed_addr constant [7 x i8] c"\0A%-40s\00", comdat, align 1
-@"??_C@_0M@HECCAEGL@?$DMempty?5Tag?$DO?$AA@" = linkonce_odr dso_local unnamed_addr constant [12 x i8] c"<empty Tag>\00", comdat, align 1
-@"??_C@_04HPMIDMKH@True?$AA@" = linkonce_odr dso_local unnamed_addr constant [5 x i8] c"True\00", comdat, align 1
-@"??_C@_05MKDOIIA@False?$AA@" = linkonce_odr dso_local unnamed_addr constant [6 x i8] c"False\00", comdat, align 1
-@"??_C@_02DKCKIIND@?$CFs?$AA@" = linkonce_odr dso_local unnamed_addr constant [3 x i8] c"%s\00", comdat, align 1
-@"??_C@_04BFAHMMK@?$CFlld?$AA@" = linkonce_odr dso_local unnamed_addr constant [5 x i8] c"%lld\00", comdat, align 1
 @"??_C@_0BL@NBAMDLKF@TTResultFormat_TTTRRecType?$AA@" = linkonce_odr dso_local unnamed_addr constant [27 x i8] c"TTResultFormat_TTTRRecType\00", comdat, align 1
-@"??_C@_09DGLOBCMH@0x?$CF16?416X?$AA@" = linkonce_odr dso_local unnamed_addr constant [10 x i8] c"0x%16.16X\00", comdat, align 1
-@"??_C@_02LDDGBJKG@?$CFE?$AA@" = linkonce_odr dso_local unnamed_addr constant [3 x i8] c"%E\00", comdat, align 1
 @"??_C@_0BE@MLJFPCOI@MeasDesc_Resolution?$AA@" = linkonce_odr dso_local unnamed_addr constant [20 x i8] c"MeasDesc_Resolution\00", comdat, align 1
 @"??_C@_0BK@JGMIOCJJ@MeasDesc_GlobalResolution?$AA@" = linkonce_odr dso_local unnamed_addr constant [26 x i8] c"MeasDesc_GlobalResolution\00", comdat, align 1
-@"??_C@_0BO@ENEJMDLG@?$DMFloat?5Array?5with?5?$CFd?5Entries?$DO?$AA@" = linkonce_odr dso_local unnamed_addr constant [30 x i8] c"<Float Array with %d Entries>\00", comdat, align 1
-@"??_C@_01LOCGONAA@?$AA?$AA@" = linkonce_odr dso_local unnamed_addr constant [2 x i8] zeroinitializer, comdat, align 1
-@"??_C@_0BC@KFPMDKOJ@?6Incomplete?5File?4?$AA@" = linkonce_odr dso_local unnamed_addr constant [18 x i8] c"\0AIncomplete File.\00", comdat, align 1
 @"??_C@_15GANGMFKL@?$AA?$CF?$AAs?$AA?$AA@" = linkonce_odr dso_local unnamed_addr constant [3 x i16] [i16 37, i16 115, i16 0], comdat, align 2
-@"??_C@_0CA@FNNAPBCN@?$DMBinary?5Blob?5contains?5?$CFd?5Bytes?$DO?$AA@" = linkonce_odr dso_local unnamed_addr constant [32 x i8] c"<Binary Blob contains %d Bytes>\00", comdat, align 1
-@"??_C@_0CM@NLBAOIPI@Illegal?5Type?5identifier?5found?$CB?5B@" = linkonce_odr dso_local unnamed_addr constant [44 x i8] c"Illegal Type identifier found! Broken file?\00", comdat, align 1
 @"??_C@_0L@BKLBDFDP@Header_End?$AA@" = linkonce_odr dso_local unnamed_addr constant [11 x i8] c"Header_End\00", comdat, align 1
-@"??_C@_0BL@HPPLJEMK@?6?6?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?6?$AA@" = linkonce_odr dso_local unnamed_addr constant [27 x i8] c"\0A\0A-----------------------\0A\00", comdat, align 1
-@"??_C@_0BD@EHFANJBB@?6PicoHarp?5T2?5data?6?$AA@" = linkonce_odr dso_local unnamed_addr constant [19 x i8] c"\0APicoHarp T2 data\0A\00", comdat, align 1
-@"??_C@_0BH@NKCKBLM@?6HydraHarp?5V1?5T2?5data?6?$AA@" = linkonce_odr dso_local unnamed_addr constant [23 x i8] c"\0AHydraHarp V1 T2 data\0A\00", comdat, align 1
-@"??_C@_0BH@JEEAMHLN@?6HydraHarp?5V2?5T2?5data?6?$AA@" = linkonce_odr dso_local unnamed_addr constant [23 x i8] c"\0AHydraHarp V2 T2 data\0A\00", comdat, align 1
-@"??_C@_0BH@DICKBJCF@?6TimeHarp260N?5T2?5data?6?$AA@" = linkonce_odr dso_local unnamed_addr constant [23 x i8] c"\0ATimeHarp260N T2 data\0A\00", comdat, align 1
-@"??_C@_0BH@MEKKPGOI@?6TimeHarp260P?5T2?5data?6?$AA@" = linkonce_odr dso_local unnamed_addr constant [23 x i8] c"\0ATimeHarp260P T2 data\0A\00", comdat, align 1
-@"??_C@_0BD@ILPKNJIP@?6PicoHarp?5T3?5data?6?$AA@" = linkonce_odr dso_local unnamed_addr constant [19 x i8] c"\0APicoHarp T3 data\0A\00", comdat, align 1
-@"??_C@_0BH@MBAIKBCC@?6HydraHarp?5V1?5T3?5data?6?$AA@" = linkonce_odr dso_local unnamed_addr constant [23 x i8] c"\0AHydraHarp V1 T3 data\0A\00", comdat, align 1
-@"??_C@_0BH@FIOKMHCD@?6HydraHarp?5V2?5T3?5data?6?$AA@" = linkonce_odr dso_local unnamed_addr constant [23 x i8] c"\0AHydraHarp V2 T3 data\0A\00", comdat, align 1
-@"??_C@_0BH@PEIABJLL@?6TimeHarp260N?5T3?5data?6?$AA@" = linkonce_odr dso_local unnamed_addr constant [23 x i8] c"\0ATimeHarp260N T3 data\0A\00", comdat, align 1
-@"??_C@_0BH@IAAPGHG@?6TimeHarp260P?5T3?5data?6?$AA@" = linkonce_odr dso_local unnamed_addr constant [23 x i8] c"\0ATimeHarp260P T3 data\0A\00", comdat, align 1
-@"??_C@_0CM@KKBPPLIM@?6Unknown?5time?9tag?5record?5type?3?50@" = linkonce_odr dso_local unnamed_addr constant [44 x i8] c"\0AUnknown time-tag record type: 0x%X\0A 0x%X\0A \00", comdat, align 1
-@"??_C@_0CJ@FCCDKPDO@?6?5?$FLERROR?$FNFailed?5to?5read?5header?0?5@" = linkonce_odr dso_local unnamed_addr constant [41 x i8] c"\0A [ERROR]Failed to read header, aborted.\00", comdat, align 1
 @"??_C@_06OMFAFKCA@PQTTTR?$AA@" = linkonce_odr dso_local unnamed_addr constant [7 x i8] c"PQTTTR\00", comdat, align 1
 @"??_C@_04CHFOFOOE@?$IH?$LD?$JB?z?$AA@" = linkonce_odr dso_local unnamed_addr constant [5 x i8] c"\87\B3\91\FA\00", comdat, align 1
-@"??_C@_0CG@HMLPIAGM@?6Header?5Parser?3?5quTAU_FORMAT_BIN@" = linkonce_odr dso_local unnamed_addr constant [38 x i8] c"\0AHeader Parser: quTAU_FORMAT_BINARY \0A\00", comdat, align 1
-@"??_C@_0CF@NEHPJAOD@?6Header?5Parser?3?5Swebian?5Instrume@" = linkonce_odr dso_local unnamed_addr constant [37 x i8] c"\0AHeader Parser: Swebian Instrument \0A\00", comdat, align 1
-@"??_C@_0CK@FCNMCNDN@?6Header?5Parser?3?5quTAU_FORMAT_COM@" = linkonce_odr dso_local unnamed_addr constant [42 x i8] c"\0AHeader Parser: quTAU_FORMAT_COMPRESSED \0A\00", comdat, align 1
-@"??_C@_0CA@KMEBJAMG@?6Header?5Parser?3?5bh_spc_4bytes?5?6?$AA@" = linkonce_odr dso_local unnamed_addr constant [32 x i8] c"\0AHeader Parser: bh_spc_4bytes \0A\00", comdat, align 1
-@"??_C@_0BM@LJCIIAMF@?6Header?5Parser?3?5PicoQuant?5?6?$AA@" = linkonce_odr dso_local unnamed_addr constant [28 x i8] c"\0AHeader Parser: PicoQuant \0A\00", comdat, align 1
-@"??_C@_0FP@FPIFGDME@?6?5?$FLERROR?$FNUnidentified?5time?9tag?5f@" = linkonce_odr dso_local unnamed_addr constant [95 x i8] c"\0A [ERROR]Unidentified time-tag format. Specify one the with eta.run(...format=???). Aborted. \0A\00", comdat, align 1
 @"?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA" = linkonce_odr dso_local global i64 0, comdat, align 8
 
 ; Function Attrs: alwaysinline nounwind uwtable
@@ -227,96 +90,65 @@ define dso_local i64 @"?bread@@YA_KPEAUheader_info@@PEAX_K2PEAD@Z"(%struct.heade
 ; Function Attrs: argmemonly nounwind
 declare void @llvm.memcpy.p0i8.p0i8.i64(i8* nocapture writeonly, i8* nocapture readonly, i64, i1) #1
 
-; Function Attrs: alwaysinline uwtable
-define dso_local i32 @"?bh_4bytes_header_parser@@YAHPEAUheader_info@@QEAD@Z"(%struct.header_info*, i8*) #2 {
+; Function Attrs: alwaysinline nounwind uwtable
+define dso_local i32 @"?bh_4bytes_header_parser@@YAHPEAUheader_info@@QEAD@Z"(%struct.header_info*, i8*) #0 {
   %3 = alloca i8*, align 8
   %4 = alloca %struct.header_info*, align 8
   store i8* %1, i8** %3, align 8
   store %struct.header_info* %0, %struct.header_info** %4, align 8
-  %5 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([64 x i8], [64 x i8]* @"??_C@_0EA@FDLFOLNG@?6Becker?5?$CG?5Hickl?5SPC?9134?1144?1154?1@", i32 0, i32 0))
-  %6 = sext i32 %5 to i64
-  store i64 %6, i64* @"?order_gurantee@@3_JA", align 8
-  %7 = load i8*, i8** %3, align 8
-  %8 = bitcast i8* %7 to i16*
-  %9 = getelementptr inbounds i16, i16* %8, i64 0
-  %10 = load i16, i16* %9, align 2
-  %11 = zext i16 %10 to i64
+  %5 = load i8*, i8** %3, align 8
+  %6 = bitcast i8* %5 to i16*
+  %7 = getelementptr inbounds i16, i16* %6, i64 0
+  %8 = load i16, i16* %7, align 2
+  %9 = zext i16 %8 to i64
+  %10 = load %struct.header_info*, %struct.header_info** %4, align 8
+  %11 = getelementptr inbounds %struct.header_info, %struct.header_info* %10, i32 0, i32 4
+  store i64 %9, i64* %11, align 8
   %12 = load %struct.header_info*, %struct.header_info** %4, align 8
-  %13 = getelementptr inbounds %struct.header_info, %struct.header_info* %12, i32 0, i32 4
-  store i64 %11, i64* %13, align 8
+  %13 = getelementptr inbounds %struct.header_info, %struct.header_info* %12, i32 0, i32 3
+  store i64 1, i64* %13, align 8
   %14 = load %struct.header_info*, %struct.header_info** %4, align 8
-  %15 = getelementptr inbounds %struct.header_info, %struct.header_info* %14, i32 0, i32 3
-  store i64 1, i64* %15, align 8
+  %15 = getelementptr inbounds %struct.header_info, %struct.header_info* %14, i32 0, i32 2
+  store i64 0, i64* %15, align 8
   %16 = load %struct.header_info*, %struct.header_info** %4, align 8
-  %17 = getelementptr inbounds %struct.header_info, %struct.header_info* %16, i32 0, i32 2
-  store i64 0, i64* %17, align 8
+  %17 = getelementptr inbounds %struct.header_info, %struct.header_info* %16, i32 0, i32 6
+  store i64 3, i64* %17, align 8
   %18 = load %struct.header_info*, %struct.header_info** %4, align 8
-  %19 = getelementptr inbounds %struct.header_info, %struct.header_info* %18, i32 0, i32 6
-  store i64 3, i64* %19, align 8
-  %20 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([35 x i8], [35 x i8]* @"??_C@_0CD@BELPJBEF@?6PARSER?9?$DORecordType?3?5bh_spc_4byt@", i32 0, i32 0))
-  %21 = sext i32 %20 to i64
-  store i64 %21, i64* @"?order_gurantee@@3_JA", align 8
-  %22 = load %struct.header_info*, %struct.header_info** %4, align 8
-  %23 = getelementptr inbounds %struct.header_info, %struct.header_info* %22, i32 0, i32 5
-  store i64 4, i64* %23, align 8
-  %24 = load %struct.header_info*, %struct.header_info** %4, align 8
-  %25 = getelementptr inbounds %struct.header_info, %struct.header_info* %24, i32 0, i32 1
-  store i64 4, i64* %25, align 8
+  %19 = getelementptr inbounds %struct.header_info, %struct.header_info* %18, i32 0, i32 5
+  store i64 4, i64* %19, align 8
+  %20 = load %struct.header_info*, %struct.header_info** %4, align 8
+  %21 = getelementptr inbounds %struct.header_info, %struct.header_info* %20, i32 0, i32 1
+  store i64 4, i64* %21, align 8
   ret i32 0
 }
 
-; Function Attrs: noinline optnone uwtable
-define linkonce_odr dso_local i32 @printf(i8*, ...) #3 comdat {
-  %2 = alloca i8*, align 8
-  %3 = alloca i32, align 4
-  %4 = alloca i8*, align 8
-  store i8* %0, i8** %2, align 8
-  %5 = bitcast i8** %4 to i8*
-  call void @llvm.va_start(i8* %5)
-  %6 = load i8*, i8** %4, align 8
-  %7 = load i8*, i8** %2, align 8
-  %8 = call %struct._iobuf* @__acrt_iob_func(i32 1)
-  %9 = call i32 @_vfprintf_l(%struct._iobuf* %8, i8* %7, %struct.__crt_locale_pointers* null, i8* %6)
-  store i32 %9, i32* %3, align 4
-  %10 = bitcast i8** %4 to i8*
-  call void @llvm.va_end(i8* %10)
-  %11 = load i32, i32* %3, align 4
-  ret i32 %11
-}
-
-; Function Attrs: alwaysinline uwtable
-define dso_local i32 @"?Swebian_header_parser@@YAHPEAUheader_info@@@Z"(%struct.header_info*) #2 {
+; Function Attrs: alwaysinline nounwind uwtable
+define dso_local i32 @"?Swebian_header_parser@@YAHPEAUheader_info@@@Z"(%struct.header_info*) #0 {
   %2 = alloca %struct.header_info*, align 8
   store %struct.header_info* %0, %struct.header_info** %2, align 8
-  %3 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([48 x i8], [48 x i8]* @"??_C@_0DA@FODAHEFK@?6Swebian?5Instrument?5timetag?5file@", i32 0, i32 0))
-  %4 = sext i32 %3 to i64
-  store i64 %4, i64* @"?order_gurantee@@3_JA", align 8
+  %3 = load %struct.header_info*, %struct.header_info** %2, align 8
+  %4 = getelementptr inbounds %struct.header_info, %struct.header_info* %3, i32 0, i32 4
+  store i64 0, i64* %4, align 8
   %5 = load %struct.header_info*, %struct.header_info** %2, align 8
-  %6 = getelementptr inbounds %struct.header_info, %struct.header_info* %5, i32 0, i32 4
-  store i64 0, i64* %6, align 8
+  %6 = getelementptr inbounds %struct.header_info, %struct.header_info* %5, i32 0, i32 2
+  store i64 1, i64* %6, align 8
   %7 = load %struct.header_info*, %struct.header_info** %2, align 8
-  %8 = getelementptr inbounds %struct.header_info, %struct.header_info* %7, i32 0, i32 2
+  %8 = getelementptr inbounds %struct.header_info, %struct.header_info* %7, i32 0, i32 3
   store i64 1, i64* %8, align 8
   %9 = load %struct.header_info*, %struct.header_info** %2, align 8
-  %10 = getelementptr inbounds %struct.header_info, %struct.header_info* %9, i32 0, i32 3
+  %10 = getelementptr inbounds %struct.header_info, %struct.header_info* %9, i32 0, i32 6
   store i64 1, i64* %10, align 8
   %11 = load %struct.header_info*, %struct.header_info** %2, align 8
-  %12 = getelementptr inbounds %struct.header_info, %struct.header_info* %11, i32 0, i32 6
-  store i64 1, i64* %12, align 8
-  %13 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([48 x i8], [48 x i8]* @"??_C@_0DA@NCKJEHJH@?6PARSER?9?$DORecordType?3?5SwebianInst@", i32 0, i32 0))
-  %14 = sext i32 %13 to i64
-  store i64 %14, i64* @"?order_gurantee@@3_JA", align 8
-  %15 = load %struct.header_info*, %struct.header_info** %2, align 8
-  %16 = getelementptr inbounds %struct.header_info, %struct.header_info* %15, i32 0, i32 5
-  store i64 16, i64* %16, align 8
-  %17 = load %struct.header_info*, %struct.header_info** %2, align 8
-  %18 = getelementptr inbounds %struct.header_info, %struct.header_info* %17, i32 0, i32 1
-  store i64 0, i64* %18, align 8
+  %12 = getelementptr inbounds %struct.header_info, %struct.header_info* %11, i32 0, i32 5
+  store i64 16, i64* %12, align 8
+  %13 = load %struct.header_info*, %struct.header_info** %2, align 8
+  %14 = getelementptr inbounds %struct.header_info, %struct.header_info* %13, i32 0, i32 1
+  store i64 0, i64* %14, align 8
   ret i32 0
 }
 
-; Function Attrs: alwaysinline uwtable
-define dso_local i32 @"?quTAU_FORMAT_BINARY_header_parser@@YAHPEAUheader_info@@PEAD@Z"(%struct.header_info*, i8*) #2 {
+; Function Attrs: alwaysinline nounwind uwtable
+define dso_local i32 @"?quTAU_FORMAT_BINARY_header_parser@@YAHPEAUheader_info@@PEAD@Z"(%struct.header_info*, i8*) #0 {
   %3 = alloca i8*, align 8
   %4 = alloca i64, align 8
   %5 = alloca i64, align 8
@@ -358,50 +190,42 @@ define dso_local i32 @"?quTAU_FORMAT_BINARY_header_parser@@YAHPEAUheader_info@@P
   %32 = load i64, i64* %4, align 8
   %33 = mul i64 %31, %32
   %34 = icmp ne i64 %33, 32
-  br i1 %34, label %35, label %38
+  br i1 %34, label %35, label %36
 
 ; <label>:35:                                     ; preds = %2
-  %36 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([45 x i8], [45 x i8]* @"??_C@_0CN@NEMBOFCA@?6?5?$FLERROR?$FNError?5when?5reading?5head@", i32 0, i32 0))
-  %37 = sext i32 %36 to i64
-  store i64 %37, i64* @"?order_gurantee@@3_JA", align 8
+  store i64 0, i64* @"?order_gurantee@@3_JA", align 8
   store i32 -1, i32* %8, align 4
-  br label %56
+  br label %50
 
-; <label>:38:                                     ; preds = %2
-  %39 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([55 x i8], [55 x i8]* @"??_C@_0DH@LIKDKBGP@?6quTAU_FORMAT_BINARY?5file?5header@", i32 0, i32 0))
-  %40 = sext i32 %39 to i64
-  store i64 %40, i64* @"?order_gurantee@@3_JA", align 8
+; <label>:36:                                     ; preds = %2
+  %37 = load %struct.header_info*, %struct.header_info** %10, align 8
+  %38 = getelementptr inbounds %struct.header_info, %struct.header_info* %37, i32 0, i32 6
+  store i64 0, i64* %38, align 8
+  %39 = load %struct.header_info*, %struct.header_info** %10, align 8
+  %40 = getelementptr inbounds %struct.header_info, %struct.header_info* %39, i32 0, i32 5
+  store i64 10, i64* %40, align 8
   %41 = load %struct.header_info*, %struct.header_info** %10, align 8
-  %42 = getelementptr inbounds %struct.header_info, %struct.header_info* %41, i32 0, i32 6
-  store i64 0, i64* %42, align 8
+  %42 = getelementptr inbounds %struct.header_info, %struct.header_info* %41, i32 0, i32 2
+  store i64 1, i64* %42, align 8
   %43 = load %struct.header_info*, %struct.header_info** %10, align 8
-  %44 = getelementptr inbounds %struct.header_info, %struct.header_info* %43, i32 0, i32 5
-  store i64 10, i64* %44, align 8
-  %45 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([50 x i8], [50 x i8]* @"??_C@_0DC@HCDGCALK@?6PARSER?9?$DORecordType?3?5quTAU_FORMA@", i32 0, i32 0))
-  %46 = sext i32 %45 to i64
-  store i64 %46, i64* @"?order_gurantee@@3_JA", align 8
-  %47 = load %struct.header_info*, %struct.header_info** %10, align 8
-  %48 = getelementptr inbounds %struct.header_info, %struct.header_info* %47, i32 0, i32 2
-  store i64 1, i64* %48, align 8
-  %49 = load %struct.header_info*, %struct.header_info** %10, align 8
-  %50 = getelementptr inbounds %struct.header_info, %struct.header_info* %49, i32 0, i32 2
-  %51 = load i64, i64* %50, align 8
-  %52 = load %struct.header_info*, %struct.header_info** %10, align 8
-  %53 = getelementptr inbounds %struct.header_info, %struct.header_info* %52, i32 0, i32 3
-  store i64 %51, i64* %53, align 8
-  %54 = load %struct.header_info*, %struct.header_info** %10, align 8
-  %55 = getelementptr inbounds %struct.header_info, %struct.header_info* %54, i32 0, i32 4
-  store i64 1249, i64* %55, align 8
+  %44 = getelementptr inbounds %struct.header_info, %struct.header_info* %43, i32 0, i32 2
+  %45 = load i64, i64* %44, align 8
+  %46 = load %struct.header_info*, %struct.header_info** %10, align 8
+  %47 = getelementptr inbounds %struct.header_info, %struct.header_info* %46, i32 0, i32 3
+  store i64 %45, i64* %47, align 8
+  %48 = load %struct.header_info*, %struct.header_info** %10, align 8
+  %49 = getelementptr inbounds %struct.header_info, %struct.header_info* %48, i32 0, i32 4
+  store i64 1249, i64* %49, align 8
   store i32 0, i32* %8, align 4
-  br label %56
+  br label %50
 
-; <label>:56:                                     ; preds = %38, %35
-  %57 = load i32, i32* %8, align 4
-  ret i32 %57
+; <label>:50:                                     ; preds = %36, %35
+  %51 = load i32, i32* %8, align 4
+  ret i32 %51
 }
 
-; Function Attrs: alwaysinline uwtable
-define dso_local i32 @"?quTAU_FORMAT_COMPRESSED_header_parser@@YAHPEAUheader_info@@PEAD@Z"(%struct.header_info*, i8*) #2 {
+; Function Attrs: alwaysinline nounwind uwtable
+define dso_local i32 @"?quTAU_FORMAT_COMPRESSED_header_parser@@YAHPEAUheader_info@@PEAD@Z"(%struct.header_info*, i8*) #0 {
   %3 = alloca i8*, align 8
   %4 = alloca i64, align 8
   %5 = alloca i64, align 8
@@ -443,50 +267,42 @@ define dso_local i32 @"?quTAU_FORMAT_COMPRESSED_header_parser@@YAHPEAUheader_inf
   %32 = load i64, i64* %4, align 8
   %33 = mul i64 %31, %32
   %34 = icmp ne i64 %33, 32
-  br i1 %34, label %35, label %38
+  br i1 %34, label %35, label %36
 
 ; <label>:35:                                     ; preds = %2
-  %36 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([45 x i8], [45 x i8]* @"??_C@_0CN@NEMBOFCA@?6?5?$FLERROR?$FNError?5when?5reading?5head@", i32 0, i32 0))
-  %37 = sext i32 %36 to i64
-  store i64 %37, i64* @"?order_gurantee@@3_JA", align 8
+  store i64 0, i64* @"?order_gurantee@@3_JA", align 8
   store i32 -1, i32* %8, align 4
-  br label %56
+  br label %50
 
-; <label>:38:                                     ; preds = %2
-  %39 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([59 x i8], [59 x i8]* @"??_C@_0DL@ILPAIDLG@?6quTAU_FORMAT_COMPRESSED?5file?5he@", i32 0, i32 0))
-  %40 = sext i32 %39 to i64
-  store i64 %40, i64* @"?order_gurantee@@3_JA", align 8
+; <label>:36:                                     ; preds = %2
+  %37 = load %struct.header_info*, %struct.header_info** %10, align 8
+  %38 = getelementptr inbounds %struct.header_info, %struct.header_info* %37, i32 0, i32 6
+  store i64 0, i64* %38, align 8
+  %39 = load %struct.header_info*, %struct.header_info** %10, align 8
+  %40 = getelementptr inbounds %struct.header_info, %struct.header_info* %39, i32 0, i32 5
+  store i64 5, i64* %40, align 8
   %41 = load %struct.header_info*, %struct.header_info** %10, align 8
-  %42 = getelementptr inbounds %struct.header_info, %struct.header_info* %41, i32 0, i32 6
-  store i64 0, i64* %42, align 8
+  %42 = getelementptr inbounds %struct.header_info, %struct.header_info* %41, i32 0, i32 2
+  store i64 1, i64* %42, align 8
   %43 = load %struct.header_info*, %struct.header_info** %10, align 8
-  %44 = getelementptr inbounds %struct.header_info, %struct.header_info* %43, i32 0, i32 5
-  store i64 5, i64* %44, align 8
-  %45 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([53 x i8], [53 x i8]* @"??_C@_0DF@LMNGPACF@?6PARSER?9?$DORecordType?3?5quTAU_FORMA@", i32 0, i32 0))
-  %46 = sext i32 %45 to i64
-  store i64 %46, i64* @"?order_gurantee@@3_JA", align 8
-  %47 = load %struct.header_info*, %struct.header_info** %10, align 8
-  %48 = getelementptr inbounds %struct.header_info, %struct.header_info* %47, i32 0, i32 2
-  store i64 1, i64* %48, align 8
-  %49 = load %struct.header_info*, %struct.header_info** %10, align 8
-  %50 = getelementptr inbounds %struct.header_info, %struct.header_info* %49, i32 0, i32 2
-  %51 = load i64, i64* %50, align 8
-  %52 = load %struct.header_info*, %struct.header_info** %10, align 8
-  %53 = getelementptr inbounds %struct.header_info, %struct.header_info* %52, i32 0, i32 3
-  store i64 %51, i64* %53, align 8
-  %54 = load %struct.header_info*, %struct.header_info** %10, align 8
-  %55 = getelementptr inbounds %struct.header_info, %struct.header_info* %54, i32 0, i32 4
-  store i64 1249, i64* %55, align 8
+  %44 = getelementptr inbounds %struct.header_info, %struct.header_info* %43, i32 0, i32 2
+  %45 = load i64, i64* %44, align 8
+  %46 = load %struct.header_info*, %struct.header_info** %10, align 8
+  %47 = getelementptr inbounds %struct.header_info, %struct.header_info* %46, i32 0, i32 3
+  store i64 %45, i64* %47, align 8
+  %48 = load %struct.header_info*, %struct.header_info** %10, align 8
+  %49 = getelementptr inbounds %struct.header_info, %struct.header_info* %48, i32 0, i32 4
+  store i64 1249, i64* %49, align 8
   store i32 0, i32* %8, align 4
-  br label %56
+  br label %50
 
-; <label>:56:                                     ; preds = %38, %35
-  %57 = load i32, i32* %8, align 4
-  ret i32 %57
+; <label>:50:                                     ; preds = %36, %35
+  %51 = load i32, i32* %8, align 4
+  ret i32 %51
 }
 
 ; Function Attrs: noinline nounwind optnone uwtable
-define dso_local i64 @"?TDateTime_TimeT@@YA_JN@Z"(double) #4 {
+define dso_local i64 @"?TDateTime_TimeT@@YA_JN@Z"(double) #2 {
   %2 = alloca double, align 8
   %3 = alloca i32, align 4
   %4 = alloca i32, align 4
@@ -505,7 +321,7 @@ define dso_local i64 @"?TDateTime_TimeT@@YA_JN@Z"(double) #4 {
 }
 
 ; Function Attrs: alwaysinline uwtable
-define dso_local i32 @"?PicoQuant_header_parser@@YAHPEAUheader_info@@PEAD@Z"(%struct.header_info*, i8*) #2 {
+define dso_local i32 @"?PicoQuant_header_parser@@YAHPEAUheader_info@@PEAD@Z"(%struct.header_info*, i8*) #3 {
   %3 = alloca i8*, align 8
   %4 = alloca i64, align 8
   %5 = alloca i64, align 8
@@ -575,507 +391,422 @@ define dso_local i32 @"?PicoQuant_header_parser@@YAHPEAUheader_info@@PEAD@Z"(%st
   %59 = load i32, i32* %27, align 4
   %60 = sext i32 %59 to i64
   %61 = icmp ne i64 %60, 8
-  br i1 %61, label %62, label %65
+  br i1 %61, label %62, label %63
 
 ; <label>:62:                                     ; preds = %2
-  %63 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([41 x i8], [41 x i8]* @"??_C@_0CJ@BKHAGGLC@?6?5?$FLERROR?$FN?6error?5reading?5header?0?5@", i32 0, i32 0))
-  %64 = sext i32 %63 to i64
-  store i64 %64, i64* @"?order_gurantee@@3_JA", align 8
-  br label %362
+  store i64 0, i64* @"?order_gurantee@@3_JA", align 8
+  br label %291
 
-; <label>:65:                                     ; preds = %2
-  %66 = getelementptr inbounds [8 x i8], [8 x i8]* %30, i32 0, i32 0
-  %67 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @"??_C@_0BH@PAEBLGPJ@?6PTU?5file?5Header?3?5?$CFs?5?6?$AA@", i32 0, i32 0), i8* %66)
-  %68 = sext i32 %67 to i64
-  store i64 %68, i64* @"?order_gurantee@@3_JA", align 8
-  br label %69
+; <label>:63:                                     ; preds = %2
+  br label %64
 
-; <label>:69:                                     ; preds = %300, %65
-  %70 = load i8*, i8** %24, align 8
-  %71 = bitcast %struct.TgHd* %26 to i8*
-  %72 = load %struct.header_info*, %struct.header_info** %25, align 8
-  store i8* %70, i8** %13, align 8
+; <label>:64:                                     ; preds = %256, %63
+  %65 = load i8*, i8** %24, align 8
+  %66 = bitcast %struct.TgHd* %26 to i8*
+  %67 = load %struct.header_info*, %struct.header_info** %25, align 8
+  store i8* %65, i8** %13, align 8
   store i64 48, i64* %14, align 8
   store i64 1, i64* %15, align 8
-  store i8* %71, i8** %16, align 8
-  store %struct.header_info* %72, %struct.header_info** %17, align 8
-  %73 = load i8*, i8** %16, align 8
-  %74 = load i8*, i8** %13, align 8
-  %75 = load %struct.header_info*, %struct.header_info** %17, align 8
-  %76 = getelementptr inbounds %struct.header_info, %struct.header_info* %75, i32 0, i32 1
-  %77 = load i64, i64* %76, align 8
-  %78 = getelementptr inbounds i8, i8* %74, i64 %77
-  %79 = load i64, i64* %15, align 8
-  %80 = load i64, i64* %14, align 8
-  %81 = mul i64 %79, %80
-  call void @llvm.memcpy.p0i8.p0i8.i64(i8* align 1 %73, i8* align 1 %78, i64 %81, i1 false) #6
-  %82 = load i64, i64* %15, align 8
-  %83 = load i64, i64* %14, align 8
-  %84 = mul i64 %82, %83
-  %85 = load %struct.header_info*, %struct.header_info** %17, align 8
-  %86 = getelementptr inbounds %struct.header_info, %struct.header_info* %85, i32 0, i32 1
-  %87 = load i64, i64* %86, align 8
-  %88 = add i64 %87, %84
-  store i64 %88, i64* %86, align 8
-  %89 = load i64, i64* %15, align 8
-  %90 = load i64, i64* %14, align 8
-  %91 = mul i64 %89, %90
-  %92 = trunc i64 %91 to i32
-  store i32 %92, i32* %27, align 4
-  %93 = load i32, i32* %27, align 4
-  %94 = sext i32 %93 to i64
-  %95 = icmp ne i64 %94, 48
-  br i1 %95, label %96, label %99
+  store i8* %66, i8** %16, align 8
+  store %struct.header_info* %67, %struct.header_info** %17, align 8
+  %68 = load i8*, i8** %16, align 8
+  %69 = load i8*, i8** %13, align 8
+  %70 = load %struct.header_info*, %struct.header_info** %17, align 8
+  %71 = getelementptr inbounds %struct.header_info, %struct.header_info* %70, i32 0, i32 1
+  %72 = load i64, i64* %71, align 8
+  %73 = getelementptr inbounds i8, i8* %69, i64 %72
+  %74 = load i64, i64* %15, align 8
+  %75 = load i64, i64* %14, align 8
+  %76 = mul i64 %74, %75
+  call void @llvm.memcpy.p0i8.p0i8.i64(i8* align 1 %68, i8* align 1 %73, i64 %76, i1 false) #6
+  %77 = load i64, i64* %15, align 8
+  %78 = load i64, i64* %14, align 8
+  %79 = mul i64 %77, %78
+  %80 = load %struct.header_info*, %struct.header_info** %17, align 8
+  %81 = getelementptr inbounds %struct.header_info, %struct.header_info* %80, i32 0, i32 1
+  %82 = load i64, i64* %81, align 8
+  %83 = add i64 %82, %79
+  store i64 %83, i64* %81, align 8
+  %84 = load i64, i64* %15, align 8
+  %85 = load i64, i64* %14, align 8
+  %86 = mul i64 %84, %85
+  %87 = trunc i64 %86 to i32
+  store i32 %87, i32* %27, align 4
+  %88 = load i32, i32* %27, align 4
+  %89 = sext i32 %88 to i64
+  %90 = icmp ne i64 %89, 48
+  br i1 %90, label %91, label %92
 
-; <label>:96:                                     ; preds = %69
-  %97 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([19 x i8], [19 x i8]* @"??_C@_0BD@GFPKCHLP@?6?6Incomplete?5File?4?$AA@", i32 0, i32 0))
-  %98 = sext i32 %97 to i64
-  store i64 %98, i64* @"?order_gurantee@@3_JA", align 8
-  br label %362
+; <label>:91:                                     ; preds = %64
+  br label %291
 
-; <label>:99:                                     ; preds = %69
-  %100 = getelementptr inbounds [40 x i8], [40 x i8]* %31, i32 0, i32 0
-  %101 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 0
-  %102 = getelementptr inbounds [32 x i8], [32 x i8]* %101, i32 0, i32 0
-  call void @llvm.memcpy.p0i8.p0i8.i64(i8* align 16 %100, i8* align 8 %102, i64 40, i1 false)
-  %103 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 1
-  %104 = load i32, i32* %103, align 8
-  %105 = icmp sgt i32 %104, -1
-  br i1 %105, label %106, label %113
+; <label>:92:                                     ; preds = %64
+  %93 = getelementptr inbounds [40 x i8], [40 x i8]* %31, i32 0, i32 0
+  %94 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 0
+  %95 = getelementptr inbounds [32 x i8], [32 x i8]* %94, i32 0, i32 0
+  call void @llvm.memcpy.p0i8.p0i8.i64(i8* align 16 %93, i8* align 8 %95, i64 40, i1 false)
+  %96 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 1
+  %97 = load i32, i32* %96, align 8
+  %98 = icmp sgt i32 %97, -1
+  br i1 %98, label %99, label %106
 
-; <label>:106:                                    ; preds = %99
-  %107 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 1
-  %108 = load i32, i32* %107, align 8
-  %109 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 0
-  %110 = getelementptr inbounds [32 x i8], [32 x i8]* %109, i32 0, i32 0
-  %111 = getelementptr inbounds [40 x i8], [40 x i8]* %31, i32 0, i32 0
-  %112 = call i32 (i8*, i8*, ...) @sprintf(i8* %111, i8* getelementptr inbounds ([7 x i8], [7 x i8]* @"??_C@_06BPGFIOAL@?$CFs?$CI?$CFd?$CJ?$AA@", i32 0, i32 0), i8* %110, i32 %108)
-  br label %113
+; <label>:99:                                     ; preds = %92
+  %100 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 1
+  %101 = load i32, i32* %100, align 8
+  %102 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 0
+  %103 = getelementptr inbounds [32 x i8], [32 x i8]* %102, i32 0, i32 0
+  %104 = getelementptr inbounds [40 x i8], [40 x i8]* %31, i32 0, i32 0
+  %105 = call i32 (i8*, i8*, ...) @sprintf(i8* %104, i8* getelementptr inbounds ([7 x i8], [7 x i8]* @"??_C@_06BPGFIOAL@?$CFs?$CI?$CFd?$CJ?$AA@", i32 0, i32 0), i8* %103, i32 %101)
+  br label %106
 
-; <label>:113:                                    ; preds = %106, %99
-  %114 = getelementptr inbounds [40 x i8], [40 x i8]* %31, i32 0, i32 0
-  %115 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([7 x i8], [7 x i8]* @"??_C@_06PHODKAKM@?6?$CF?940s?$AA@", i32 0, i32 0), i8* %114)
-  %116 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 2
-  %117 = load i32, i32* %116, align 4
-  switch i32 %117, label %297 [
-    i32 -65528, label %118
-    i32 8, label %120
-    i32 268435464, label %127
-    i32 285212680, label %141
-    i32 301989896, label %145
-    i32 536870920, label %149
-    i32 537001983, label %182
-    i32 553648136, label %193
-    i32 1073872895, label %201
-    i32 1073938431, label %242
-    i32 -1, label %287
+; <label>:106:                                    ; preds = %99, %92
+  %107 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 2
+  %108 = load i32, i32* %107, align 4
+  switch i32 %108, label %254 [
+    i32 -65528, label %109
+    i32 8, label %110
+    i32 268435464, label %111
+    i32 285212680, label %122
+    i32 301989896, label %123
+    i32 536870920, label %124
+    i32 537001983, label %153
+    i32 553648136, label %160
+    i32 1073872895, label %165
+    i32 1073938431, label %203
+    i32 -1, label %247
   ]
 
-; <label>:118:                                    ; preds = %113
-  %119 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([12 x i8], [12 x i8]* @"??_C@_0M@HECCAEGL@?$DMempty?5Tag?$DO?$AA@", i32 0, i32 0))
-  br label %299
+; <label>:109:                                    ; preds = %106
+  br label %255
 
-; <label>:120:                                    ; preds = %113
-  %121 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 3
-  %122 = load i64, i64* %121, align 8
-  %123 = icmp ne i64 %122, 0
-  %124 = zext i1 %123 to i64
-  %125 = select i1 %123, i8* getelementptr inbounds ([5 x i8], [5 x i8]* @"??_C@_04HPMIDMKH@True?$AA@", i32 0, i32 0), i8* getelementptr inbounds ([6 x i8], [6 x i8]* @"??_C@_05MKDOIIA@False?$AA@", i32 0, i32 0)
-  %126 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @"??_C@_02DKCKIIND@?$CFs?$AA@", i32 0, i32 0), i8* %125)
-  br label %299
+; <label>:110:                                    ; preds = %106
+  br label %255
 
-; <label>:127:                                    ; preds = %113
-  %128 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 3
-  %129 = load i64, i64* %128, align 8
-  %130 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([5 x i8], [5 x i8]* @"??_C@_04BFAHMMK@?$CFlld?$AA@", i32 0, i32 0), i64 %129)
-  %131 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 0
-  %132 = getelementptr inbounds [32 x i8], [32 x i8]* %131, i32 0, i32 0
-  %133 = call i32 @strcmp(i8* %132, i8* getelementptr inbounds ([27 x i8], [27 x i8]* @"??_C@_0BL@NBAMDLKF@TTResultFormat_TTTRRecType?$AA@", i32 0, i32 0))
-  %134 = icmp eq i32 %133, 0
-  br i1 %134, label %135, label %140
+; <label>:111:                                    ; preds = %106
+  %112 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 0
+  %113 = getelementptr inbounds [32 x i8], [32 x i8]* %112, i32 0, i32 0
+  %114 = call i32 @strcmp(i8* %113, i8* getelementptr inbounds ([27 x i8], [27 x i8]* @"??_C@_0BL@NBAMDLKF@TTResultFormat_TTTRRecType?$AA@", i32 0, i32 0))
+  %115 = icmp eq i32 %114, 0
+  br i1 %115, label %116, label %121
 
-; <label>:135:                                    ; preds = %127
-  %136 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 3
-  %137 = load i64, i64* %136, align 8
-  %138 = load %struct.header_info*, %struct.header_info** %25, align 8
-  %139 = getelementptr inbounds %struct.header_info, %struct.header_info* %138, i32 0, i32 6
-  store i64 %137, i64* %139, align 8
-  br label %140
+; <label>:116:                                    ; preds = %111
+  %117 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 3
+  %118 = load i64, i64* %117, align 8
+  %119 = load %struct.header_info*, %struct.header_info** %25, align 8
+  %120 = getelementptr inbounds %struct.header_info, %struct.header_info* %119, i32 0, i32 6
+  store i64 %118, i64* %120, align 8
+  br label %121
 
-; <label>:140:                                    ; preds = %135, %127
-  br label %299
+; <label>:121:                                    ; preds = %116, %111
+  br label %255
 
-; <label>:141:                                    ; preds = %113
-  %142 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 3
-  %143 = load i64, i64* %142, align 8
-  %144 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([10 x i8], [10 x i8]* @"??_C@_09DGLOBCMH@0x?$CF16?416X?$AA@", i32 0, i32 0), i64 %143)
-  br label %299
+; <label>:122:                                    ; preds = %106
+  br label %255
 
-; <label>:145:                                    ; preds = %113
-  %146 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 3
-  %147 = load i64, i64* %146, align 8
-  %148 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([10 x i8], [10 x i8]* @"??_C@_09DGLOBCMH@0x?$CF16?416X?$AA@", i32 0, i32 0), i64 %147)
-  br label %299
+; <label>:123:                                    ; preds = %106
+  br label %255
 
-; <label>:149:                                    ; preds = %113
-  %150 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 3
-  %151 = bitcast i64* %150 to double*
-  %152 = load double, double* %151, align 8
-  %153 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @"??_C@_02LDDGBJKG@?$CFE?$AA@", i32 0, i32 0), double %152)
-  %154 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 0
-  %155 = getelementptr inbounds [32 x i8], [32 x i8]* %154, i32 0, i32 0
-  %156 = call i32 @strcmp(i8* %155, i8* getelementptr inbounds ([20 x i8], [20 x i8]* @"??_C@_0BE@MLJFPCOI@MeasDesc_Resolution?$AA@", i32 0, i32 0))
-  %157 = icmp eq i32 %156, 0
-  br i1 %157, label %158, label %167
+; <label>:124:                                    ; preds = %106
+  %125 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 0
+  %126 = getelementptr inbounds [32 x i8], [32 x i8]* %125, i32 0, i32 0
+  %127 = call i32 @strcmp(i8* %126, i8* getelementptr inbounds ([20 x i8], [20 x i8]* @"??_C@_0BE@MLJFPCOI@MeasDesc_Resolution?$AA@", i32 0, i32 0))
+  %128 = icmp eq i32 %127, 0
+  br i1 %128, label %129, label %138
 
-; <label>:158:                                    ; preds = %149
-  %159 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 3
-  %160 = bitcast i64* %159 to double*
-  %161 = load double, double* %160, align 8
-  store double %161, double* %32, align 8
-  %162 = load double, double* %32, align 8
-  %163 = fmul double %162, 1.000000e+12
-  %164 = fptosi double %163 to i64
-  %165 = load %struct.header_info*, %struct.header_info** %25, align 8
-  %166 = getelementptr inbounds %struct.header_info, %struct.header_info* %165, i32 0, i32 3
-  store i64 %164, i64* %166, align 8
-  br label %167
+; <label>:129:                                    ; preds = %124
+  %130 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 3
+  %131 = bitcast i64* %130 to double*
+  %132 = load double, double* %131, align 8
+  store double %132, double* %32, align 8
+  %133 = load double, double* %32, align 8
+  %134 = fmul double %133, 1.000000e+12
+  %135 = fptosi double %134 to i64
+  %136 = load %struct.header_info*, %struct.header_info** %25, align 8
+  %137 = getelementptr inbounds %struct.header_info, %struct.header_info* %136, i32 0, i32 3
+  store i64 %135, i64* %137, align 8
+  br label %138
 
-; <label>:167:                                    ; preds = %158, %149
-  %168 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 0
-  %169 = getelementptr inbounds [32 x i8], [32 x i8]* %168, i32 0, i32 0
-  %170 = call i32 @strcmp(i8* %169, i8* getelementptr inbounds ([26 x i8], [26 x i8]* @"??_C@_0BK@JGMIOCJJ@MeasDesc_GlobalResolution?$AA@", i32 0, i32 0))
-  %171 = icmp eq i32 %170, 0
-  br i1 %171, label %172, label %181
+; <label>:138:                                    ; preds = %129, %124
+  %139 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 0
+  %140 = getelementptr inbounds [32 x i8], [32 x i8]* %139, i32 0, i32 0
+  %141 = call i32 @strcmp(i8* %140, i8* getelementptr inbounds ([26 x i8], [26 x i8]* @"??_C@_0BK@JGMIOCJJ@MeasDesc_GlobalResolution?$AA@", i32 0, i32 0))
+  %142 = icmp eq i32 %141, 0
+  br i1 %142, label %143, label %152
 
-; <label>:172:                                    ; preds = %167
-  %173 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 3
-  %174 = bitcast i64* %173 to double*
-  %175 = load double, double* %174, align 8
-  store double %175, double* %33, align 8
-  %176 = load double, double* %33, align 8
-  %177 = fmul double %176, 1.000000e+12
-  %178 = fptosi double %177 to i64
-  %179 = load %struct.header_info*, %struct.header_info** %25, align 8
-  %180 = getelementptr inbounds %struct.header_info, %struct.header_info* %179, i32 0, i32 2
-  store i64 %178, i64* %180, align 8
-  br label %181
+; <label>:143:                                    ; preds = %138
+  %144 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 3
+  %145 = bitcast i64* %144 to double*
+  %146 = load double, double* %145, align 8
+  store double %146, double* %33, align 8
+  %147 = load double, double* %33, align 8
+  %148 = fmul double %147, 1.000000e+12
+  %149 = fptosi double %148 to i64
+  %150 = load %struct.header_info*, %struct.header_info** %25, align 8
+  %151 = getelementptr inbounds %struct.header_info, %struct.header_info* %150, i32 0, i32 2
+  store i64 %149, i64* %151, align 8
+  br label %152
 
-; <label>:181:                                    ; preds = %172, %167
-  br label %299
+; <label>:152:                                    ; preds = %143, %138
+  br label %255
 
-; <label>:182:                                    ; preds = %113
-  %183 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 3
-  %184 = load i64, i64* %183, align 8
-  %185 = udiv i64 %184, 8
-  %186 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([30 x i8], [30 x i8]* @"??_C@_0BO@ENEJMDLG@?$DMFloat?5Array?5with?5?$CFd?5Entries?$DO?$AA@", i32 0, i32 0), i64 %185)
-  %187 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 3
+; <label>:153:                                    ; preds = %106
+  %154 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 3
+  %155 = load i64, i64* %154, align 8
+  %156 = trunc i64 %155 to i32
+  %157 = sext i32 %156 to i64
+  %158 = load %struct.header_info*, %struct.header_info** %25, align 8
+  %159 = getelementptr inbounds %struct.header_info, %struct.header_info* %158, i32 0, i32 1
+  store i64 %157, i64* %159, align 8
+  br label %255
+
+; <label>:160:                                    ; preds = %106
+  %161 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 3
+  %162 = bitcast i64* %161 to double*
+  %163 = load double, double* %162, align 8
+  %164 = call i64 @"?TDateTime_TimeT@@YA_JN@Z"(double %163)
+  store i64 %164, i64* %34, align 8
+  br label %255
+
+; <label>:165:                                    ; preds = %106
+  %166 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 3
+  %167 = load i64, i64* %166, align 8
+  %168 = call noalias i8* @calloc(i64 %167, i64 1)
+  store i8* %168, i8** %28, align 8
+  %169 = load i8*, i8** %24, align 8
+  %170 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 3
+  %171 = load i64, i64* %170, align 8
+  %172 = load i8*, i8** %28, align 8
+  %173 = load %struct.header_info*, %struct.header_info** %25, align 8
+  store i8* %169, i8** %3, align 8
+  store i64 %171, i64* %4, align 8
+  store i64 1, i64* %5, align 8
+  store i8* %172, i8** %6, align 8
+  store %struct.header_info* %173, %struct.header_info** %7, align 8
+  %174 = load i8*, i8** %6, align 8
+  %175 = load i8*, i8** %3, align 8
+  %176 = load %struct.header_info*, %struct.header_info** %7, align 8
+  %177 = getelementptr inbounds %struct.header_info, %struct.header_info* %176, i32 0, i32 1
+  %178 = load i64, i64* %177, align 8
+  %179 = getelementptr inbounds i8, i8* %175, i64 %178
+  %180 = load i64, i64* %5, align 8
+  %181 = load i64, i64* %4, align 8
+  %182 = mul i64 %180, %181
+  call void @llvm.memcpy.p0i8.p0i8.i64(i8* align 1 %174, i8* align 1 %179, i64 %182, i1 false) #6
+  %183 = load i64, i64* %5, align 8
+  %184 = load i64, i64* %4, align 8
+  %185 = mul i64 %183, %184
+  %186 = load %struct.header_info*, %struct.header_info** %7, align 8
+  %187 = getelementptr inbounds %struct.header_info, %struct.header_info* %186, i32 0, i32 1
   %188 = load i64, i64* %187, align 8
-  %189 = trunc i64 %188 to i32
-  %190 = sext i32 %189 to i64
-  %191 = load %struct.header_info*, %struct.header_info** %25, align 8
-  %192 = getelementptr inbounds %struct.header_info, %struct.header_info* %191, i32 0, i32 1
-  store i64 %190, i64* %192, align 8
-  br label %299
+  %189 = add i64 %188, %185
+  store i64 %189, i64* %187, align 8
+  %190 = load i64, i64* %5, align 8
+  %191 = load i64, i64* %4, align 8
+  %192 = mul i64 %190, %191
+  %193 = trunc i64 %192 to i32
+  store i32 %193, i32* %27, align 4
+  %194 = load i32, i32* %27, align 4
+  %195 = sext i32 %194 to i64
+  %196 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 3
+  %197 = load i64, i64* %196, align 8
+  %198 = icmp ne i64 %195, %197
+  br i1 %198, label %199, label %201
 
-; <label>:193:                                    ; preds = %113
-  %194 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 3
-  %195 = bitcast i64* %194 to double*
-  %196 = load double, double* %195, align 8
-  %197 = call i64 @"?TDateTime_TimeT@@YA_JN@Z"(double %196)
-  store i64 %197, i64* %34, align 8
-  %198 = call %struct.tm* @"?gmtime@@YAPEAUtm@@QEB_J@Z"(i64* %34)
-  %199 = call i8* @asctime(%struct.tm* %198)
-  %200 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @"??_C@_02DKCKIIND@?$CFs?$AA@", i32 0, i32 0), i8* %199, i8* getelementptr inbounds ([2 x i8], [2 x i8]* @"??_C@_01LOCGONAA@?$AA?$AA@", i32 0, i32 0))
-  br label %299
+; <label>:199:                                    ; preds = %165
+  %200 = load i8*, i8** %28, align 8
+  call void @free(i8* %200)
+  br label %291
 
-; <label>:201:                                    ; preds = %113
-  %202 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 3
-  %203 = load i64, i64* %202, align 8
-  %204 = call noalias i8* @calloc(i64 %203, i64 1)
-  store i8* %204, i8** %28, align 8
-  %205 = load i8*, i8** %24, align 8
-  %206 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 3
-  %207 = load i64, i64* %206, align 8
-  %208 = load i8*, i8** %28, align 8
-  %209 = load %struct.header_info*, %struct.header_info** %25, align 8
-  store i8* %205, i8** %8, align 8
-  store i64 %207, i64* %9, align 8
+; <label>:201:                                    ; preds = %165
+  %202 = load i8*, i8** %28, align 8
+  call void @free(i8* %202)
+  br label %255
+
+; <label>:203:                                    ; preds = %106
+  %204 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 3
+  %205 = load i64, i64* %204, align 8
+  %206 = call noalias i8* @calloc(i64 %205, i64 1)
+  %207 = bitcast i8* %206 to i16*
+  store i16* %207, i16** %29, align 8
+  %208 = load i8*, i8** %24, align 8
+  %209 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 3
+  %210 = load i64, i64* %209, align 8
+  %211 = load i16*, i16** %29, align 8
+  %212 = bitcast i16* %211 to i8*
+  %213 = load %struct.header_info*, %struct.header_info** %25, align 8
+  store i8* %208, i8** %8, align 8
+  store i64 %210, i64* %9, align 8
   store i64 1, i64* %10, align 8
-  store i8* %208, i8** %11, align 8
-  store %struct.header_info* %209, %struct.header_info** %12, align 8
-  %210 = load i8*, i8** %11, align 8
-  %211 = load i8*, i8** %8, align 8
-  %212 = load %struct.header_info*, %struct.header_info** %12, align 8
-  %213 = getelementptr inbounds %struct.header_info, %struct.header_info* %212, i32 0, i32 1
-  %214 = load i64, i64* %213, align 8
-  %215 = getelementptr inbounds i8, i8* %211, i64 %214
-  %216 = load i64, i64* %10, align 8
-  %217 = load i64, i64* %9, align 8
-  %218 = mul i64 %216, %217
-  call void @llvm.memcpy.p0i8.p0i8.i64(i8* align 1 %210, i8* align 1 %215, i64 %218, i1 false) #6
-  %219 = load i64, i64* %10, align 8
-  %220 = load i64, i64* %9, align 8
-  %221 = mul i64 %219, %220
-  %222 = load %struct.header_info*, %struct.header_info** %12, align 8
-  %223 = getelementptr inbounds %struct.header_info, %struct.header_info* %222, i32 0, i32 1
-  %224 = load i64, i64* %223, align 8
-  %225 = add i64 %224, %221
-  store i64 %225, i64* %223, align 8
-  %226 = load i64, i64* %10, align 8
-  %227 = load i64, i64* %9, align 8
-  %228 = mul i64 %226, %227
-  %229 = trunc i64 %228 to i32
-  store i32 %229, i32* %27, align 4
-  %230 = load i32, i32* %27, align 4
-  %231 = sext i32 %230 to i64
-  %232 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 3
-  %233 = load i64, i64* %232, align 8
-  %234 = icmp ne i64 %231, %233
-  br i1 %234, label %235, label %238
+  store i8* %212, i8** %11, align 8
+  store %struct.header_info* %213, %struct.header_info** %12, align 8
+  %214 = load i8*, i8** %11, align 8
+  %215 = load i8*, i8** %8, align 8
+  %216 = load %struct.header_info*, %struct.header_info** %12, align 8
+  %217 = getelementptr inbounds %struct.header_info, %struct.header_info* %216, i32 0, i32 1
+  %218 = load i64, i64* %217, align 8
+  %219 = getelementptr inbounds i8, i8* %215, i64 %218
+  %220 = load i64, i64* %10, align 8
+  %221 = load i64, i64* %9, align 8
+  %222 = mul i64 %220, %221
+  call void @llvm.memcpy.p0i8.p0i8.i64(i8* align 1 %214, i8* align 1 %219, i64 %222, i1 false) #6
+  %223 = load i64, i64* %10, align 8
+  %224 = load i64, i64* %9, align 8
+  %225 = mul i64 %223, %224
+  %226 = load %struct.header_info*, %struct.header_info** %12, align 8
+  %227 = getelementptr inbounds %struct.header_info, %struct.header_info* %226, i32 0, i32 1
+  %228 = load i64, i64* %227, align 8
+  %229 = add i64 %228, %225
+  store i64 %229, i64* %227, align 8
+  %230 = load i64, i64* %10, align 8
+  %231 = load i64, i64* %9, align 8
+  %232 = mul i64 %230, %231
+  %233 = trunc i64 %232 to i32
+  store i32 %233, i32* %27, align 4
+  %234 = load i32, i32* %27, align 4
+  %235 = sext i32 %234 to i64
+  %236 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 3
+  %237 = load i64, i64* %236, align 8
+  %238 = icmp ne i64 %235, %237
+  br i1 %238, label %239, label %242
 
-; <label>:235:                                    ; preds = %201
-  %236 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([18 x i8], [18 x i8]* @"??_C@_0BC@KFPMDKOJ@?6Incomplete?5File?4?$AA@", i32 0, i32 0))
-  %237 = load i8*, i8** %28, align 8
-  call void @free(i8* %237)
-  br label %362
-
-; <label>:238:                                    ; preds = %201
-  %239 = load i8*, i8** %28, align 8
-  %240 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @"??_C@_02DKCKIIND@?$CFs?$AA@", i32 0, i32 0), i8* %239)
-  %241 = load i8*, i8** %28, align 8
+; <label>:239:                                    ; preds = %203
+  %240 = load i16*, i16** %29, align 8
+  %241 = bitcast i16* %240 to i8*
   call void @free(i8* %241)
-  br label %299
+  br label %291
 
-; <label>:242:                                    ; preds = %113
-  %243 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 3
-  %244 = load i64, i64* %243, align 8
-  %245 = call noalias i8* @calloc(i64 %244, i64 1)
-  %246 = bitcast i8* %245 to i16*
-  store i16* %246, i16** %29, align 8
-  %247 = load i8*, i8** %24, align 8
+; <label>:242:                                    ; preds = %203
+  %243 = load i16*, i16** %29, align 8
+  %244 = call i32 (i16*, ...) @wprintf(i16* getelementptr inbounds ([3 x i16], [3 x i16]* @"??_C@_15GANGMFKL@?$AA?$CF?$AAs?$AA?$AA@", i32 0, i32 0), i16* %243)
+  %245 = load i16*, i16** %29, align 8
+  %246 = bitcast i16* %245 to i8*
+  call void @free(i8* %246)
+  br label %255
+
+; <label>:247:                                    ; preds = %106
   %248 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 3
   %249 = load i64, i64* %248, align 8
-  %250 = load i16*, i16** %29, align 8
-  %251 = bitcast i16* %250 to i8*
+  %250 = trunc i64 %249 to i32
+  %251 = sext i32 %250 to i64
   %252 = load %struct.header_info*, %struct.header_info** %25, align 8
-  store i8* %247, i8** %3, align 8
-  store i64 %249, i64* %4, align 8
-  store i64 1, i64* %5, align 8
-  store i8* %251, i8** %6, align 8
-  store %struct.header_info* %252, %struct.header_info** %7, align 8
-  %253 = load i8*, i8** %6, align 8
-  %254 = load i8*, i8** %3, align 8
-  %255 = load %struct.header_info*, %struct.header_info** %7, align 8
-  %256 = getelementptr inbounds %struct.header_info, %struct.header_info* %255, i32 0, i32 1
-  %257 = load i64, i64* %256, align 8
-  %258 = getelementptr inbounds i8, i8* %254, i64 %257
-  %259 = load i64, i64* %5, align 8
-  %260 = load i64, i64* %4, align 8
-  %261 = mul i64 %259, %260
-  call void @llvm.memcpy.p0i8.p0i8.i64(i8* align 1 %253, i8* align 1 %258, i64 %261, i1 false) #6
-  %262 = load i64, i64* %5, align 8
-  %263 = load i64, i64* %4, align 8
-  %264 = mul i64 %262, %263
-  %265 = load %struct.header_info*, %struct.header_info** %7, align 8
-  %266 = getelementptr inbounds %struct.header_info, %struct.header_info* %265, i32 0, i32 1
-  %267 = load i64, i64* %266, align 8
-  %268 = add i64 %267, %264
-  store i64 %268, i64* %266, align 8
-  %269 = load i64, i64* %5, align 8
-  %270 = load i64, i64* %4, align 8
-  %271 = mul i64 %269, %270
-  %272 = trunc i64 %271 to i32
-  store i32 %272, i32* %27, align 4
-  %273 = load i32, i32* %27, align 4
-  %274 = sext i32 %273 to i64
-  %275 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 3
-  %276 = load i64, i64* %275, align 8
-  %277 = icmp ne i64 %274, %276
-  br i1 %277, label %278, label %282
+  %253 = getelementptr inbounds %struct.header_info, %struct.header_info* %252, i32 0, i32 1
+  store i64 %251, i64* %253, align 8
+  br label %255
 
-; <label>:278:                                    ; preds = %242
-  %279 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([18 x i8], [18 x i8]* @"??_C@_0BC@KFPMDKOJ@?6Incomplete?5File?4?$AA@", i32 0, i32 0))
-  %280 = load i16*, i16** %29, align 8
-  %281 = bitcast i16* %280 to i8*
-  call void @free(i8* %281)
-  br label %362
+; <label>:254:                                    ; preds = %106
+  br label %291
 
-; <label>:282:                                    ; preds = %242
-  %283 = load i16*, i16** %29, align 8
-  %284 = call i32 (i16*, ...) @wprintf(i16* getelementptr inbounds ([3 x i16], [3 x i16]* @"??_C@_15GANGMFKL@?$AA?$CF?$AAs?$AA?$AA@", i32 0, i32 0), i16* %283)
-  %285 = load i16*, i16** %29, align 8
-  %286 = bitcast i16* %285 to i8*
-  call void @free(i8* %286)
-  br label %299
+; <label>:255:                                    ; preds = %247, %242, %201, %160, %153, %152, %123, %122, %121, %110, %109
+  br label %256
 
-; <label>:287:                                    ; preds = %113
-  %288 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 3
-  %289 = load i64, i64* %288, align 8
-  %290 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([32 x i8], [32 x i8]* @"??_C@_0CA@FNNAPBCN@?$DMBinary?5Blob?5contains?5?$CFd?5Bytes?$DO?$AA@", i32 0, i32 0), i64 %289)
-  %291 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 3
-  %292 = load i64, i64* %291, align 8
-  %293 = trunc i64 %292 to i32
-  %294 = sext i32 %293 to i64
-  %295 = load %struct.header_info*, %struct.header_info** %25, align 8
-  %296 = getelementptr inbounds %struct.header_info, %struct.header_info* %295, i32 0, i32 1
-  store i64 %294, i64* %296, align 8
-  br label %299
+; <label>:256:                                    ; preds = %255
+  %257 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 0
+  %258 = getelementptr inbounds [32 x i8], [32 x i8]* %257, i32 0, i32 0
+  %259 = call i32 @strncmp(i8* %258, i8* getelementptr inbounds ([11 x i8], [11 x i8]* @"??_C@_0L@BKLBDFDP@Header_End?$AA@", i32 0, i32 0), i64 11)
+  %260 = icmp ne i32 %259, 0
+  br i1 %260, label %64, label %261
 
-; <label>:297:                                    ; preds = %113
-  %298 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([44 x i8], [44 x i8]* @"??_C@_0CM@NLBAOIPI@Illegal?5Type?5identifier?5found?$CB?5B@", i32 0, i32 0))
-  br label %362
-
-; <label>:299:                                    ; preds = %287, %282, %238, %193, %182, %181, %145, %141, %140, %120, %118
-  br label %300
-
-; <label>:300:                                    ; preds = %299
-  %301 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 0
-  %302 = getelementptr inbounds [32 x i8], [32 x i8]* %301, i32 0, i32 0
-  %303 = call i32 @strncmp(i8* %302, i8* getelementptr inbounds ([11 x i8], [11 x i8]* @"??_C@_0L@BKLBDFDP@Header_End?$AA@", i32 0, i32 0), i64 11)
-  %304 = icmp ne i32 %303, 0
-  br i1 %304, label %69, label %305
-
-; <label>:305:                                    ; preds = %300
-  %306 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([27 x i8], [27 x i8]* @"??_C@_0BL@HPPLJEMK@?6?6?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?6?$AA@", i32 0, i32 0))
-  %307 = sext i32 %306 to i64
-  store i64 %307, i64* @"?order_gurantee@@3_JA", align 8
-  %308 = load %struct.header_info*, %struct.header_info** %25, align 8
-  %309 = getelementptr inbounds %struct.header_info, %struct.header_info* %308, i32 0, i32 6
-  %310 = load i64, i64* %309, align 8
-  switch i64 %310, label %341 [
-    i64 66051, label %311
-    i64 66052, label %314
-    i64 16843268, label %317
-    i64 66053, label %320
-    i64 66054, label %323
-    i64 66307, label %326
-    i64 66308, label %329
-    i64 16843524, label %332
-    i64 66309, label %335
-    i64 66310, label %338
+; <label>:261:                                    ; preds = %256
+  %262 = load %struct.header_info*, %struct.header_info** %25, align 8
+  %263 = getelementptr inbounds %struct.header_info, %struct.header_info* %262, i32 0, i32 6
+  %264 = load i64, i64* %263, align 8
+  switch i64 %264, label %275 [
+    i64 66051, label %265
+    i64 66052, label %266
+    i64 16843268, label %267
+    i64 66053, label %268
+    i64 66054, label %269
+    i64 66307, label %270
+    i64 66308, label %271
+    i64 16843524, label %272
+    i64 66309, label %273
+    i64 66310, label %274
   ]
 
-; <label>:311:                                    ; preds = %305
-  %312 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([19 x i8], [19 x i8]* @"??_C@_0BD@EHFANJBB@?6PicoHarp?5T2?5data?6?$AA@", i32 0, i32 0))
-  %313 = sext i32 %312 to i64
-  store i64 %313, i64* @"?order_gurantee@@3_JA", align 8
+; <label>:265:                                    ; preds = %261
   store i8 1, i8* %35, align 1
-  br label %347
+  br label %276
 
-; <label>:314:                                    ; preds = %305
-  %315 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @"??_C@_0BH@NKCKBLM@?6HydraHarp?5V1?5T2?5data?6?$AA@", i32 0, i32 0))
-  %316 = sext i32 %315 to i64
-  store i64 %316, i64* @"?order_gurantee@@3_JA", align 8
+; <label>:266:                                    ; preds = %261
   store i8 1, i8* %35, align 1
-  br label %347
+  br label %276
 
-; <label>:317:                                    ; preds = %305
-  %318 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @"??_C@_0BH@JEEAMHLN@?6HydraHarp?5V2?5T2?5data?6?$AA@", i32 0, i32 0))
-  %319 = sext i32 %318 to i64
-  store i64 %319, i64* @"?order_gurantee@@3_JA", align 8
+; <label>:267:                                    ; preds = %261
   store i8 1, i8* %35, align 1
-  br label %347
+  br label %276
 
-; <label>:320:                                    ; preds = %305
-  %321 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @"??_C@_0BH@DICKBJCF@?6TimeHarp260N?5T2?5data?6?$AA@", i32 0, i32 0))
-  %322 = sext i32 %321 to i64
-  store i64 %322, i64* @"?order_gurantee@@3_JA", align 8
+; <label>:268:                                    ; preds = %261
   store i8 1, i8* %35, align 1
-  br label %347
+  br label %276
 
-; <label>:323:                                    ; preds = %305
-  %324 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @"??_C@_0BH@MEKKPGOI@?6TimeHarp260P?5T2?5data?6?$AA@", i32 0, i32 0))
-  %325 = sext i32 %324 to i64
-  store i64 %325, i64* @"?order_gurantee@@3_JA", align 8
+; <label>:269:                                    ; preds = %261
   store i8 1, i8* %35, align 1
-  br label %347
+  br label %276
 
-; <label>:326:                                    ; preds = %305
-  %327 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([19 x i8], [19 x i8]* @"??_C@_0BD@ILPKNJIP@?6PicoHarp?5T3?5data?6?$AA@", i32 0, i32 0))
-  %328 = sext i32 %327 to i64
-  store i64 %328, i64* @"?order_gurantee@@3_JA", align 8
+; <label>:270:                                    ; preds = %261
   store i8 0, i8* %35, align 1
-  br label %347
+  br label %276
 
-; <label>:329:                                    ; preds = %305
-  %330 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @"??_C@_0BH@MBAIKBCC@?6HydraHarp?5V1?5T3?5data?6?$AA@", i32 0, i32 0))
-  %331 = sext i32 %330 to i64
-  store i64 %331, i64* @"?order_gurantee@@3_JA", align 8
+; <label>:271:                                    ; preds = %261
   store i8 0, i8* %35, align 1
-  br label %347
+  br label %276
 
-; <label>:332:                                    ; preds = %305
-  %333 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @"??_C@_0BH@FIOKMHCD@?6HydraHarp?5V2?5T3?5data?6?$AA@", i32 0, i32 0))
-  %334 = sext i32 %333 to i64
-  store i64 %334, i64* @"?order_gurantee@@3_JA", align 8
+; <label>:272:                                    ; preds = %261
   store i8 0, i8* %35, align 1
-  br label %347
+  br label %276
 
-; <label>:335:                                    ; preds = %305
-  %336 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @"??_C@_0BH@PEIABJLL@?6TimeHarp260N?5T3?5data?6?$AA@", i32 0, i32 0))
-  %337 = sext i32 %336 to i64
-  store i64 %337, i64* @"?order_gurantee@@3_JA", align 8
+; <label>:273:                                    ; preds = %261
   store i8 0, i8* %35, align 1
-  br label %347
+  br label %276
 
-; <label>:338:                                    ; preds = %305
-  %339 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @"??_C@_0BH@IAAPGHG@?6TimeHarp260P?5T3?5data?6?$AA@", i32 0, i32 0))
-  %340 = sext i32 %339 to i64
-  store i64 %340, i64* @"?order_gurantee@@3_JA", align 8
+; <label>:274:                                    ; preds = %261
   store i8 0, i8* %35, align 1
-  br label %347
+  br label %276
 
-; <label>:341:                                    ; preds = %305
-  %342 = load %struct.header_info*, %struct.header_info** %25, align 8
-  %343 = getelementptr inbounds %struct.header_info, %struct.header_info* %342, i32 0, i32 6
-  %344 = load i64, i64* %343, align 8
-  %345 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([44 x i8], [44 x i8]* @"??_C@_0CM@KKBPPLIM@?6Unknown?5time?9tag?5record?5type?3?50@", i32 0, i32 0), i64 %344)
-  %346 = sext i32 %345 to i64
-  store i64 %346, i64* @"?order_gurantee@@3_JA", align 8
-  br label %362
+; <label>:275:                                    ; preds = %261
+  br label %291
 
-; <label>:347:                                    ; preds = %338, %335, %332, %329, %326, %323, %320, %317, %314, %311
-  %348 = load i8, i8* %35, align 1
-  %349 = trunc i8 %348 to i1
-  br i1 %349, label %350, label %353
+; <label>:276:                                    ; preds = %274, %273, %272, %271, %270, %269, %268, %267, %266, %265
+  %277 = load i8, i8* %35, align 1
+  %278 = trunc i8 %277 to i1
+  br i1 %278, label %279, label %282
 
-; <label>:350:                                    ; preds = %347
-  %351 = load %struct.header_info*, %struct.header_info** %25, align 8
-  %352 = getelementptr inbounds %struct.header_info, %struct.header_info* %351, i32 0, i32 4
-  store i64 1, i64* %352, align 8
-  br label %359
+; <label>:279:                                    ; preds = %276
+  %280 = load %struct.header_info*, %struct.header_info** %25, align 8
+  %281 = getelementptr inbounds %struct.header_info, %struct.header_info* %280, i32 0, i32 4
+  store i64 1, i64* %281, align 8
+  br label %288
 
-; <label>:353:                                    ; preds = %347
-  %354 = load %struct.header_info*, %struct.header_info** %25, align 8
-  %355 = getelementptr inbounds %struct.header_info, %struct.header_info* %354, i32 0, i32 2
-  %356 = load i64, i64* %355, align 8
-  %357 = load %struct.header_info*, %struct.header_info** %25, align 8
-  %358 = getelementptr inbounds %struct.header_info, %struct.header_info* %357, i32 0, i32 4
-  store i64 %356, i64* %358, align 8
-  br label %359
+; <label>:282:                                    ; preds = %276
+  %283 = load %struct.header_info*, %struct.header_info** %25, align 8
+  %284 = getelementptr inbounds %struct.header_info, %struct.header_info* %283, i32 0, i32 2
+  %285 = load i64, i64* %284, align 8
+  %286 = load %struct.header_info*, %struct.header_info** %25, align 8
+  %287 = getelementptr inbounds %struct.header_info, %struct.header_info* %286, i32 0, i32 4
+  store i64 %285, i64* %287, align 8
+  br label %288
 
-; <label>:359:                                    ; preds = %353, %350
-  %360 = load %struct.header_info*, %struct.header_info** %25, align 8
-  %361 = getelementptr inbounds %struct.header_info, %struct.header_info* %360, i32 0, i32 5
-  store i64 4, i64* %361, align 8
+; <label>:288:                                    ; preds = %282, %279
+  %289 = load %struct.header_info*, %struct.header_info** %25, align 8
+  %290 = getelementptr inbounds %struct.header_info, %struct.header_info* %289, i32 0, i32 5
+  store i64 4, i64* %290, align 8
   store i32 0, i32* %23, align 4
-  br label %364
+  br label %293
 
-; <label>:362:                                    ; preds = %341, %297, %278, %235, %96, %62
+; <label>:291:                                    ; preds = %275, %254, %239, %199, %91, %62
   store i32 -1, i32* %23, align 4
-  br label %364
+  br label %293
                                                   ; No predecessors!
   store i32 -2, i32* %23, align 4
-  br label %364
+  br label %293
 
-; <label>:364:                                    ; preds = %363, %362, %359
-  %365 = load i32, i32* %23, align 4
-  ret i32 %365
+; <label>:293:                                    ; preds = %292, %291, %288
+  %294 = load i32, i32* %23, align 4
+  ret i32 %294
 }
 
 ; Function Attrs: noinline optnone uwtable
-define linkonce_odr dso_local i32 @sprintf(i8*, i8*, ...) #3 comdat {
+define linkonce_odr dso_local i32 @sprintf(i8*, i8*, ...) #4 comdat {
   %3 = alloca i8*, align 8
   %4 = alloca i8*, align 8
   %5 = alloca i32, align 4
@@ -1097,23 +828,12 @@ define linkonce_odr dso_local i32 @sprintf(i8*, i8*, ...) #3 comdat {
 
 declare dso_local i32 @strcmp(i8*, i8*) #5
 
-declare dso_local i8* @asctime(%struct.tm*) #5
-
-; Function Attrs: noinline optnone uwtable
-define internal %struct.tm* @"?gmtime@@YAPEAUtm@@QEB_J@Z"(i64*) #3 {
-  %2 = alloca i64*, align 8
-  store i64* %0, i64** %2, align 8
-  %3 = load i64*, i64** %2, align 8
-  %4 = call %struct.tm* @_gmtime64(i64* %3)
-  ret %struct.tm* %4
-}
-
 declare dso_local noalias i8* @calloc(i64, i64) #5
 
 declare dso_local void @free(i8*) #5
 
 ; Function Attrs: noinline optnone uwtable
-define linkonce_odr dso_local i32 @wprintf(i16*, ...) #3 comdat {
+define linkonce_odr dso_local i32 @wprintf(i16*, ...) #4 comdat {
   %2 = alloca i16*, align 8
   %3 = alloca i32, align 4
   %4 = alloca i8*, align 8
@@ -1134,40 +854,40 @@ define linkonce_odr dso_local i32 @wprintf(i16*, ...) #3 comdat {
 declare dso_local i32 @strncmp(i8*, i8*, i64) #5
 
 ; Function Attrs: alwaysinline uwtable
-define dso_local i32 @PARSE_TimeTagFileHeader(%struct.header_info*, i8*) #2 {
+define dso_local i32 @PARSE_TimeTagFileHeader(%struct.header_info*, i8*) #3 {
   %3 = alloca i8*, align 8
-  %4 = alloca i64, align 8
-  %5 = alloca i64, align 8
-  %6 = alloca i8*, align 8
-  %7 = alloca %struct.header_info*, align 8
+  %4 = alloca %struct.header_info*, align 8
+  %5 = alloca i8*, align 8
+  %6 = alloca i64, align 8
+  %7 = alloca i64, align 8
   %8 = alloca i8*, align 8
-  %9 = alloca i64, align 8
-  %10 = alloca i64, align 8
+  %9 = alloca %struct.header_info*, align 8
+  %10 = alloca i32, align 4
   %11 = alloca i8*, align 8
   %12 = alloca %struct.header_info*, align 8
-  %13 = alloca i8*, align 8
-  %14 = alloca i64, align 8
+  %13 = alloca %struct.header_info*, align 8
+  %14 = alloca i8*, align 8
   %15 = alloca i64, align 8
-  %16 = alloca i8*, align 8
-  %17 = alloca %struct.header_info*, align 8
-  %18 = alloca i8*, align 8
-  %19 = alloca i64, align 8
-  %20 = alloca i64, align 8
-  %21 = alloca i8*, align 8
-  %22 = alloca %struct.header_info*, align 8
-  %23 = alloca i32, align 4
-  %24 = alloca i8*, align 8
-  %25 = alloca %struct.header_info*, align 8
-  %26 = alloca %struct.TgHd, align 8
-  %27 = alloca i32, align 4
+  %16 = alloca i64, align 8
+  %17 = alloca i8*, align 8
+  %18 = alloca %struct.header_info*, align 8
+  %19 = alloca i32, align 4
+  %20 = alloca i8*, align 8
+  %21 = alloca %struct.header_info*, align 8
+  %22 = alloca [32 x i8], align 16
+  %23 = alloca i8*, align 8
+  %24 = alloca i64, align 8
+  %25 = alloca i64, align 8
+  %26 = alloca i8*, align 8
+  %27 = alloca %struct.header_info*, align 8
   %28 = alloca i8*, align 8
-  %29 = alloca i16*, align 8
-  %30 = alloca [8 x i8], align 1
-  %31 = alloca [40 x i8], align 16
-  %32 = alloca double, align 8
-  %33 = alloca double, align 8
+  %29 = alloca i64, align 8
+  %30 = alloca i64, align 8
+  %31 = alloca i8*, align 8
+  %32 = alloca %struct.header_info*, align 8
+  %33 = alloca i8*, align 8
   %34 = alloca i64, align 8
-  %35 = alloca i8, align 1
+  %35 = alloca i64, align 8
   %36 = alloca i8*, align 8
   %37 = alloca %struct.header_info*, align 8
   %38 = alloca i8*, align 8
@@ -1178,16 +898,16 @@ define dso_local i32 @PARSE_TimeTagFileHeader(%struct.header_info*, i8*) #2 {
   %43 = alloca i32, align 4
   %44 = alloca i8*, align 8
   %45 = alloca %struct.header_info*, align 8
-  %46 = alloca %struct.header_info*, align 8
-  %47 = alloca i8*, align 8
-  %48 = alloca i64, align 8
-  %49 = alloca i64, align 8
-  %50 = alloca i8*, align 8
-  %51 = alloca %struct.header_info*, align 8
-  %52 = alloca i32, align 4
-  %53 = alloca i8*, align 8
-  %54 = alloca %struct.header_info*, align 8
-  %55 = alloca [32 x i8], align 16
+  %46 = alloca %struct.TgHd, align 8
+  %47 = alloca i32, align 4
+  %48 = alloca i8*, align 8
+  %49 = alloca i16*, align 8
+  %50 = alloca [8 x i8], align 1
+  %51 = alloca [40 x i8], align 16
+  %52 = alloca double, align 8
+  %53 = alloca double, align 8
+  %54 = alloca i64, align 8
+  %55 = alloca i8, align 1
   %56 = alloca i8*, align 8
   %57 = alloca i64, align 8
   %58 = alloca i64, align 8
@@ -1235,894 +955,730 @@ define dso_local i32 @PARSE_TimeTagFileHeader(%struct.header_info*, i8*) #2 {
   %89 = load i64, i64* %57, align 8
   %90 = mul i64 %88, %89
   %91 = icmp ne i64 %90, 8
-  br i1 %91, label %92, label %95
+  br i1 %91, label %92, label %93
 
 ; <label>:92:                                     ; preds = %2
-  %93 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([41 x i8], [41 x i8]* @"??_C@_0CJ@FCCDKPDO@?6?5?$FLERROR?$FNFailed?5to?5read?5header?0?5@", i32 0, i32 0))
-  %94 = sext i32 %93 to i64
-  store i64 %94, i64* @"?order_gurantee@@3_JA", align 8
+  store i64 0, i64* @"?order_gurantee@@3_JA", align 8
   store i32 -2, i32* %61, align 4
-  br label %611
+  br label %506
 
-; <label>:95:                                     ; preds = %2
+; <label>:93:                                     ; preds = %2
   store i8 1, i8* %66, align 1
-  %96 = load %struct.header_info*, %struct.header_info** %63, align 8
-  %97 = getelementptr inbounds %struct.header_info, %struct.header_info* %96, i32 0, i32 6
-  %98 = load i64, i64* %97, align 8
-  %99 = icmp eq i64 %98, -1
-  br i1 %99, label %100, label %115
+  %94 = load %struct.header_info*, %struct.header_info** %63, align 8
+  %95 = getelementptr inbounds %struct.header_info, %struct.header_info* %94, i32 0, i32 6
+  %96 = load i64, i64* %95, align 8
+  %97 = icmp eq i64 %96, -1
+  br i1 %97, label %98, label %113
 
-; <label>:100:                                    ; preds = %95
-  %101 = getelementptr inbounds [8 x i8], [8 x i8]* %65, i32 0, i32 0
-  %102 = call i32 @strncmp(i8* %101, i8* getelementptr inbounds ([7 x i8], [7 x i8]* @"??_C@_06OMFAFKCA@PQTTTR?$AA@", i32 0, i32 0), i64 6)
-  %103 = icmp eq i32 %102, 0
-  br i1 %103, label %104, label %107
+; <label>:98:                                     ; preds = %93
+  %99 = getelementptr inbounds [8 x i8], [8 x i8]* %65, i32 0, i32 0
+  %100 = call i32 @strncmp(i8* %99, i8* getelementptr inbounds ([7 x i8], [7 x i8]* @"??_C@_06OMFAFKCA@PQTTTR?$AA@", i32 0, i32 0), i64 6)
+  %101 = icmp eq i32 %100, 0
+  br i1 %101, label %102, label %105
 
-; <label>:104:                                    ; preds = %100
-  %105 = load %struct.header_info*, %struct.header_info** %63, align 8
-  %106 = getelementptr inbounds %struct.header_info, %struct.header_info* %105, i32 0, i32 6
-  store i64 4, i64* %106, align 8
-  br label %107
+; <label>:102:                                    ; preds = %98
+  %103 = load %struct.header_info*, %struct.header_info** %63, align 8
+  %104 = getelementptr inbounds %struct.header_info, %struct.header_info* %103, i32 0, i32 6
+  store i64 4, i64* %104, align 8
+  br label %105
 
-; <label>:107:                                    ; preds = %104, %100
-  %108 = getelementptr inbounds [8 x i8], [8 x i8]* %65, i32 0, i32 0
-  %109 = call i32 @strncmp(i8* %108, i8* getelementptr inbounds ([5 x i8], [5 x i8]* @"??_C@_04CHFOFOOE@?$IH?$LD?$JB?z?$AA@", i32 0, i32 0), i64 4)
-  %110 = icmp eq i32 %109, 0
-  br i1 %110, label %111, label %114
+; <label>:105:                                    ; preds = %102, %98
+  %106 = getelementptr inbounds [8 x i8], [8 x i8]* %65, i32 0, i32 0
+  %107 = call i32 @strncmp(i8* %106, i8* getelementptr inbounds ([5 x i8], [5 x i8]* @"??_C@_04CHFOFOOE@?$IH?$LD?$JB?z?$AA@", i32 0, i32 0), i64 4)
+  %108 = icmp eq i32 %107, 0
+  br i1 %108, label %109, label %112
 
-; <label>:111:                                    ; preds = %107
-  %112 = load %struct.header_info*, %struct.header_info** %63, align 8
-  %113 = getelementptr inbounds %struct.header_info, %struct.header_info* %112, i32 0, i32 6
-  store i64 0, i64* %113, align 8
-  br label %114
+; <label>:109:                                    ; preds = %105
+  %110 = load %struct.header_info*, %struct.header_info** %63, align 8
+  %111 = getelementptr inbounds %struct.header_info, %struct.header_info* %110, i32 0, i32 6
+  store i64 0, i64* %111, align 8
+  br label %112
 
-; <label>:114:                                    ; preds = %111, %107
-  br label %115
+; <label>:112:                                    ; preds = %109, %105
+  br label %113
 
-; <label>:115:                                    ; preds = %114, %95
-  %116 = load %struct.header_info*, %struct.header_info** %63, align 8
-  %117 = getelementptr inbounds %struct.header_info, %struct.header_info* %116, i32 0, i32 6
-  %118 = load i64, i64* %117, align 8
-  switch i64 %118, label %604 [
-    i64 0, label %119
-    i64 1, label %170
-    i64 2, label %190
-    i64 3, label %241
-    i64 4, label %266
-    i64 -1, label %599
+; <label>:113:                                    ; preds = %112, %93
+  %114 = load %struct.header_info*, %struct.header_info** %63, align 8
+  %115 = getelementptr inbounds %struct.header_info, %struct.header_info* %114, i32 0, i32 6
+  %116 = load i64, i64* %115, align 8
+  switch i64 %116, label %499 [
+    i64 0, label %117
+    i64 1, label %160
+    i64 2, label %174
+    i64 3, label %217
+    i64 4, label %236
+    i64 -1, label %496
   ]
 
-; <label>:119:                                    ; preds = %115
-  %120 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([38 x i8], [38 x i8]* @"??_C@_0CG@HMLPIAGM@?6Header?5Parser?3?5quTAU_FORMAT_BIN@", i32 0, i32 0))
-  %121 = sext i32 %120 to i64
-  store i64 %121, i64* @"?order_gurantee@@3_JA", align 8
-  %122 = load i8*, i8** %62, align 8
-  %123 = load %struct.header_info*, %struct.header_info** %63, align 8
-  store i8* %122, i8** %53, align 8
-  store %struct.header_info* %123, %struct.header_info** %54, align 8
-  %124 = load i8*, i8** %53, align 8
-  %125 = bitcast [32 x i8]* %55 to i8*
-  %126 = load %struct.header_info*, %struct.header_info** %54, align 8
-  store i8* %124, i8** %47, align 8
-  store i64 32, i64* %48, align 8
-  store i64 1, i64* %49, align 8
-  store i8* %125, i8** %50, align 8
-  store %struct.header_info* %126, %struct.header_info** %51, align 8
-  %127 = load i8*, i8** %50, align 8
-  %128 = load i8*, i8** %47, align 8
-  %129 = load %struct.header_info*, %struct.header_info** %51, align 8
-  %130 = getelementptr inbounds %struct.header_info, %struct.header_info* %129, i32 0, i32 1
-  %131 = load i64, i64* %130, align 8
-  %132 = getelementptr inbounds i8, i8* %128, i64 %131
-  %133 = load i64, i64* %49, align 8
-  %134 = load i64, i64* %48, align 8
-  %135 = mul i64 %133, %134
-  call void @llvm.memcpy.p0i8.p0i8.i64(i8* align 1 %127, i8* align 1 %132, i64 %135, i1 false) #6
-  %136 = load i64, i64* %49, align 8
-  %137 = load i64, i64* %48, align 8
-  %138 = mul i64 %136, %137
-  %139 = load %struct.header_info*, %struct.header_info** %51, align 8
-  %140 = getelementptr inbounds %struct.header_info, %struct.header_info* %139, i32 0, i32 1
-  %141 = load i64, i64* %140, align 8
-  %142 = add i64 %141, %138
-  store i64 %142, i64* %140, align 8
-  %143 = load i64, i64* %49, align 8
-  %144 = load i64, i64* %48, align 8
-  %145 = mul i64 %143, %144
-  %146 = icmp ne i64 %145, 32
-  br i1 %146, label %147, label %150
+; <label>:117:                                    ; preds = %113
+  %118 = load i8*, i8** %62, align 8
+  %119 = load %struct.header_info*, %struct.header_info** %63, align 8
+  store i8* %118, i8** %20, align 8
+  store %struct.header_info* %119, %struct.header_info** %21, align 8
+  %120 = load i8*, i8** %20, align 8
+  %121 = bitcast [32 x i8]* %22 to i8*
+  %122 = load %struct.header_info*, %struct.header_info** %21, align 8
+  store i8* %120, i8** %14, align 8
+  store i64 32, i64* %15, align 8
+  store i64 1, i64* %16, align 8
+  store i8* %121, i8** %17, align 8
+  store %struct.header_info* %122, %struct.header_info** %18, align 8
+  %123 = load i8*, i8** %17, align 8
+  %124 = load i8*, i8** %14, align 8
+  %125 = load %struct.header_info*, %struct.header_info** %18, align 8
+  %126 = getelementptr inbounds %struct.header_info, %struct.header_info* %125, i32 0, i32 1
+  %127 = load i64, i64* %126, align 8
+  %128 = getelementptr inbounds i8, i8* %124, i64 %127
+  %129 = load i64, i64* %16, align 8
+  %130 = load i64, i64* %15, align 8
+  %131 = mul i64 %129, %130
+  call void @llvm.memcpy.p0i8.p0i8.i64(i8* align 1 %123, i8* align 1 %128, i64 %131, i1 false) #6
+  %132 = load i64, i64* %16, align 8
+  %133 = load i64, i64* %15, align 8
+  %134 = mul i64 %132, %133
+  %135 = load %struct.header_info*, %struct.header_info** %18, align 8
+  %136 = getelementptr inbounds %struct.header_info, %struct.header_info* %135, i32 0, i32 1
+  %137 = load i64, i64* %136, align 8
+  %138 = add i64 %137, %134
+  store i64 %138, i64* %136, align 8
+  %139 = load i64, i64* %16, align 8
+  %140 = load i64, i64* %15, align 8
+  %141 = mul i64 %139, %140
+  %142 = icmp ne i64 %141, 32
+  br i1 %142, label %143, label %144
 
-; <label>:147:                                    ; preds = %119
-  %148 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([45 x i8], [45 x i8]* @"??_C@_0CN@NEMBOFCA@?6?5?$FLERROR?$FNError?5when?5reading?5head@", i32 0, i32 0))
-  %149 = sext i32 %148 to i64
-  store i64 %149, i64* @"?order_gurantee@@3_JA", align 8
-  store i32 -1, i32* %52, align 4
-  br label %168
+; <label>:143:                                    ; preds = %117
+  store i64 0, i64* @"?order_gurantee@@3_JA", align 8
+  store i32 -1, i32* %19, align 4
+  br label %158
 
-; <label>:150:                                    ; preds = %119
-  %151 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([55 x i8], [55 x i8]* @"??_C@_0DH@LIKDKBGP@?6quTAU_FORMAT_BINARY?5file?5header@", i32 0, i32 0))
-  %152 = sext i32 %151 to i64
-  store i64 %152, i64* @"?order_gurantee@@3_JA", align 8
-  %153 = load %struct.header_info*, %struct.header_info** %54, align 8
-  %154 = getelementptr inbounds %struct.header_info, %struct.header_info* %153, i32 0, i32 6
-  store i64 0, i64* %154, align 8
-  %155 = load %struct.header_info*, %struct.header_info** %54, align 8
-  %156 = getelementptr inbounds %struct.header_info, %struct.header_info* %155, i32 0, i32 5
-  store i64 10, i64* %156, align 8
-  %157 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([50 x i8], [50 x i8]* @"??_C@_0DC@HCDGCALK@?6PARSER?9?$DORecordType?3?5quTAU_FORMA@", i32 0, i32 0))
-  %158 = sext i32 %157 to i64
-  store i64 %158, i64* @"?order_gurantee@@3_JA", align 8
-  %159 = load %struct.header_info*, %struct.header_info** %54, align 8
-  %160 = getelementptr inbounds %struct.header_info, %struct.header_info* %159, i32 0, i32 2
-  store i64 1, i64* %160, align 8
-  %161 = load %struct.header_info*, %struct.header_info** %54, align 8
-  %162 = getelementptr inbounds %struct.header_info, %struct.header_info* %161, i32 0, i32 2
-  %163 = load i64, i64* %162, align 8
-  %164 = load %struct.header_info*, %struct.header_info** %54, align 8
-  %165 = getelementptr inbounds %struct.header_info, %struct.header_info* %164, i32 0, i32 3
-  store i64 %163, i64* %165, align 8
-  %166 = load %struct.header_info*, %struct.header_info** %54, align 8
-  %167 = getelementptr inbounds %struct.header_info, %struct.header_info* %166, i32 0, i32 4
-  store i64 1249, i64* %167, align 8
-  store i32 0, i32* %52, align 4
-  br label %168
+; <label>:144:                                    ; preds = %117
+  %145 = load %struct.header_info*, %struct.header_info** %21, align 8
+  %146 = getelementptr inbounds %struct.header_info, %struct.header_info* %145, i32 0, i32 6
+  store i64 0, i64* %146, align 8
+  %147 = load %struct.header_info*, %struct.header_info** %21, align 8
+  %148 = getelementptr inbounds %struct.header_info, %struct.header_info* %147, i32 0, i32 5
+  store i64 10, i64* %148, align 8
+  %149 = load %struct.header_info*, %struct.header_info** %21, align 8
+  %150 = getelementptr inbounds %struct.header_info, %struct.header_info* %149, i32 0, i32 2
+  store i64 1, i64* %150, align 8
+  %151 = load %struct.header_info*, %struct.header_info** %21, align 8
+  %152 = getelementptr inbounds %struct.header_info, %struct.header_info* %151, i32 0, i32 2
+  %153 = load i64, i64* %152, align 8
+  %154 = load %struct.header_info*, %struct.header_info** %21, align 8
+  %155 = getelementptr inbounds %struct.header_info, %struct.header_info* %154, i32 0, i32 3
+  store i64 %153, i64* %155, align 8
+  %156 = load %struct.header_info*, %struct.header_info** %21, align 8
+  %157 = getelementptr inbounds %struct.header_info, %struct.header_info* %156, i32 0, i32 4
+  store i64 1249, i64* %157, align 8
+  store i32 0, i32* %19, align 4
+  br label %158
 
-; <label>:168:                                    ; preds = %147, %150
-  %169 = load i32, i32* %52, align 4
-  store i32 %169, i32* %64, align 4
-  br label %604
+; <label>:158:                                    ; preds = %143, %144
+  %159 = load i32, i32* %19, align 4
+  store i32 %159, i32* %64, align 4
+  br label %499
 
-; <label>:170:                                    ; preds = %115
-  %171 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([37 x i8], [37 x i8]* @"??_C@_0CF@NEHPJAOD@?6Header?5Parser?3?5Swebian?5Instrume@", i32 0, i32 0))
-  %172 = sext i32 %171 to i64
-  store i64 %172, i64* @"?order_gurantee@@3_JA", align 8
-  %173 = load %struct.header_info*, %struct.header_info** %63, align 8
-  store %struct.header_info* %173, %struct.header_info** %46, align 8
-  %174 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([48 x i8], [48 x i8]* @"??_C@_0DA@FODAHEFK@?6Swebian?5Instrument?5timetag?5file@", i32 0, i32 0))
-  %175 = sext i32 %174 to i64
-  store i64 %175, i64* @"?order_gurantee@@3_JA", align 8
-  %176 = load %struct.header_info*, %struct.header_info** %46, align 8
-  %177 = getelementptr inbounds %struct.header_info, %struct.header_info* %176, i32 0, i32 4
-  store i64 0, i64* %177, align 8
-  %178 = load %struct.header_info*, %struct.header_info** %46, align 8
-  %179 = getelementptr inbounds %struct.header_info, %struct.header_info* %178, i32 0, i32 2
-  store i64 1, i64* %179, align 8
-  %180 = load %struct.header_info*, %struct.header_info** %46, align 8
-  %181 = getelementptr inbounds %struct.header_info, %struct.header_info* %180, i32 0, i32 3
-  store i64 1, i64* %181, align 8
-  %182 = load %struct.header_info*, %struct.header_info** %46, align 8
-  %183 = getelementptr inbounds %struct.header_info, %struct.header_info* %182, i32 0, i32 6
-  store i64 1, i64* %183, align 8
-  %184 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([48 x i8], [48 x i8]* @"??_C@_0DA@NCKJEHJH@?6PARSER?9?$DORecordType?3?5SwebianInst@", i32 0, i32 0))
-  %185 = sext i32 %184 to i64
-  store i64 %185, i64* @"?order_gurantee@@3_JA", align 8
-  %186 = load %struct.header_info*, %struct.header_info** %46, align 8
-  %187 = getelementptr inbounds %struct.header_info, %struct.header_info* %186, i32 0, i32 5
-  store i64 16, i64* %187, align 8
-  %188 = load %struct.header_info*, %struct.header_info** %46, align 8
-  %189 = getelementptr inbounds %struct.header_info, %struct.header_info* %188, i32 0, i32 1
-  store i64 0, i64* %189, align 8
+; <label>:160:                                    ; preds = %113
+  %161 = load %struct.header_info*, %struct.header_info** %63, align 8
+  store %struct.header_info* %161, %struct.header_info** %13, align 8
+  %162 = load %struct.header_info*, %struct.header_info** %13, align 8
+  %163 = getelementptr inbounds %struct.header_info, %struct.header_info* %162, i32 0, i32 4
+  store i64 0, i64* %163, align 8
+  %164 = load %struct.header_info*, %struct.header_info** %13, align 8
+  %165 = getelementptr inbounds %struct.header_info, %struct.header_info* %164, i32 0, i32 2
+  store i64 1, i64* %165, align 8
+  %166 = load %struct.header_info*, %struct.header_info** %13, align 8
+  %167 = getelementptr inbounds %struct.header_info, %struct.header_info* %166, i32 0, i32 3
+  store i64 1, i64* %167, align 8
+  %168 = load %struct.header_info*, %struct.header_info** %13, align 8
+  %169 = getelementptr inbounds %struct.header_info, %struct.header_info* %168, i32 0, i32 6
+  store i64 1, i64* %169, align 8
+  %170 = load %struct.header_info*, %struct.header_info** %13, align 8
+  %171 = getelementptr inbounds %struct.header_info, %struct.header_info* %170, i32 0, i32 5
+  store i64 16, i64* %171, align 8
+  %172 = load %struct.header_info*, %struct.header_info** %13, align 8
+  %173 = getelementptr inbounds %struct.header_info, %struct.header_info* %172, i32 0, i32 1
+  store i64 0, i64* %173, align 8
   store i32 0, i32* %64, align 4
-  br label %604
+  br label %499
 
-; <label>:190:                                    ; preds = %115
-  %191 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([42 x i8], [42 x i8]* @"??_C@_0CK@FCNMCNDN@?6Header?5Parser?3?5quTAU_FORMAT_COM@", i32 0, i32 0))
-  %192 = sext i32 %191 to i64
-  store i64 %192, i64* @"?order_gurantee@@3_JA", align 8
-  %193 = load i8*, i8** %62, align 8
-  %194 = load %struct.header_info*, %struct.header_info** %63, align 8
-  store i8* %193, i8** %44, align 8
-  store %struct.header_info* %194, %struct.header_info** %45, align 8
-  %195 = load i8*, i8** %44, align 8
-  %196 = bitcast [32 x i8]* %55 to i8*
-  %197 = load %struct.header_info*, %struct.header_info** %45, align 8
-  store i8* %195, i8** %38, align 8
-  store i64 32, i64* %39, align 8
+; <label>:174:                                    ; preds = %113
+  %175 = load i8*, i8** %62, align 8
+  %176 = load %struct.header_info*, %struct.header_info** %63, align 8
+  store i8* %175, i8** %11, align 8
+  store %struct.header_info* %176, %struct.header_info** %12, align 8
+  %177 = load i8*, i8** %11, align 8
+  %178 = bitcast [32 x i8]* %22 to i8*
+  %179 = load %struct.header_info*, %struct.header_info** %12, align 8
+  store i8* %177, i8** %5, align 8
+  store i64 32, i64* %6, align 8
+  store i64 1, i64* %7, align 8
+  store i8* %178, i8** %8, align 8
+  store %struct.header_info* %179, %struct.header_info** %9, align 8
+  %180 = load i8*, i8** %8, align 8
+  %181 = load i8*, i8** %5, align 8
+  %182 = load %struct.header_info*, %struct.header_info** %9, align 8
+  %183 = getelementptr inbounds %struct.header_info, %struct.header_info* %182, i32 0, i32 1
+  %184 = load i64, i64* %183, align 8
+  %185 = getelementptr inbounds i8, i8* %181, i64 %184
+  %186 = load i64, i64* %7, align 8
+  %187 = load i64, i64* %6, align 8
+  %188 = mul i64 %186, %187
+  call void @llvm.memcpy.p0i8.p0i8.i64(i8* align 1 %180, i8* align 1 %185, i64 %188, i1 false) #6
+  %189 = load i64, i64* %7, align 8
+  %190 = load i64, i64* %6, align 8
+  %191 = mul i64 %189, %190
+  %192 = load %struct.header_info*, %struct.header_info** %9, align 8
+  %193 = getelementptr inbounds %struct.header_info, %struct.header_info* %192, i32 0, i32 1
+  %194 = load i64, i64* %193, align 8
+  %195 = add i64 %194, %191
+  store i64 %195, i64* %193, align 8
+  %196 = load i64, i64* %7, align 8
+  %197 = load i64, i64* %6, align 8
+  %198 = mul i64 %196, %197
+  %199 = icmp ne i64 %198, 32
+  br i1 %199, label %200, label %201
+
+; <label>:200:                                    ; preds = %174
+  store i64 0, i64* @"?order_gurantee@@3_JA", align 8
+  store i32 -1, i32* %10, align 4
+  br label %215
+
+; <label>:201:                                    ; preds = %174
+  %202 = load %struct.header_info*, %struct.header_info** %12, align 8
+  %203 = getelementptr inbounds %struct.header_info, %struct.header_info* %202, i32 0, i32 6
+  store i64 0, i64* %203, align 8
+  %204 = load %struct.header_info*, %struct.header_info** %12, align 8
+  %205 = getelementptr inbounds %struct.header_info, %struct.header_info* %204, i32 0, i32 5
+  store i64 5, i64* %205, align 8
+  %206 = load %struct.header_info*, %struct.header_info** %12, align 8
+  %207 = getelementptr inbounds %struct.header_info, %struct.header_info* %206, i32 0, i32 2
+  store i64 1, i64* %207, align 8
+  %208 = load %struct.header_info*, %struct.header_info** %12, align 8
+  %209 = getelementptr inbounds %struct.header_info, %struct.header_info* %208, i32 0, i32 2
+  %210 = load i64, i64* %209, align 8
+  %211 = load %struct.header_info*, %struct.header_info** %12, align 8
+  %212 = getelementptr inbounds %struct.header_info, %struct.header_info* %211, i32 0, i32 3
+  store i64 %210, i64* %212, align 8
+  %213 = load %struct.header_info*, %struct.header_info** %12, align 8
+  %214 = getelementptr inbounds %struct.header_info, %struct.header_info* %213, i32 0, i32 4
+  store i64 1249, i64* %214, align 8
+  store i32 0, i32* %10, align 4
+  br label %215
+
+; <label>:215:                                    ; preds = %200, %201
+  %216 = load i32, i32* %10, align 4
+  store i32 %216, i32* %64, align 4
+  br label %499
+
+; <label>:217:                                    ; preds = %113
+  %218 = getelementptr inbounds [8 x i8], [8 x i8]* %65, i32 0, i32 0
+  %219 = load %struct.header_info*, %struct.header_info** %63, align 8
+  store i8* %218, i8** %3, align 8
+  store %struct.header_info* %219, %struct.header_info** %4, align 8
+  %220 = load i8*, i8** %3, align 8
+  %221 = bitcast i8* %220 to i16*
+  %222 = load i16, i16* %221, align 2
+  %223 = zext i16 %222 to i64
+  %224 = load %struct.header_info*, %struct.header_info** %4, align 8
+  %225 = getelementptr inbounds %struct.header_info, %struct.header_info* %224, i32 0, i32 4
+  store i64 %223, i64* %225, align 8
+  %226 = load %struct.header_info*, %struct.header_info** %4, align 8
+  %227 = getelementptr inbounds %struct.header_info, %struct.header_info* %226, i32 0, i32 3
+  store i64 1, i64* %227, align 8
+  %228 = load %struct.header_info*, %struct.header_info** %4, align 8
+  %229 = getelementptr inbounds %struct.header_info, %struct.header_info* %228, i32 0, i32 2
+  store i64 0, i64* %229, align 8
+  %230 = load %struct.header_info*, %struct.header_info** %4, align 8
+  %231 = getelementptr inbounds %struct.header_info, %struct.header_info* %230, i32 0, i32 6
+  store i64 3, i64* %231, align 8
+  %232 = load %struct.header_info*, %struct.header_info** %4, align 8
+  %233 = getelementptr inbounds %struct.header_info, %struct.header_info* %232, i32 0, i32 5
+  store i64 4, i64* %233, align 8
+  %234 = load %struct.header_info*, %struct.header_info** %4, align 8
+  %235 = getelementptr inbounds %struct.header_info, %struct.header_info* %234, i32 0, i32 1
+  store i64 4, i64* %235, align 8
+  store i32 0, i32* %64, align 4
+  br label %499
+
+; <label>:236:                                    ; preds = %113
+  %237 = load i8*, i8** %62, align 8
+  %238 = load %struct.header_info*, %struct.header_info** %63, align 8
+  store i8* %237, i8** %44, align 8
+  store %struct.header_info* %238, %struct.header_info** %45, align 8
+  %239 = load i8*, i8** %44, align 8
+  %240 = bitcast [8 x i8]* %50 to i8*
+  %241 = load %struct.header_info*, %struct.header_info** %45, align 8
+  store i8* %239, i8** %38, align 8
+  store i64 8, i64* %39, align 8
   store i64 1, i64* %40, align 8
-  store i8* %196, i8** %41, align 8
-  store %struct.header_info* %197, %struct.header_info** %42, align 8
-  %198 = load i8*, i8** %41, align 8
-  %199 = load i8*, i8** %38, align 8
-  %200 = load %struct.header_info*, %struct.header_info** %42, align 8
-  %201 = getelementptr inbounds %struct.header_info, %struct.header_info* %200, i32 0, i32 1
-  %202 = load i64, i64* %201, align 8
-  %203 = getelementptr inbounds i8, i8* %199, i64 %202
-  %204 = load i64, i64* %40, align 8
-  %205 = load i64, i64* %39, align 8
-  %206 = mul i64 %204, %205
-  call void @llvm.memcpy.p0i8.p0i8.i64(i8* align 1 %198, i8* align 1 %203, i64 %206, i1 false) #6
-  %207 = load i64, i64* %40, align 8
-  %208 = load i64, i64* %39, align 8
-  %209 = mul i64 %207, %208
-  %210 = load %struct.header_info*, %struct.header_info** %42, align 8
-  %211 = getelementptr inbounds %struct.header_info, %struct.header_info* %210, i32 0, i32 1
-  %212 = load i64, i64* %211, align 8
-  %213 = add i64 %212, %209
-  store i64 %213, i64* %211, align 8
-  %214 = load i64, i64* %40, align 8
-  %215 = load i64, i64* %39, align 8
-  %216 = mul i64 %214, %215
-  %217 = icmp ne i64 %216, 32
-  br i1 %217, label %218, label %221
+  store i8* %240, i8** %41, align 8
+  store %struct.header_info* %241, %struct.header_info** %42, align 8
+  %242 = load i8*, i8** %41, align 8
+  %243 = load i8*, i8** %38, align 8
+  %244 = load %struct.header_info*, %struct.header_info** %42, align 8
+  %245 = getelementptr inbounds %struct.header_info, %struct.header_info* %244, i32 0, i32 1
+  %246 = load i64, i64* %245, align 8
+  %247 = getelementptr inbounds i8, i8* %243, i64 %246
+  %248 = load i64, i64* %40, align 8
+  %249 = load i64, i64* %39, align 8
+  %250 = mul i64 %248, %249
+  call void @llvm.memcpy.p0i8.p0i8.i64(i8* align 1 %242, i8* align 1 %247, i64 %250, i1 false) #6
+  %251 = load i64, i64* %40, align 8
+  %252 = load i64, i64* %39, align 8
+  %253 = mul i64 %251, %252
+  %254 = load %struct.header_info*, %struct.header_info** %42, align 8
+  %255 = getelementptr inbounds %struct.header_info, %struct.header_info* %254, i32 0, i32 1
+  %256 = load i64, i64* %255, align 8
+  %257 = add i64 %256, %253
+  store i64 %257, i64* %255, align 8
+  %258 = load i64, i64* %40, align 8
+  %259 = load i64, i64* %39, align 8
+  %260 = mul i64 %258, %259
+  %261 = trunc i64 %260 to i32
+  store i32 %261, i32* %47, align 4
+  %262 = load i32, i32* %47, align 4
+  %263 = sext i32 %262 to i64
+  %264 = icmp ne i64 %263, 8
+  br i1 %264, label %265, label %266
 
-; <label>:218:                                    ; preds = %190
-  %219 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([45 x i8], [45 x i8]* @"??_C@_0CN@NEMBOFCA@?6?5?$FLERROR?$FNError?5when?5reading?5head@", i32 0, i32 0))
-  %220 = sext i32 %219 to i64
-  store i64 %220, i64* @"?order_gurantee@@3_JA", align 8
-  store i32 -1, i32* %43, align 4
-  br label %239
+; <label>:265:                                    ; preds = %236
+  store i64 0, i64* @"?order_gurantee@@3_JA", align 8
+  br label %493
 
-; <label>:221:                                    ; preds = %190
-  %222 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([59 x i8], [59 x i8]* @"??_C@_0DL@ILPAIDLG@?6quTAU_FORMAT_COMPRESSED?5file?5he@", i32 0, i32 0))
-  %223 = sext i32 %222 to i64
-  store i64 %223, i64* @"?order_gurantee@@3_JA", align 8
-  %224 = load %struct.header_info*, %struct.header_info** %45, align 8
-  %225 = getelementptr inbounds %struct.header_info, %struct.header_info* %224, i32 0, i32 6
-  store i64 0, i64* %225, align 8
-  %226 = load %struct.header_info*, %struct.header_info** %45, align 8
-  %227 = getelementptr inbounds %struct.header_info, %struct.header_info* %226, i32 0, i32 5
-  store i64 5, i64* %227, align 8
-  %228 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([53 x i8], [53 x i8]* @"??_C@_0DF@LMNGPACF@?6PARSER?9?$DORecordType?3?5quTAU_FORMA@", i32 0, i32 0))
-  %229 = sext i32 %228 to i64
-  store i64 %229, i64* @"?order_gurantee@@3_JA", align 8
-  %230 = load %struct.header_info*, %struct.header_info** %45, align 8
-  %231 = getelementptr inbounds %struct.header_info, %struct.header_info* %230, i32 0, i32 2
-  store i64 1, i64* %231, align 8
-  %232 = load %struct.header_info*, %struct.header_info** %45, align 8
-  %233 = getelementptr inbounds %struct.header_info, %struct.header_info* %232, i32 0, i32 2
-  %234 = load i64, i64* %233, align 8
-  %235 = load %struct.header_info*, %struct.header_info** %45, align 8
-  %236 = getelementptr inbounds %struct.header_info, %struct.header_info* %235, i32 0, i32 3
-  store i64 %234, i64* %236, align 8
-  %237 = load %struct.header_info*, %struct.header_info** %45, align 8
-  %238 = getelementptr inbounds %struct.header_info, %struct.header_info* %237, i32 0, i32 4
-  store i64 1249, i64* %238, align 8
-  store i32 0, i32* %43, align 4
-  br label %239
+; <label>:266:                                    ; preds = %236
+  br label %267
 
-; <label>:239:                                    ; preds = %218, %221
-  %240 = load i32, i32* %43, align 4
-  store i32 %240, i32* %64, align 4
-  br label %604
-
-; <label>:241:                                    ; preds = %115
-  %242 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([32 x i8], [32 x i8]* @"??_C@_0CA@KMEBJAMG@?6Header?5Parser?3?5bh_spc_4bytes?5?6?$AA@", i32 0, i32 0))
-  %243 = sext i32 %242 to i64
-  store i64 %243, i64* @"?order_gurantee@@3_JA", align 8
-  %244 = getelementptr inbounds [8 x i8], [8 x i8]* %65, i32 0, i32 0
-  %245 = load %struct.header_info*, %struct.header_info** %63, align 8
-  store i8* %244, i8** %36, align 8
-  store %struct.header_info* %245, %struct.header_info** %37, align 8
-  %246 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([64 x i8], [64 x i8]* @"??_C@_0EA@FDLFOLNG@?6Becker?5?$CG?5Hickl?5SPC?9134?1144?1154?1@", i32 0, i32 0))
-  %247 = sext i32 %246 to i64
-  store i64 %247, i64* @"?order_gurantee@@3_JA", align 8
-  %248 = load i8*, i8** %36, align 8
-  %249 = bitcast i8* %248 to i16*
-  %250 = load i16, i16* %249, align 2
-  %251 = zext i16 %250 to i64
-  %252 = load %struct.header_info*, %struct.header_info** %37, align 8
-  %253 = getelementptr inbounds %struct.header_info, %struct.header_info* %252, i32 0, i32 4
-  store i64 %251, i64* %253, align 8
-  %254 = load %struct.header_info*, %struct.header_info** %37, align 8
-  %255 = getelementptr inbounds %struct.header_info, %struct.header_info* %254, i32 0, i32 3
-  store i64 1, i64* %255, align 8
-  %256 = load %struct.header_info*, %struct.header_info** %37, align 8
-  %257 = getelementptr inbounds %struct.header_info, %struct.header_info* %256, i32 0, i32 2
-  store i64 0, i64* %257, align 8
-  %258 = load %struct.header_info*, %struct.header_info** %37, align 8
-  %259 = getelementptr inbounds %struct.header_info, %struct.header_info* %258, i32 0, i32 6
-  store i64 3, i64* %259, align 8
-  %260 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([35 x i8], [35 x i8]* @"??_C@_0CD@BELPJBEF@?6PARSER?9?$DORecordType?3?5bh_spc_4byt@", i32 0, i32 0))
-  %261 = sext i32 %260 to i64
-  store i64 %261, i64* @"?order_gurantee@@3_JA", align 8
-  %262 = load %struct.header_info*, %struct.header_info** %37, align 8
-  %263 = getelementptr inbounds %struct.header_info, %struct.header_info* %262, i32 0, i32 5
-  store i64 4, i64* %263, align 8
-  %264 = load %struct.header_info*, %struct.header_info** %37, align 8
-  %265 = getelementptr inbounds %struct.header_info, %struct.header_info* %264, i32 0, i32 1
-  store i64 4, i64* %265, align 8
-  store i32 0, i32* %64, align 4
-  br label %604
-
-; <label>:266:                                    ; preds = %115
-  %267 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([28 x i8], [28 x i8]* @"??_C@_0BM@LJCIIAMF@?6Header?5Parser?3?5PicoQuant?5?6?$AA@", i32 0, i32 0))
-  %268 = sext i32 %267 to i64
-  store i64 %268, i64* @"?order_gurantee@@3_JA", align 8
-  %269 = load i8*, i8** %62, align 8
-  %270 = load %struct.header_info*, %struct.header_info** %63, align 8
-  store i8* %269, i8** %24, align 8
-  store %struct.header_info* %270, %struct.header_info** %25, align 8
-  %271 = load i8*, i8** %24, align 8
-  %272 = bitcast [8 x i8]* %30 to i8*
-  %273 = load %struct.header_info*, %struct.header_info** %25, align 8
-  store i8* %271, i8** %18, align 8
-  store i64 8, i64* %19, align 8
-  store i64 1, i64* %20, align 8
-  store i8* %272, i8** %21, align 8
-  store %struct.header_info* %273, %struct.header_info** %22, align 8
-  %274 = load i8*, i8** %21, align 8
-  %275 = load i8*, i8** %18, align 8
-  %276 = load %struct.header_info*, %struct.header_info** %22, align 8
-  %277 = getelementptr inbounds %struct.header_info, %struct.header_info* %276, i32 0, i32 1
-  %278 = load i64, i64* %277, align 8
-  %279 = getelementptr inbounds i8, i8* %275, i64 %278
-  %280 = load i64, i64* %20, align 8
-  %281 = load i64, i64* %19, align 8
+; <label>:267:                                    ; preds = %458, %266
+  %268 = load i8*, i8** %44, align 8
+  %269 = bitcast %struct.TgHd* %46 to i8*
+  %270 = load %struct.header_info*, %struct.header_info** %45, align 8
+  store i8* %268, i8** %33, align 8
+  store i64 48, i64* %34, align 8
+  store i64 1, i64* %35, align 8
+  store i8* %269, i8** %36, align 8
+  store %struct.header_info* %270, %struct.header_info** %37, align 8
+  %271 = load i8*, i8** %36, align 8
+  %272 = load i8*, i8** %33, align 8
+  %273 = load %struct.header_info*, %struct.header_info** %37, align 8
+  %274 = getelementptr inbounds %struct.header_info, %struct.header_info* %273, i32 0, i32 1
+  %275 = load i64, i64* %274, align 8
+  %276 = getelementptr inbounds i8, i8* %272, i64 %275
+  %277 = load i64, i64* %35, align 8
+  %278 = load i64, i64* %34, align 8
+  %279 = mul i64 %277, %278
+  call void @llvm.memcpy.p0i8.p0i8.i64(i8* align 1 %271, i8* align 1 %276, i64 %279, i1 false) #6
+  %280 = load i64, i64* %35, align 8
+  %281 = load i64, i64* %34, align 8
   %282 = mul i64 %280, %281
-  call void @llvm.memcpy.p0i8.p0i8.i64(i8* align 1 %274, i8* align 1 %279, i64 %282, i1 false) #6
-  %283 = load i64, i64* %20, align 8
-  %284 = load i64, i64* %19, align 8
-  %285 = mul i64 %283, %284
-  %286 = load %struct.header_info*, %struct.header_info** %22, align 8
-  %287 = getelementptr inbounds %struct.header_info, %struct.header_info* %286, i32 0, i32 1
-  %288 = load i64, i64* %287, align 8
-  %289 = add i64 %288, %285
-  store i64 %289, i64* %287, align 8
-  %290 = load i64, i64* %20, align 8
-  %291 = load i64, i64* %19, align 8
-  %292 = mul i64 %290, %291
-  %293 = trunc i64 %292 to i32
-  store i32 %293, i32* %27, align 4
-  %294 = load i32, i32* %27, align 4
-  %295 = sext i32 %294 to i64
-  %296 = icmp ne i64 %295, 8
-  br i1 %296, label %297, label %300
+  %283 = load %struct.header_info*, %struct.header_info** %37, align 8
+  %284 = getelementptr inbounds %struct.header_info, %struct.header_info* %283, i32 0, i32 1
+  %285 = load i64, i64* %284, align 8
+  %286 = add i64 %285, %282
+  store i64 %286, i64* %284, align 8
+  %287 = load i64, i64* %35, align 8
+  %288 = load i64, i64* %34, align 8
+  %289 = mul i64 %287, %288
+  %290 = trunc i64 %289 to i32
+  store i32 %290, i32* %47, align 4
+  %291 = load i32, i32* %47, align 4
+  %292 = sext i32 %291 to i64
+  %293 = icmp ne i64 %292, 48
+  br i1 %293, label %294, label %295
 
-; <label>:297:                                    ; preds = %266
-  %298 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([41 x i8], [41 x i8]* @"??_C@_0CJ@BKHAGGLC@?6?5?$FLERROR?$FN?6error?5reading?5header?0?5@", i32 0, i32 0))
-  %299 = sext i32 %298 to i64
-  store i64 %299, i64* @"?order_gurantee@@3_JA", align 8
-  br label %596
+; <label>:294:                                    ; preds = %267
+  br label %493
 
-; <label>:300:                                    ; preds = %266
-  %301 = getelementptr inbounds [8 x i8], [8 x i8]* %30, i32 0, i32 0
-  %302 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @"??_C@_0BH@PAEBLGPJ@?6PTU?5file?5Header?3?5?$CFs?5?6?$AA@", i32 0, i32 0), i8* %301)
-  %303 = sext i32 %302 to i64
-  store i64 %303, i64* @"?order_gurantee@@3_JA", align 8
-  br label %304
+; <label>:295:                                    ; preds = %267
+  %296 = getelementptr inbounds [40 x i8], [40 x i8]* %51, i32 0, i32 0
+  %297 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %46, i32 0, i32 0
+  %298 = getelementptr inbounds [32 x i8], [32 x i8]* %297, i32 0, i32 0
+  call void @llvm.memcpy.p0i8.p0i8.i64(i8* align 16 %296, i8* align 8 %298, i64 40, i1 false)
+  %299 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %46, i32 0, i32 1
+  %300 = load i32, i32* %299, align 8
+  %301 = icmp sgt i32 %300, -1
+  br i1 %301, label %302, label %309
 
-; <label>:304:                                    ; preds = %534, %300
-  %305 = load i8*, i8** %24, align 8
-  %306 = bitcast %struct.TgHd* %26 to i8*
-  %307 = load %struct.header_info*, %struct.header_info** %25, align 8
-  store i8* %305, i8** %13, align 8
-  store i64 48, i64* %14, align 8
-  store i64 1, i64* %15, align 8
-  store i8* %306, i8** %16, align 8
-  store %struct.header_info* %307, %struct.header_info** %17, align 8
-  %308 = load i8*, i8** %16, align 8
-  %309 = load i8*, i8** %13, align 8
-  %310 = load %struct.header_info*, %struct.header_info** %17, align 8
-  %311 = getelementptr inbounds %struct.header_info, %struct.header_info* %310, i32 0, i32 1
-  %312 = load i64, i64* %311, align 8
-  %313 = getelementptr inbounds i8, i8* %309, i64 %312
-  %314 = load i64, i64* %15, align 8
-  %315 = load i64, i64* %14, align 8
-  %316 = mul i64 %314, %315
-  call void @llvm.memcpy.p0i8.p0i8.i64(i8* align 1 %308, i8* align 1 %313, i64 %316, i1 false) #6
-  %317 = load i64, i64* %15, align 8
-  %318 = load i64, i64* %14, align 8
-  %319 = mul i64 %317, %318
-  %320 = load %struct.header_info*, %struct.header_info** %17, align 8
-  %321 = getelementptr inbounds %struct.header_info, %struct.header_info* %320, i32 0, i32 1
-  %322 = load i64, i64* %321, align 8
-  %323 = add i64 %322, %319
-  store i64 %323, i64* %321, align 8
-  %324 = load i64, i64* %15, align 8
-  %325 = load i64, i64* %14, align 8
-  %326 = mul i64 %324, %325
-  %327 = trunc i64 %326 to i32
-  store i32 %327, i32* %27, align 4
-  %328 = load i32, i32* %27, align 4
-  %329 = sext i32 %328 to i64
-  %330 = icmp ne i64 %329, 48
-  br i1 %330, label %331, label %334
+; <label>:302:                                    ; preds = %295
+  %303 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %46, i32 0, i32 1
+  %304 = load i32, i32* %303, align 8
+  %305 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %46, i32 0, i32 0
+  %306 = getelementptr inbounds [32 x i8], [32 x i8]* %305, i32 0, i32 0
+  %307 = getelementptr inbounds [40 x i8], [40 x i8]* %51, i32 0, i32 0
+  %308 = call i32 (i8*, i8*, ...) @sprintf(i8* %307, i8* getelementptr inbounds ([7 x i8], [7 x i8]* @"??_C@_06BPGFIOAL@?$CFs?$CI?$CFd?$CJ?$AA@", i32 0, i32 0), i8* %306, i32 %304)
+  br label %309
 
-; <label>:331:                                    ; preds = %304
-  %332 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([19 x i8], [19 x i8]* @"??_C@_0BD@GFPKCHLP@?6?6Incomplete?5File?4?$AA@", i32 0, i32 0))
-  %333 = sext i32 %332 to i64
-  store i64 %333, i64* @"?order_gurantee@@3_JA", align 8
-  br label %596
-
-; <label>:334:                                    ; preds = %304
-  %335 = getelementptr inbounds [40 x i8], [40 x i8]* %31, i32 0, i32 0
-  %336 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 0
-  %337 = getelementptr inbounds [32 x i8], [32 x i8]* %336, i32 0, i32 0
-  call void @llvm.memcpy.p0i8.p0i8.i64(i8* align 16 %335, i8* align 8 %337, i64 40, i1 false)
-  %338 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 1
-  %339 = load i32, i32* %338, align 8
-  %340 = icmp sgt i32 %339, -1
-  br i1 %340, label %341, label %348
-
-; <label>:341:                                    ; preds = %334
-  %342 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 1
-  %343 = load i32, i32* %342, align 8
-  %344 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 0
-  %345 = getelementptr inbounds [32 x i8], [32 x i8]* %344, i32 0, i32 0
-  %346 = getelementptr inbounds [40 x i8], [40 x i8]* %31, i32 0, i32 0
-  %347 = call i32 (i8*, i8*, ...) @sprintf(i8* %346, i8* getelementptr inbounds ([7 x i8], [7 x i8]* @"??_C@_06BPGFIOAL@?$CFs?$CI?$CFd?$CJ?$AA@", i32 0, i32 0), i8* %345, i32 %343)
-  br label %348
-
-; <label>:348:                                    ; preds = %341, %334
-  %349 = getelementptr inbounds [40 x i8], [40 x i8]* %31, i32 0, i32 0
-  %350 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([7 x i8], [7 x i8]* @"??_C@_06PHODKAKM@?6?$CF?940s?$AA@", i32 0, i32 0), i8* %349)
-  %351 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 2
-  %352 = load i32, i32* %351, align 4
-  switch i32 %352, label %532 [
-    i32 -65528, label %353
-    i32 8, label %355
-    i32 268435464, label %362
-    i32 285212680, label %376
-    i32 301989896, label %380
-    i32 536870920, label %384
-    i32 537001983, label %417
-    i32 553648136, label %428
-    i32 1073872895, label %436
-    i32 1073938431, label %477
-    i32 -1, label %522
+; <label>:309:                                    ; preds = %302, %295
+  %310 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %46, i32 0, i32 2
+  %311 = load i32, i32* %310, align 4
+  switch i32 %311, label %457 [
+    i32 -65528, label %312
+    i32 8, label %313
+    i32 268435464, label %314
+    i32 285212680, label %325
+    i32 301989896, label %326
+    i32 536870920, label %327
+    i32 537001983, label %356
+    i32 553648136, label %363
+    i32 1073872895, label %368
+    i32 1073938431, label %406
+    i32 -1, label %450
   ]
 
-; <label>:353:                                    ; preds = %348
-  %354 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([12 x i8], [12 x i8]* @"??_C@_0M@HECCAEGL@?$DMempty?5Tag?$DO?$AA@", i32 0, i32 0))
-  br label %534
+; <label>:312:                                    ; preds = %309
+  br label %458
 
-; <label>:355:                                    ; preds = %348
-  %356 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 3
-  %357 = load i64, i64* %356, align 8
-  %358 = icmp ne i64 %357, 0
-  %359 = zext i1 %358 to i64
-  %360 = select i1 %358, i8* getelementptr inbounds ([5 x i8], [5 x i8]* @"??_C@_04HPMIDMKH@True?$AA@", i32 0, i32 0), i8* getelementptr inbounds ([6 x i8], [6 x i8]* @"??_C@_05MKDOIIA@False?$AA@", i32 0, i32 0)
-  %361 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @"??_C@_02DKCKIIND@?$CFs?$AA@", i32 0, i32 0), i8* %360)
-  br label %534
+; <label>:313:                                    ; preds = %309
+  br label %458
 
-; <label>:362:                                    ; preds = %348
-  %363 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 3
-  %364 = load i64, i64* %363, align 8
-  %365 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([5 x i8], [5 x i8]* @"??_C@_04BFAHMMK@?$CFlld?$AA@", i32 0, i32 0), i64 %364)
-  %366 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 0
-  %367 = getelementptr inbounds [32 x i8], [32 x i8]* %366, i32 0, i32 0
-  %368 = call i32 @strcmp(i8* %367, i8* getelementptr inbounds ([27 x i8], [27 x i8]* @"??_C@_0BL@NBAMDLKF@TTResultFormat_TTTRRecType?$AA@", i32 0, i32 0))
-  %369 = icmp eq i32 %368, 0
-  br i1 %369, label %370, label %375
+; <label>:314:                                    ; preds = %309
+  %315 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %46, i32 0, i32 0
+  %316 = getelementptr inbounds [32 x i8], [32 x i8]* %315, i32 0, i32 0
+  %317 = call i32 @strcmp(i8* %316, i8* getelementptr inbounds ([27 x i8], [27 x i8]* @"??_C@_0BL@NBAMDLKF@TTResultFormat_TTTRRecType?$AA@", i32 0, i32 0))
+  %318 = icmp eq i32 %317, 0
+  br i1 %318, label %319, label %324
 
-; <label>:370:                                    ; preds = %362
-  %371 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 3
-  %372 = load i64, i64* %371, align 8
-  %373 = load %struct.header_info*, %struct.header_info** %25, align 8
-  %374 = getelementptr inbounds %struct.header_info, %struct.header_info* %373, i32 0, i32 6
-  store i64 %372, i64* %374, align 8
-  br label %375
+; <label>:319:                                    ; preds = %314
+  %320 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %46, i32 0, i32 3
+  %321 = load i64, i64* %320, align 8
+  %322 = load %struct.header_info*, %struct.header_info** %45, align 8
+  %323 = getelementptr inbounds %struct.header_info, %struct.header_info* %322, i32 0, i32 6
+  store i64 %321, i64* %323, align 8
+  br label %324
 
-; <label>:375:                                    ; preds = %370, %362
-  br label %534
+; <label>:324:                                    ; preds = %319, %314
+  br label %458
 
-; <label>:376:                                    ; preds = %348
-  %377 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 3
-  %378 = load i64, i64* %377, align 8
-  %379 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([10 x i8], [10 x i8]* @"??_C@_09DGLOBCMH@0x?$CF16?416X?$AA@", i32 0, i32 0), i64 %378)
-  br label %534
+; <label>:325:                                    ; preds = %309
+  br label %458
 
-; <label>:380:                                    ; preds = %348
-  %381 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 3
-  %382 = load i64, i64* %381, align 8
-  %383 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([10 x i8], [10 x i8]* @"??_C@_09DGLOBCMH@0x?$CF16?416X?$AA@", i32 0, i32 0), i64 %382)
-  br label %534
+; <label>:326:                                    ; preds = %309
+  br label %458
 
-; <label>:384:                                    ; preds = %348
-  %385 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 3
-  %386 = bitcast i64* %385 to double*
-  %387 = load double, double* %386, align 8
-  %388 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @"??_C@_02LDDGBJKG@?$CFE?$AA@", i32 0, i32 0), double %387)
-  %389 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 0
-  %390 = getelementptr inbounds [32 x i8], [32 x i8]* %389, i32 0, i32 0
-  %391 = call i32 @strcmp(i8* %390, i8* getelementptr inbounds ([20 x i8], [20 x i8]* @"??_C@_0BE@MLJFPCOI@MeasDesc_Resolution?$AA@", i32 0, i32 0))
-  %392 = icmp eq i32 %391, 0
-  br i1 %392, label %393, label %402
+; <label>:327:                                    ; preds = %309
+  %328 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %46, i32 0, i32 0
+  %329 = getelementptr inbounds [32 x i8], [32 x i8]* %328, i32 0, i32 0
+  %330 = call i32 @strcmp(i8* %329, i8* getelementptr inbounds ([20 x i8], [20 x i8]* @"??_C@_0BE@MLJFPCOI@MeasDesc_Resolution?$AA@", i32 0, i32 0))
+  %331 = icmp eq i32 %330, 0
+  br i1 %331, label %332, label %341
 
-; <label>:393:                                    ; preds = %384
-  %394 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 3
-  %395 = bitcast i64* %394 to double*
-  %396 = load double, double* %395, align 8
-  store double %396, double* %32, align 8
-  %397 = load double, double* %32, align 8
-  %398 = fmul double %397, 1.000000e+12
-  %399 = fptosi double %398 to i64
-  %400 = load %struct.header_info*, %struct.header_info** %25, align 8
-  %401 = getelementptr inbounds %struct.header_info, %struct.header_info* %400, i32 0, i32 3
-  store i64 %399, i64* %401, align 8
-  br label %402
+; <label>:332:                                    ; preds = %327
+  %333 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %46, i32 0, i32 3
+  %334 = bitcast i64* %333 to double*
+  %335 = load double, double* %334, align 8
+  store double %335, double* %52, align 8
+  %336 = load double, double* %52, align 8
+  %337 = fmul double %336, 1.000000e+12
+  %338 = fptosi double %337 to i64
+  %339 = load %struct.header_info*, %struct.header_info** %45, align 8
+  %340 = getelementptr inbounds %struct.header_info, %struct.header_info* %339, i32 0, i32 3
+  store i64 %338, i64* %340, align 8
+  br label %341
 
-; <label>:402:                                    ; preds = %393, %384
-  %403 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 0
-  %404 = getelementptr inbounds [32 x i8], [32 x i8]* %403, i32 0, i32 0
-  %405 = call i32 @strcmp(i8* %404, i8* getelementptr inbounds ([26 x i8], [26 x i8]* @"??_C@_0BK@JGMIOCJJ@MeasDesc_GlobalResolution?$AA@", i32 0, i32 0))
-  %406 = icmp eq i32 %405, 0
-  br i1 %406, label %407, label %416
+; <label>:341:                                    ; preds = %332, %327
+  %342 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %46, i32 0, i32 0
+  %343 = getelementptr inbounds [32 x i8], [32 x i8]* %342, i32 0, i32 0
+  %344 = call i32 @strcmp(i8* %343, i8* getelementptr inbounds ([26 x i8], [26 x i8]* @"??_C@_0BK@JGMIOCJJ@MeasDesc_GlobalResolution?$AA@", i32 0, i32 0))
+  %345 = icmp eq i32 %344, 0
+  br i1 %345, label %346, label %355
 
-; <label>:407:                                    ; preds = %402
-  %408 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 3
-  %409 = bitcast i64* %408 to double*
-  %410 = load double, double* %409, align 8
-  store double %410, double* %33, align 8
-  %411 = load double, double* %33, align 8
-  %412 = fmul double %411, 1.000000e+12
-  %413 = fptosi double %412 to i64
-  %414 = load %struct.header_info*, %struct.header_info** %25, align 8
-  %415 = getelementptr inbounds %struct.header_info, %struct.header_info* %414, i32 0, i32 2
-  store i64 %413, i64* %415, align 8
-  br label %416
+; <label>:346:                                    ; preds = %341
+  %347 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %46, i32 0, i32 3
+  %348 = bitcast i64* %347 to double*
+  %349 = load double, double* %348, align 8
+  store double %349, double* %53, align 8
+  %350 = load double, double* %53, align 8
+  %351 = fmul double %350, 1.000000e+12
+  %352 = fptosi double %351 to i64
+  %353 = load %struct.header_info*, %struct.header_info** %45, align 8
+  %354 = getelementptr inbounds %struct.header_info, %struct.header_info* %353, i32 0, i32 2
+  store i64 %352, i64* %354, align 8
+  br label %355
 
-; <label>:416:                                    ; preds = %407, %402
-  br label %534
+; <label>:355:                                    ; preds = %346, %341
+  br label %458
 
-; <label>:417:                                    ; preds = %348
-  %418 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 3
-  %419 = load i64, i64* %418, align 8
-  %420 = udiv i64 %419, 8
-  %421 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([30 x i8], [30 x i8]* @"??_C@_0BO@ENEJMDLG@?$DMFloat?5Array?5with?5?$CFd?5Entries?$DO?$AA@", i32 0, i32 0), i64 %420)
-  %422 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 3
-  %423 = load i64, i64* %422, align 8
-  %424 = trunc i64 %423 to i32
-  %425 = sext i32 %424 to i64
-  %426 = load %struct.header_info*, %struct.header_info** %25, align 8
-  %427 = getelementptr inbounds %struct.header_info, %struct.header_info* %426, i32 0, i32 1
-  store i64 %425, i64* %427, align 8
-  br label %534
+; <label>:356:                                    ; preds = %309
+  %357 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %46, i32 0, i32 3
+  %358 = load i64, i64* %357, align 8
+  %359 = trunc i64 %358 to i32
+  %360 = sext i32 %359 to i64
+  %361 = load %struct.header_info*, %struct.header_info** %45, align 8
+  %362 = getelementptr inbounds %struct.header_info, %struct.header_info* %361, i32 0, i32 1
+  store i64 %360, i64* %362, align 8
+  br label %458
 
-; <label>:428:                                    ; preds = %348
-  %429 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 3
-  %430 = bitcast i64* %429 to double*
-  %431 = load double, double* %430, align 8
-  %432 = call i64 @"?TDateTime_TimeT@@YA_JN@Z"(double %431)
-  store i64 %432, i64* %34, align 8
-  %433 = call %struct.tm* @"?gmtime@@YAPEAUtm@@QEB_J@Z"(i64* %34)
-  %434 = call i8* @asctime(%struct.tm* %433)
-  %435 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @"??_C@_02DKCKIIND@?$CFs?$AA@", i32 0, i32 0), i8* %434, i8* getelementptr inbounds ([2 x i8], [2 x i8]* @"??_C@_01LOCGONAA@?$AA?$AA@", i32 0, i32 0))
-  br label %534
+; <label>:363:                                    ; preds = %309
+  %364 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %46, i32 0, i32 3
+  %365 = bitcast i64* %364 to double*
+  %366 = load double, double* %365, align 8
+  %367 = call i64 @"?TDateTime_TimeT@@YA_JN@Z"(double %366)
+  store i64 %367, i64* %54, align 8
+  br label %458
 
-; <label>:436:                                    ; preds = %348
-  %437 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 3
-  %438 = load i64, i64* %437, align 8
-  %439 = call noalias i8* @calloc(i64 %438, i64 1)
-  store i8* %439, i8** %28, align 8
-  %440 = load i8*, i8** %24, align 8
-  %441 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 3
-  %442 = load i64, i64* %441, align 8
-  %443 = load i8*, i8** %28, align 8
-  %444 = load %struct.header_info*, %struct.header_info** %25, align 8
-  store i8* %440, i8** %8, align 8
-  store i64 %442, i64* %9, align 8
-  store i64 1, i64* %10, align 8
-  store i8* %443, i8** %11, align 8
-  store %struct.header_info* %444, %struct.header_info** %12, align 8
-  %445 = load i8*, i8** %11, align 8
-  %446 = load i8*, i8** %8, align 8
-  %447 = load %struct.header_info*, %struct.header_info** %12, align 8
-  %448 = getelementptr inbounds %struct.header_info, %struct.header_info* %447, i32 0, i32 1
-  %449 = load i64, i64* %448, align 8
-  %450 = getelementptr inbounds i8, i8* %446, i64 %449
-  %451 = load i64, i64* %10, align 8
-  %452 = load i64, i64* %9, align 8
-  %453 = mul i64 %451, %452
-  call void @llvm.memcpy.p0i8.p0i8.i64(i8* align 1 %445, i8* align 1 %450, i64 %453, i1 false) #6
-  %454 = load i64, i64* %10, align 8
-  %455 = load i64, i64* %9, align 8
-  %456 = mul i64 %454, %455
-  %457 = load %struct.header_info*, %struct.header_info** %12, align 8
-  %458 = getelementptr inbounds %struct.header_info, %struct.header_info* %457, i32 0, i32 1
-  %459 = load i64, i64* %458, align 8
-  %460 = add i64 %459, %456
-  store i64 %460, i64* %458, align 8
-  %461 = load i64, i64* %10, align 8
-  %462 = load i64, i64* %9, align 8
-  %463 = mul i64 %461, %462
-  %464 = trunc i64 %463 to i32
-  store i32 %464, i32* %27, align 4
-  %465 = load i32, i32* %27, align 4
-  %466 = sext i32 %465 to i64
-  %467 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 3
-  %468 = load i64, i64* %467, align 8
-  %469 = icmp ne i64 %466, %468
-  br i1 %469, label %470, label %473
+; <label>:368:                                    ; preds = %309
+  %369 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %46, i32 0, i32 3
+  %370 = load i64, i64* %369, align 8
+  %371 = call noalias i8* @calloc(i64 %370, i64 1)
+  store i8* %371, i8** %48, align 8
+  %372 = load i8*, i8** %44, align 8
+  %373 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %46, i32 0, i32 3
+  %374 = load i64, i64* %373, align 8
+  %375 = load i8*, i8** %48, align 8
+  %376 = load %struct.header_info*, %struct.header_info** %45, align 8
+  store i8* %372, i8** %23, align 8
+  store i64 %374, i64* %24, align 8
+  store i64 1, i64* %25, align 8
+  store i8* %375, i8** %26, align 8
+  store %struct.header_info* %376, %struct.header_info** %27, align 8
+  %377 = load i8*, i8** %26, align 8
+  %378 = load i8*, i8** %23, align 8
+  %379 = load %struct.header_info*, %struct.header_info** %27, align 8
+  %380 = getelementptr inbounds %struct.header_info, %struct.header_info* %379, i32 0, i32 1
+  %381 = load i64, i64* %380, align 8
+  %382 = getelementptr inbounds i8, i8* %378, i64 %381
+  %383 = load i64, i64* %25, align 8
+  %384 = load i64, i64* %24, align 8
+  %385 = mul i64 %383, %384
+  call void @llvm.memcpy.p0i8.p0i8.i64(i8* align 1 %377, i8* align 1 %382, i64 %385, i1 false) #6
+  %386 = load i64, i64* %25, align 8
+  %387 = load i64, i64* %24, align 8
+  %388 = mul i64 %386, %387
+  %389 = load %struct.header_info*, %struct.header_info** %27, align 8
+  %390 = getelementptr inbounds %struct.header_info, %struct.header_info* %389, i32 0, i32 1
+  %391 = load i64, i64* %390, align 8
+  %392 = add i64 %391, %388
+  store i64 %392, i64* %390, align 8
+  %393 = load i64, i64* %25, align 8
+  %394 = load i64, i64* %24, align 8
+  %395 = mul i64 %393, %394
+  %396 = trunc i64 %395 to i32
+  store i32 %396, i32* %47, align 4
+  %397 = load i32, i32* %47, align 4
+  %398 = sext i32 %397 to i64
+  %399 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %46, i32 0, i32 3
+  %400 = load i64, i64* %399, align 8
+  %401 = icmp ne i64 %398, %400
+  br i1 %401, label %402, label %404
 
-; <label>:470:                                    ; preds = %436
-  %471 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([18 x i8], [18 x i8]* @"??_C@_0BC@KFPMDKOJ@?6Incomplete?5File?4?$AA@", i32 0, i32 0))
-  %472 = load i8*, i8** %28, align 8
-  call void @free(i8* %472)
-  br label %596
+; <label>:402:                                    ; preds = %368
+  %403 = load i8*, i8** %48, align 8
+  call void @free(i8* %403)
+  br label %493
 
-; <label>:473:                                    ; preds = %436
-  %474 = load i8*, i8** %28, align 8
-  %475 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @"??_C@_02DKCKIIND@?$CFs?$AA@", i32 0, i32 0), i8* %474)
-  %476 = load i8*, i8** %28, align 8
-  call void @free(i8* %476)
-  br label %534
+; <label>:404:                                    ; preds = %368
+  %405 = load i8*, i8** %48, align 8
+  call void @free(i8* %405)
+  br label %458
 
-; <label>:477:                                    ; preds = %348
-  %478 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 3
-  %479 = load i64, i64* %478, align 8
-  %480 = call noalias i8* @calloc(i64 %479, i64 1)
-  %481 = bitcast i8* %480 to i16*
-  store i16* %481, i16** %29, align 8
-  %482 = load i8*, i8** %24, align 8
-  %483 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 3
-  %484 = load i64, i64* %483, align 8
-  %485 = load i16*, i16** %29, align 8
-  %486 = bitcast i16* %485 to i8*
-  %487 = load %struct.header_info*, %struct.header_info** %25, align 8
-  store i8* %482, i8** %3, align 8
-  store i64 %484, i64* %4, align 8
-  store i64 1, i64* %5, align 8
-  store i8* %486, i8** %6, align 8
-  store %struct.header_info* %487, %struct.header_info** %7, align 8
-  %488 = load i8*, i8** %6, align 8
-  %489 = load i8*, i8** %3, align 8
-  %490 = load %struct.header_info*, %struct.header_info** %7, align 8
-  %491 = getelementptr inbounds %struct.header_info, %struct.header_info* %490, i32 0, i32 1
-  %492 = load i64, i64* %491, align 8
-  %493 = getelementptr inbounds i8, i8* %489, i64 %492
-  %494 = load i64, i64* %5, align 8
-  %495 = load i64, i64* %4, align 8
-  %496 = mul i64 %494, %495
-  call void @llvm.memcpy.p0i8.p0i8.i64(i8* align 1 %488, i8* align 1 %493, i64 %496, i1 false) #6
-  %497 = load i64, i64* %5, align 8
-  %498 = load i64, i64* %4, align 8
-  %499 = mul i64 %497, %498
-  %500 = load %struct.header_info*, %struct.header_info** %7, align 8
+; <label>:406:                                    ; preds = %309
+  %407 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %46, i32 0, i32 3
+  %408 = load i64, i64* %407, align 8
+  %409 = call noalias i8* @calloc(i64 %408, i64 1)
+  %410 = bitcast i8* %409 to i16*
+  store i16* %410, i16** %49, align 8
+  %411 = load i8*, i8** %44, align 8
+  %412 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %46, i32 0, i32 3
+  %413 = load i64, i64* %412, align 8
+  %414 = load i16*, i16** %49, align 8
+  %415 = bitcast i16* %414 to i8*
+  %416 = load %struct.header_info*, %struct.header_info** %45, align 8
+  store i8* %411, i8** %28, align 8
+  store i64 %413, i64* %29, align 8
+  store i64 1, i64* %30, align 8
+  store i8* %415, i8** %31, align 8
+  store %struct.header_info* %416, %struct.header_info** %32, align 8
+  %417 = load i8*, i8** %31, align 8
+  %418 = load i8*, i8** %28, align 8
+  %419 = load %struct.header_info*, %struct.header_info** %32, align 8
+  %420 = getelementptr inbounds %struct.header_info, %struct.header_info* %419, i32 0, i32 1
+  %421 = load i64, i64* %420, align 8
+  %422 = getelementptr inbounds i8, i8* %418, i64 %421
+  %423 = load i64, i64* %30, align 8
+  %424 = load i64, i64* %29, align 8
+  %425 = mul i64 %423, %424
+  call void @llvm.memcpy.p0i8.p0i8.i64(i8* align 1 %417, i8* align 1 %422, i64 %425, i1 false) #6
+  %426 = load i64, i64* %30, align 8
+  %427 = load i64, i64* %29, align 8
+  %428 = mul i64 %426, %427
+  %429 = load %struct.header_info*, %struct.header_info** %32, align 8
+  %430 = getelementptr inbounds %struct.header_info, %struct.header_info* %429, i32 0, i32 1
+  %431 = load i64, i64* %430, align 8
+  %432 = add i64 %431, %428
+  store i64 %432, i64* %430, align 8
+  %433 = load i64, i64* %30, align 8
+  %434 = load i64, i64* %29, align 8
+  %435 = mul i64 %433, %434
+  %436 = trunc i64 %435 to i32
+  store i32 %436, i32* %47, align 4
+  %437 = load i32, i32* %47, align 4
+  %438 = sext i32 %437 to i64
+  %439 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %46, i32 0, i32 3
+  %440 = load i64, i64* %439, align 8
+  %441 = icmp ne i64 %438, %440
+  br i1 %441, label %442, label %445
+
+; <label>:442:                                    ; preds = %406
+  %443 = load i16*, i16** %49, align 8
+  %444 = bitcast i16* %443 to i8*
+  call void @free(i8* %444)
+  br label %493
+
+; <label>:445:                                    ; preds = %406
+  %446 = load i16*, i16** %49, align 8
+  %447 = call i32 (i16*, ...) @wprintf(i16* getelementptr inbounds ([3 x i16], [3 x i16]* @"??_C@_15GANGMFKL@?$AA?$CF?$AAs?$AA?$AA@", i32 0, i32 0), i16* %446)
+  %448 = load i16*, i16** %49, align 8
+  %449 = bitcast i16* %448 to i8*
+  call void @free(i8* %449)
+  br label %458
+
+; <label>:450:                                    ; preds = %309
+  %451 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %46, i32 0, i32 3
+  %452 = load i64, i64* %451, align 8
+  %453 = trunc i64 %452 to i32
+  %454 = sext i32 %453 to i64
+  %455 = load %struct.header_info*, %struct.header_info** %45, align 8
+  %456 = getelementptr inbounds %struct.header_info, %struct.header_info* %455, i32 0, i32 1
+  store i64 %454, i64* %456, align 8
+  br label %458
+
+; <label>:457:                                    ; preds = %309
+  br label %493
+
+; <label>:458:                                    ; preds = %450, %445, %404, %363, %356, %355, %326, %325, %324, %313, %312
+  %459 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %46, i32 0, i32 0
+  %460 = getelementptr inbounds [32 x i8], [32 x i8]* %459, i32 0, i32 0
+  %461 = call i32 @strncmp(i8* %460, i8* getelementptr inbounds ([11 x i8], [11 x i8]* @"??_C@_0L@BKLBDFDP@Header_End?$AA@", i32 0, i32 0), i64 11)
+  %462 = icmp ne i32 %461, 0
+  br i1 %462, label %267, label %463
+
+; <label>:463:                                    ; preds = %458
+  %464 = load %struct.header_info*, %struct.header_info** %45, align 8
+  %465 = getelementptr inbounds %struct.header_info, %struct.header_info* %464, i32 0, i32 6
+  %466 = load i64, i64* %465, align 8
+  switch i64 %466, label %477 [
+    i64 66051, label %467
+    i64 66052, label %468
+    i64 16843268, label %469
+    i64 66053, label %470
+    i64 66054, label %471
+    i64 66307, label %472
+    i64 66308, label %473
+    i64 16843524, label %474
+    i64 66309, label %475
+    i64 66310, label %476
+  ]
+
+; <label>:467:                                    ; preds = %463
+  store i8 1, i8* %55, align 1
+  br label %478
+
+; <label>:468:                                    ; preds = %463
+  store i8 1, i8* %55, align 1
+  br label %478
+
+; <label>:469:                                    ; preds = %463
+  store i8 1, i8* %55, align 1
+  br label %478
+
+; <label>:470:                                    ; preds = %463
+  store i8 1, i8* %55, align 1
+  br label %478
+
+; <label>:471:                                    ; preds = %463
+  store i8 1, i8* %55, align 1
+  br label %478
+
+; <label>:472:                                    ; preds = %463
+  store i8 0, i8* %55, align 1
+  br label %478
+
+; <label>:473:                                    ; preds = %463
+  store i8 0, i8* %55, align 1
+  br label %478
+
+; <label>:474:                                    ; preds = %463
+  store i8 0, i8* %55, align 1
+  br label %478
+
+; <label>:475:                                    ; preds = %463
+  store i8 0, i8* %55, align 1
+  br label %478
+
+; <label>:476:                                    ; preds = %463
+  store i8 0, i8* %55, align 1
+  br label %478
+
+; <label>:477:                                    ; preds = %463
+  br label %493
+
+; <label>:478:                                    ; preds = %476, %475, %474, %473, %472, %471, %470, %469, %468, %467
+  %479 = load i8, i8* %55, align 1
+  %480 = trunc i8 %479 to i1
+  br i1 %480, label %481, label %484
+
+; <label>:481:                                    ; preds = %478
+  %482 = load %struct.header_info*, %struct.header_info** %45, align 8
+  %483 = getelementptr inbounds %struct.header_info, %struct.header_info* %482, i32 0, i32 4
+  store i64 1, i64* %483, align 8
+  br label %490
+
+; <label>:484:                                    ; preds = %478
+  %485 = load %struct.header_info*, %struct.header_info** %45, align 8
+  %486 = getelementptr inbounds %struct.header_info, %struct.header_info* %485, i32 0, i32 2
+  %487 = load i64, i64* %486, align 8
+  %488 = load %struct.header_info*, %struct.header_info** %45, align 8
+  %489 = getelementptr inbounds %struct.header_info, %struct.header_info* %488, i32 0, i32 4
+  store i64 %487, i64* %489, align 8
+  br label %490
+
+; <label>:490:                                    ; preds = %484, %481
+  %491 = load %struct.header_info*, %struct.header_info** %45, align 8
+  %492 = getelementptr inbounds %struct.header_info, %struct.header_info* %491, i32 0, i32 5
+  store i64 4, i64* %492, align 8
+  store i32 0, i32* %43, align 4
+  br label %494
+
+; <label>:493:                                    ; preds = %477, %457, %442, %402, %294, %265
+  store i32 -1, i32* %43, align 4
+  br label %494
+
+; <label>:494:                                    ; preds = %490, %493
+  %495 = load i32, i32* %43, align 4
+  store i32 %495, i32* %64, align 4
+  store i8 0, i8* %66, align 1
+  br label %499
+
+; <label>:496:                                    ; preds = %113
+  store i64 0, i64* @"?order_gurantee@@3_JA", align 8
+  store i32 -2, i32* %64, align 4
+  %497 = load %struct.header_info*, %struct.header_info** %63, align 8
+  %498 = getelementptr inbounds %struct.header_info, %struct.header_info* %497, i32 0, i32 5
+  store i64 1, i64* %498, align 8
+  br label %499
+
+; <label>:499:                                    ; preds = %113, %496, %494, %217, %215, %160, %158
+  %500 = load %struct.header_info*, %struct.header_info** %63, align 8
   %501 = getelementptr inbounds %struct.header_info, %struct.header_info* %500, i32 0, i32 1
   %502 = load i64, i64* %501, align 8
-  %503 = add i64 %502, %499
-  store i64 %503, i64* %501, align 8
-  %504 = load i64, i64* %5, align 8
-  %505 = load i64, i64* %4, align 8
-  %506 = mul i64 %504, %505
-  %507 = trunc i64 %506 to i32
-  store i32 %507, i32* %27, align 4
-  %508 = load i32, i32* %27, align 4
-  %509 = sext i32 %508 to i64
-  %510 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 3
-  %511 = load i64, i64* %510, align 8
-  %512 = icmp ne i64 %509, %511
-  br i1 %512, label %513, label %517
+  %503 = load %struct.header_info*, %struct.header_info** %63, align 8
+  %504 = getelementptr inbounds %struct.header_info, %struct.header_info* %503, i32 0, i32 0
+  store i64 %502, i64* %504, align 8
+  %505 = load i32, i32* %64, align 4
+  store i32 %505, i32* %61, align 4
+  br label %506
 
-; <label>:513:                                    ; preds = %477
-  %514 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([18 x i8], [18 x i8]* @"??_C@_0BC@KFPMDKOJ@?6Incomplete?5File?4?$AA@", i32 0, i32 0))
-  %515 = load i16*, i16** %29, align 8
-  %516 = bitcast i16* %515 to i8*
-  call void @free(i8* %516)
-  br label %596
-
-; <label>:517:                                    ; preds = %477
-  %518 = load i16*, i16** %29, align 8
-  %519 = call i32 (i16*, ...) @wprintf(i16* getelementptr inbounds ([3 x i16], [3 x i16]* @"??_C@_15GANGMFKL@?$AA?$CF?$AAs?$AA?$AA@", i32 0, i32 0), i16* %518)
-  %520 = load i16*, i16** %29, align 8
-  %521 = bitcast i16* %520 to i8*
-  call void @free(i8* %521)
-  br label %534
-
-; <label>:522:                                    ; preds = %348
-  %523 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 3
-  %524 = load i64, i64* %523, align 8
-  %525 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([32 x i8], [32 x i8]* @"??_C@_0CA@FNNAPBCN@?$DMBinary?5Blob?5contains?5?$CFd?5Bytes?$DO?$AA@", i32 0, i32 0), i64 %524)
-  %526 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 3
-  %527 = load i64, i64* %526, align 8
-  %528 = trunc i64 %527 to i32
-  %529 = sext i32 %528 to i64
-  %530 = load %struct.header_info*, %struct.header_info** %25, align 8
-  %531 = getelementptr inbounds %struct.header_info, %struct.header_info* %530, i32 0, i32 1
-  store i64 %529, i64* %531, align 8
-  br label %534
-
-; <label>:532:                                    ; preds = %348
-  %533 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([44 x i8], [44 x i8]* @"??_C@_0CM@NLBAOIPI@Illegal?5Type?5identifier?5found?$CB?5B@", i32 0, i32 0))
-  br label %596
-
-; <label>:534:                                    ; preds = %522, %517, %473, %428, %417, %416, %380, %376, %375, %355, %353
-  %535 = getelementptr inbounds %struct.TgHd, %struct.TgHd* %26, i32 0, i32 0
-  %536 = getelementptr inbounds [32 x i8], [32 x i8]* %535, i32 0, i32 0
-  %537 = call i32 @strncmp(i8* %536, i8* getelementptr inbounds ([11 x i8], [11 x i8]* @"??_C@_0L@BKLBDFDP@Header_End?$AA@", i32 0, i32 0), i64 11)
-  %538 = icmp ne i32 %537, 0
-  br i1 %538, label %304, label %539
-
-; <label>:539:                                    ; preds = %534
-  %540 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([27 x i8], [27 x i8]* @"??_C@_0BL@HPPLJEMK@?6?6?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9?6?$AA@", i32 0, i32 0))
-  %541 = sext i32 %540 to i64
-  store i64 %541, i64* @"?order_gurantee@@3_JA", align 8
-  %542 = load %struct.header_info*, %struct.header_info** %25, align 8
-  %543 = getelementptr inbounds %struct.header_info, %struct.header_info* %542, i32 0, i32 6
-  %544 = load i64, i64* %543, align 8
-  switch i64 %544, label %575 [
-    i64 66051, label %545
-    i64 66052, label %548
-    i64 16843268, label %551
-    i64 66053, label %554
-    i64 66054, label %557
-    i64 66307, label %560
-    i64 66308, label %563
-    i64 16843524, label %566
-    i64 66309, label %569
-    i64 66310, label %572
-  ]
-
-; <label>:545:                                    ; preds = %539
-  %546 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([19 x i8], [19 x i8]* @"??_C@_0BD@EHFANJBB@?6PicoHarp?5T2?5data?6?$AA@", i32 0, i32 0))
-  %547 = sext i32 %546 to i64
-  store i64 %547, i64* @"?order_gurantee@@3_JA", align 8
-  store i8 1, i8* %35, align 1
-  br label %581
-
-; <label>:548:                                    ; preds = %539
-  %549 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @"??_C@_0BH@NKCKBLM@?6HydraHarp?5V1?5T2?5data?6?$AA@", i32 0, i32 0))
-  %550 = sext i32 %549 to i64
-  store i64 %550, i64* @"?order_gurantee@@3_JA", align 8
-  store i8 1, i8* %35, align 1
-  br label %581
-
-; <label>:551:                                    ; preds = %539
-  %552 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @"??_C@_0BH@JEEAMHLN@?6HydraHarp?5V2?5T2?5data?6?$AA@", i32 0, i32 0))
-  %553 = sext i32 %552 to i64
-  store i64 %553, i64* @"?order_gurantee@@3_JA", align 8
-  store i8 1, i8* %35, align 1
-  br label %581
-
-; <label>:554:                                    ; preds = %539
-  %555 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @"??_C@_0BH@DICKBJCF@?6TimeHarp260N?5T2?5data?6?$AA@", i32 0, i32 0))
-  %556 = sext i32 %555 to i64
-  store i64 %556, i64* @"?order_gurantee@@3_JA", align 8
-  store i8 1, i8* %35, align 1
-  br label %581
-
-; <label>:557:                                    ; preds = %539
-  %558 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @"??_C@_0BH@MEKKPGOI@?6TimeHarp260P?5T2?5data?6?$AA@", i32 0, i32 0))
-  %559 = sext i32 %558 to i64
-  store i64 %559, i64* @"?order_gurantee@@3_JA", align 8
-  store i8 1, i8* %35, align 1
-  br label %581
-
-; <label>:560:                                    ; preds = %539
-  %561 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([19 x i8], [19 x i8]* @"??_C@_0BD@ILPKNJIP@?6PicoHarp?5T3?5data?6?$AA@", i32 0, i32 0))
-  %562 = sext i32 %561 to i64
-  store i64 %562, i64* @"?order_gurantee@@3_JA", align 8
-  store i8 0, i8* %35, align 1
-  br label %581
-
-; <label>:563:                                    ; preds = %539
-  %564 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @"??_C@_0BH@MBAIKBCC@?6HydraHarp?5V1?5T3?5data?6?$AA@", i32 0, i32 0))
-  %565 = sext i32 %564 to i64
-  store i64 %565, i64* @"?order_gurantee@@3_JA", align 8
-  store i8 0, i8* %35, align 1
-  br label %581
-
-; <label>:566:                                    ; preds = %539
-  %567 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @"??_C@_0BH@FIOKMHCD@?6HydraHarp?5V2?5T3?5data?6?$AA@", i32 0, i32 0))
-  %568 = sext i32 %567 to i64
-  store i64 %568, i64* @"?order_gurantee@@3_JA", align 8
-  store i8 0, i8* %35, align 1
-  br label %581
-
-; <label>:569:                                    ; preds = %539
-  %570 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @"??_C@_0BH@PEIABJLL@?6TimeHarp260N?5T3?5data?6?$AA@", i32 0, i32 0))
-  %571 = sext i32 %570 to i64
-  store i64 %571, i64* @"?order_gurantee@@3_JA", align 8
-  store i8 0, i8* %35, align 1
-  br label %581
-
-; <label>:572:                                    ; preds = %539
-  %573 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([23 x i8], [23 x i8]* @"??_C@_0BH@IAAPGHG@?6TimeHarp260P?5T3?5data?6?$AA@", i32 0, i32 0))
-  %574 = sext i32 %573 to i64
-  store i64 %574, i64* @"?order_gurantee@@3_JA", align 8
-  store i8 0, i8* %35, align 1
-  br label %581
-
-; <label>:575:                                    ; preds = %539
-  %576 = load %struct.header_info*, %struct.header_info** %25, align 8
-  %577 = getelementptr inbounds %struct.header_info, %struct.header_info* %576, i32 0, i32 6
-  %578 = load i64, i64* %577, align 8
-  %579 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([44 x i8], [44 x i8]* @"??_C@_0CM@KKBPPLIM@?6Unknown?5time?9tag?5record?5type?3?50@", i32 0, i32 0), i64 %578)
-  %580 = sext i32 %579 to i64
-  store i64 %580, i64* @"?order_gurantee@@3_JA", align 8
-  br label %596
-
-; <label>:581:                                    ; preds = %572, %569, %566, %563, %560, %557, %554, %551, %548, %545
-  %582 = load i8, i8* %35, align 1
-  %583 = trunc i8 %582 to i1
-  br i1 %583, label %584, label %587
-
-; <label>:584:                                    ; preds = %581
-  %585 = load %struct.header_info*, %struct.header_info** %25, align 8
-  %586 = getelementptr inbounds %struct.header_info, %struct.header_info* %585, i32 0, i32 4
-  store i64 1, i64* %586, align 8
-  br label %593
-
-; <label>:587:                                    ; preds = %581
-  %588 = load %struct.header_info*, %struct.header_info** %25, align 8
-  %589 = getelementptr inbounds %struct.header_info, %struct.header_info* %588, i32 0, i32 2
-  %590 = load i64, i64* %589, align 8
-  %591 = load %struct.header_info*, %struct.header_info** %25, align 8
-  %592 = getelementptr inbounds %struct.header_info, %struct.header_info* %591, i32 0, i32 4
-  store i64 %590, i64* %592, align 8
-  br label %593
-
-; <label>:593:                                    ; preds = %587, %584
-  %594 = load %struct.header_info*, %struct.header_info** %25, align 8
-  %595 = getelementptr inbounds %struct.header_info, %struct.header_info* %594, i32 0, i32 5
-  store i64 4, i64* %595, align 8
-  store i32 0, i32* %23, align 4
-  br label %597
-
-; <label>:596:                                    ; preds = %575, %532, %513, %470, %331, %297
-  store i32 -1, i32* %23, align 4
-  br label %597
-
-; <label>:597:                                    ; preds = %593, %596
-  %598 = load i32, i32* %23, align 4
-  store i32 %598, i32* %64, align 4
-  store i8 0, i8* %66, align 1
-  br label %604
-
-; <label>:599:                                    ; preds = %115
-  %600 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([95 x i8], [95 x i8]* @"??_C@_0FP@FPIFGDME@?6?5?$FLERROR?$FNUnidentified?5time?9tag?5f@", i32 0, i32 0))
-  %601 = sext i32 %600 to i64
-  store i64 %601, i64* @"?order_gurantee@@3_JA", align 8
-  store i32 -2, i32* %64, align 4
-  %602 = load %struct.header_info*, %struct.header_info** %63, align 8
-  %603 = getelementptr inbounds %struct.header_info, %struct.header_info* %602, i32 0, i32 5
-  store i64 1, i64* %603, align 8
-  br label %604
-
-; <label>:604:                                    ; preds = %115, %599, %597, %241, %239, %170, %168
-  %605 = load %struct.header_info*, %struct.header_info** %63, align 8
-  %606 = getelementptr inbounds %struct.header_info, %struct.header_info* %605, i32 0, i32 1
-  %607 = load i64, i64* %606, align 8
-  %608 = load %struct.header_info*, %struct.header_info** %63, align 8
-  %609 = getelementptr inbounds %struct.header_info, %struct.header_info* %608, i32 0, i32 0
-  store i64 %607, i64* %609, align 8
-  %610 = load i32, i32* %64, align 4
-  store i32 %610, i32* %61, align 4
-  br label %611
-
-; <label>:611:                                    ; preds = %604, %92
-  %612 = load i32, i32* %61, align 4
-  ret i32 %612
+; <label>:506:                                    ; preds = %499, %92
+  %507 = load i32, i32* %61, align 4
+  ret i32 %507
 }
 
 ; Function Attrs: nounwind
 declare void @llvm.va_start(i8*) #6
 
 ; Function Attrs: noinline optnone uwtable
-define linkonce_odr dso_local i32 @_vfprintf_l(%struct._iobuf*, i8*, %struct.__crt_locale_pointers*, i8*) #3 comdat {
-  %5 = alloca i8*, align 8
-  %6 = alloca %struct.__crt_locale_pointers*, align 8
-  %7 = alloca i8*, align 8
-  %8 = alloca %struct._iobuf*, align 8
-  store i8* %3, i8** %5, align 8
-  store %struct.__crt_locale_pointers* %2, %struct.__crt_locale_pointers** %6, align 8
-  store i8* %1, i8** %7, align 8
-  store %struct._iobuf* %0, %struct._iobuf** %8, align 8
-  %9 = load i8*, i8** %5, align 8
-  %10 = load %struct.__crt_locale_pointers*, %struct.__crt_locale_pointers** %6, align 8
-  %11 = load i8*, i8** %7, align 8
-  %12 = load %struct._iobuf*, %struct._iobuf** %8, align 8
-  %13 = call i64* @__local_stdio_printf_options()
-  %14 = load i64, i64* %13, align 8
-  %15 = call i32 @__stdio_common_vfprintf(i64 %14, %struct._iobuf* %12, i8* %11, %struct.__crt_locale_pointers* %10, i8* %9)
-  ret i32 %15
-}
-
-declare dso_local %struct._iobuf* @__acrt_iob_func(i32) #5
-
-; Function Attrs: nounwind
-declare void @llvm.va_end(i8*) #6
-
-declare dso_local i32 @__stdio_common_vfprintf(i64, %struct._iobuf*, i8*, %struct.__crt_locale_pointers*, i8*) #5
-
-; Function Attrs: noinline nounwind optnone uwtable
-define linkonce_odr dso_local i64* @__local_stdio_printf_options() #4 comdat {
-  ret i64* @"?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA"
-}
-
-; Function Attrs: noinline optnone uwtable
-define linkonce_odr dso_local i32 @_vsprintf_l(i8*, i8*, %struct.__crt_locale_pointers*, i8*) #3 comdat {
+define linkonce_odr dso_local i32 @_vsprintf_l(i8*, i8*, %struct.__crt_locale_pointers*, i8*) #4 comdat {
   %5 = alloca i8*, align 8
   %6 = alloca %struct.__crt_locale_pointers*, align 8
   %7 = alloca i8*, align 8
@@ -2139,8 +1695,11 @@ define linkonce_odr dso_local i32 @_vsprintf_l(i8*, i8*, %struct.__crt_locale_po
   ret i32 %13
 }
 
+; Function Attrs: nounwind
+declare void @llvm.va_end(i8*) #6
+
 ; Function Attrs: noinline optnone uwtable
-define linkonce_odr dso_local i32 @_vsnprintf_l(i8*, i64, i8*, %struct.__crt_locale_pointers*, i8*) #3 comdat {
+define linkonce_odr dso_local i32 @_vsnprintf_l(i8*, i64, i8*, %struct.__crt_locale_pointers*, i8*) #4 comdat {
   %6 = alloca i8*, align 8
   %7 = alloca %struct.__crt_locale_pointers*, align 8
   %8 = alloca i8*, align 8
@@ -2180,10 +1739,13 @@ define linkonce_odr dso_local i32 @_vsnprintf_l(i8*, i64, i8*, %struct.__crt_loc
 
 declare dso_local i32 @__stdio_common_vsprintf(i64, i8*, i64, i8*, %struct.__crt_locale_pointers*, i8*) #5
 
-declare dso_local %struct.tm* @_gmtime64(i64*) #5
+; Function Attrs: noinline nounwind optnone uwtable
+define linkonce_odr dso_local i64* @__local_stdio_printf_options() #2 comdat {
+  ret i64* @"?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA"
+}
 
 ; Function Attrs: noinline optnone uwtable
-define linkonce_odr dso_local i32 @_vfwprintf_l(%struct._iobuf*, i16*, %struct.__crt_locale_pointers*, i8*) #3 comdat {
+define linkonce_odr dso_local i32 @_vfwprintf_l(%struct._iobuf*, i16*, %struct.__crt_locale_pointers*, i8*) #4 comdat {
   %5 = alloca i8*, align 8
   %6 = alloca %struct.__crt_locale_pointers*, align 8
   %7 = alloca i16*, align 8
@@ -2202,13 +1764,15 @@ define linkonce_odr dso_local i32 @_vfwprintf_l(%struct._iobuf*, i16*, %struct._
   ret i32 %15
 }
 
+declare dso_local %struct._iobuf* @__acrt_iob_func(i32) #5
+
 declare dso_local i32 @__stdio_common_vfwprintf(i64, %struct._iobuf*, i16*, %struct.__crt_locale_pointers*, i8*) #5
 
 attributes #0 = { alwaysinline nounwind uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "min-legal-vector-width"="0" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
 attributes #1 = { argmemonly nounwind }
-attributes #2 = { alwaysinline uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "min-legal-vector-width"="0" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
-attributes #3 = { noinline optnone uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "min-legal-vector-width"="0" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
-attributes #4 = { noinline nounwind optnone uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "min-legal-vector-width"="0" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #2 = { noinline nounwind optnone uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "min-legal-vector-width"="0" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #3 = { alwaysinline uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "min-legal-vector-width"="0" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #4 = { noinline optnone uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "min-legal-vector-width"="0" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
 attributes #5 = { "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
 attributes #6 = { nounwind }
 

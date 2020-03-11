@@ -26,12 +26,13 @@ typedef wchar_t WCHAR;
 long long order_gurantee = 0;
 #define PERROR(...)                                        \
 	{                                                      \
-		order_gurantee = printf("\n [ERROR]" __VA_ARGS__); \
+		order_gurantee = PINFO("\n [ERROR]" __VA_ARGS__); \
 	}
-#define PINFO(...)                                 \
-	{                                              \
-		order_gurantee = printf("\n" __VA_ARGS__); \
-	}
+#ifdef __debugging__
+#define PINFO(...)  {order_gurantee3=PINFO("\n" __VA_ARGS__);}
+#else
+#define PINFO(...)  {}
+#endif
 
 typedef struct
 {
@@ -219,19 +220,19 @@ int MKS_inline PicoQuant_header_parser(header_info *PARSER, char *fpin)
 			{
 				sprintf(readStringBuffer, "%s(%d)", TagHead.Ident, TagHead.Idx);
 			}
-			printf("\n%-40s", readStringBuffer);
+			PINFO("\n%-40s", readStringBuffer);
 		}
 
 		switch (TagHead.Typ)
 		{
 		case tyEmpty8:
-			printf("<empty Tag>");
+			PINFO("<empty Tag>");
 			break;
 		case tyBool8:
-			printf("%s", bool(TagHead.TagValue) ? "True" : "False");
+			PINFO("%s", bool(TagHead.TagValue) ? "True" : "False");
 			break;
 		case tyInt8:
-			printf("%lld", TagHead.TagValue);
+			PINFO("%lld", TagHead.TagValue);
 			// get some Values we need to analyse records
 			//if (strcmp(TagHead.Ident, TTTRTagNumRecords) == 0) // Number of records
 			//NumRecords = TagHead.TagValue;
@@ -239,13 +240,13 @@ int MKS_inline PicoQuant_header_parser(header_info *PARSER, char *fpin)
 				PARSER->RecordType = TagHead.TagValue;
 			break;
 		case tyBitSet64:
-			printf("0x%16.16X", TagHead.TagValue);
+			PINFO("0x%16.16X", TagHead.TagValue);
 			break;
 		case tyColor8:
-			printf("0x%16.16X", TagHead.TagValue);
+			PINFO("0x%16.16X", TagHead.TagValue);
 			break;
 		case tyFloat8:
-			printf("%E", *(double *)&(TagHead.TagValue));
+			PINFO("%E", *(double *)&(TagHead.TagValue));
 			if (strcmp(TagHead.Ident, TTTRTagRes) == 0)
 			{
 				// Resolution of delay time for T3
@@ -262,7 +263,7 @@ int MKS_inline PicoQuant_header_parser(header_info *PARSER, char *fpin)
 			break;
 
 		case tyFloat8Array:
-			printf("<Float Array with %d Entries>", TagHead.TagValue / sizeof(double));
+			PINFO("<Float Array with %d Entries>", TagHead.TagValue / sizeof(double));
 			// only seek the Data, if one needs the data, it can be loaded here
 			PARSER->headeroffset = (long)TagHead.TagValue;
 			//fseek(fpin, (long)TagHead.TagValue, SEEK_CUR);
@@ -270,18 +271,18 @@ int MKS_inline PicoQuant_header_parser(header_info *PARSER, char *fpin)
 		case tyTDateTime:
 			time_t CreateTime;
 			CreateTime = TDateTime_TimeT(*((double *)&(TagHead.TagValue)));
-			printf("%s", asctime(gmtime(&CreateTime)), "\0");
+			PINFO("%s", asctime(gmtime(&CreateTime)), "\0");
 			break;
 		case tyAnsiString:
 			AnsiBuffer = (char *)calloc((size_t)TagHead.TagValue, 1);
 			readResult = bread(PARSER, AnsiBuffer, 1, (size_t)TagHead.TagValue, fpin);
 			if (readResult != TagHead.TagValue)
 			{
-				printf("\nIncomplete File.");
+				PINFO("\nIncomplete File.");
 				free(AnsiBuffer);
 				goto close;
 			}
-			printf("%s", AnsiBuffer);
+			PINFO("%s", AnsiBuffer);
 			free(AnsiBuffer);
 			break;
 		case tyWideString:
@@ -289,7 +290,7 @@ int MKS_inline PicoQuant_header_parser(header_info *PARSER, char *fpin)
 			readResult = bread(PARSER, WideBuffer, 1, (size_t)TagHead.TagValue, fpin);
 			if (readResult != TagHead.TagValue)
 			{
-				printf("\nIncomplete File.");
+				PINFO("\nIncomplete File.");
 				free(WideBuffer);
 				goto close;
 			}
@@ -297,13 +298,13 @@ int MKS_inline PicoQuant_header_parser(header_info *PARSER, char *fpin)
 			free(WideBuffer);
 			break;
 		case tyBinaryBlob:
-			printf("<Binary Blob contains %d Bytes>", TagHead.TagValue);
+			PINFO("<Binary Blob contains %d Bytes>", TagHead.TagValue);
 			// only seek the Data, if one needs the data, it can be loaded here
 			PARSER->headeroffset = (long)TagHead.TagValue;
 			//fseek(fpin, (long)TagHead.TagValue, SEEK_CUR);
 			break;
 		default:
-			printf("Illegal Type identifier found! Broken file?");
+			PINFO("Illegal Type identifier found! Broken file?");
 			goto close;
 		}
 	} while ((strncmp(TagHead.Ident, FileTagEnd, sizeof(FileTagEnd))));
@@ -427,7 +428,7 @@ extern "C" int MKS_inline PARSE_TimeTagFileHeader(header_info *PARSER, char *fpi
 		isendlessfile = false;
 		break;
 	case -1:
-		PERROR("Unidentified time-tag format. Specify one the with eta.run(...format=???). Aborted. \n");
+		PERROR("Unidentified time-tag format. Specify one the with eta.run(...format=x). Aborted. \n");
 		ret = -2;
 		PARSER->BytesofRecords = 1;
 		break;
