@@ -53,7 +53,7 @@ extern "C" {
 	typedef struct {
 		// CLIP info
 		long long fseekpoint;//0
-		long long fendpoint ;//1
+		long long headeroffset ;//1
 
 		long long TTRes_pspr ;//2
 		long long DTRes_pspr ;//3
@@ -350,14 +350,6 @@ extern "C" {
 				PINFO("Reader %llx paused, nextrec %lld at %lld, batchend at %lld. \n", (uint64_t)READER, next_relpos,next_abspos,batch_end_abspos);
 				break;
 			}
-			/*
-			if (next_abspos >= READER->fendpoint)
-			{
-				PINFO("Reader %x for section [%lld %lld) paused, nextrec %lld at %lld, batchend at %lld, file boundry.", (unsigned int)READER, READER->fseekpoint, READER->fendpoint,next_relpos,next_abspos,batch_end_abspos);
-				break;
-			}
-			*/
-
 
 			//parse binary
 			const auto TTTRRecord = ((unsigned int*)READER->buffer)[READER->next_RecID_in_batch];
