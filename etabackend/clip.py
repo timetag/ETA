@@ -62,7 +62,7 @@ class Clip():
             raise ValueError(
                 "batch_actualread_length is larger than the size of buffer")
         if self.batch_actualread_length == 0:
-            return False
+            return None
         return self
 
     def from_parser_output(self, parse_output):
@@ -117,6 +117,7 @@ class ETA_CUT():
         currentclip = True
         counter = 0
         TTF_filesize = os.path.getsize(str(filename))
+
         while currentclip:
             if reuse_clips:
                 currentclip = last_clip
@@ -124,20 +125,24 @@ class ETA_CUT():
                 currentclip = Clip()
                 # copy information from last clip
                 currentclip.from_parser_output(last_clip.to_reader_input())
+            # compute seeking info
+            if keep_indexes:
+                if type(keep_indexes) != list:
+                    raise ValueError(
+                        "ETA.clips: keep_indexes should be a list of indexes of sliding windows that you want to actually yield. ")
+                if counter >= len(keep_indexes):
+                    # keep_indexes reaching its end
+                    break
+                seek_event = keep_indexes[counter]*read_events
+            else:
+                seek_event = -1 # auto slide window
+                #seek_event = counter * read_events # remove me
             currentclip = self.clip_file(
-                filename, modify_clip=currentclip, read_events=read_events, **kwargs)
+                filename, modify_clip=currentclip, read_events=read_events, seek_event=seek_event, **kwargs)
             if currentclip:
-                self.logfrontend.info("Analysis progress: {:.2f} ({}/{})".format(
-                    (currentclip.fseekpoint/TTF_filesize)*100.0, currentclip.fseekpoint, TTF_filesize))
-                if keep_indexes:
-                    if type(keep_indexes) == list:
-                        if counter in keep_indexes:
-                            yield currentclip
-                    else:
-                        raise ValueError(
-                            "ETA.clips: The third parameter, keep_indexes, should be a list. ")
-                else:
-                    yield currentclip
+                self.logfrontend.info("Analysis progress: {:.2f}% ({:.2f}MB/{:.2f}MB)".format(
+                    (currentclip.fseekpoint/TTF_filesize)*100.0, currentclip.fseekpoint/(1024.0*1024.0), TTF_filesize/(1024.0*1024.0)))
+                yield currentclip
                 counter += 1
                 last_clip = currentclip
             else:
@@ -161,7 +166,7 @@ class ETA_CUT():
         # validate
         if not isinstance(temp_clip, Clip):
             raise ValueError(
-                "ETA.clip_file: modify_clip must take a one Clip object as input.")
+                "ETA.clip_file: modify_clip must take a Clip object as the input.")
 
         # moving to the end of the last read or seek_event
         if seek_event < 0:
@@ -189,7 +194,7 @@ class ETA_CUT():
             waited_for += 0.01
             if waited_for > wait_timeout:
                 self.logfrontend.info(
-                    "ETA.clip_file: Timeout when waiting for the next cut, round to file boundry.")
+                    "ETA.clip_file: Timeout when waiting for data, overriding read_events to the current file boundry.")
                 filedesiredsize = fileactualsize
                 break
             self.logfrontend.info("ETA.clip_file: Waiting for file {} to grow from {} to {} bytes.".format(filename,
@@ -201,8 +206,8 @@ class ETA_CUT():
         # make buffer
         if temp_clip.fseekpoint > fileactualsize:
             self.logfrontend.info(
-                "ETA.clip_file: Can not seek to {} in the file '{}' for the Clip. ".format(temp_clip.fseekpoint, filename))
-            return False
+                "ETA.clip_file: Can not seek to {} in the file '{}' for the Clip, None is returned. ".format(temp_clip.fseekpoint, filename))
+            return None
         if (temp_clip.buffer == None or len(temp_clip.buffer) != filedesiredsize-temp_clip.fseekpoint):
             # reuser buffer as much as possible
             temp_clip.buffer = bytearray(
@@ -214,8 +219,8 @@ class ETA_CUT():
         # fail when zero size
         if temp_clip.batch_actualread_length == 0:
             self.logfrontend.info(
-                "ETA.clip_file: The file '{}' is not long enough for the Clip. ".format(filename))
-            return False
+                "ETA.clip_file: The file '{}' is not long enough for the Clip, None is returned. ".format(filename))
+            return None
         else:
             self.logfrontend.info("ETA.clip_file: The file '{}' section [{},{}) is loaded into the Clip. ".format(
                 filename, temp_clip.fseekpoint,  temp_clip.fseekpoint+temp_clip.batch_actualread_length))
