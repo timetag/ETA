@@ -176,7 +176,7 @@ class ETA(ETA_CUT):
                     "Invalid object retruned from the generator in the sources. RFILE {} requires a generator function instead.".format(required_rfile))
             if not(feed_clip.validate()):
                 self.logfrontend.warn(
-                    "ETA.run: invalid Clip given for RFILE {}, maybe it has been used before.".format(required_rfile))
+                    "ETA.run: invalid Clip given for RFILE {}.".format(required_rfile))
                 feed_clip = None
         return feed_clip
 
