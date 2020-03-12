@@ -120,22 +120,22 @@ class ETA(ETA_CUT):
             self.logger.debug(thread1.result())
             self.logger.info("Task for resumtion has completed.")
         if ts is None:
-            ts = time.time()  # start timing
+            ts = [time.time(), 0]  # start timing
         if ctxs is None:
             self.logger.info("Initializing context.")
             ctxs = initializer()
 
         if return_results:
             # execute on MainThread
-            self.ctx_loop(*vargs, ctxs=ctxs, mainloop=mainloop,
-                          required_rfiles=rfiles, **kwargs)
+            self.ctx_loop(*vargs, ctxs=ctxs,  mainloop=mainloop,
+                          required_rfiles=rfiles, ts=ts, **kwargs)
             thread1 = None
         else:
             # execute on ThreadPool
             thread1 = self.executor.submit(
-                self.ctx_loop, *vargs, ctxs=ctxs, mainloop=mainloop, required_rfiles=rfiles, **kwargs)
+                self.ctx_loop, *vargs, ctxs=ctxs, mainloop=mainloop, required_rfiles=rfiles, ts=ts, **kwargs)
 
-        task = (thread1, ts, ctxs, rfiles)
+        task = (thread1, ts,  ctxs, rfiles)
 
         if return_results and return_task:
             return self.aggregrate([task]), task
@@ -180,7 +180,7 @@ class ETA(ETA_CUT):
                 feed_clip = None
         return feed_clip
 
-    def ctx_loop(self, sources, ctxs=None, mainloop=None, required_rfiles=None, max_autofeed=0, stop_with_source=True):
+    def ctx_loop(self, sources, ctxs=None, mainloop=None, required_rfiles=None, ts=[0, 0], max_autofeed=0, stop_with_source=True):
         # auto-feed loop
         loop_count = 0
         ret = 0
@@ -210,7 +210,9 @@ class ETA(ETA_CUT):
                     ctxs[rfile_name] = feed_clip.buffer
 
             self.logger.info("Executing analysis program...")
+            ts1 = time.time()
             ret += mainloop(**ctxs)
+            ts[1] += time.time()-ts1
             # check final stop
             if ctxs["scalar_AbsTime_ps"][0] == 9223372036854775807:
                 self.logger.info("Analysis program ended.")
@@ -236,15 +238,20 @@ class ETA(ETA_CUT):
             ctxs["READER"][struct_start:struct_end])
         return used_clip_result, struct_start, struct_end
 
-    def aggregrate(self, list_of_tasks, sum_results=True):
+    def aggregrate(self, list_of_tasks, sum_results=True, include_timing=False):
         rets = []
-
+        max_eta_total_time = 0
+        max_eta_compute_time = 0
         for task in list_of_tasks:
             (thread1, ts, ctxs, required_rfiles) = task
             if thread1:
                 # join process
                 print(thread1.result())
-            te = time.time()
+            # update timing
+            eta_total_time, eta_compute_time = ts
+            eta_total_time = time.time() - eta_total_time
+            max_eta_total_time = max(max_eta_total_time, eta_total_time)
+            max_eta_compute_time = max(max_eta_compute_time, eta_compute_time)
             # construct results
             result = {}
             # emit rfiles
@@ -267,6 +274,11 @@ class ETA(ETA_CUT):
                         result[each.replace("scalar_", "")] = ctxs[each][0]
                     else:
                         result[each] = ctxs[each]
+            # update global timing
+            if include_timing:
+                result["eta_total_time"] = eta_total_time
+                result["eta_compute_time"] = eta_compute_time
+            
             rets.append(result)
         if sum_results:
             # reduce
@@ -275,9 +287,13 @@ class ETA(ETA_CUT):
                     if isinstance(rets[i][each], np.ndarray) or isinstance(rets[i][each], float) or isinstance(rets[i][each], int):
                         rets[0][each] += rets[i][each]
             rets = rets[0]
-        self.logfrontend.info(
-            'ETA.run: Analysis is finished in {0:.2f} seconds.'.format((te - ts)))
+            if include_timing:
+                rets["max_eta_total_time"] = max_eta_total_time
+                rets["max_eta_compute_time"] = max_eta_compute_time
+        self.logfrontend.info('ETA.run: Analysis is finished in {0:.2f} seconds. Compute time: {1:.2f} seconds.'.format(
+                max_eta_total_time, max_eta_compute_time))
         self.notify_callback('stopped')
+
         return rets
 
     def add_callback(self, name, func):
