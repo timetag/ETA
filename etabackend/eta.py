@@ -290,8 +290,7 @@ class ETA(ETA_CUT):
             if include_timing:
                 rets["max_eta_total_time"] = max_eta_total_time
                 rets["max_eta_compute_time"] = max_eta_compute_time
-        self.logfrontend.info('ETA.run: Analysis is finished in {0:.2f} seconds. Compute time: {1:.2f} seconds.'.format(
-                max_eta_total_time, max_eta_compute_time))
+        self.logfrontend.info('ETA.run: Analysis is finished in {0:.2f} seconds.'.format(max_eta_compute_time))
         self.notify_callback('stopped')
 
         return rets
