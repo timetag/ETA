@@ -1,4 +1,4 @@
-const { spawnSync } = require('child_process');
+const { spawnSync, spawn } = require('child_process');
 const { dialog } = require('electron')
 const { shell } = require('electron')
 
