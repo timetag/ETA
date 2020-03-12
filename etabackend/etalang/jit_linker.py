@@ -225,7 +225,6 @@ def link_jit_code(args):
             chn = scalar_chn[0]
             fileid = scalar_fileid[0]
             if AbsTime_ps == 9223372036854775807:  # full stop
-                print("!!!!!VCHN FUCKED UP!!!!!!")
                 break
             looping
             if interrupt:
