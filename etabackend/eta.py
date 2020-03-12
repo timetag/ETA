@@ -132,7 +132,7 @@ class ETA(ETA_CUT):
             thread1 = None
         else:
             # execute on ThreadPool
-            print("Thread started.") # DO NOT REMOVE
+            time.sleep(0.1)
             thread1 = self.executor.submit(
                 self.ctx_loop, *vargs, ctxs=ctxs, mainloop=mainloop, required_rfiles=rfiles, ts=ts, **kwargs)
 
