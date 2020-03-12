@@ -191,7 +191,8 @@ class ETA(ETA_CUT):
                 break
             for (rfile_name, rfile_id) in required_rfiles.items():
                 # check for existing clips
-                used_clip_result, struct_start, struct_end = self.clip_from_ctxs(rfile_id, ctxs)
+                used_clip_result, struct_start, struct_end = self.clip_from_ctxs(
+                    rfile_id, ctxs)
                 if used_clip_result.check_consumed():
                     self.logger.debug(
                         "Auto-fill triggered on {}".format(rfile_name))
@@ -244,36 +245,41 @@ class ETA(ETA_CUT):
                 # join process
                 print(thread1.result())
             te = time.time()
-
-            self.logfrontend.info(
-                'ETA.run: Analysis is finished in {0:.2f} seconds.'.format((te - ts)))
-            self.notify_callback('stopped')
-
-            # appending returns
-            rets.append(ctxs)
-
-        if sum_results:
-            # reduce
-            for each_graph in rets[0].keys():
-                if not(each_graph=="RECORDER" or (each_graph in required_rfiles)):
-                    for each in range(1, len(rets)):
-                        rets[0][each_graph] += rets[each][each_graph]
-                else:
-                    pass
-            result = rets[0]
+            # construct results
+            result = {}
             # emit rfiles
             for (rfile_name, rfile_id) in required_rfiles.items():
                 if rfile_name in result:
-                    used_clip_result, _, _ = self.clip_from_ctxs(rfile_id, result)
-                    result[rfile_name] =  used_clip_result.validate(check_buffer=False)
-            self.logfrontend.info('ETA.run: Aggregating {} results.'.format(
-                len(rets)))
-            self.notify_callback('stopped')
-        else:
-            self.logfrontend.info("ETA.run: Listing results for each task.")
-            result = rets
-
-        return result
+                    used_clip_result, _, _ = self.clip_from_ctxs(
+                        rfile_id, ctxs)
+                    result[rfile_name] = used_clip_result.validate(
+                        check_buffer=False)
+            # emit other stuff
+            kwlist = ["_now_", "_last_", "POOL_", "_start_", "_stop_", "VCHN",
+                      "READER", "VFILES", "_vfile", 'AbsTime_ps', 'fileid', 'chn', 'chn_next', "INTERRUPT"]
+            for each in ctxs.keys():
+                skip = False
+                for kw in kwlist:
+                    if each.find(kw) >= 0 or each in required_rfiles:
+                        skip = True
+                        continue
+                if not skip:
+                    if each.find("scalar_") >= 0:
+                        result[each.replace("scalar_", "")] = ctxs[each][0]
+                    else:
+                        result[each] = ctxs[each]
+            rets.append(result)
+        if sum_results:
+            # reduce
+            for each in rets[0].keys():
+                for i in range(1, len(rets)):
+                    if isinstance(rets[i][each], np.ndarray) or isinstance(rets[i][each], float) or isinstance(rets[i][each], int):
+                        rets[0][each] += rets[i][each]
+            rets = rets[0]
+        self.logfrontend.info(
+            'ETA.run: Analysis is finished in {0:.2f} seconds.'.format((te - ts)))
+        self.notify_callback('stopped')
+        return rets
 
     def add_callback(self, name, func):
         if func not in self._observer[name]:

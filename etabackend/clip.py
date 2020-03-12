@@ -53,7 +53,7 @@ class Clip():
     def check_consumed(self):
         return self.next_RecID_in_batch * self.BytesofRecords >= self.batch_actualread_length
 
-    def validate(self,check_buffer= True):
+    def validate(self, check_buffer=True):
         self.GlobalTimeShift = int(self.GlobalTimeShift)
         self.TTRes_pspr = int(self.TTRes_pspr)
         self.DTRes_pspr = int(self.DTRes_pspr)
@@ -61,7 +61,7 @@ class Clip():
         if check_buffer and self.batch_actualread_length > len(self.buffer):
             raise ValueError(
                 "batch_actualread_length is larger than the size of buffer")
-        if self.BytesofRecords==0 or self.batch_actualread_length == 0:
+        if self.BytesofRecords == 0 or self.batch_actualread_length == 0:
             return None
         return self
 
@@ -105,6 +105,7 @@ class Clip():
     def get_pos(self):
         return (self.fseekpoint-self.headeroffset)//self.BytesofRecords+self.next_RecID_in_batch
 
+
 class ETA_CUT():
     def __init__(self):
         self.logger = logging.getLogger(__name__)
@@ -127,7 +128,7 @@ class ETA_CUT():
                                                                                                                         cuts=cuts))
         return self.clips(filename, read_events=((NumRecords+cuts-1) // cuts), modify_clip=last_clip, reuse_clips=reuse_clips, keep_indexes=keep_indexes, **kwargs)
 
-    def clips(self, filename, modify_clip=None, read_events=1024*1024*10, reuse_clips=True, keep_indexes=None, **kwargs):
+    def clips(self, filename, modify_clip=None, read_events=1024*1024*10, seek_event=-1, reuse_clips=True, keep_indexes=None, **kwargs):
         last_clip = modify_clip
         currentclip = True
         counter = 0
@@ -141,6 +142,7 @@ class ETA_CUT():
                 # copy information from last clip
                 currentclip.from_parser_output(last_clip.to_reader_input())
             # compute seeking info
+            seek_event1 = seek_event
             if keep_indexes:
                 if type(keep_indexes) != list:
                     raise ValueError(
@@ -148,12 +150,14 @@ class ETA_CUT():
                 if counter >= len(keep_indexes):
                     # keep_indexes reaching its end
                     break
-                seek_event = keep_indexes[counter]*read_events
+                # ovrride seek_event with keep_indexes
+                seek_event1 = max(seek_event, 0) + \
+                    keep_indexes[counter]*read_events
             else:
-                seek_event = -1  # auto slide window
-                # seek_event = counter * read_events # remove me
+                if counter > 0:
+                    seek_event1 = -1  # override seek_event to auto slide window from the second clip
             currentclip = self.clip_file(
-                filename, modify_clip=currentclip, read_events=read_events, seek_event=seek_event, **kwargs)
+                filename, modify_clip=currentclip, read_events=read_events, seek_event=seek_event1, **kwargs)
             if currentclip:
                 self.logfrontend.info("Analysis progress: {:.2f}% ({:.2f}MB/{:.2f}MB)".format(
                     (currentclip.fseekpoint/TTF_filesize)*100.0, currentclip.fseekpoint/(1024.0*1024.0), TTF_filesize/(1024.0*1024.0)))

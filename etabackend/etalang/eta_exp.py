@@ -713,7 +713,7 @@ class Graph(INTEGER, TABLE, RFILE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENC
                      type="uint8", with_ptr=True)
         self.INTEGER("uettp_initial", "chn_next",
                      initvalue=255, type="uint8", with_ptr=True)
-        self.INTEGER("uettp_initial", "interrupt", initvalue=0, type="uint8", const=True)
+        self.INTEGER("uettp_initial", "INTERRUPT", initvalue=0, type="uint8", const=True)
 
         self.TABLE("uettp_initial", "POOL_timetag_arr", [
                    pool_tree_size], type="int64", with_ptr=True)
@@ -777,12 +777,12 @@ class Graph(INTEGER, TABLE, RFILE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENC
     def interrupt(self,triggers):
         if isinstance(triggers,list):
             self.EMIT_LINE(
-                triggers, """interrupt=1""")
+                triggers, """INTERRUPT=1""")
 
     def abort(self,triggers):
         if isinstance(triggers,list):
             self.EMIT_LINE(
-                triggers, """AbsTime_ps = 9223372036854775807;interrupt=1""")
+                triggers, """AbsTime_ps = 9223372036854775807;INTERRUPT=1""")
 
     def parse_multi_object(self, names):
         names = names.strip()

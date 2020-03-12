@@ -207,7 +207,7 @@ def link_jit_code(args):
     FileReader_pop_event, POOL_update, VCHN_next = (
         lambda *vargs: 0,)*3
     scalar_chn_next, READER, scalar_chn, scalar_fileid = (np.zeros(0),)*4
-    uettp_initial, init_llvm, deinit, looping, beforeloop_code,  num_rslot, global_initial, table_list, ptr_VCHN, ptr_fileid, ptr_chn, ptr_READER, ptr_chn_next, interrupt = (
+    uettp_initial, init_llvm, deinit, looping, beforeloop_code,  num_rslot, global_initial, table_list, ptr_VCHN, ptr_fileid, ptr_chn, ptr_READER, ptr_chn_next, INTERRUPT = (
         0,)*14
 
     @jit(nopython=True, nogil=True)  # parallel=True,
@@ -227,8 +227,8 @@ def link_jit_code(args):
             if AbsTime_ps == 9223372036854775807:  # full stop
                 break
             looping
-            if interrupt:
-                eta_ret += interrupt
+            if INTERRUPT:
+                eta_ret += INTERRUPT
                 break
             if fileid < num_rslot:
                 controller_rfile_time = FileReader_pop_event(
