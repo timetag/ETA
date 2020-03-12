@@ -102,13 +102,8 @@ function backend_run(install_mode) {
   if (!check_etabackend()){
     return false;
   }
-  let ls = spawnSync('python', ['-m', 'etabackend'], { detached: true, shell: true });
-  if (ls.error) {
-      dialog.showErrorBox('Install Failed', "Can not execute python via system shell.")
-      return false;
-  }
-  logger.info("ETA Backend not installed.")
-  if (ls.stdout) logger.info(ls.stdout.toString())//success
+  const subprocess = spawn('python', ['-m', 'etabackend'], { detached: true, shell: true });
+  subprocess.unref();
   return false;
 }
 module.exports = backend_run;
