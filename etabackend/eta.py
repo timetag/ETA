@@ -249,11 +249,10 @@ class ETA(ETA_CUT):
             result = {}
             # emit rfiles
             for (rfile_name, rfile_id) in required_rfiles.items():
-                if rfile_name in result:
-                    used_clip_result, _, _ = self.clip_from_ctxs(
-                        rfile_id, ctxs)
-                    result[rfile_name] = used_clip_result.validate(
-                        check_buffer=False)
+                used_clip_result, _, _ = self.clip_from_ctxs(
+                    rfile_id, ctxs)
+                result[rfile_name] = used_clip_result.validate(
+                    check_buffer=False)
             # emit other stuff
             kwlist = ["_now_", "_last_", "POOL_", "_start_", "_stop_", "VCHN",
                       "READER", "VFILES", "_vfile", 'AbsTime_ps', 'fileid', 'chn', 'chn_next', "INTERRUPT"]

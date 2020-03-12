@@ -27,7 +27,7 @@ class CrazyTransformer(ast.NodeTransformer):
         return node
 
     def visit_Assign(self, node):
-        print(ast.dump(node))
+        #print(ast.dump(node))
         for each in node.targets:
             args = copy.deepcopy(self.contex)
             args.append(astunparse.unparse(each).replace("\n", ""))
@@ -53,14 +53,13 @@ class CrazyTransformer(ast.NodeTransformer):
         args.append(target+op+value)
         self.code_list.append(
                 ["ASSIGN_values_to", args])
-def code_parse(expr, contex=[], verbose=False):
+def code_parse(expr, contex=[]):
     expr = textwrap.dedent(expr)
     expr_ast = ast.parse(expr)
     transformer = CrazyTransformer(contex=contex)
 
     transformer.visit(expr_ast)
-    if verbose:
-        print(ast.dump(expr_ast))
+    #print(ast.dump(expr_ast))
     return transformer.code_list
 
 

@@ -62,12 +62,6 @@ def index_permute(A=[], new_order=[]):
     return ret
 
 
-def index_to_address(index=[]):
-    for each in index:
-        print(each)
-    return each
-
-
 def transpose_tensor(A=[], axis=[]):
     dim = tensor_dimension(A)
     A = flat_tensor(A)
