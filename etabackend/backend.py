@@ -3,6 +3,7 @@ import logging
 import os
 import queue
 import sys
+import signal
 import time
 import traceback
 import threading
@@ -53,6 +54,7 @@ class Backend():
                              web.get('/index.html', self.web_index, name='default'),
                              web.get('/ws', self.websocket_handler),
                              web.get('/shutdown-display', self.shutdown_display),
+                             web.get('/shutdown', self.shutdown),
                              web.static('/', BASE_DIR / 'static/', append_version=True),
                             ])
         self.logfrontend.addHandler(WebClientHandler(self.schedule_send_text))
@@ -71,6 +73,7 @@ class Backend():
         self.loop = asyncio.get_event_loop()
 
         self.app.on_shutdown.append(self.on_shutdown)
+
         if run_forever:
             web.run_app(self.app, host=self.hostip, port=self.hostport, shutdown_timeout=1, access_log=None)
 
@@ -253,7 +256,11 @@ class Backend():
             return web.json_response(['success'])
         
         return web.json_response([])
-            
+
+    async def shutdown(self, request):
+        os.kill(os.getpid(), signal.SIGINT) #FIXME if there is a better way.
+        return web.Response(text="ETA backend is shutdown.")
+
     def display(self, app=None, type='dash'):
         if app is None:
             self.logfrontend.warning(
