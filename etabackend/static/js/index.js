@@ -207,7 +207,7 @@ d3.select('#btn_connect').on('click', function () {
         if (ret[0] == "running") {
             $("#exampleModalClose").toggleClass("d-none", true);
             $("#exampleModalLabel").html('<div class="loader d-inline-block"></div> <div class="d-inline-block">ETA Running...</div>');
-            $("#btn_viewresult").toggleClass("d-none", true);
+            //$("#btn_viewresult").toggleClass("d-none", true);
             if (ret[1].length>=1)
                 $("#remoteLOG").html($("#remoteLOG").html() + "<br/>" + ret[1]);
         }
