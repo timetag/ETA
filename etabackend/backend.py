@@ -13,8 +13,6 @@ import aiohttp
 from aiohttp import web
 import weakref
 
-from bokeh.server.server import Server
-
 import etabackend.webinstall as webinstall
 from etabackend.eta import ETA, ETACompilationException
 
@@ -41,7 +39,9 @@ class Backend():
         self.hostip = os.environ.get('ETA_IP') or "localhost"
         self.hostport = int(os.environ.get('ETA_PORT') or "5678")
         self.hostdashport = int(os.environ.get('ETA_DASHPORT') or "5679")
-        self.displaying = False
+        self.not_displaying = threading.Event()
+        self.not_displaying.set()
+
 
         # Fix for tornado webserver
         if hasattr(asyncio,"WindowsSelectorEventLoopPolicy"):
@@ -65,7 +65,6 @@ class Backend():
         # FIXME This is somehow evil, but works. Should be fixed if the Display function is every fixed, it is also not so beautiful.
         self.kernel.display = self.display
         self.kernel.send = self.schedule_send
-        self.kernel.show = self.show
 
         self.logger.info("ETA URL: http://{}:{}".format(self.hostip, self.hostport))
         self.loop = asyncio.get_event_loop()
@@ -163,7 +162,7 @@ class Backend():
     async def process_eta(self, etaobj=None, id="code", group="main"):
         await self.send("none", "discard")  # show a neutral icon
 
-        if self.displaying:
+        if not self.not_displaying.is_set():
             self.logfrontend.info(
                 "ETA.display: Script Panel is serving at http://{}:{}.".format(self.hostip, self.hostdashport))
             self.logfrontend.warning(
@@ -204,42 +203,45 @@ class Backend():
                 self.logfrontend.info(
                     "Don't forget to save the recipe and share it!")
 
-    def show(self, app=None):
-        """ Displays a bokeh object or application. 
+    async def show_bokeh(self, app=None):
+        """ Displays a bokeh document. 
         """
-
-        self.logfrontend.info("eta.show: Show bokeh object")
+        import tornado.ioloop
+        from bokeh.server.server import Server
+        
+        self.logfrontend.info("show_bokeh: Show bokeh object in main thread")
         try:
-            global bokserver
-
             def shutdown(doc):
                 bokserver.unlisten()
                 bokserver.stop()
-                self.displaying = False
+                self.not_displaying.set()
                 self.logfrontend.info("Dashboard shutting down.")
                 self.schedule_send("http://{}:{}".format(self.hostip,
-                                                        self.hostdashport), "discard")
+                                                         self.hostdashport), "discard")
             bokserver = Server(
                         {"/": app, 
-                            "/shutdown": shutdown},
+                         "/shutdown": shutdown},
                         address=self.hostip,
                         port=self.hostdashport,
                         allow_websocket_origin=[f"{self.hostip}:{self.hostport}", 
-                                                f"{self.hostip}:{self.hostdashport}"]
+                                                f"{self.hostip}:{self.hostdashport}",
+                                                f"127.0.0.1:{self.hostport}",
+                                                f"127.0.0.1:{self.hostdashport}"
+                                               ],
+                        io_loop=tornado.ioloop.IOLoop.current()
                         )
             bokserver.start()
-            
-            self.logfrontend.info(
-                "ETA.display: Script Panel is serving at http://{}:{}.".format(self.hostip, self.hostdashport))
-            self.schedule_send("http://{}:{}".format(self.hostip,
-                                                        self.hostdashport), "dash")
-            self.displaying = True
+            logging.getLogger('tornado.access').setLevel(logging.WARNING)
+
+            self.logfrontend.info("ETA.display: Script Panel is serving at http://{}:{}.".format(self.hostip, self.hostdashport))
+            await self.send("http://{}:{}".format(self.hostip, self.hostdashport), "dash")
+
         except Exception as e:
             self.logfrontend.error("bokeh failed to start", exc_info=True)
-            self.displaying = False
+            self.not_displaying.set()
             self.logger.error(str(e), exc_info=True)
 
-    def display(self, app=None):
+    def display(self, app=None, type='dash'):
         if app is None:
             self.logfrontend.warning(
                 "No display dashboard created. Use 'app = dash.Dash()' to create a Dash graph.")
@@ -247,7 +249,7 @@ class Backend():
             self.logfrontend.info("ETA.DISPLAY: Starting Script Panel.")
             try:
                 import threading
-                if str(type(app)) == "<class 'dash.dash.Dash'>":
+                if type == "dash":
                     from flask import request
 
                     @app.server.route('/shutdown', methods=['GET'])
@@ -257,7 +259,7 @@ class Backend():
                             raise RuntimeError(
                                 'Not running with the Werkzeug Server')
                         func()
-                        self.displaying = False
+                        self.not_displaying.set()
                         self.logfrontend.info("Dashboard shutting down.")
                         self.schedule_send("http://{}:{}".format(self.hostip,
                                                         self.hostdashport), "discard")
@@ -268,34 +270,25 @@ class Backend():
                     thread2 = threading.Thread(
                         target=app.server.run, kwargs={'host': self.hostip, "port": int(self.hostdashport)})
                     thread2.daemon = True
-                    thread2.start()
-                elif str(type(app)) == "<class 'function'>":
-
-                    from bokeh.server.server import Server
-                    global bokserver
-
-                    def shutdown(doc):
-                        bokserver.unlisten()
-                        bokserver.stop()
-                        self.displaying = False
-                        self.logfrontend.info("Dashboard shutting down.")
-                        self.schedule_send("http://{}:{}".format(self.hostip,
-                                                        self.hostdashport), "discard")
-
-                    bokserver = Server(
-                        {"/": app, "/shutdown": shutdown}, address=self.hostip, port=int(self.hostdashport))
-                    bokserver.start()
+                    thread2.start()                   
+                    self.logfrontend.info(
+                        "ETA.display: Script Panel is serving at http://{}:{}.".format(self.hostip, self.hostdashport))
+                    self.schedule_send("http://{}:{}".format(self.hostip,
+                                                    self.hostdashport), "dash")
+                elif type == "bokeh":
+                    asyncio.run_coroutine_threadsafe(self.show_bokeh(app), self.loop)
                 else:
                     self.logfrontend.warning(
                         "eta.display: unknown type {} for display".format(str(type(app))))
-                self.logfrontend.info(
-                    "ETA.display: Script Panel is serving at http://{}:{}.".format(self.hostip, self.hostdashport))
-                self.schedule_send("http://{}:{}".format(self.hostip,
-                                                self.hostdashport), "dash")
-                self.displaying = True
+                    return None
+
+
+
+                self.not_displaying.clear()
+                return self.not_displaying
             except Exception as e:
                 self.logfrontend.error("bokeh failed to start", exc_info=True)
-                self.displaying = False
+                self.not_displaying.set()
                 self.logger.error(str(e), exc_info=True)
 
 
