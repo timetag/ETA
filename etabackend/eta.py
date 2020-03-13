@@ -3,9 +3,10 @@ import json
 import logging
 import os
 import sys
+import threading
 import time
 import types
-from concurrent.futures import ThreadPoolExecutor
+from concurrent import futures
 
 import numpy as np
 
@@ -32,7 +33,7 @@ class ETA(ETA_CUT):
     def __init__(self):
         super().__init__()
 
-        self.executor = ThreadPoolExecutor()
+        self.executor = futures.ThreadPoolExecutor()
         self._observer = {"running": [],
                           "stopped": [],
                           "update-recipe": [],
@@ -122,7 +123,7 @@ class ETA(ETA_CUT):
         if ts is None:
             ts = [time.time(), 0]  # start timing
         if ctxs is None:
-            self.logger.info("Initializing context.")
+            self.logger.debug("Initializing context.")
             ctxs = initializer()
 
         if return_results:
@@ -132,7 +133,6 @@ class ETA(ETA_CUT):
             thread1 = None
         else:
             # execute on ThreadPool
-            time.sleep(0.1)
             thread1 = self.executor.submit(
                 self.ctx_loop, *vargs, ctxs=ctxs, mainloop=mainloop, required_rfiles=rfiles, ts=ts, **kwargs)
 
@@ -188,7 +188,7 @@ class ETA(ETA_CUT):
         while True:
             if (max_autofeed > 0) and (loop_count >= max_autofeed):
                 self.logger.info(
-                    "Analysis program early-stopped, exceeding max_autofeed.")
+                    "Analysis on {} early-stopped, exceeding max_autofeed.".format(threading.current_thread().name))
                 break
             for (rfile_name, rfile_id) in required_rfiles.items():
                 # check for existing clips
@@ -202,7 +202,7 @@ class ETA(ETA_CUT):
                         sources, rfile_name, max_autofeed)
                     if stop_with_source and (not feed_clip):
                         self.logger.info(
-                            "Analysis program early-stopped, stop at the end of Clips in one of the sources.")
+                            "Analysis on {} early-stopped at the end of Clips in one of the sources.".format(threading.current_thread().name))
                         return ret
                     feed_clip.overflowcorrection = used_clip_result.overflowcorrection
                     # replace to new Clip info
@@ -210,10 +210,13 @@ class ETA(ETA_CUT):
                     # replace buffer
                     ctxs[rfile_name] = feed_clip.buffer
 
-            self.logger.info("Executing analysis program...")
+            self.logger.debug("Executing analysis program on {}...".format(
+                threading.current_thread().name))
             ts1 = time.time()
             ret += mainloop(**ctxs)
             ts[1] += time.time()-ts1
+            self.logger.debug("Pausing analysis program on {}...".format(
+                threading.current_thread().name))
             # check final stop
             if ctxs["scalar_AbsTime_ps"][0] == 9223372036854775807:
                 self.logger.info("Analysis program ended.")
@@ -243,11 +246,16 @@ class ETA(ETA_CUT):
         rets = []
         max_eta_total_time = 0
         max_eta_compute_time = 0
+        threads = []
         for task in list_of_tasks:
-            (thread1, ts, ctxs, required_rfiles) = task
+            (thread1, _, _, _,) = task
             if thread1:
-                # join process
-                print(thread1.result())
+                threads.append(thread1)
+        # join threads
+        if threads:
+            futures.wait(threads, timeout=None)
+        for task in list_of_tasks:
+            (_, ts, ctxs, required_rfiles) = task
             # update timing
             eta_total_time, eta_compute_time = ts
             eta_total_time = time.time() - eta_total_time
@@ -279,7 +287,7 @@ class ETA(ETA_CUT):
             if include_timing:
                 result["eta_total_time"] = eta_total_time
                 result["eta_compute_time"] = eta_compute_time
-            
+
             rets.append(result)
         if sum_results:
             # reduce
@@ -291,7 +299,8 @@ class ETA(ETA_CUT):
             if include_timing:
                 rets["max_eta_total_time"] = max_eta_total_time
                 rets["max_eta_compute_time"] = max_eta_compute_time
-        self.logfrontend.info('ETA.run: Analysis is finished in {0:.2f} seconds.'.format(max_eta_compute_time))
+        self.logfrontend.info(
+            'ETA.run: Analysis is finished in {0:.2f} seconds.'.format(max_eta_compute_time))
         self.notify_callback('stopped')
 
         return rets
