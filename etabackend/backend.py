@@ -52,19 +52,20 @@ class Backend():
         self.app.add_routes([web.get('/', self.web_redirect),
                              web.get('/index.html', self.web_index, name='default'),
                              web.get('/ws', self.websocket_handler),
+                             web.get('/shutdown-display', self.shutdown_display),
                              web.static('/', BASE_DIR / 'static/', append_version=True),
                             ])
-        self.logfrontend.addHandler(WebClientHandler(self.schedule_send))
+        self.logfrontend.addHandler(WebClientHandler(self.schedule_send_text))
 
         self.kernel = ETA()
-        self.kernel.add_callback('running', lambda: self.schedule_send('', 'running'))
-        self.kernel.add_callback('stopped', lambda: self.schedule_send('', 'stopped'))
+        self.kernel.add_callback('running', lambda: self.schedule_send({'op': 'running'}))
+        self.kernel.add_callback('stopped', lambda: self.schedule_send({'op': 'stopped'}))
         self.kernel.add_callback('update-recipe', lambda: self.schedule_recipe_update())
 
         # Monkeypatch a display function to the kernel to support display in recipe.
         # FIXME This is somehow evil, but works. Should be fixed if the Display function is every fixed, it is also not so beautiful.
         self.kernel.display = self.display
-        self.kernel.send = self.schedule_send
+        self.kernel.send = self.schedule_send_text
 
         self.logger.info("ETA URL: http://{}:{}".format(self.hostip, self.hostport))
         self.loop = asyncio.get_event_loop()
@@ -105,22 +106,27 @@ class Backend():
             await ws.close(code=aiohttp.WSCloseCode.GOING_AWAY,
                            message='Server shutdown')
 
-    async def send(self, text, endpoint="log"):
-        """ Sends a websocket message to all clients.
+    async def send(self, data):
+        """ Sends a websocket message to all clients using `json.dumps()` to convert data
         """
         for _ws in self.app['websockets']:
-            await _ws.send_json([endpoint, str(text)])
+            await _ws.send_json(data)
     
-    def schedule_send(self, text, endpoint="log"):
+    def schedule_send(self, data):
         """ Schedules a send on the websocket.
         """
-        asyncio.run_coroutine_threadsafe(self.send(text, endpoint), self.loop)
-            
+        asyncio.run_coroutine_threadsafe(self.send(data), self.loop)
+
+    def schedule_send_text(self, text, endpoint='log'):
+        """ Schedule sending text to the frontend
+        """
+        self.schedule_send({'op': endpoint, 'msg': text})
+
     def schedule_recipe_update(self):
-        self.schedule_send(self.kernel.recipe.get_table(), "table")
+        self.schedule_send({'op': 'table', 'table': self.kernel.recipe.get_table()})
 
     async def recipe_update(self):
-        await self.send(self.kernel.recipe.get_table(), "table")
+        await self.send({'op': 'table', 'table': self.kernel.recipe.get_table()})
 
     async def recipe_set_filename(self, etaobj, id, key):
         try:
@@ -154,21 +160,22 @@ class Backend():
             self.logger.error(str(e), exc_info=True)
 
     async def compile_eta(self, etaobj=None):
-        await self.send("none", "discard")  # show a neutral icon
+        await self.send({"op": "discard"})  # show a neutral icon
 
         loop = asyncio.get_running_loop()
         await loop.run_in_executor(None, lambda: self.kernel.load_eta(etaobj))
 
     async def process_eta(self, etaobj=None, id="code", group="main"):
-        await self.send("none", "discard")  # show a neutral icon
+        await self.send({"op": "discard"})  # show a neutral icon
 
         if not self.not_displaying.is_set():
             self.logfrontend.info(
                 "ETA.display: Script Panel is serving at http://{}:{}.".format(self.hostip, self.hostdashport))
             self.logfrontend.warning(
                 "The current script is not executed, because a previously executed script is still serving the results.")
-            await self.send("http://{}:{}".format(self.hostip,
-                                                  self.hostdashport), "dash")
+            await self.send({"op": "dash", 
+                             "url-dash": "http://{}:{}".format(self.hostip, self.hostdashport),
+                             "url-shutdown": "http://{}:{}/shutdown-display".format(self.hostip, self.hostdashport)})
         else:
             loop = asyncio.get_running_loop()
             await loop.run_in_executor(None, lambda: self.kernel.load_eta(etaobj))
@@ -211,16 +218,8 @@ class Backend():
         
         self.logfrontend.info("show_bokeh: Show bokeh object in main thread")
         try:
-            def shutdown(doc):
-                bokserver.unlisten()
-                bokserver.stop()
-                self.not_displaying.set()
-                self.logfrontend.info("Dashboard shutting down.")
-                self.schedule_send("http://{}:{}".format(self.hostip,
-                                                         self.hostdashport), "discard")
-            bokserver = Server(
-                        {"/": app, 
-                         "/shutdown": shutdown},
+            self.app['bokserver'] = Server(
+                        {"/": app,},
                         address=self.hostip,
                         port=self.hostdashport,
                         allow_websocket_origin=[f"{self.hostip}:{self.hostport}", 
@@ -230,17 +229,31 @@ class Backend():
                                                ],
                         io_loop=tornado.ioloop.IOLoop.current()
                         )
-            bokserver.start()
+            self.app['bokserver'].start()
             logging.getLogger('tornado.access').setLevel(logging.WARNING)
 
             self.logfrontend.info("ETA.display: Script Panel is serving at http://{}:{}.".format(self.hostip, self.hostdashport))
-            await self.send("http://{}:{}".format(self.hostip, self.hostdashport), "dash")
+            await self.send({"op": "dash", 
+                             "url-dash": "http://{}:{}".format(self.hostip, self.hostdashport),
+                             "url-shutdown": "http://{}:{}/shutdown-display".format(self.hostip, self.hostport)})
 
         except Exception as e:
             self.logfrontend.error("bokeh failed to start", exc_info=True)
             self.not_displaying.set()
             self.logger.error(str(e), exc_info=True)
 
+    async def shutdown_display(self, request):
+        if self.app.get('bokserver', None) is not None:
+            self.app['bokserver'].stop()
+            self.app['bokserver'] = None
+            self.not_displaying.set()
+            self.logfrontend.info("Dashboard shutting down.")
+            self.schedule_send_text("http://{}:{}".format(self.hostip,
+                                                          self.hostport), "discard")
+            return web.json_response(['success'])
+        
+        return web.json_response([])
+            
     def display(self, app=None, type='dash'):
         if app is None:
             self.logfrontend.warning(
@@ -261,8 +274,7 @@ class Backend():
                         func()
                         self.not_displaying.set()
                         self.logfrontend.info("Dashboard shutting down.")
-                        self.schedule_send("http://{}:{}".format(self.hostip,
-                                                        self.hostdashport), "discard")
+                        self.schedule_send_text(f"http://{self.hostip}:{self.hostport}", "discard")
                         response = app.server.make_response('Hello, World')
                         response.headers.add(
                             'Access-Control-Allow-Origin', '*')
@@ -271,10 +283,10 @@ class Backend():
                         target=app.server.run, kwargs={'host': self.hostip, "port": int(self.hostdashport)})
                     thread2.daemon = True
                     thread2.start()                   
-                    self.logfrontend.info(
-                        "ETA.display: Script Panel is serving at http://{}:{}.".format(self.hostip, self.hostdashport))
-                    self.schedule_send("http://{}:{}".format(self.hostip,
-                                                    self.hostdashport), "dash")
+                    self.logfrontend.info(f"ETA.display: Script Panel is serving at http://{self.hostip}:{self.hostdashport}.")
+                    self.schedule_send({"op": "dash", 
+                                        "url-dash": f"http://{self.hostip}:{self.hostdashport}",
+                                        "url-shutdown": f"http://{self.hostip}:{self.hostport}/shutdown-display"})
                 elif type == "bokeh":
                     asyncio.run_coroutine_threadsafe(self.show_bokeh(app), self.loop)
                 else:

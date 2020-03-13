@@ -191,53 +191,53 @@ d3.select('#btn_connect').on('click', function () {
 
     ws.onmessage = function (t) {
         var ret = JSON.parse(t.data);
-        if (ret[0] == "err") {
-            ret[1] = "⚠" + ret[1];
+        if (ret['op'] == "err") {
+            ret['msg'] = "⚠" + ret['msg'];
             $("#exampleModalClose").toggleClass("d-none", false); //allow closing on error
             $("#exampleModalLabel").html('🛑 ETA Error');
         }
-        if (ret[0] == "log" || ret[0] == "err") {
+        if (ret['op'] == "log" || ret['op'] == "err") {
             $("#remoteModal").modal();
-            $("#remoteLOG").html($("#remoteLOG").html() + "<br/>" + ret[1]);
+            $("#remoteLOG").html($("#remoteLOG").html() + "<br/>" + ret['msg']);
         }
-        if (ret[0] == "table") {
-            load_table(ret[1]);
+        if (ret['op'] == "table") {
+            load_table(ret['table']);
             update_to_ls();
         }
-        if (ret[0] == "running") {
+        if (ret['op'] == "running") {
             $("#exampleModalClose").toggleClass("d-none", true);
             $("#exampleModalLabel").html('<div class="loader d-inline-block"></div> <div class="d-inline-block">ETA Running...</div>');
             //$("#btn_viewresult").toggleClass("d-none", true);
-            if (ret[1].length>=1)
-                $("#remoteLOG").html($("#remoteLOG").html() + "<br/>" + ret[1]);
+            if ('msg' in ret && ret['msg'].length>=1)
+                $("#remoteLOG").html($("#remoteLOG").html() + "<br/>" + ret['msg']);
         }
-        if (ret[0] == "stopped") {
+        if (ret['op'] == "stopped") {
             $("#exampleModalClose").toggleClass("d-none", false);
             $("#exampleModalLabel").html('<img src="favicon.ico" style="width: 2em;"/> ETA Results');
-            if (ret[1].length>=1)
-                $("#remoteLOG").html($("#remoteLOG").html() + "<br/>" + ret[1]);
+            if ('msg' in ret && ret['msg'].length>=1)
+                $("#remoteLOG").html($("#remoteLOG").html() + "<br/>" + ret['msg']);
         }
-        if (ret[0] == "clear") {
+        if (ret['op'] == "clear") {
             $("#remoteLOG").html("");// clear log
         }
-        if (ret[0] == "dash") {
+        if (ret['op'] == "dash") {
             $("#exampleModalClose").toggleClass("d-none", false);
             $("#btn_viewresult").toggleClass("d-none", false);
             $("#btn_viewresult").unbind("click");
             $("#btn_viewresult").click(function (d) {
-                    window.open(ret[1]);
+                    window.open(ret['url-dash']);
             });
 
             $("#btn_discardresult").toggleClass("d-none", false);
             $("#btn_discardresult").unbind("click");
             $("#btn_discardresult").click(function (d) {
                     $.ajax({
-                        url: ret[1] + "/shutdown",
+                        url: ret['url-shutdown'],
                         context: document.body
                     });
             });
         }
-        if (ret[0] == "discard") {
+        if (ret['op'] == "discard") {
             $("#exampleModalClose").toggleClass("d-none", false);
             $("#remoteModal").modal('hide');
             $("#exampleModalLabel").html('ETA Backend');
