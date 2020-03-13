@@ -198,7 +198,8 @@ class Backend():
                         loc = self.kernel.compilecache_vars[group]
                     else:
                         loc = {}
-                    await loop.run_in_executor(None, lambda: exec(etaobj[id], glob, loc))
+                    glob.update(loc)
+                    await loop.run_in_executor(None, lambda: exec(etaobj[id], glob))
                     await self.recipe_update()
                 except Exception as e:
                     if (str(type(e)).find("numba") >= 0):
