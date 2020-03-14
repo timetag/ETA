@@ -61,7 +61,8 @@ class Backend():
 
         self.kernel = ETA()
         self.kernel.add_callback('running', lambda: self.schedule_send({'op': 'running'}))
-        self.kernel.add_callback('stopped', lambda: self.schedule_send({'op': 'stopped'}))
+        self.kernel.add_callback('paused', lambda: self.schedule_send({'op': 'paused'}))
+        self.kernel.add_callback('finished', lambda: self.schedule_send({'op': 'finished'}))
         self.kernel.add_callback('update-recipe', lambda: self.schedule_recipe_update())
 
         # Monkeypatch a display function to the kernel to support display in recipe.
@@ -178,7 +179,7 @@ class Backend():
                 "The current script is not executed, because a previously executed script is still serving the results.")
             await self.send({"op": "dash", 
                              "url-dash": "http://{}:{}".format(self.hostip, self.hostdashport),
-                             "url-shutdown": "http://{}:{}/shutdown-display".format(self.hostip, self.hostdashport)})
+                             "url-shutdown": "http://{}:{}/shutdown-display".format(self.hostip, self.hostport)})
         else:
             loop = asyncio.get_running_loop()
             await loop.run_in_executor(None, lambda: self.kernel.load_eta(etaobj))
@@ -213,6 +214,7 @@ class Backend():
                     return
                 self.logfrontend.info(
                     "Don't forget to save the recipe and share it!")
+                self.schedule_send({'op': 'finished'})
 
     async def show_bokeh(self, app=None):
         """ Displays a bokeh document. 

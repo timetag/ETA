@@ -159,10 +159,10 @@ d3.select('#btn_connect').on('click', function () {
     }
     try {
         ws_url = d3.select('#ws').property("value");
-        if (ws_url.length<=0){
-            ws_url  = "ws://" +  window.location.host+"/ws";
+        if (ws_url.length <= 0) {
+            ws_url = "ws://" + window.location.host + "/ws";
         }
-        d3.select('#ws').property("value",ws_url);
+        d3.select('#ws').property("value", ws_url);
         ws = new ReconnectingWebSocket(ws_url);
     } catch (error) {
         d3.select('#ws').classed("is-valid", false);
@@ -180,9 +180,8 @@ d3.select('#btn_connect').on('click', function () {
     ws.onerror = function (t) {
         d3.select('#ws').classed("is-valid", false);
         d3.select('#ws').classed("is-invalid", true);
-        if ($('#remoteModal').hasClass('show'))
-        {
-            ws.onmessage({'data':JSON.stringify(['err','Lost connection to Backend, retrying... <br/>You may need to restart the backend.'])});
+        if ($('#remoteModal').hasClass('show')) {
+            ws.onmessage({ 'data': JSON.stringify(['err', 'Lost connection to Backend, retrying... <br/>You may need to restart the backend.']) });
         }
     };
     ws.onclose = function (t) {
@@ -198,7 +197,8 @@ d3.select('#btn_connect').on('click', function () {
         }
         if (ret['op'] == "log" || ret['op'] == "err") {
             $("#remoteModal").modal();
-            $("#remoteLOG").html($("#remoteLOG").html() + "<br/>" + ret['msg']);
+            if ('msg' in ret && ret['msg'].length >= 1)
+                $("#remoteLOG").html($("#remoteLOG").html() + "<br/>" + ret['msg']);
         }
         if (ret['op'] == "table") {
             load_table(ret['table']);
@@ -206,39 +206,37 @@ d3.select('#btn_connect').on('click', function () {
         }
         if (ret['op'] == "running") {
             $("#exampleModalClose").toggleClass("d-none", true);
-            $("#exampleModalLabel").html('<div class="loader d-inline-block"></div> <div class="d-inline-block">ETA Running...</div>');
-            //$("#btn_viewresult").toggleClass("d-none", true);
-            if ('msg' in ret && ret['msg'].length>=1)
-                $("#remoteLOG").html($("#remoteLOG").html() + "<br/>" + ret['msg']);
+            $("#exampleModalLabel").html('<div class="loader d-inline-block" ></div> <div class="d-inline-block">ETA Running...</div>');
         }
-        if (ret['op'] == "stopped") {
+        if (ret['op'] == "paused") {
+            $("#exampleModalLabel").html('<img src="favicon.ico" style="width: 1.3em;"/> ETA Running');
+        }
+        if (ret['op'] == "finished") {
             $("#exampleModalClose").toggleClass("d-none", false);
-            $("#exampleModalLabel").html('<img src="favicon.ico" style="width: 2em;"/> ETA Results');
-            if ('msg' in ret && ret['msg'].length>=1)
-                $("#remoteLOG").html($("#remoteLOG").html() + "<br/>" + ret['msg']);
+            $("#exampleModalLabel").html('<img src="favicon.ico" style="width: 1.3em;"/> ETA Results');
         }
         if (ret['op'] == "clear") {
             $("#remoteLOG").html("");// clear log
         }
         if (ret['op'] == "dash") {
-            $("#exampleModalClose").toggleClass("d-none", false);
+            $("#exampleModalClose").toggleClass("d-none", true); //hide close button
             $("#btn_viewresult").toggleClass("d-none", false);
             $("#btn_viewresult").unbind("click");
             $("#btn_viewresult").click(function (d) {
-                    window.open(ret['url-dash']);
+                window.open(ret['url-dash']);
             });
 
             $("#btn_discardresult").toggleClass("d-none", false);
             $("#btn_discardresult").unbind("click");
             $("#btn_discardresult").click(function (d) {
-                    $.ajax({
-                        url: ret['url-shutdown'],
-                        context: document.body
-                    });
+                $.ajax({
+                    url: ret['url-shutdown'],
+                    context: document.body
+                });
             });
         }
         if (ret['op'] == "discard") {
-            $("#exampleModalClose").toggleClass("d-none", false);
+            $("#exampleModalClose").toggleClass("d-none", false); // resume close button
             $("#remoteModal").modal('hide');
             $("#exampleModalLabel").html('ETA Backend');
             $("#btn_viewresult").toggleClass("d-none", true);

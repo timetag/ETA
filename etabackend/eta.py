@@ -36,7 +36,8 @@ class ETA(ETA_CUT,Util):
 
         self.executor = futures.ThreadPoolExecutor()
         self._observer = {"running": [],
-                          "stopped": [],
+                          "paused": [],
+                          "finished": [],
                           "update-recipe": [],
                           }
         # timetag formats
@@ -107,14 +108,12 @@ class ETA(ETA_CUT,Util):
         if resume_task is None:
             self.logfrontend.info(
                 "ETA.run: Starting new analysis using Instrument group {}.".format(group))
-            self.notify_callback('running')
             (thread1, ts, ctxs, _) = (None, None, None, None)
         else:
             self.logfrontend.info(
                 "ETA.run: Resuming analysis using Instrument group {}.".format(group))
-            self.notify_callback('running')
             (thread1, ts, ctxs, _) = resume_task
-
+        self.notify_callback('running')
         if thread1:
             # join the previous thread
             self.logger.info(
@@ -302,7 +301,7 @@ class ETA(ETA_CUT,Util):
                 rets["max_eta_compute_time"] = max_eta_compute_time
         self.logfrontend.info(
             'ETA.run: Analysis is finished in {0:.2f} seconds.'.format(max_eta_compute_time))
-        self.notify_callback('stopped')
+        self.notify_callback('paused')
 
         return rets
 
