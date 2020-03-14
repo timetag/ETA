@@ -4,7 +4,6 @@ import logging
 try:
     # Check dependencies
     import etabackend.backend as backend
-    import etabackend.webinstall as webinstall
     from etabackend.eta import ETA, ETACompilationException
 except Exception as e:
     logger = logging.getLogger(__name__)
