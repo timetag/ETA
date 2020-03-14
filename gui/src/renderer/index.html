@@ -21,6 +21,7 @@
             document.getElementById("connecting").hidden = true;
             document.getElementById("prompt").hidden = false;
             document.getElementById("host").value = host;
+            launch_backend();
         }
         function try_connect() {
             document.getElementById("connecting").hidden = false;
@@ -45,22 +46,26 @@
             }
         }
         setTimeout(try_connect, 1);
-
+        function launch_backend() {
+            const { ipcRenderer } = require('electron');
+            ipcRenderer.send('launch_backend',  {
+                host: document.getElementById("host").value,
+            });
+        }
     </script>
     <div id="connecting" hidden="true">
         Connecting to ETA Backend...
     </div>
 
     <div id="prompt" hidden="true">
-        <h></h>Please launch ETA Backend and specify its host and port, like localhost:5678. <br/>
-        <a href="https://eta.readthedocs.io/en/latest/installation.html" target="_blank" >How to install ETA?</a>
+        <h>Please launch ETA Backend and specify its host and port, like localhost:5678. <a href="https://eta.readthedocs.io/en/latest/installation.html" target="_blank" >How to install ETA?</a>
+        </h>
         <br/>
         <br/>
         <form>
             Host and Port: <input id="host" type="text">
             <button onclick="go()">Go</button>
         </form>
-  
     </div>
 </body>
 

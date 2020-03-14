@@ -6,15 +6,17 @@ const BrowserWindow = electron.BrowserWindow
 const url = require('url')
 const formatUrl = url.format
 const path = require('path')
-const process = require('process');
+const process = require('process')
 
 const { dialog } = require('electron')
+const { ipcMain } = require('electron')
 const { autoUpdater } = require('electron-updater')
 
 const backend_run = require('./backend.js')
 
 autoUpdater.logger = require("electron-log")
 autoUpdater.logger.transports.file.level = "info"
+
 
 // global reference to mainWindow (necessary to prevent window from being garbage collected)
 let mainWindow
@@ -61,6 +63,8 @@ function ask_for_restarting_backend(){
     }
   })
 }
+
+
 
 // GUI related part
 function createMainWindow() {
@@ -119,6 +123,14 @@ function createMainWindow() {
 
   return window
 }
+
+
+ipcMain.on('launch_backend', (event, arg) => {
+  ask_for_restarting_backend();
+  console.log(
+      arg
+  );
+});
 
 // quit application when all windows are closed
 app.on('window-all-closed', () => {
