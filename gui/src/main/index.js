@@ -127,9 +127,6 @@ function createMainWindow() {
 
 ipcMain.on('launch_backend', (event, arg) => {
   ask_for_restarting_backend();
-  console.log(
-      arg
-  );
 });
 
 // quit application when all windows are closed

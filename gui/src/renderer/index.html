@@ -21,7 +21,7 @@
             document.getElementById("connecting").hidden = true;
             document.getElementById("prompt").hidden = false;
             document.getElementById("host").value = host;
-            launch_backend();
+            launch_backend(host);
         }
         function try_connect() {
             document.getElementById("connecting").hidden = false;
@@ -46,10 +46,10 @@
             }
         }
         setTimeout(try_connect, 1);
-        function launch_backend() {
+        function launch_backend(host) {
             const { ipcRenderer } = require('electron');
             ipcRenderer.send('launch_backend',  {
-                host: document.getElementById("host").value,
+                "host": host
             });
         }
     </script>
