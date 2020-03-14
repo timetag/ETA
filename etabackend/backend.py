@@ -13,8 +13,6 @@ import asyncio
 import aiohttp
 from aiohttp import web
 import weakref
-
-import etabackend.webinstall as webinstall
 from etabackend.eta import ETA, ETACompilationException
 
 ETA_VERSION = "v0.7.1"
