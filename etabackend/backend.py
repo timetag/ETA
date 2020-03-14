@@ -198,13 +198,13 @@ class Backend():
         else:
             loop = asyncio.get_running_loop()
             await loop.run_in_executor(None, lambda: self.kernel.load_eta(etaobj))
-
+            group = group.split(",")[0]
             if self.kernel.compilecache_nfunc is not None:
                 # ETA File version check
                 if self.kernel.recipe.get_parameter("ETA_VERSION") is not None and self.kernel.recipe.get_parameter("ETA_VERSION") != self.ETA_VERSION:
                     self.logfrontend.warning(
                         "ETA_VERSION: the recipe requires {} while ETA Backend is {}, you might encounter compatibility issues.".format(self.kernel.recipe.get_parameter("ETA_VERSION"), self.ETA_VERSION))
-
+                
                 self.logfrontend.info(
                     "Executing code in Script Panel in group {}...".format(group))
                 try:
