@@ -104,12 +104,7 @@ $('.table-openfile').click(function () {
 
     recipe_set_filename($td.eq(0).text(), $td.eq(1).text())
 });
-// Tooltip and buttons
-d3.select('#btn_backend').on('click', function () {
-    window.open("./processing.html");
-});
-
-
+// buttons
 $('#add-vi').click(function () {
     create_item("vi_template")
 });
@@ -120,10 +115,19 @@ $('#add-dpp').click(function () {
     create_item("dpp_template", "NewPanel")
 });
 
-
+// Setting dialog
+// TODO: use jquery, but we need the click simulation
 d3.select('#btn_settings').on('click', function () {
     $("#connectModal").modal({ backdrop: 'static', keyboard: false });
 });
+
+$("#btn_shutdown").click(function (d) {
+    $.ajax({
+        url: 'shutdown',
+        context: document.body
+    });
+});
+
 
 // new dialog
 
@@ -262,8 +266,9 @@ function check_connectivity() {
 
     return false;
 }
-d3.select('#btn_connect').on('click')();
 
+// simulate click connect once
+d3.select('#btn_connect').on('click')();
 
 //RPC calls
 
