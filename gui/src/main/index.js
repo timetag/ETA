@@ -26,14 +26,14 @@ let mainWindow
 let backend_mode = false
 let install_mode = false
 process.argv.forEach((val, index) => {
-  if (val.indexOf("backend") >= 0) 
-    backend_mode=true;
-  if (val.indexOf("install") >= 0) 
-    install_mode=true;
+  if (val.indexOf("backend") >= 0)
+    backend_mode = true;
+  if (val.indexOf("install") >= 0)
+    install_mode = true;
 });
 
 // single instance lock
-if (backend_mode==false &&  install_mode ==false){
+if (backend_mode == false && install_mode == false) {
   const gotTheLock = app.requestSingleInstanceLock()
   if (!gotTheLock) {
     app.quit();
@@ -49,7 +49,7 @@ if (backend_mode==false &&  install_mode ==false){
   }
 }
 
-function ask_for_restarting_backend(){
+function ask_for_restarting_backend() {
   dialog.showMessageBox({
     type: 'info',
     title: 'Launch ETA Backend',
@@ -57,7 +57,7 @@ function ask_for_restarting_backend(){
     buttons: ['Yes', 'No']
   }, (buttonIndex) => {
     if (buttonIndex === 0) {
-        backend_run(install_mode);
+      backend_run(install_mode);
     }
     else {
     }
@@ -71,10 +71,14 @@ function createMainWindow() {
   let { width, height } = electron.screen.getPrimaryDisplay().workAreaSize;
   var width1 = width * 0.9 | 0;
   var height1 = height * 0.9 | 0;
-  const window = new BrowserWindow({ width: width1, height: height1, show: false })
-  
+  const window = new BrowserWindow({
+    width: width1, height: height1, show: false, webPreferences: {
+      nodeIntegration: true
+    }
+  })
+
   window.setMenuBarVisibility(false) // removing menu
-  
+
   window.once('ready-to-show', () => {
     window.show()
   })
@@ -84,7 +88,7 @@ function createMainWindow() {
   // general callback
   const onWindowOpen = (event, url, frameName) => {
     event.preventDefault()
-    var showinframe = (!(url.indexOf(".html") >= 0))||(url.indexOf("https:") >= 0)
+    var showinframe = (!(url.indexOf(".html") >= 0)) || (url.indexOf("https:") >= 0)
     const win = new BrowserWindow({
       resizable: true,
       backgroundColor: showinframe ? '#FFFFFF' : '#000000',
@@ -100,12 +104,22 @@ function createMainWindow() {
     win.webContents.on('new-window', onWindowOpen)
     win.webContents.on('did-fail-load', (event, code, desc, url, isMainFrame) => {
       win.close()
-      dialog.showErrorBox('Lost connection',"ETA GUI can not load resources from the backend. Try restarting the backend.")
+      dialog.showErrorBox('Lost connection', "ETA GUI can not load resources from the backend. Try restarting the backend.")
       ask_for_restarting_backend()
     })
     event.newGuest = win
   }
-
+  function load_mainpage(){
+    window.loadURL(formatUrl({
+      pathname: path.join(__dirname, '/../renderer/index.html'),
+      protocol: 'file',
+      slashes: true
+    }))
+  }
+  window.webContents.on('did-fail-load', (event, code, desc, url, isMainFrame) => {
+    dialog.showErrorBox('Lost connection', "ETA GUI can not load resources from the backend. Try restarting the backend.")
+    load_mainpage()
+   })
   window.webContents.on('new-window', onWindowOpen);
   /*
   window.webContents.on('devtools-opened', () => {
@@ -115,11 +129,7 @@ function createMainWindow() {
     })
   })
   */
-  window.loadURL(formatUrl({
-    pathname: path.join(__dirname, '/../renderer/index.html'),
-    protocol: 'file',
-    slashes: true
-  }))
+  load_mainpage()
 
   return window
 }
@@ -147,16 +157,16 @@ app.on('activate', () => {
 
 // create main BrowserWindow when electron is ready
 app.on('ready', () => {
-  if (backend_mode){
+  if (backend_mode) {
     // Backend 
-    while (backend_run(install_mode)){};
+    while (backend_run(install_mode)) { };
     app.quit();
     return;
-  }else{
+  } else {
     // create GUI
     mainWindow = createMainWindow()
   }
-  
+
   // Auto updater logic
   autoUpdater.autoDownload = false
 
