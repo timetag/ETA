@@ -11,6 +11,7 @@ from concurrent import futures
 import numpy as np
 
 from etabackend.clip import ETA_CUT, Clip
+from etabackend.util import Util
 from etabackend.etalang import jit_linker, recipe_compiler
 from etabackend.recipe import Recipe
 
@@ -28,7 +29,7 @@ class ETANonExistingGroupException(ETAException):
     pass
 
 
-class ETA(ETA_CUT):
+class ETA(ETA_CUT,Util):
 
     def __init__(self):
         super().__init__()

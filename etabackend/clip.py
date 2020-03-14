@@ -91,7 +91,8 @@ class Clip():
             ret.append(int(value))
         return ret
 
-    def parse_header(self, filename):
+    def parse_header(self, filename, format):
+        self.RecordType = format
         fileheader = bytearray(1024*20)  # 20KB header
         with open(filename, "rb") as f:
             f.readinto(fileheader)
@@ -174,8 +175,7 @@ class ETA_CUT():
         filename = str(filename)  # supporting pathlib
         if modify_clip == None:
             temp_clip = Clip()
-            temp_clip.RecordType = format
-            temp_clip.parse_header(filename)
+            temp_clip.parse_header(filename, format)
         else:
             temp_clip = modify_clip
 
