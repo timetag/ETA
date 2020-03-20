@@ -160,8 +160,8 @@ class ETA_CUT():
             currentclip = self.clip_file(
                 filename, modify_clip=currentclip, read_events=read_events, seek_event=seek_event1, **kwargs)
             if currentclip:
-                self.logfrontend.info("Analysis progress: {:.2f}% ({:.2f}MB/{:.2f}MB)".format(
-                    (currentclip.fseekpoint/TTF_filesize)*100.0, currentclip.fseekpoint/(1024.0*1024.0), TTF_filesize/(1024.0*1024.0)))
+                self.logfrontend.info("Analysis progress: {:.2f}% ({:.2f}MB/{:.2f}MB, {:.2f}MB desired)".format(
+                    (currentclip.fseekpoint/TTF_filesize)*100.0, currentclip.fseekpoint/(1024.0*1024.0), (read_events*currentclip.BytesofRecords)/(1024.0*1024.0), TTF_filesize/(1024.0*1024.0)))
                 yield currentclip
                 counter += 1
                 last_clip = currentclip

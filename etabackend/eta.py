@@ -29,7 +29,7 @@ class ETANonExistingGroupException(ETAException):
     pass
 
 
-class ETA(ETA_CUT,Util):
+class ETA(ETA_CUT, Util):
 
     def __init__(self):
         super().__init__()
@@ -156,8 +156,6 @@ class ETA(ETA_CUT,Util):
                 raise ValueError("ETA.run: Can not find the required RFILE {} in the sources dict, the given dict only contains {}.".format(
                     required_rfile, str(sources_user.keys())))
         else:
-            self.logfrontend.info(
-                "ETA.run: sources is not a dict. \n ETA will try to distribute it to all RFILES, which might case unexpected behavior. \n Use eta.run(sources={'file1':cg1,'file2':cg1},...) to give them seperatedly.")
             sources = sources_user
         if isinstance(sources, types.GeneratorType):
             try:
@@ -185,6 +183,10 @@ class ETA(ETA_CUT,Util):
         # auto-feed loop
         loop_count = 0
         ret = 0
+        if (isinstance(required_rfiles, dict) and len(required_rfiles) > 1 and (not isinstance(ctxs, dict))):
+            self.logfrontend.warn(
+                "ETA.run: sources is not a dict. \n ETA will try to distribute it to all RFILES, which might case unexpected behavior. \n Use eta.run(sources={'file1':cg1,'file2':cg1},...) to give them seperatedly.")
+
         while True:
             if (max_autofeed > 0) and (loop_count >= max_autofeed):
                 self.logger.info(
