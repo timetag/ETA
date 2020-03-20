@@ -13,7 +13,7 @@
   "build": {
     "appId": "com.eta.client",
     "productName": "ETA",
-    "copyright": "Copyright (C) 2019 Zuzeng Lin",
+    "copyright": "Copyright (C) 2020 Zuzeng Lin",
     "mac": {
       "category": "your.app.category.type",
       "publish": [
@@ -24,7 +24,8 @@
       "extraFiles": [
         "backend.ico",
         "python-webinstall.exe",
-        "*.whl"
+        "*.whl",
+        "*.bat"
       ],
       "publish": [
         "github"
