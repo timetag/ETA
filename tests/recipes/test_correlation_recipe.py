@@ -9,8 +9,8 @@ import numpy as np
 import etabackend.eta
 
 test_folder = Path(__file__).parent.parent
-recipe_folder = Path(__file__).parent.parent.parent / "etabackend" / "static" / "recipes"
-
+#recipe_folder = Path(__file__).parent.parent.parent / "etabackend" / "static" / "recipes"
+recipe_folder = Path(__file__).parent #FIXME: use the latest recipe from the etabackend
 
 class TestCorrelationRecipe:
     """ Tests if the Correlation Recipe delivered with the software does what it should do.
