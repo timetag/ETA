@@ -13,9 +13,9 @@ import asyncio
 import aiohttp
 from aiohttp import web
 import weakref
+import etabackend
 from etabackend.eta import ETA, ETACompilationException
 
-ETA_VERSION = "v0.7.1"
 ETA_BANNER = \
     """ 
     ______  ______    ___ 
@@ -32,7 +32,6 @@ BASE_DIR = pathlib.Path(__file__).parent
 
 class Backend():
     def __init__(self, run_forever=True):
-        self.ETA_VERSION = ETA_VERSION
         self.logger = logging.getLogger(__name__)
         self.logfrontend = logging.getLogger("etabackend.frontend")
 
@@ -201,9 +200,9 @@ class Backend():
             group = group.split(",")[0]
             if self.kernel.compilecache_nfunc is not None:
                 # ETA File version check
-                if self.kernel.recipe.get_parameter("ETA_VERSION") is not None and self.kernel.recipe.get_parameter("ETA_VERSION") != self.ETA_VERSION:
+                if self.kernel.recipe.get_parameter("ETA_VERSION") is not None and self.kernel.recipe.get_parameter("ETA_VERSION") != etabackend.__version__:
                     self.logfrontend.warning(
-                        "ETA_VERSION: the recipe requires {} while ETA Backend is {}, you might encounter compatibility issues.".format(self.kernel.recipe.get_parameter("ETA_VERSION"), self.ETA_VERSION))
+                        "ETA_VERSION: the recipe requires {} while ETA Backend is {}, you might encounter compatibility issues.".format(self.kernel.recipe.get_parameter("ETA_VERSION"), etabackend.__version__))
                 
                 self.logfrontend.info(
                     "Executing code in Script Panel in group {}...".format(group))
@@ -370,6 +369,6 @@ class WebClientHandler(logging.Handler):
 def main():
     print(ETA_BANNER)
     logger = logging.getLogger(__name__)
-    logger.info("ETA_VERSION: "+ETA_VERSION)
+    logger.info("ETA_VERSION: " + etabackend.__version__)
     #print("Using Python libraries from ", sys.path)
     ws = Backend()

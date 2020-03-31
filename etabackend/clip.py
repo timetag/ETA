@@ -108,6 +108,8 @@ class Clip():
 
 
 class ETA_CUT():
+    __version__ = etabackend.__version__
+
     def __init__(self):
         self.logger = logging.getLogger(__name__)
         self.logfrontend = logging.getLogger("etabackend.frontend")
