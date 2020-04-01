@@ -9,6 +9,18 @@ on:
     types: [ published ]
 
 jobs:
+  wget_python_webinstall:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download python-webinstall.exe
+      uses: wei/wget@v1
+      with:
+        args: -O python-webinstall.exe https://www.python.org/ftp/python/3.7.3/python-3.7.3-amd64-webinstall.exe
+    - name: Upload artifact
+      uses: actions/upload-artifact@v1
+      with:
+          name: python-webinstall
+          path: python-webinstall.exe
   build_windows:
     runs-on: windows-latest
     strategy:
@@ -26,11 +38,10 @@ jobs:
          python -m pip install wheel --upgrade
          python setup.py bdist_wheel
          dir 
-         move .\dist\*.whl .\gui\
     - name: Upload artifact
       uses: actions/upload-artifact@v1
       with:
-          name: wheels-win
+          name: wheels-win-${{ matrix.python-version }}
           path: dist
     - name: Test with pytest
       run: |
@@ -38,7 +49,7 @@ jobs:
         tox
         dir
   build_windows_gui:
-    needs: [build_windows]
+    needs: [build_windows,wget_python_webinstall]
     runs-on: windows-latest
     strategy:
       matrix:
@@ -48,18 +59,21 @@ jobs:
     - name: Download artifact
       uses: actions/download-artifact@v1
       with:
-          name: wheels-win
-          path: dist
+          name: wheels-win-3.7
+          path: gui
+    - name: Download artifact
+      uses: actions/download-artifact@v1
+      with:
+          name: python-webinstall
+          path: gui
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
     - name: build windows GUI
       run: |
-        echo DownloadFile https://www.python.org/ftp/python/3.7.3/python-3.7.3-amd64-webinstall.exe -FileName %APPVEYOR_BUILD_FOLDER%\gui\python-webinstall.exe
-        dir
-        move .\dist\*.whl .\gui\
         cd gui
+        dir
         yarn
         yarn dist
         cd ..
@@ -98,7 +112,6 @@ jobs:
         pip3 install tox tox-gh-actions --upgrade
         tox
         ls 
-
     - name: Upload artifact
       uses: actions/upload-artifact@v1
       with:
@@ -106,7 +119,7 @@ jobs:
           path: dist
   publish:
     needs: [build]
-    if: ${{ github.ref == 'refs/heads/master' || (github.event_name == 'release' && github.event.action == 'published') }}
+    if: ${{ github.ref == 'refs/heads/master' && (github.event_name == 'release' && github.event.action == 'published') }}
     runs-on: ubuntu-latest
     env:
         PYPI_PASSWORD: ${{secrets.PYPI_PASSWORD}}
