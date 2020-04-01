@@ -92,7 +92,11 @@ def codegen(recipe_obj):
             try:
                 etavm.exec_uettp(each)
             except Exception as e:
-                raise ValueError("Error when compiling ETA expression in graph {}:{}".format(graphnames[each[1][0]],e))
+                graphid = each[1][0]
+                if isinstance(graphid,int):
+                    raise ValueError("Unknown error when compiling graph {}:{}".format(graphnames[graphid],e))
+                else:
+                    raise e
         # generates infos
 
         vchn_max = -1
