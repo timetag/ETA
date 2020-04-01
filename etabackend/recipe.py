@@ -52,25 +52,32 @@ class Recipe():
         newobj.update(self.var)
         return json.dumps(newobj)
 
-    def set_parameter(self, key, value):
+    def set_parameter(self, key, value, group="main"):
         create = True
         for each in self.var_table:
             if each["name"].strip() == key:
-                each["config"] = value
+                each["config"] = str(value)
                 create = False
 
         if create:
             self.var_table.append({"id": "var_template"+str(
-                int(time.time())), "name": key, "group": "main", "info": "", "config": value})
+                int(time.time())), "name": key, "group": group, "info": "", "config": value})
+
+    def del_parameter(self, key):
+        for i, each in enumerate(self.var_table):
+            if each["name"].strip() == key:
+                del self.var_table[i]
+                break
 
     def get_parameter(self, key):
         for each in self.var_table:
             if each["name"].strip() == key:
                 return each["config"]
 
+
 if __name__ == '__main__':
     rnew = Recipe()
-    rnew.append_eta_recipe( json.load(open("Correlation.eta")))
-    rnew.append_eta_recipe( json.load(open("Realtime.eta")))
-    with open ("Merged.eta","w") as r:
+    rnew.append_eta_recipe(json.load(open("Correlation.eta")))
+    rnew.append_eta_recipe(json.load(open("Realtime.eta")))
+    with open("Merged.eta", "w") as r:
         r.write(rnew.dumps())

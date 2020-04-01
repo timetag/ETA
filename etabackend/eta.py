@@ -70,7 +70,7 @@ class ETA(ETA_CUT, Util):
                     self.compilecache_mainloop[k] = old_mainloop[k]
                     self.compilecache_initializer[k] = old_initializer[k]
 
-    def load_recipe(self, jsonobj=None, compile=True):
+    def load_recipe(self, jsonobj=None, compile=True, update_gui=True):
         try:
             if jsonobj:
                 self.recipe = Recipe(jsonobj)
@@ -78,13 +78,14 @@ class ETA(ETA_CUT, Util):
                 assert isinstance(self.recipe, Recipe)
                 self.update_cache(*recipe_compiler.codegen(
                     self.recipe))
+            if update_gui:
                 self.notify_callback('update-recipe')
         except Exception as e:
             self.logger.warning("Load recipe failed.", exc_info=True)
             self.logfrontend.warning("Load recipe failed.", exc_info=True)
             raise ETACompilationException from e
 
-    def compile_group(self, group="main"):
+    def link_group(self, group="main"):
         if not (group in self.compilecache_nfunc):
             raise ETANonExistingGroupException(
                 "Can not eta.run() on a non-existing group {}.".format(group))
@@ -103,7 +104,7 @@ class ETA(ETA_CUT, Util):
 
     def run(self, *vargs, resume_task=None, group="main", return_task=False, return_results=True, **kwargs):
         # linking
-        initializer, mainloop = self.compile_group(group=group)
+        initializer, mainloop = self.link_group(group=group)
         # getting rfiles
         rfiles = self.compilecache_rfiles[group]
         # resuming task
