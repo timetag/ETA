@@ -46,4 +46,10 @@ jobs:
       run: |
         tox
         pip3 install twine
-        twine upload dist/*.whl --skip-existing
+        echo twine upload dist/*.whl --skip-existing
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v1
+        with:
+          name: wheels
+          path: dist/*.whl
