@@ -27,12 +27,45 @@ jobs:
          python setup.py bdist_wheel
          dir 
          move .\dist\*.whl .\gui\
-         
+    - name: Upload artifact
+      uses: actions/upload-artifact@v1
+      with:
+          name: wheels-win
+          path: dist
     - name: Test with pytest
       run: |
         python -m pip install tox tox-gh-actions --upgrade
         tox
-        dir 
+        dir
+  build_windows_gui:
+    needs: [build_windows]
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Download artifact
+      uses: actions/download-artifact@v1
+      with:
+          name: wheels-win
+          path: dist
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: build windows GUI
+      run: |
+        echo DownloadFile https://www.python.org/ftp/python/3.7.3/python-3.7.3-amd64-webinstall.exe -FileName %APPVEYOR_BUILD_FOLDER%\gui\python-webinstall.exe
+        dir
+        move .\dist\*.whl .\gui\
+        cd gui
+        yarn
+        yarn dist
+        cd ..
+        ls .\gui\dist\
+        7z a ETA_Install-win64.zip .\gui\dist\*.exe
+
   build:
     runs-on: ubuntu-latest
     strategy:
@@ -95,8 +128,9 @@ jobs:
       uses: actions/download-artifact@v1
       with:
           name: wheels-3.7
+          path: dist
     - name: Twine upload
       run: |
         ls
-        twine upload wheels/*.whl --skip-existing
+        twine upload dist/*.whl --skip-existing
  
