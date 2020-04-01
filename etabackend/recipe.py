@@ -52,16 +52,21 @@ class Recipe():
         newobj.update(self.var)
         return json.dumps(newobj)
 
-    def set_parameter(self, key, value, group="main"):
+    def set_parameter(self, key, value=None, group=None):
         create = True
         for each in self.var_table:
             if each["name"].strip() == key:
-                each["config"] = str(value)
+                if value:
+                    each["config"] = str(value)
+                if group:
+                    each["group"] = str(group)
                 create = False
 
         if create:
+            if group is None:
+                group = "main"
             self.var_table.append({"id": "var_template"+str(
-                int(time.time())), "name": key, "group": group, "info": "", "config": value})
+                int(time.time())), "name": key, "group": str(group), "info": "", "config": str(value)})
 
     def del_parameter(self, key):
         for i, each in enumerate(self.var_table):
