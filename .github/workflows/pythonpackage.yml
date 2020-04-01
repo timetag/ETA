@@ -23,18 +23,14 @@ jobs:
       uses: actions/setup-python@v1
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
+    - name: Install dependencies and build
       run: |
          sudo apt-get update 
          sudo apt-get install -y llvm-8
          sudo apt-get install -y clang-8
-         sudo apt-get install -y python3
-         sudo apt-get install -y python3-pip
-         python3 -V  # Print out python version for debugging
-         pip3 install virtualenv
-         pip3 install tox --upgrade
-         virtualenv venv
-         source venv/bin/activate
+         #pip3 install virtualenv
+         #virtualenv venv
+         #source venv/bin/activate
          ls
          clang-8 etabackend/cpp/PARSE_TimeTagFileHeader.cpp -S -emit-llvm 
          clang-8 etabackend/cpp/PARSE_TimeTags.cpp  -S -emit-llvm 
@@ -44,12 +40,13 @@ jobs:
          
     - name: Test with pytest
       run: |
+        pip3 install tox --upgrade
         tox
-        pip3 install twine
-        echo twine upload dist/*.whl --skip-existing
+        ls 
+        
 
     - name: Upload artifact
       uses: actions/upload-artifact@v1
       with:
           name: wheels
-          path: dist/*.whl
+          path: dist
