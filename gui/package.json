@@ -7,7 +7,7 @@
   "version": "0.7.2",
   "scripts": {
     "dev": "electron .",
-    "dist": "electron-builder",
+    "dist": "electron-builder  --publish onTagOrDraft",
     "dist:dir": "yarn dist --dir -c.compression=store -c.mac.identity=null"
   },
   "main": "src/main/index.js",

@@ -52,7 +52,7 @@ jobs:
     needs: [build_windows,wget_python_webinstall]
     runs-on: windows-latest
     env:
-        GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     strategy:
       matrix:
         node-version: [12.x]
@@ -73,16 +73,11 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - name: Build Electron app
-      uses: samuelmeuli/action-electron-builder@v1
-      with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          package_root: gui
-    - name: build windows GUI
       run: |
         cd gui
         dir
-        echo yarn
-        echo yarn dist
+        yarn
+        yarn dist
         cd ..
         ls .\gui\dist\
         echo 7z a ETA_Install-win64.zip .\gui\dist\*.exe
