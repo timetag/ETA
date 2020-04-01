@@ -25,11 +25,11 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
-         apt-get update 
-         apt-get install -y llvm-8
-         apt-get install -y clang-8
-         apt-get install -y python3
-         apt-get install -y python3-pip
+         sudo apt-get update 
+         sudo apt-get install -y llvm-8
+         sudo apt-get install -y clang-8
+         sudo apt-get install -y python3
+         sudo apt-get install -y python3-pip
          python3 -V  # Print out python version for debugging
          pip3 install virtualenv
          pip3 install tox --upgrade
@@ -46,3 +46,4 @@ jobs:
       run: |
         tox
         pip3 install twine
+        twine upload dist/*.whl --skip-existing
