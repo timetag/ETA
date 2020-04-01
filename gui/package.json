@@ -35,11 +35,11 @@
   },
   "dependencies": {
     "electron-log": "^3.0.8",
-    "electron-updater": "^4.1.2"
+    "electron-updater": "^4.2.5"
   },
   "devDependencies": {
-    "electron": "^6.0.12",
-    "electron-builder": "21.2.0"
+    "electron": "^8.2.0",
+		"electron-builder": "^22.4.1"
   },
   "resolutions": {}
 }
