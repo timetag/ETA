@@ -1,4 +1,4 @@
-name: Python package
+name: CI
 
 on:
   push:
@@ -71,11 +71,10 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - name: Build Electron app
-        uses: samuelmeuli/action-electron-builder@v1
-        with:
+      uses: samuelmeuli/action-electron-builder@v1
+      with:
           github_token: ${{ secrets.github_token }}
           package_root: gui
-    
     - name: build windows GUI
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
