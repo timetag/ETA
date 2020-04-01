@@ -19,7 +19,7 @@ jobs:
     - name: Upload artifact
       uses: actions/upload-artifact@v1
       with:
-          name: python-webinstall
+          name: pywi
           path: python-webinstall.exe
   build_windows:
     runs-on: windows-latest
@@ -64,13 +64,15 @@ jobs:
     - name: Download artifact
       uses: actions/download-artifact@v1
       with:
-          name: python-webinstall
+          name: pywi
           path: gui
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
     - name: build windows GUI
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         cd gui
         dir
@@ -79,7 +81,12 @@ jobs:
         cd ..
         ls .\gui\dist\
         7z a ETA_Install-win64.zip .\gui\dist\*.exe
-
+    - name: Upload artifact
+      uses: actions/upload-artifact@v1
+      with:
+          name: ETA_Install-win64
+          path: gui\dist
+   
   build:
     runs-on: ubuntu-latest
     strategy:
