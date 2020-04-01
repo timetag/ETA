@@ -1,3 +1,4 @@
+import asyncio
 import json
 import logging
 import os
@@ -8,11 +9,11 @@ import time
 import traceback
 import threading
 import pathlib
+import weakref
 
-import asyncio
 import aiohttp
 from aiohttp import web
-import weakref
+
 import etabackend
 from etabackend.eta import ETA, ETACompilationException
 
@@ -28,7 +29,6 @@ ETA_BANNER = \
 """
 
 BASE_DIR = pathlib.Path(__file__).parent
-
 
 class Backend():
     def __init__(self, run_forever=True):

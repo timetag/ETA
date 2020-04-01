@@ -2,6 +2,7 @@ import logging
 import os
 import time
 
+import etabackend
 from etabackend.etalang.jit_linker import PARSE_TimeTagFileHeader_wrapper, np
 
 
@@ -108,9 +109,8 @@ class Clip():
 
 
 class ETA_CUT():
-    #__version__ = etabackend.__version__ 
-    #FIXME:It seem that this doesn't work with the working folder installed with  "pip install -e"
-
+    __version__ = etabackend.__version__ 
+    
     def __init__(self):
         self.logger = logging.getLogger(__name__)
         self.logfrontend = logging.getLogger("etabackend.frontend")
