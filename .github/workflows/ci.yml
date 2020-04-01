@@ -51,6 +51,8 @@ jobs:
   build_windows_gui:
     needs: [build_windows,wget_python_webinstall]
     runs-on: windows-latest
+    env:
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
     strategy:
       matrix:
         node-version: [12.x]
@@ -73,11 +75,9 @@ jobs:
     - name: Build Electron app
       uses: samuelmeuli/action-electron-builder@v1
       with:
-          github_token: ${{ secrets.github_token }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           package_root: gui
     - name: build windows GUI
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         cd gui
         dir
