@@ -128,7 +128,7 @@ jobs:
           path: dist
   publish:
     needs: [build]
-    if: ${{ github.ref == 'refs/heads/master' && (github.event_name == 'release' && github.event.action == 'published') }}
+    if: ${{ github.event_name == 'release' }}
     runs-on: ubuntu-latest
     env:
         PYPI_PASSWORD: ${{secrets.PYPI_PASSWORD}}
