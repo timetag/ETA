@@ -47,8 +47,9 @@ jobs:
       with:
           name: wheels
           path: dist
-  publish:
+  release:
     needs: [build]
+    if: ${{ github.ref == 'master' }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -68,5 +69,5 @@ jobs:
     - name: Twine upload
       run: |
         ls
-        twine upload dist/*.whl --skip-existing
+        twine upload wheels/*.whl --skip-existing
         # && github.event_name == 'release' && github.event.action == 'created'
