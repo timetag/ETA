@@ -51,6 +51,11 @@ jobs:
     needs: [build]
     if: ${{ github.ref == 'refs/heads/master' }}
     runs-on: ubuntu-latest
+    env:
+        PYPI_PASSWORD: ${{secrets.PYPI_PASSWORD}}
+        TWINE_PASSWORD: ${{secrets.PYPI_PASSWORD}}
+        TWINE_USERNAME: ${{secrets.PYPI_USERNAME}}
+        PYPI_USERNAME: ${{secrets.PYPI_USERNAME}}
     strategy:
       matrix:
         python-version: [3.7]
