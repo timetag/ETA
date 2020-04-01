@@ -12,7 +12,6 @@ on:
     types: [ published ]
 jobs:
   build:
-
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -50,16 +49,19 @@ jobs:
       with:
           name: wheels
           path: dist
-
+  
   release:
     if: ${{ github.ref == 'master' }}
-    # && github.event_name == 'release' && github.event.action == 'created'
     needs: build
     runs-on: ubuntu-latest
+    env:
+          PYPI_PASSWORD: ${{secrets.PYPI_PASSWORD}}
+          TWINE_PASSWORD: ${{secrets.PYPI_PASSWORD}}
+          TWINE_USERNAME: ${{secrets.PYPI_USERNAME}}
+          PYPI_USERNAME: ${{secrets.PYPI_USERNAME}}
     strategy:
       matrix:
         python-version: [3.7]
-
     steps:
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v1
@@ -73,10 +75,7 @@ jobs:
       with:
           name: wheels
     - name: Twine upload
-      env:
-          PYPI_PASSWORD: ${{secrets.PYPI_PASSWORD}}
-          TWINE_PASSWORD: ${{secrets.PYPI_PASSWORD}}
-          TWINE_USERNAME: ${{secrets.PYPI_USERNAME}}
-          PYPI_USERNAME: ${{secrets.PYPI_USERNAME}}
       run: |
+        ls
         twine upload dist/*.whl --skip-existing
+        # && github.event_name == 'release' && github.event.action == 'created'
