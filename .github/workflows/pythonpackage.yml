@@ -1,0 +1,48 @@
+# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+name: Python package
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.7]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+         apt-get update 
+         apt-get install -y llvm-8
+         apt-get install -y clang-8
+         apt-get install -y python3
+         apt-get install -y python3-pip
+         python3 -V  # Print out python version for debugging
+         pip3 install virtualenv
+         pip3 install tox --upgrade
+         virtualenv venv
+         source venv/bin/activate
+         ls
+         clang-8 etabackend/cpp/PARSE_TimeTagFileHeader.cpp -S -emit-llvm 
+         clang-8 etabackend/cpp/PARSE_TimeTags.cpp  -S -emit-llvm 
+         clang-8 etabackend/cpp/INFRA_vchn.cpp  -S -emit-llvm
+         mv *.ll etabackend/ll/posix
+         python3 setup.py bdist_wheel
+         
+    - name: Test with pytest
+      run: |
+        tox
+        pip3 install twine
