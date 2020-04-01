@@ -1,4 +1,4 @@
-name: Python package
+name: CI
 
 on:
   push:
@@ -70,22 +70,30 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+    - name: Build Electron app
+        uses: samuelmeuli/action-electron-builder@v1
+        with:
+          github_token: ${{ secrets.github_token }}
+          package_root: gui
+    
     - name: build windows GUI
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         cd gui
         dir
-        yarn
-        yarn dist
+        echo yarn
+        echo yarn dist
         cd ..
         ls .\gui\dist\
-        7z a ETA_Install-win64.zip .\gui\dist\*.exe
+        echo 7z a ETA_Install-win64.zip .\gui\dist\*.exe
+        mkdir artifact
+        move .\gui\dist\*.exe .\artifact
     - name: Upload artifact
       uses: actions/upload-artifact@v1
       with:
           name: ETA_Install-win64
-          path: gui\dist
+          path: artifact
    
   build:
     runs-on: ubuntu-latest
