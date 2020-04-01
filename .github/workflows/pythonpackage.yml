@@ -47,9 +47,9 @@ jobs:
       with:
           name: wheels
           path: dist
-  release:
+  publish:
     needs: [build]
-    if: ${{ github.ref == 'master' }}
+    if: ${{ true }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
