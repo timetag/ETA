@@ -8,7 +8,7 @@ class TestHydraHarpCorrelation:
     def test_g2_recipe(self):
         #etaobj
         #eta = eta.ETA()
-        #eta.load_eta(etaobj)
+        #eta.load_recipe(etaobj)
         #eta.run()
         pass
 

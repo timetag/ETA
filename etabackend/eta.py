@@ -70,7 +70,7 @@ class ETA(ETA_CUT, Util):
                     self.compilecache_mainloop[k] = old_mainloop[k]
                     self.compilecache_initializer[k] = old_initializer[k]
 
-    def load_eta(self, jsonobj=None, compile=True):
+    def load_recipe(self, jsonobj=None, compile=True):
         try:
             if jsonobj:
                 self.recipe = Recipe(jsonobj)

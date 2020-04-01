@@ -23,7 +23,7 @@ class TestCorrelationRecipe:
             recipe_obj = json.load(filehandle)
 
         eta_engine = etabackend.eta.ETA()
-        eta_engine.load_eta(recipe_obj)
+        eta_engine.load_recipe(recipe_obj)
         cut=eta_engine.split_file(test_folder / "hydraharp" / "data" / "200204_HH400_T2_320MHz_HBT.timeres", 4)
         result=eta_engine.run(cut, group='HHT2')
 
@@ -39,7 +39,7 @@ class TestCorrelationRecipe:
             recipe_obj = json.load(filehandle)
 
         eta_engine = etabackend.eta.ETA()
-        eta_engine.load_eta(recipe_obj)
+        eta_engine.load_recipe(recipe_obj)
         cut=eta_engine.split_file(test_folder / "hydraharp" / "data" / "200213_HH400_T3_80MHz_HBT.timeres", 4)
         result=eta_engine.run(cut, group='HHT3')
 
@@ -55,7 +55,7 @@ class TestCorrelationRecipe:
             recipe_obj = json.load(filehandle)
 
         eta_engine = etabackend.eta.ETA()
-        eta_engine.load_eta(recipe_obj)
+        eta_engine.load_recipe(recipe_obj)
         cut=eta_engine.split_file(test_folder / "qutag" / "data" / "19_qutag_80MHz_HBT_sync_filtered.qutag", 4)
         result=eta_engine.run(cut, group='quTAG')
 

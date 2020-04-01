@@ -149,7 +149,7 @@ class Backend():
     async def recipe_set_filename(self, etaobj, id, key):
         try:
             loop = asyncio.get_running_loop()
-            await loop.run_in_executor(None, lambda: self.kernel.load_eta(etaobj, compile=False))
+            await loop.run_in_executor(None, lambda: self.kernel.load_recipe(etaobj, compile=False))
 
             import tkinter as tk
             from tkinter.filedialog import askopenfilename
@@ -181,7 +181,7 @@ class Backend():
         await self.send({"op": "discard"})  # show a neutral icon
 
         loop = asyncio.get_running_loop()
-        await loop.run_in_executor(None, lambda: self.kernel.load_eta(etaobj))
+        await loop.run_in_executor(None, lambda: self.kernel.load_recipe(etaobj))
 
     async def process_eta(self, etaobj=None, id="code", group="main"):
         await self.send({"op": "discard"})  # show a neutral icon
@@ -196,7 +196,7 @@ class Backend():
                              "url-shutdown": self.display_shutdown_url})
         else:
             loop = asyncio.get_running_loop()
-            await loop.run_in_executor(None, lambda: self.kernel.load_eta(etaobj))
+            await loop.run_in_executor(None, lambda: self.kernel.load_recipe(etaobj))
             group = group.split(",")[0]
             if self.kernel.compilecache_nfunc is not None:
                 # ETA File version check
