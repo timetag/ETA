@@ -72,8 +72,10 @@ class ETA(ETA_CUT, Util):
 
     def load_eta(self, jsonobj=None, compile=True):
         try:
-            self.recipe = Recipe(jsonobj)
+            if jsonobj:
+                self.recipe = Recipe(jsonobj)
             if compile:
+                assert isinstance(self.recipe, Recipe)
                 self.update_cache(*recipe_compiler.codegen(
                     self.recipe))
                 self.notify_callback('update-recipe')

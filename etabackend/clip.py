@@ -108,7 +108,8 @@ class Clip():
 
 
 class ETA_CUT():
-    __version__ = etabackend.__version__
+    #__version__ = etabackend.__version__ 
+    #FIXME:It seem that this doesn't work with the working folder installed with  "pip install -e"
 
     def __init__(self):
         self.logger = logging.getLogger(__name__)
