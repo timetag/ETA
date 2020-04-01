@@ -47,8 +47,8 @@ jobs:
       with:
           name: wheels
           path: dist
-  release:
-    needs: build
+  publish:
+    needs: [build]
     runs-on: ubuntu-latest
     strategy:
       matrix:
