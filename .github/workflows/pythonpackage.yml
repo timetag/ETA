@@ -8,7 +8,8 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
-
+  release:
+    types: [ published ]
 jobs:
   build:
 
@@ -28,9 +29,9 @@ jobs:
          sudo apt-get update 
          sudo apt-get install -y llvm-8
          sudo apt-get install -y clang-8
-         #pip3 install virtualenv
-         #virtualenv venv
-         #source venv/bin/activate
+         pip3 install virtualenv
+         virtualenv venv
+         source venv/bin/activate
          ls
          clang-8 etabackend/cpp/PARSE_TimeTagFileHeader.cpp -S -emit-llvm 
          clang-8 etabackend/cpp/PARSE_TimeTags.cpp  -S -emit-llvm 
@@ -43,10 +44,39 @@ jobs:
         pip3 install tox --upgrade
         tox
         ls 
-        
 
     - name: Upload artifact
       uses: actions/upload-artifact@v1
       with:
           name: wheels
           path: dist
+
+  release:
+    if: ${{ github.ref == 'master' }}
+    # && github.event_name == 'release' && github.event.action == 'created'
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.7]
+
+    steps:
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+         pip3 install twine
+    - name: Download artifact
+      uses: actions/download-artifact@v1
+      with:
+          name: wheels
+    - name: Twine upload
+      env:
+          PYPI_PASSWORD: ${{secrets.PYPI_PASSWORD}}
+          TWINE_PASSWORD: ${{secrets.PYPI_PASSWORD}}
+          TWINE_USERNAME: ${{secrets.PYPI_USERNAME}}
+          PYPI_USERNAME: ${{secrets.PYPI_USERNAME}}
+      run: |
+        twine upload dist/*.whl --skip-existing
