@@ -2,8 +2,9 @@
   "name": "ETA",
   "license": "MIT",
   "author": "Zuzeng Lin <zuzeng@kth.se>",
+  "repository": "github:timetag/ETA",
   "homepage": "http://timetag.github.io",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "scripts": {
     "dev": "electron .",
     "dist": "electron-builder",
