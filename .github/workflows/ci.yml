@@ -25,7 +25,7 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        python-version: [3.7]
+        python-version: [3.7,3.8]
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
@@ -155,4 +155,25 @@ jobs:
       run: |
         ls
         twine upload dist/*.whl --skip-existing
- 
+  test_macos:
+    needs: [build]
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        python-version: [3.7,3.8]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Download artifact
+      uses: actions/download-artifact@v1
+      with:
+          name: wheels-3.7
+          path: dist
+    - name: Test with pytest
+      run: |
+        ls
+        python -m pip install tox tox-gh-actions tox-external-wheels --upgrade
+        tox --external_wheels 'dist/*.whl'
