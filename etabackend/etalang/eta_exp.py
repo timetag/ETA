@@ -164,6 +164,7 @@ class RECORDER():
         self.INTEGER(triggers, name + "_tail", 0)
         self.INTEGER(triggers, name + "_size", 0)
         self.INTEGER(triggers, name + "_i", 0)
+        self.INTEGER(triggers, name + "_ssms", 0)
         return self.define_syms(name, ["recorder", size])
 
     def recorder_append(self, triggers, name, num="AbsTime_ps"):
@@ -294,13 +295,13 @@ class HISTOGRAM():
                 preact = preact.replace("time", diff)
             else:
                 preact = diff
-            self.INTEGER(triggers, "ssms_i", 0)
+            
             hister = """
-                                  ssms_i = ({preact})  // {bin_step}
-                                  if (ssms_i >= {bin_num}):
+                                  {buffer_name}_ssms = ({preact})  // {bin_step}
+                                  if ({buffer_name}_ssms >= {bin_num}):
                                       break
-                                  if (ssms_i >= 0):
-                                      {histogram}[ssms_i] += 1
+                                  if ({buffer_name}_ssms >= 0):
+                                      {histogram}[{buffer_name}_ssms] += 1
                           """.format(histogram=histogram, buffer_name=buffer_name,
                                      preact=preact, bin_step=bin_step,
                                      bin_num=bin_num)
