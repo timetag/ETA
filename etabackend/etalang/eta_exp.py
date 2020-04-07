@@ -94,7 +94,7 @@ class VFILE():
         # VFILE can be defined more than once, but only the size of the first time will be taken.
         undefined=False
         try:
-            return self.assert_sym_exist(symbol)
+            return self.assert_sym_exist(name)
         except Exception:
             undefined=True
         if undefined:
@@ -615,19 +615,19 @@ class Graph(INTEGER, TABLE, RFILE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENC
             fulltype = self.get_type_of_syms(symbol, public, fulltype=True)
 
             if isinstance(type_desired, list):
-                if fulltype == type_desired[0]:
-                    # FIXME: override the old type properly
-                    sds[symbol_name] = type_desired
+                if basetype == type_desired[0]:
+                    # TODO: override the old type properly
+                    sds[symbol_name] = type_desired 
                     return symbol
                 else:
-                    raise ValueError(self.error_prefix+"Type mismatch for symbol {}.".format(
-                        symbol_name))
+                    raise ValueError(self.error_prefix+"Type mismatch for symbol {}, you want {}, but it was already defined using {}.".format(
+                        symbol_name,type_desired[0], fulltype))
             elif isinstance(type_desired, str):
                 if type_desired == basetype:
                     return symbol
                 else:
-                    raise ValueError("Type mismatch for symbol {}.".format(
-                        symbol_name))
+                    raise ValueError("Type mismatch for symbol {}, you want {}, but it was already defined using {}.".format(
+            symbolname, type_desired, basetype))
             else:
                 raise ValueError(self.error_prefix +
                                  "Unexpected type {}".format(type_desired))
@@ -655,7 +655,7 @@ class Graph(INTEGER, TABLE, RFILE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENC
         if basetype == type:
             return symbol
 
-        raise ValueError("Type mismatch for symbol {}, you want {}, but it is defined by type {}.".format(
+        raise ValueError("Type mismatch for symbol {}, you want {}, but it was already defined using {}.".format(
             symbol, type, fulltype))
 
     def get_type_of_syms(self, symbol, public=False, fulltype=False):
