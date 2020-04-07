@@ -79,11 +79,10 @@ class VFILE():
         """.format(vfile2=type[1], buffer_size=type[2], chn=type[3]))
 
     def VFILE(self, triggers, chn, size="2097152"):
-        # TODO: remove hard-coded VFILE size
         chn = int(chn)
         size = int(ast.literal_eval(size))
         name = "vchn"+str(chn)
-
+        # VFILE can not be assigned to RFILES
         if chn in self.source_chn_all:
             raise ValueError(self.error_prefix+"Virtual channel {chn} has already been assigned to a RFILE in graph {graph}.".format(
                 chn=chn, graph=self.source_chn_all[chn][0]))
@@ -92,9 +91,16 @@ class VFILE():
         # add to global channel table
         self.virtual_chn_all[chn] = (self.name, self.graphid)
 
-        tablename = name + "_vfile"
-        self.TABLE(triggers, tablename, dimension=[size])
-        return self.define_syms(name, ["vfile", tablename, size, chn])
+        # VFILE can be defined more than once, but only the size of the first time will be taken.
+        undefined=False
+        try:
+            return self.assert_sym_exist(symbol)
+        except Exception:
+            undefined=True
+        if undefined:
+            tablename = name + "_vfile"
+            self.TABLE(triggers, tablename, dimension=[size])
+            return self.define_syms(name, ["vfile", tablename, size, chn])
 
 
 class RFILE():
