@@ -163,6 +163,7 @@ class RECORDER():
         self.INTEGER(triggers, name + "_head", 0)
         self.INTEGER(triggers, name + "_tail", 0)
         self.INTEGER(triggers, name + "_size", 0)
+        self.INTEGER(triggers, name + "_i", 0)
         return self.define_syms(name, ["recorder", size])
 
     def recorder_append(self, triggers, name, num="AbsTime_ps"):
@@ -275,8 +276,8 @@ class HISTOGRAM():
                     clock_name + "_start", "recorder")
                 table_buffer_name = self.assert_sym_type(
                     buffer_name + "_tab", "table", public=True)
-                diff = "({clock_name}_stop_rec - {table_buffer_name}[i])".format(clock_name=clock_name,
-                                                                                 table_buffer_name=table_buffer_name)
+                diff = "({clock_name}_stop_rec - {table_buffer_name}[{buffer_name}_i])".format(clock_name=clock_name,
+                                                                                 table_buffer_name=table_buffer_name,buffer_name=buffer_name)
             elif clock_fulltype[2] > 1:
                 if clock_fulltype[1] == 0:
                     self.RECORDER(triggers, clock_name +
@@ -285,15 +286,15 @@ class HISTOGRAM():
                     clock_name + "_stop", "recorder")
                 table_buffer_name = self.assert_sym_type(
                     buffer_name + "_tab", "table", public=True)
-                diff = "({table_buffer_name}[i] - {clock_name}_start_rec )".format(clock_name=clock_name,
-                                                                                   table_buffer_name=table_buffer_name)
+                diff = "({table_buffer_name}[{buffer_name}_i] - {clock_name}_start_rec )".format(clock_name=clock_name,
+                                                                                   table_buffer_name=table_buffer_name,buffer_name=buffer_name)
             # time difference preparing stage
             if len(dims[0]) > 2:
                 preact = dims[0][2]
                 preact = preact.replace("time", diff)
             else:
                 preact = diff
-
+            self.INTEGER(triggers, "ssms_i", 0)
             hister = """
                                   ssms_i = ({preact})  // {bin_step}
                                   if (ssms_i >= {bin_num}):
@@ -306,12 +307,12 @@ class HISTOGRAM():
             if clock_fulltype[1] > 1:
                 code = """
                           if {buffer_name}_tail<{buffer_name}_head:
-                              for i in range({buffer_name}_head-1,{buffer_name}_tail-1,-1):
+                              for {buffer_name}_i in range({buffer_name}_head-1,{buffer_name}_tail-1,-1):
                   {hister}
                           elif {buffer_name}_tail>{buffer_name}_head:
-                              for i in range({buffer_name}_head-1,0,-1):
+                              for {buffer_name}_i in range({buffer_name}_head-1,0,-1):
                   {hister}
-                              for i in range({buffer_name}_size-1,{buffer_name}_tail-1,-1):
+                              for {buffer_name}_i in range({buffer_name}_size-1,{buffer_name}_tail-1,-1):
                   {hister}
                           """.format(buffer_name=buffer_name, hister=hister)
             else:
