@@ -4,7 +4,7 @@
   "author": "Zuzeng Lin <zuzeng@kth.se>",
   "repository": "github:timetag/ETA",
   "homepage": "http://timetag.github.io",
-  "version": "0.7.2",
+  "version": "0.7.3",
   "scripts": {
     "dev": "electron .",
     "dist": "electron-builder  --publish onTagOrDraft",
