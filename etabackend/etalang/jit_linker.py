@@ -86,7 +86,7 @@ def link_global(name, do_get=True, type=nb.int64):
             argtypes = [context.get_argument_type(aty) for aty in sig.args]
             restype = context.get_argument_type(sig.return_type)
             fnty = ir.FunctionType(restype, argtypes)
-            fn = nb.cgutils.insert_pure_function(
+            fn = nb.core.cgutils.insert_pure_function(
                 builder.module, fnty, name=name + "_get")
             retval = context.call_external_function(
                 builder, fn, sig.args, args)
@@ -107,7 +107,7 @@ def link_global(name, do_get=True, type=nb.int64):
             argtypes = [context.get_argument_type(aty) for aty in sig.args]
             restype = context.get_argument_type(sig.return_type)
             fnty = ir.FunctionType(restype, argtypes)
-            fn = nb.cgutils.insert_pure_function(
+            fn = nb.core.cgutils.insert_pure_function(
                 builder.module, fnty, name=name + "_set")
             retval = context.call_external_function(
                 builder, fn, sig.args, args)
@@ -167,7 +167,7 @@ def link_function(func_name="", param=1, i64ret=False):
             argtypes = [context.get_argument_type(aty) for aty in sig.args]
             restype = context.get_argument_type(sig.return_type)
             fnty = ir.FunctionType(restype, argtypes)
-            fn = nb.cgutils.insert_pure_function(
+            fn = nb.core.cgutils.insert_pure_function(
                 builder.module, fnty, name=func_name)
             retval = context.call_external_function(
                 builder, fn, sig.args, args)
