@@ -54,7 +54,7 @@ function install_backend(slient_mode) {
             return false;
         }
         //execute with shell
-        let ls = spawnSync('python', ['-m', 'pip', '--disable-pip-version-check', 'install', '--find-links=.', 'etabackend', '--upgrade'], { detached: true, shell: true });
+        let ls = spawnSync('cmd.exe', ['/c', 'upgradebackend.bat'], { detached: true, shell: true });
         if (ls.error) {
             dialog.showErrorBox('Install Failed', "Can not execute python via system shell.")
             return false;
