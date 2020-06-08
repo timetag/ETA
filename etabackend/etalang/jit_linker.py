@@ -76,7 +76,7 @@ def link_global(name, do_get=True, type=nb.int64):
 
     @nb.extending.intrinsic
     def BytesofRecords_get(typingctx):
-        sig = nb.typing.signature(nb.int64)
+        sig = nb.core.typing.signature(nb.int64)
 
         def codegen(context, builder, sig, args):
             library = compile_library(
@@ -96,7 +96,7 @@ def link_global(name, do_get=True, type=nb.int64):
         return sig, codegen
 
     def BytesofRecords_set(typingctx, param1):
-        sig = nb.typing.signature(nb.int64, param1)
+        sig = nb.core.typing.signature(nb.int64, param1)
 
         def codegen(context, builder, sig, args):
             code = llvm_global_set.replace("test", name)
@@ -124,7 +124,7 @@ def link_global(name, do_get=True, type=nb.int64):
 
 @nb.extending.intrinsic
 def link_libs(typingctx=None):
-    sig = nb.typing.signature(nb.int32)
+    sig = nb.core.typing.signature(nb.int32)
 
     def codegen(context, builder, sig, args):
         # print("===== linking =====")
@@ -157,7 +157,7 @@ def link_function(func_name="", param=1, i64ret=False):
     args = {
         "ARB_PARAM": ast.parse("def ARB_PARAM(typingctx, {para}): pass".format(para=para)),
         "func_name": ast.parse("'{}'".format(func_name)),
-        "makesig": ast.parse("sig = nb.typing.signature({typer}, {para})".format(typer=typer, para=para)),
+        "makesig": ast.parse("sig = nb.core.typing.signature({typer}, {para})".format(typer=typer, para=para)),
     }
     sig = None
     makesig = None
