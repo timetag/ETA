@@ -3,7 +3,7 @@ cffi>=1.12.3
 numpy>=1.16.2
 astunparse>=1.6.2
 numba>=0.49.0
-llvmlite>=0.28.0
+llvmlite
 dash
 dash-renderer
 dash-html-components
