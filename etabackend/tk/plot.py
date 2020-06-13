@@ -47,7 +47,7 @@ def style_plot(fig, title=None, xlabel=None, ylabel=None, style='ETA'):
     if style == 'ETA':
         return _ETA_style_plot(fig, title, xlabel, ylabel)
 
-def plot_histogram(df, data_file, result_folder, data_name="", file_label="", info=None):
+def plot_histogram(df, data_file, result_path, data_name="", file_label="", info=None):
     """ The most common plot in ETA based on bokeh
     """
     source = bokeh.models.ColumnDataSource(df)
@@ -79,8 +79,8 @@ def plot_histogram(df, data_file, result_folder, data_name="", file_label="", in
     plog.x_range = plin.x_range
 
     # Styling
-    plin = style_plot(plin, "Start Stop Measurement", "Time delay (ps)", "Histogram events")
-    plog = style_plot(plog, "Start Stop Measurement", "Time delay (ps)", "Histogram events")
+    plin = style_plot(plin, data_name, "Time delay (ps)", "Histogram events")
+    plog = style_plot(plog, data_name, "Time delay (ps)", "Histogram events")
     
     plot_row_lin = bokeh.layouts.row(plin, sizing_mode='stretch_both')
     plot_row_log = bokeh.layouts.row(plog, sizing_mode='stretch_both')
@@ -97,15 +97,8 @@ def plot_histogram(df, data_file, result_folder, data_name="", file_label="", in
     plin.add_tools(hover)
     plog.add_tools(hover)
 
-    def bokeh_button_linlog_callback(col, flin, flog, new_value):
-        # See https://github.com/bokeh/bokeh/issues/6575#issuecomment-312446284
-        if new_value == 1: # Log
-            col.children[0] = flog
-        elif new_value == 0: #Lin
-            col.children[0] = flin
-
     button_save = bokeh.models.Button(label="Save")
-    button_save.on_click(lambda: save_data(df['time bins'].values, df['histogram events'].values, data_file, result_folder, file_label, header=info))
+    button_save.on_click(lambda: save_data(df['time bins'].values, df['histogram events'].values, data_file, result_path, file_label, header=info))
 
     #button_download = bokeh.models.Button(label="Save", button_type="success")
     #button_download.js_on_event(ButtonClick, lambda data: download_data(data_source))
@@ -118,19 +111,26 @@ def plot_histogram(df, data_file, result_folder, data_name="", file_label="", in
     figure_column = bokeh.layouts.column([plot_row_lin, buttons], sizing_mode='stretch_both')
     return figure_column
 
-def save_data(xdata, ydata, data_file, result_folder, label, header=None):
+def bokeh_button_linlog_callback(col, flin, flog, new_value):
+    # See https://github.com/bokeh/bokeh/issues/6575#issuecomment-312446284
+    if new_value == 1: # Log
+        col.children[0] = flog
+    elif new_value == 0: #Lin
+        col.children[0] = flin
+
+def save_data(xdata, ydata, data_file, result_path, label, header=None):
     """ Stores the data in a local result folder.
     """
     data_file = Path(data_file)
-    result_folder = Path(result_folder)
-    result_folder.mkdir(parents=True, exist_ok=True)  # Create analyzed folder
+    result_path = Path(result_path)
+    result_path.mkdir(parents=True, exist_ok=True)  # Create analyzed folder
     
     # create unique index for file
     file_index = 0
-    while (result_folder / f"{data_file.stem}_{label}_{file_index:0=3d}.txt").exists():
+    while (result_path / f"{data_file.stem}_{label}_{file_index:0=3d}.txt").exists():
         file_index += 1
     
-    np.savetxt(result_folder / f"{data_file.stem}_{label}_{file_index:0=3d}.txt",
+    np.savetxt(result_path / f"{data_file.stem}_{label}_{file_index:0=3d}.txt",
                 np.transpose([xdata, ydata]), delimiter='\t', 
                 header=header)
 
