@@ -56,8 +56,8 @@ function ask_for_restarting_backend() {
     message: 'Do you want to run ETA Backend on this computer?',
     buttons: ['Yes', 'No']
   }, (buttonIndex) => {
-    if (buttonIndex === 0) {
-      backend_run(install_mode);
+    if (buttonIndex == 0) {
+      backend_run(false);
     }
     else {
     }
