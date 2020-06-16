@@ -17,4 +17,7 @@ setuptools.setup(
         "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
         "Operating System :: OS Independent",
     ],
+    extras_require={
+        "plotly":  ["plotly", "dash", "dash-renderer", "dash-html-components", "dash-core-components",],
+    }
 )
