@@ -24,15 +24,15 @@ def info(globals_dict, recipe_type=None):
 
     !the in globals() thing should be removed once we separate recipes depending on hardware!
     '''
-    timeres_path = globals_dict.get("f", "not availible")
-    binsize = globals_dict.get("binsize", "not availible")
-    bins = globals_dict.get("bins", "not availible")
+    timeres_path = globals_dict.get("f", "not available")
+    binsize = globals_dict.get("binsize", "not available")
+    bins = globals_dict.get("bins", "not available")
     types = {'correlation':f'mode: {globals_dict.get("HH400_mode","quTAG")}\n',
-             'lifetime':f'mode: {globals_dict.get("ch_sel","not availible")}\n',
-             'simulation':f'syncs: {globals_dict.get("syncs","not availible")}\n',
+             'lifetime':f'mode: {globals_dict.get("ch_sel","not available")}\n',
+             'simulation':f'syncs: {globals_dict.get("syncs","not available")}\n',
              'countrate':''}
     string = (f'Created with ETA - https://timetag.github.io\n'
-        f'filename: {timeres_path.name if isinstance(timeres_path, pathlib.PurePath) else timeres_path}\n'
+        f'filename: {Path(timeres_path).name}\n'
         f'binsize: {binsize}\n'
         f'bins: {bins}\n')
     if recipe_type:

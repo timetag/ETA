@@ -1,4 +1,6 @@
-""" Plotting utilities to use together with `Bokeh <http://bokeh.pydata.org>`.
+""" Plotting utilities to use together with `Bokeh <http://bokeh.pydata.org>`
+
+This code is used in the default recipes of ETA.
 """
 
 from pathlib import Path
@@ -104,14 +106,14 @@ def plot_histogram(df, data_file, result_path, data_name="", file_label="", info
     #button_download.js_on_event(ButtonClick, lambda data: download_data(data_source))
 
     button_linlog = bokeh.models.RadioButtonGroup(labels=["Linear", "Logarithmic"], active=0)
-    button_linlog.on_click(lambda nv: bokeh_button_linlog_callback(figure_column, plot_row_lin, plot_row_log, nv))
+    button_linlog.on_click(lambda nv: _bokeh_button_linlog_callback(figure_column, plot_row_lin, plot_row_log, nv))
     
     buttons = bokeh.layouts.row([button_linlog, button_save], sizing_mode='stretch_width')
 
     figure_column = bokeh.layouts.column([plot_row_lin, buttons], sizing_mode='stretch_both')
     return figure_column
 
-def bokeh_button_linlog_callback(col, flin, flog, new_value):
+def _bokeh_button_linlog_callback(col, flin, flog, new_value):
     # See https://github.com/bokeh/bokeh/issues/6575#issuecomment-312446284
     if new_value == 1: # Log
         col.children[0] = flog
@@ -135,7 +137,7 @@ def save_data(xdata, ydata, data_file, result_path, label, header=None):
                 header=header)
 
 def download_data(data_source):
-    """ Creates the data online and offers as download.
+    """ Creates the data online using javascript and offers as download.
         Based on https://github.com/surfaceowl-ai/python_visualizations/blob/master/notebooks/bokeh_save_linked_plot_data.ipynb
     """
     raise NotImplementedError()
