@@ -4,12 +4,16 @@ This code is used in the default recipes of ETA.
 """
 
 from pathlib import Path
+import queue
+import logging
 import numpy as np
 
 import bokeh.plotting
 import bokeh.models
 import bokeh.models.tools
 import bokeh.layouts
+
+import etabackend.tk.data
 
 def _ETA_style_plot(fig, title=None, xlabel=None, ylabel=None):
     """ The common style for bokeh plots used in ETA
@@ -54,53 +58,16 @@ def plot_histogram(df, data_file, result_path, data_name="", file_label="", info
     """
     source = bokeh.models.ColumnDataSource(df)
 
-    toolbox = "pan,wheel_zoom,box_zoom,reset"
-    # setup linear plot
-    plin = bokeh.plotting.figure(plot_width = 700, plot_height = 700,
-                y_axis_type='linear', tools=toolbox,
-                #active_drag="box_zoom",
-                active_scroll='wheel_zoom')
-    plin.x_range = bokeh.models.Range1d(df['time bins'].min(axis=0), df['time bins'].max(axis=0))
-    plin.y_range = bokeh.models.Range1d(0.5, df['histogram events'].max(axis=0)*1.1)
-    plin.line(x='time bins', y='log events', 
-              source=source, color='firebrick', 
-              legend_label='{}'.format(data_name), line_width=1.5
-             )
-
-    # setup log plot
-    plog = bokeh.plotting.figure(plot_width = 700, plot_height = 700,
-                  y_axis_type='log', tools=toolbox,
-                  #active_drag="box_zoom",
-                  active_scroll='wheel_zoom'
-                 )
-    plog.y_range = bokeh.models.Range1d(0.5, df['histogram events'].max(axis=0)*1.1)
-    
-    plog.line(x='time bins', y='log events', 
-              source=source, color='firebrick', legend_label='{}'.format(data_name), line_width=1.5
-             )
-    plog.x_range = plin.x_range
-
-    # Styling
-    plin = style_plot(plin, data_name, "Time delay (ps)", "Histogram events")
-    plog = style_plot(plog, data_name, "Time delay (ps)", "Histogram events")
-    
+    plin, plog = ETABokehPlot.bokeh_plot_histogram(source, 
+                                                   line_names={'histogram events': data_name},
+                                                   x_name='time bins'
+                                                   )
     plot_row_lin = bokeh.layouts.row(plin, sizing_mode='stretch_both')
     plot_row_log = bokeh.layouts.row(plog, sizing_mode='stretch_both')
 
-    # Hover tools
-    hover = bokeh.models.tools.HoverTool(tooltips = [
-                ("Delay: ", "@{time bins}"),
-                ("Histogram events: ", "@{histogram events}"),
-                ],
-                mode='vline', point_policy = "snap_to_data",
-                line_policy = "nearest"
-            )
-
-    plin.add_tools(hover)
-    plog.add_tools(hover)
-
     button_save = bokeh.models.Button(label="Save")
-    button_save.on_click(lambda: save_data(df['time bins'].values, df['histogram events'].values, data_file, result_path, file_label, header=info))
+    button_save.on_click(lambda: etabackend.tk.data.save_data(df['time bins'].values, df['histogram events'].values, 
+                                                              data_file, result_path, file_label, header=info))
 
     #button_download = bokeh.models.Button(label="Save", button_type="success")
     #button_download.js_on_event(ButtonClick, lambda data: download_data(data_source))
@@ -119,22 +86,6 @@ def _bokeh_button_linlog_callback(col, flin, flog, new_value):
         col.children[0] = flog
     elif new_value == 0: #Lin
         col.children[0] = flin
-
-def save_data(xdata, ydata, data_file, result_path, label, header=None):
-    """ Stores the data in a local result folder.
-    """
-    data_file = Path(data_file)
-    result_path = Path(result_path)
-    result_path.mkdir(parents=True, exist_ok=True)  # Create analyzed folder
-    
-    # create unique index for file
-    file_index = 0
-    while (result_path / f"{data_file.stem}_{label}_{file_index:0=3d}.txt").exists():
-        file_index += 1
-    
-    np.savetxt(result_path / f"{data_file.stem}_{label}_{file_index:0=3d}.txt",
-                np.transpose([xdata, ydata]), delimiter='\t', 
-                header=header)
 
 def download_data(data_source):
     """ Creates the data online using javascript and offers as download.
@@ -161,3 +112,158 @@ def download_data(data_source):
     #         """
     # )
     # return custom_js
+
+class ETABokehPlot:
+    def __init__(self, eta_result):
+        self.eta_result = eta_result
+        self.logger = logging.getLogger('etabackend.frontend')
+        self.process_queue = queue.SimpleQueue()
+        self.ctx = {}
+        self.source = bokeh.models.ColumnDataSource({'x': self.eta_result.xdata, 'y': self.eta_result.ydata })
+        self.callback = None
+       
+    @staticmethod
+    def bokeh_plot_histogram(source, line_names={'y': 'data'}, x_name='x'):
+        """ The most common plot in ETA based on bokeh based on a ColumnDataSource
+        """
+        toolbox = "pan,wheel_zoom,box_zoom,reset"
+
+        # setup linear plot
+        plin = bokeh.plotting.figure(plot_width = 700, plot_height = 700,
+                    y_axis_type='linear', tools=toolbox,
+                    #active_drag="box_zoom",
+                    active_scroll='wheel_zoom')        
+
+        # setup log plot
+        plog = bokeh.plotting.figure(plot_width = 700, plot_height = 700,
+                    y_axis_type='log', tools=toolbox,
+                    #active_drag="box_zoom",
+                    active_scroll='wheel_zoom'
+                    )
+
+        max_y = 0
+        for key, data_name in line_names.items():
+            max_y = max(max_y, source.data[key].max(axis=0))
+
+            plin.line(x=x_name, y=key, 
+                      source=source, color='firebrick', 
+                      legend_label='{}'.format(data_name), line_width=1.5
+                    )
+            plog.line(x=x_name, y=key,
+                      source=source, color='firebrick', 
+                      legend_label='{}'.format(data_name), line_width=1.5
+                    )
+            
+            # Hover tools
+            hover = bokeh.models.tools.HoverTool(tooltips = [
+                    ("Delay: ", f"@{{{x_name}}}"),
+                    ("Histogram events: ", f"@{{{key}}}"),
+                    ],
+                    mode='vline', point_policy = "snap_to_data",
+                    line_policy = "nearest"
+            )
+            plin.add_tools(hover)
+            plog.add_tools(hover)      
+
+        plin.x_range = bokeh.models.Range1d(source.data[x_name].min(axis=0), source.data[x_name].max(axis=0))
+        plog.x_range = plin.x_range # Link Range to x range
+        plin.y_range = bokeh.models.Range1d(0.5, max_y*1.1)
+        plog.y_range = bokeh.models.Range1d(0.5, max_y*1.1)
+
+        # style plots
+        plin = style_plot(plin, data_name, "Time delay (ps)", "Histogram events")
+        plog = style_plot(plog, data_name, "Time delay (ps)", "Histogram events")
+     
+        return plin, plog
+
+    def bokeh_plot_document(self, doc):
+        """ Plots on a Bokeh Document that can then be displayed in the frontend.
+        """
+        self.doc = doc
+        self.ctx['lastupdate'] = self.eta_result.lastupdate
+        self.ctx['source'] = self.source
+
+        plin, plog = ETABokehPlot.bokeh_plot_histogram(self.source, 
+                                                        line_names={'y': 'Correlation'},
+                                                        x_name='x'
+                                                      )
+        plot_row_lin = bokeh.layouts.row(plin, sizing_mode='stretch_both')
+        plot_row_log = bokeh.layouts.row(plog, sizing_mode='stretch_both')
+        
+        self.ctx['plin'] = plin
+        self.ctx['plog'] = plog
+
+        buttons = []
+        button_save = bokeh.models.Button(label="Save")
+        #button_save.on_click(lambda: etabackend.tk.data.save_data(self.eta_result.ydata, self.eta_result.xdata, 
+        #                                                          self.eta_result.file, self.eta_result.file.parent.joinpath(DATAFOLDER), file_label, header=info))
+        buttons.append(button_save)
+
+        #button_download = bokeh.models.Button(label="Save", button_type="success")
+        #button_download.js_on_event(ButtonClick, lambda data: download_data(data_source))
+
+        button_linlog = bokeh.models.RadioButtonGroup(labels=["Linear", "Logarithmic"], active=0)
+        button_linlog.on_click(lambda nv: _bokeh_button_linlog_callback(figure_column, plot_row_lin, plot_row_log, nv))
+        buttons.append(button_linlog)
+        
+        button_alignment = bokeh.models.RadioButtonGroup(labels=["Static", "Accumulation", "Alignment"], active=0)
+        button_alignment.on_click(self.bokeh_button_alignment_callback)
+        buttons.append(button_alignment)
+
+        buttons_row = bokeh.layouts.row(buttons, sizing_mode='stretch_width')
+
+        figure_column = bokeh.layouts.column([plot_row_lin, buttons_row], sizing_mode='stretch_both')
+        self.doc.add_root(figure_column)
+        return self.doc
+
+    def bokeh_button_alignment_callback(self, new_value):
+        """ Turn on alignment and set type of alignment
+        """
+        if new_value == 0: 
+            if self.callback:
+                self.doc.remove_periodic_callback(self.callback)
+                self.logger.info('Removed Callback for realtime mode')
+                self.callback = None
+        else:
+            if self.callback is None:
+                self.logger.info('Registered callback for realtime mode')
+                self.callback = self.doc.add_periodic_callback(lambda: self._bokeh_update(self.ctx), self.eta_result.interval)
+                
+            if new_value == 1:
+                self.logger.info('Accumulation mode activated')
+                self.process_queue.put(self.eta_result.set_accumulation_mode)
+            elif new_value == 2: 
+                self.logger.info('Alignment mode activated')
+                self.process_queue.put(self.eta_result.set_alignment_mode)
+    
+    def _bokeh_update(self, ctx):
+        if ctx['lastupdate'] < self.eta_result.lastupdate:
+           ctx['lastupdate'] = self.eta_result.lastupdate
+           ctx['source'].data.update({'y': self.eta_result.ydata})
+
+           ctx['plin'].y_range.end = np.amax(self.eta_result.ydata)*1.1
+           ctx['plog'].y_range.end = np.amax(self.eta_result.ydata)*1.1
+
+    def run(self, stop_flag):
+        logger_silenced = False
+
+        if not stop_flag.is_set():
+            logger_silenced = True
+            self.logger.info('No further log output for a continous running recipe.')
+            self.logger.setLevel(logging.WARNING)
+
+        while not stop_flag.is_set():
+            if self.callback is not None: # Only update if there is a callback active
+                self.eta_result.update()
+            else:
+                stop_flag.wait(self.eta_result.interval)
+            
+            if self.eta_result._simulate_growth:
+                stop_flag.wait(self.eta_result.interval)
+            while not self.process_queue.empty():
+                func = self.process_queue.get(False)
+                if func: 
+                    func()
+
+        if logger_silenced:
+            self.logger.setLevel(logging.INFO)
