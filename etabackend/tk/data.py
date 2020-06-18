@@ -2,6 +2,7 @@
 """
 import logging
 import time
+from pathlib import Path
 import numpy as np
 
 import etabackend.tk.utils
@@ -24,34 +25,36 @@ def save_data(xdata, ydata, data_file, result_path, label, header=None):
                 header=header)
 
 class ETAResult:
-    """ Analyses a file using the eta library 
-        for correlation data.
+    """ Analyzes a file using the ETA backend and provides the result.
+
+    It additionally encapsulates the logic to look at a growing file and do live analysis.
     """
-    def __init__(self, file, bins, bin_factor, group,
-                 records_per_cut=None, kernel=None, 
-                 interval=0.1, timeout=0.2, simulate_growth=False):
-        """ Calculates the result for the file regularly
+    def __init__(self, file, group, records_per_cut=None, 
+                 kernel=None, timeout=0.2, 
+                 simulate_growth=False, run_immediately=True):
+        """ Create analysis using the ETA backend.
             file: str or Path of file currently investigated
-            bin_factor: The multiplication factor for each bin.
-            interval: The time to wait in seconds
-            timeout: How long to wait for enough data until frame is skipped (seconds)
-            simulate_growth: Behave as if we have a growing file.
+            group: str The group in the ETA evaluation recipe.
+            records_per_cut: float The amount of events for each analysis block
+            timeout: How long to wait for enough data until this evaluation round is skipped.
+            simulate_growth: boolean Behave as if we have a growing file with records_per_cut added each evaluation run.
+            run_immediately: boolean Immediately call run to evaluate all available data.
         """
         self.logger = logging.getLogger('etabackend.frontend')
 
-        self.file = file
+        self.file = Path(file)
         self.group = group
-        self.bins = bins
-        self.bin_factor = bin_factor
         self.records_per_cut = records_per_cut
-        self.interval = interval
         self.timeout = timeout
 
         self.eta = kernel
+        self.vars = self.eta.compilecache_vars[group]
         self._simulate_growth = simulate_growth
         self.set_accumulation_mode()
         self._inspect_file()
         self.context = None
+
+        if run_immediately: self.run()
 
     def run(self):
         return self._run_eta_evaluation()
@@ -87,7 +90,7 @@ class ETAResult:
         
         self.growth_rate = (file_size_new - file_size_old) / \
             self.cut.BytesofRecords  # Bytes per record
-        self.records_per_cut = int(self.growth_rate * self.interval)
+        self.records_per_cut = int(self.growth_rate * self.timeout)
 
     def set_accumulation_mode(self):
         self.mode = 'accumulation'
@@ -153,7 +156,7 @@ class ETAResult:
         hist2 = result['h4']
         hist0 = result["h4_zero"]
         hist1[0] += hist0[0]
-        xdata = np.arange(-self.hist2.size, self.hist1.size)*self.bin_factor
-        ydata = np.concatenate((self.hist2[::-1],self.hist1))
+        xdata = np.arange(-hist2.size, hist1.size)*bin_factor
+        ydata = np.concatenate((hist2[::-1], hist1))
 
         return xdata, ydata                        

@@ -114,8 +114,12 @@ def download_data(data_source):
     # return custom_js
 
 class ETABokehPlot:
-    def __init__(self, eta_result):
+    def __init__(self, eta_result, result_folder='analysis', result_label=None, update_interval=0.2):
         self.eta_result = eta_result
+        self.update_interval = update_interval
+        self.result_folder = result_folder
+        self.result_label = result_label
+
         self.logger = logging.getLogger('etabackend.frontend')
         self.process_queue = queue.SimpleQueue()
         self.ctx = {}
@@ -168,7 +172,7 @@ class ETABokehPlot:
         plin.x_range = bokeh.models.Range1d(source.data[x_name].min(axis=0), source.data[x_name].max(axis=0))
         plog.x_range = plin.x_range # Link Range to x range
         plin.y_range = bokeh.models.Range1d(0.5, max_y*1.1)
-        plog.y_range = bokeh.models.Range1d(0.5, max_y*1.1)
+        plog.y_range = bokeh.models.Range1d(0.9, max_y*1.1)
 
         # style plots
         plin = style_plot(plin, data_name, "Time delay (ps)", "Histogram events")
@@ -195,8 +199,7 @@ class ETABokehPlot:
 
         buttons = []
         button_save = bokeh.models.Button(label="Save")
-        #button_save.on_click(lambda: etabackend.tk.data.save_data(self.eta_result.ydata, self.eta_result.xdata, 
-        #                                                          self.eta_result.file, self.eta_result.file.parent.joinpath(DATAFOLDER), file_label, header=info))
+        button_save.on_click(self._bokeh_button_savedata_callback)
         buttons.append(button_save)
 
         #button_download = bokeh.models.Button(label="Save", button_type="success")
@@ -207,7 +210,7 @@ class ETABokehPlot:
         buttons.append(button_linlog)
         
         button_alignment = bokeh.models.RadioButtonGroup(labels=["Static", "Accumulation", "Alignment"], active=0)
-        button_alignment.on_click(self.bokeh_button_alignment_callback)
+        button_alignment.on_click(self._bokeh_button_alignment_callback)
         buttons.append(button_alignment)
 
         buttons_row = bokeh.layouts.row(buttons, sizing_mode='stretch_width')
@@ -216,7 +219,14 @@ class ETABokehPlot:
         self.doc.add_root(figure_column)
         return self.doc
 
-    def bokeh_button_alignment_callback(self, new_value):
+    def _bokeh_button_savedata_callback(self):
+        etabackend.tk.data.save_data(self.eta_result.xdata, self.eta_result.ydata,
+                                     self.eta_result.file, self.eta_result.file.parent.joinpath(self.result_folder),
+                                     self.result_label or self.eta_result.vars['expname'].capitalize(),
+                                     header=etabackend.tk.utils.info(self.eta_result.vars, 
+                                                                     self.eta_result.vars['expname']))
+
+    def _bokeh_button_alignment_callback(self, new_value):
         """ Turn on alignment and set type of alignment
         """
         if new_value == 0: 
@@ -227,7 +237,7 @@ class ETABokehPlot:
         else:
             if self.callback is None:
                 self.logger.info('Registered callback for realtime mode')
-                self.callback = self.doc.add_periodic_callback(lambda: self._bokeh_update(self.ctx), self.eta_result.interval)
+                self.callback = self.doc.add_periodic_callback(lambda: self._bokeh_update(self.ctx), self.update_interval)
                 
             if new_value == 1:
                 self.logger.info('Accumulation mode activated')
@@ -256,10 +266,10 @@ class ETABokehPlot:
             if self.callback is not None: # Only update if there is a callback active
                 self.eta_result.update()
             else:
-                stop_flag.wait(self.eta_result.interval)
+                stop_flag.wait(self.update_interval)
             
             if self.eta_result._simulate_growth:
-                stop_flag.wait(self.eta_result.interval)
+                stop_flag.wait(self.update_interval)
             while not self.process_queue.empty():
                 func = self.process_queue.get(False)
                 if func: 

@@ -1,6 +1,6 @@
 """ Utilities for use in ETA code panels.
 """
-import pathlib
+from pathlib import Path
 
 def info(globals_dict, recipe_type=None):
     '''
@@ -11,7 +11,7 @@ def info(globals_dict, recipe_type=None):
     recipe_type : STR, optional
         selector for recipe type. The default is None.
     timeres_path : PATH or STRING, optional
-        path of file used for creating the histogram. The default is f.
+        path of file used for creating the histogram. The default is file.
     binsize : INT, optional
         binsize in ps. The default is binsize.
     bins : INT, optional
@@ -24,7 +24,7 @@ def info(globals_dict, recipe_type=None):
 
     !the in globals() thing should be removed once we separate recipes depending on hardware!
     '''
-    timeres_path = globals_dict.get("f", "not available")
+    timeres_path = globals_dict.get("file", "not available")
     binsize = globals_dict.get("binsize", "not available")
     bins = globals_dict.get("bins", "not available")
     types = {'correlation':f'mode: {globals_dict.get("HH400_mode","quTAG")}\n',
@@ -36,5 +36,5 @@ def info(globals_dict, recipe_type=None):
         f'binsize: {binsize}\n'
         f'bins: {bins}\n')
     if recipe_type:
-        string += types[recipe_type]
+        string += types.get(recipe_type.lower(), "")
     return string
