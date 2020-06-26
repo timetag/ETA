@@ -1,11 +1,11 @@
 cffi>=1.12.3
 numpy>=1.16.2
 astunparse>=1.6.2
-numba>=0.49.0
-llvmlite
+numba>=0.50.1
+llvmlite>=0.33.0
 matplotlib>=3.0.3
-bokeh
+bokeh>=2.1.1
 lmfit
 scipy
-pandas
+pandas>=1.0.5
 aiohttp
