@@ -220,11 +220,12 @@ class ETABokehPlot:
         return self.doc
 
     def _bokeh_button_savedata_callback(self):
-        etabackend.tk.data.save_data(self.eta_result.xdata, self.eta_result.ydata,
-                                     self.eta_result.file, self.eta_result.file.parent.joinpath(self.result_folder),
-                                     self.result_label or self.eta_result.vars['expname'].capitalize(),
-                                     header=etabackend.tk.utils.info(self.eta_result.vars, 
-                                                                     self.eta_result.vars['expname']))
+        fpath = etabackend.tk.data.save_data(self.eta_result.xdata, self.eta_result.ydata,
+                                             self.eta_result.file, self.eta_result.file.parent.joinpath(self.result_folder),
+                                             self.result_label or self.eta_result.vars['expname'].capitalize(),
+                                             header=etabackend.tk.utils.info(self.eta_result.vars, 
+                                                                             self.eta_result.vars['expname']))
+        self.logger.info(f"Current data saved as new file at {fpath}.")
 
     def _bokeh_button_alignment_callback(self, new_value):
         """ Turn on alignment and set type of alignment
@@ -257,15 +258,19 @@ class ETABokehPlot:
     def run(self, stop_flag):
         logger_silenced = False
 
-        if not stop_flag.is_set():
-            logger_silenced = True
-            self.logger.info('No further log output for a continous running recipe.')
-            self.logger.setLevel(logging.WARNING)
-
         while not stop_flag.is_set():
             if self.callback is not None: # Only update if there is a callback active
+                if not logger_silenced:
+                    logger_silenced = True
+                    self.logger.info('While life updating the log is disabled.')
+                    self.logger.setLevel(logging.WARNING)
+
                 self.eta_result.update()
             else:
+                if logger_silenced: # We want logs when there is no life updating recipe.
+                    self.logger.setLevel(logging.INFO)
+                    logger_silenced = False
+                    
                 stop_flag.wait(self.update_interval)
             
             if self.eta_result._simulate_growth:

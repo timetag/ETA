@@ -20,9 +20,13 @@ def save_data(xdata, ydata, data_file, result_path, label, header=None):
     while (result_path / f"{data_file.stem}_{label}_{file_index:0=3d}.txt").exists():
         file_index += 1
     
-    np.savetxt(result_path / f"{data_file.stem}_{label}_{file_index:0=3d}.txt",
-                np.transpose([xdata, ydata]), delimiter='\t', 
-                header=header)
+    file_path = result_path / f"{data_file.stem}_{label}_{file_index:0=3d}.txt"
+
+    np.savetxt(file_path,
+               np.transpose([xdata, ydata]), delimiter='\t', 
+               header=header)
+    
+    return file_path
 
 class ETAResult:
     """ Analyzes a file using the ETA backend and provides the result.
