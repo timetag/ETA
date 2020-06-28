@@ -221,31 +221,135 @@
                     </button>
                 </div>
                 <form id="create_new_form">
-                    <div class="modal-body">
-                        <h5>What do you want to start with?</h5>
-                        <h>Save the current file before continue.</h>
-                        <div class="custom-control custom-radio">
-                            <input class="custom-control-input" type="radio" id="radio0" name="recipe" value="unnamed"  /><label  class="custom-control-label" for="radio0">Blank</label>
+                    <div id="recipe-accordion" class="modal-body">
+                        <h5 class="mb-3">What do you want to start with?</h5>
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="radio-blank" name="recipe" class="custom-control-input" value="unnamed"
+                                    data-toggle="collapse" data-target="#collapse_blank">
+                                    <label class="custom-control-label h5" for="radio-blank">Blank</label>
+                                </div>
+                            </div>
+                            <div id="collapse_blank" class="collapse" data-parent="#recipe-accordion">
+                                <div class="card-body">
+                                    <p class="card-text">Get started with a blank recipe.</p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="custom-control custom-radio">
-                            <input class="custom-control-input" type="radio" id="radio1" name="recipe" value="Countrate"  /><label  class="custom-control-label" for="radio1">Count Rate</label>
+                        <div class="card">
+                            <a class="btn-block text-left" data-toggle="collapse" data-target="#collapse_countrate">
+                                <h5 class="card-header">Countrate</h5>
+                            </a>
+                            <div id="collapse_countrate" class="collapse" data-parent="#recipe-accordion">
+                                <div class="card-body">
+                                    <p class="card-text">Displays the countrate on the channels in your timetag files.</p>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input class="custom-control-input" type="radio" id="radio-cr1" name="recipe" value="Countrate-hydraharp"/>
+                                        <label  class="custom-control-label" for="radio-cr1">Hydra Harp</label>
+                                    </div>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input class="custom-control-input" type="radio" id="radio-cr2" name="recipe" value="Countrate-qutag" />
+                                        <label  class="custom-control-label" for="radio-cr2">quTAG</label>
+                                    </div>    
+                                </div>
+                            </div>
                         </div>
-                        <div class="custom-control custom-radio">
-                            <input class="custom-control-input" type="radio" id="radio2" name="recipe" value="Correlation" checked /><label class="custom-control-label" for="radio2">Correlation</label>
+                        <div class="card">
+                            <a data-toggle="collapse" data-target="#collapse_correlation">
+                                <h5 class="card-header">Correlation</h5>
+                            </a>
+                            <div id="collapse_correlation" class="collapse show" data-parent="#recipe-accordion">
+                                <div class="card-body">
+                                    <p class="card-text">Evaluate the Correlation between channels on your timetagger.</p>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input class="custom-control-input" type="radio" id="radio-cor1" name="recipe" value="Correlation-hydraharp" checked/>
+                                        <label  class="custom-control-label" for="radio-cor1">Hydra Harp</label>
+                                    </div>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input class="custom-control-input" type="radio" id="radio-cor2" name="recipe" value="Correlation-qutag" />
+                                        <label  class="custom-control-label" for="radio-cor2">quTAG</label>
+                                    </div>    
+                                </div>
+                            </div>
                         </div>
-                        <div class="custom-control custom-radio">
-                            <input class="custom-control-input" type="radio" id="radio3" name="recipe" value="Two-Time_Correlation" /><label  class="custom-control-label" for="radio3">Two-time Correlation</label>
+                        <div class="card">
+                            <a data-toggle="collapse" data-target="#collapse_lifetime">
+                                <h5 class="card-header">Lifetime</h5>
+                            </a>
+                            <div id="collapse_lifetime" class="collapse" data-parent="#recipe-accordion">
+                                <div class="card-body">
+                                    <p class="card-text">Evaluate the Lifetime (Start e.g. sync, stop second channel) on your timetagger.</p>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input class="custom-control-input" type="radio" id="radio-lt1" name="recipe" value="Lifetime-hydraharp" />
+                                        <label  class="custom-control-label" for="radio-lt1">Hydra Harp</label>
+                                    </div>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input class="custom-control-input" type="radio" id="radio-lt2" name="recipe" value="Lifetime-qutag" />
+                                        <label  class="custom-control-label" for="radio-lt2">quTAG</label>
+                                    </div>    
+                                </div>
+                            </div>
                         </div>
-                        <div class="custom-control custom-radio">
-                            <input class="custom-control-input" type="radio" id="radio4" name="recipe" value="Lifetime" /><label class="custom-control-label" for="radio4">Lifetime Measurement</label>
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="radio-sim1" name="recipe" class="custom-control-input" value="Simulation" 
+                                        data-toggle="collapse" data-target="#collapse_simulations">
+                                    <label class="custom-control-label h5" for="radio-sim1">Simulations</label>
+                                </div>
+                            </div>
+                            <div id="collapse_simulations" class="collapse" data-parent="#recipe-accordion">
+                                <div class="card-body">
+                                    <p class="card-text">Build a simulation with the timestamp logic build into ETA.</p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="custom-control custom-radio">
-                            <input class="custom-control-input" type="radio" id="radio5" name="recipe" value="Simulation" /><label class="custom-control-label" for="radio5">Simulation</label>
+                        <div class="card">
+                            <a data-toggle="collapse" data-target="#collapse_more">
+                                <h5 class="card-header">More&hellip;</h5>
+                            </a>
+                            <div id="collapse_more" class="collapse" data-parent="#recipe-accordion">
+                                <div class="card-body">
+                                    <p class="card-text">
+                                        Here you find a collection of recipes beyond the standard use-cases. 
+                                        Most of the time you will not need them, but they can be very useful when you want to develop your own recipe.
+                                    </p>
+                                    <div class="custom-control custom-radio">
+                                        <input class="custom-control-input" type="radio" id="radio-more1" name="recipe" value="Demonstration" />
+                                        <label  class="custom-control-label" for="radio-more1">Demonstration of not directly working pieces of code</label>
+                                    </div>
+                                    <div class="custom-control custom-radio">
+                                        <input class="custom-control-input" type="radio" id="radio-more2" name="recipe" value="Two-Time_Correlation" />
+                                        <label  class="custom-control-label" for="radio-more2">Two-time Correlation</label>
+                                    </div>
+                                    <div class="custom-control custom-radio">
+                                        <input class="custom-control-input" type="radio" id="radio-more3" name="recipe" value="Multi_Source_Correlation" />
+                                        <label  class="custom-control-label" for="radio-more3">Correlate from multiple Time taggers</label>
+                                    </div>   
+                                    <div class="custom-control custom-radio ">
+                                        <input class="custom-control-input" type="radio" id="radio-more4" name="recipe" value="Oscilloscope_QuTAG" />
+                                        <label  class="custom-control-label" for="radio-more4">Oscilloscope mode for QuTAG</label>
+                                    </div>
+                                    <div class="custom-control custom-radio ">
+                                        <input class="custom-control-input" type="radio" id="radio-more5" name="recipe" value="Correlation" />
+                                        <label  class="custom-control-label" for="radio-more5">Old Correlation</label>
+                                    </div>
+                                    <div class="custom-control custom-radio ">
+                                        <input class="custom-control-input" type="radio" id="radio-more6" name="recipe" value="Lifetime" />
+                                        <label  class="custom-control-label" for="radio-more6">Old Lifetime</label>
+                                    </div>
+                                    <div class="custom-control custom-radio ">
+                                        <input class="custom-control-input" type="radio" id="radio-more7" name="recipe" value="Countrate" />
+                                        <label  class="custom-control-label" for="radio-more7">Old Countrate</label>
+                                    </div>    
+                                </div>
+                            </div>
                         </div>
-                        <div class="custom-control custom-radio">
-                            <input class="custom-control-input" type="radio" id="radio6" name="recipe" value="Oscilloscope_QuTAG" /><label class="custom-control-label" for="radio6">Oscilloscope - QuTAG</label>
+                        <p><a href="https://eta.readthedocs.io/en/latest/recipes.html" target="_blank">Learn more about the pre-made recipies...</a></p>
+                        <div class="alert alert-info" role="alert">
+                            Save the current file before continue.
                         </div>
-                        <h> <a href="https://eta.readthedocs.io/en/latest/recipes.html" target="_blank">Learn more about the pre-made recipies...</a></h>
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-outline-dark" id="btn_create_new">Create</button>
