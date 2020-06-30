@@ -125,6 +125,7 @@ class ETABokehPlot:
         self.ctx = {}
         self.source = bokeh.models.ColumnDataSource({'x': self.eta_result.xdata, 'y': self.eta_result.ydata })
         self.callback = None
+        self.stop_flag = None
        
     @staticmethod
     def bokeh_plot_histogram(source, line_names={'y': 'data'}, x_name='x'):
@@ -217,6 +218,7 @@ class ETABokehPlot:
 
         figure_column = bokeh.layouts.column([plot_row_lin, buttons_row], sizing_mode='stretch_both')
         self.doc.add_root(figure_column)
+
         return self.doc
 
     def _bokeh_button_savedata_callback(self):
@@ -257,8 +259,9 @@ class ETABokehPlot:
 
     def run(self, stop_flag):
         logger_silenced = False
+        self.stop_flag = stop_flag
 
-        while not stop_flag.is_set():
+        while not self.stop_flag.is_set():
             if self.callback is not None: # Only update if there is a callback active
                 if not logger_silenced:
                     logger_silenced = True
@@ -271,13 +274,14 @@ class ETABokehPlot:
                     self.logger.setLevel(logging.INFO)
                     logger_silenced = False
                     
-                stop_flag.wait(self.update_interval)
+                self.stop_flag.wait(self.update_interval)
             
             if self.eta_result._simulate_growth:
-                stop_flag.wait(self.update_interval)
+                self.stop_flag.wait(self.update_interval)
+            
             while not self.process_queue.empty():
                 func = self.process_queue.get(False)
-                if func: 
+                if func:
                     func()
 
         if logger_silenced:

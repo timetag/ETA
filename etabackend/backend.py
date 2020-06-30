@@ -254,7 +254,7 @@ class Backend():
 
             self.display_shutdown_url = "http://{}:{}/shutdown-display".format(
                 self.hostip, self.hostport)
-            self.display_url = "http://{}:{}".format(
+            self.display_url = "http://{}:{}?bokeh-session-id=etafrontend".format(
                 self.hostip, self.hostdashport)
             self.logfrontend.info(
                 "ETA.display: Script Panel is serving at {}.".format(self.display_url))
