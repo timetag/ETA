@@ -2,13 +2,14 @@ import asyncio
 import json
 import logging
 import os
+import pathlib
 import queue
+import secrets
 import sys
 import signal
 import time
 import traceback
 import threading
-import pathlib
 import weakref
 
 import aiohttp
@@ -254,8 +255,8 @@ class Backend():
 
             self.display_shutdown_url = "http://{}:{}/shutdown-display".format(
                 self.hostip, self.hostport)
-            self.display_url = "http://{}:{}?bokeh-session-id=etafrontend".format(
-                self.hostip, self.hostdashport)
+            self.display_url = "http://{}:{}?bokeh-session-id={}".format(
+                self.hostip, self.hostdashport, secrets.token_urlsafe(16)) # Generate a token, we only support one session
             self.logfrontend.info(
                 "ETA.display: Script Panel is serving at {}.".format(self.display_url))
             await self.send({"op": "dash",
