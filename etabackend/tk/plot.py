@@ -122,8 +122,7 @@ class ETABokehPlot:
 
         self.logger = logging.getLogger('etabackend.frontend')
         self.process_queue = queue.SimpleQueue()
-        self.ctx = {}
-        self.source = bokeh.models.ColumnDataSource({'x': self.eta_result.xdata, 'y': self.eta_result.ydata })
+
         self.callback = None
         self.stop_flag = None
        
@@ -182,21 +181,27 @@ class ETABokehPlot:
         return plin, plog
 
     def bokeh_plot_document(self, doc):
-        """ Plots on a Bokeh Document that can then be displayed in the frontend.
+        """ Creates a Bokeh Document that can be displayed in the frontend
         """
-        self.doc = doc
-        self.ctx['lastupdate'] = self.eta_result.lastupdate
-        self.ctx['source'] = self.source
+        ctx = {}
 
-        plin, plog = ETABokehPlot.bokeh_plot_histogram(self.source, 
-                                                        line_names={'y': 'Correlation'},
-                                                        x_name='x'
+        ctx['doc'] = doc
+        ctx['callback'] = None 
+        ctx['lastupdate'] = self.eta_result.lastupdate
+
+        source = bokeh.models.ColumnDataSource({'x': self.eta_result.xdata, 
+                                                'y': self.eta_result.ydata })
+        ctx['source'] = source
+
+        plin, plog = ETABokehPlot.bokeh_plot_histogram(source, 
+                                                       line_names={'y': 'Correlation'},
+                                                       x_name='x'
                                                       )
         plot_row_lin = bokeh.layouts.row(plin, sizing_mode='stretch_both')
         plot_row_log = bokeh.layouts.row(plog, sizing_mode='stretch_both')
         
-        self.ctx['plin'] = plin
-        self.ctx['plog'] = plog
+        ctx['plin'] = plin
+        ctx['plog'] = plog
 
         buttons = []
         button_save = bokeh.models.Button(label="Save")
@@ -211,15 +216,15 @@ class ETABokehPlot:
         buttons.append(button_linlog)
         
         button_alignment = bokeh.models.RadioButtonGroup(labels=["Static", "Accumulation", "Alignment"], active=0)
-        button_alignment.on_click(self._bokeh_button_alignment_callback)
+        button_alignment.on_click(lambda new_value: self._bokeh_button_alignment_callback(ctx, new_value))
         buttons.append(button_alignment)
 
         buttons_row = bokeh.layouts.row(buttons, sizing_mode='stretch_width')
 
         figure_column = bokeh.layouts.column([plot_row_lin, buttons_row], sizing_mode='stretch_both')
-        self.doc.add_root(figure_column)
+        doc.add_root(figure_column)
 
-        return self.doc
+        return doc
 
     def _bokeh_button_savedata_callback(self):
         fpath = etabackend.tk.data.save_data(self.eta_result.xdata, self.eta_result.ydata,
@@ -229,26 +234,27 @@ class ETABokehPlot:
                                                                              self.eta_result.vars['expname']))
         self.logger.info(f"Current data saved as new file at {fpath}.")
 
-    def _bokeh_button_alignment_callback(self, new_value):
+    def _bokeh_button_alignment_callback(self, ctx, new_value):
         """ Turn on alignment and set type of alignment
         """
         if new_value == 0: 
-            if self.callback:
-                self.doc.remove_periodic_callback(self.callback)
+            if ctx['callback']:
+                ctx['doc'].remove_periodic_callback(ctx['callback'])
                 self.logger.info('Removed Callback for realtime mode')
-                self.callback = None
+                ctx['callback'] = None
         else:
-            if self.callback is None:
-                self.logger.info('Registered callback for realtime mode')
-                self.callback = self.doc.add_periodic_callback(lambda: self._bokeh_update(self.ctx), self.update_interval)
-                
+            if ctx['callback'] is None:
+                self.logger.info('Registered Callback for realtime mode')
+                ctx['callback'] = ctx['doc'].add_periodic_callback(lambda: self._bokeh_update(ctx), self.update_interval)
             if new_value == 1:
                 self.logger.info('Accumulation mode activated')
                 self.process_queue.put(self.eta_result.set_accumulation_mode)
             elif new_value == 2: 
                 self.logger.info('Alignment mode activated')
                 self.process_queue.put(self.eta_result.set_alignment_mode)
-    
+
+        self.callback = ctx.get('callback', None)
+            
     def _bokeh_update(self, ctx):
         if ctx['lastupdate'] < self.eta_result.lastupdate:
            ctx['lastupdate'] = self.eta_result.lastupdate
@@ -272,6 +278,7 @@ class ETABokehPlot:
             else:
                 if logger_silenced: # We want logs when there is no life updating recipe.
                     self.logger.setLevel(logging.INFO)
+                    self.logger.info('Log activated again.')
                     logger_silenced = False
                     
                 self.stop_flag.wait(self.update_interval)
