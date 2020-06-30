@@ -231,7 +231,7 @@ class Backend():
                     "Don't forget to save the recipe and share it!")
                 self.schedule_send({'op': 'finished'})
 
-    async def show_bokeh(self, app=None):
+    async def show_bokeh(self, bokeh_app=None):
         """ Displays a bokeh document. 
         """
         import tornado.ioloop
