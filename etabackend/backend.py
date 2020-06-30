@@ -240,17 +240,18 @@ class Backend():
         self.logfrontend.info("show_bokeh: Show bokeh object in main thread")
         try:
             self.app['bokserver'] = Server(
-                {"/": app, },
-                address=self.hostip,
-                port=self.hostdashport,
-                allow_websocket_origin=[f"{self.hostip}:{self.hostport}",
-                                        f"{self.hostip}:{self.hostdashport}",
-                                        f"127.0.0.1:{self.hostport}",
-                                        f"127.0.0.1:{self.hostdashport}"
-                                        ],
-                io_loop=tornado.ioloop.IOLoop.current()
-            )
+                    {"/": bokeh_app, },
+                    address=self.hostip,
+                    port=self.hostdashport,
+                    allow_websocket_origin=[f"{self.hostip}:{self.hostport}",
+                                            f"{self.hostip}:{self.hostdashport}",
+                                            f"127.0.0.1:{self.hostport}",
+                                            f"127.0.0.1:{self.hostdashport}"
+                                            ],
+                    io_loop=tornado.ioloop.IOLoop.current()
+                )
             self.app['bokserver'].start()
+            
             logging.getLogger('tornado.access').setLevel(logging.WARNING)
 
             self.display_shutdown_url = "http://{}:{}/shutdown-display".format(
@@ -270,10 +271,14 @@ class Backend():
 
     async def shutdown_display(self, request):
         if self.app.get('bokserver', None) is not None:
-            self.app['bokserver'].stop()
-            self.app['bokserver'] = None
-            self.not_displaying.set()
             self.logfrontend.info("Dashboard shutting down.")
+            self.not_displaying.set()
+            
+            sessions = self.app['bokserver'].get_sessions('/')
+            for session in sessions:
+                session.destroy() #FIXME Clearly not a clean way, but found no better way of shutting down the bokeh server.
+
+            self.app['bokserver'].stop(wait=True)
             self.schedule_send_text("", "discard")
             return web.json_response(['success'])
 
