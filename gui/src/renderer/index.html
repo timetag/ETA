@@ -6,7 +6,8 @@
     <title>ETA</title>
     <style>
     body {
-      font-family: Arial, Helvetica, sans-serif;}
+      font-family: Arial, Helvetica, sans-serif;
+    }
     .button {
       font-family: inherit;
       font-size: 100%%;
@@ -24,7 +25,6 @@
       cursor: pointer;
       outline: none;
     }
-
     .connectbutton {
       background-color: white; 
       color: black; 
@@ -105,24 +105,25 @@
             });
         }
     </script>
-      <div class="centered" id="connecting" hidden="true">
-        <p>
-          Connecting to ETA Backend...
+    <div class="centered" id="connecting" hidden="true">
+      <p>
+        Connecting to ETA Backend...
+      </p>
+    </div>
+    <div class="centered" id="prompt" hidden="true">
+        <h2>
+          Could not connect to ETA Backend.
+        </h2>
+        <p>Please launch ETA Backend and specify its host and port (default: localhost:5678).
         </p>
-      </div>
-
-      <div class="centered" id="prompt" hidden="true">
-          <p>Please launch ETA Backend and specify its host and port (default: localhost:5678).
-          </p>
-          <form>
-            <label for="host">Host and Port: </label>
-            <input id="host" type="text">
-            <button class="button connectbutton" onclick="go()">Connect</button>
-          </form>
-          <br/>
-          <br/>
-          <p>For more information, please visit the <a href="https://eta.readthedocs.io/en/latest/installation.html" target="_blank" >documentation</a>.</p>
-      </div>
+        <form>
+          <label for="host">Host and Port: </label>
+          <input id="host" type="text">
+          <button class="button connectbutton" onclick="go()">Connect</button>
+        </form>
+        <br/>
+        <br/>
+        <p>For more information, please visit the <a href="https://eta.readthedocs.io/en/latest/installation.html" target="_blank" >documentation</a>.</p>
+    </div>
 </body>
-
 </html>
