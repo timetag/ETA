@@ -4,6 +4,58 @@
 <head>
     <meta charset="utf-8">
     <title>ETA</title>
+    <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;}
+    .button {
+      font-family: inherit;
+      font-size: 100%%;
+      border-radius: 12px;
+      background-color: #343a40; /* grey */
+      border: none;
+      color: white;
+      padding: 6px 24px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      transition-duration: 0.4s;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .connectbutton {
+      background-color: white; 
+      color: black; 
+      border: 2px solid #343a40;
+      transition: background 250ms ease-in-out, 
+                  transform 150ms ease;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+    }
+    .connectbutton:hover {
+      background-color: #343a40;
+      color: white;
+    }
+    .connectbutton:active {
+      transform: scale(0.98);
+    }
+    .centered {
+      position: fixed;
+      top: 25%;
+      left: 50%;
+      /* bring your own prefixes */
+      transform: translate(-50%, -50%);
+    }
+    input[type=text], select, textarea {
+      width: 150px;
+      padding: 9px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      resize: vertical;
+    }
+    </style>
 </head>
 
 <body style="-webkit-user-select: none;">
@@ -53,20 +105,24 @@
             });
         }
     </script>
-    <div id="connecting" hidden="true">
-        Connecting to ETA Backend...
-    </div>
+      <div class="centered" id="connecting" hidden="true">
+        <p>
+          Connecting to ETA Backend...
+        </p>
+      </div>
 
-    <div id="prompt" hidden="true">
-        <h>Please launch ETA Backend and specify its host and port, like localhost:5678. <a href="https://eta.readthedocs.io/en/latest/installation.html" target="_blank" >How to install ETA?</a>
-        </h>
-        <br/>
-        <br/>
-        <form>
-            Host and Port: <input id="host" type="text">
-            <button onclick="go()">Go</button>
-        </form>
-    </div>
+      <div class="centered" id="prompt" hidden="true">
+          <p>Please launch ETA Backend and specify its host and port (default: localhost:5678).
+          </p>
+          <form>
+            <label for="host">Host and Port: </label>
+            <input id="host" type="text">
+            <button class="button connectbutton" onclick="go()">Connect</button>
+          </form>
+          <br/>
+          <br/>
+          <p>For more information, please visit the <a href="https://eta.readthedocs.io/en/latest/installation.html" target="_blank" >documentation</a>.</p>
+      </div>
 </body>
 
 </html>
