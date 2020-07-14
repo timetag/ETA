@@ -2,17 +2,25 @@
 <html>
 
 <head>
-    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" charset="utf-8">
     <title>ETA</title>
     <style>
+    * {
+      box-sizing: border-box;
+    }
     body {
       font-family: Arial, Helvetica, sans-serif;
+    }
+    .row::after {
+      content: "";
+      clear: both;
+      display: table;
     }
     .button {
       font-family: inherit;
       font-size: 100%%;
       border-radius: 12px;
-      background-color: #343a40; /* grey */
+      background-color: #343a40; /* darkgrey */
       border: none;
       color: white;
       padding: 6px 24px;
@@ -42,11 +50,11 @@
       transform: scale(0.98);
     }
     .centered {
-      position: fixed;
-      top: 25%;
+      position: absolute;
+      top: 0px;
       left: 50%;
-      /* bring your own prefixes */
-      transform: translate(-50%, -50%);
+      padding: 25px 0px 0px;
+      transform: translate(-50%, -0%);
     }
     input[type=text], select, textarea {
       font-family: inherit;
@@ -55,6 +63,55 @@
       border: 1px solid #ccc;
       border-radius: 6px;
       resize: vertical;
+    }
+    /*SPINNER*/
+    .spinner {
+      margin: 100px auto;
+      width: 40px;
+      height: 40px;
+      position: relative;
+      text-align: center;
+      
+      -webkit-animation: sk-rotate 1.0s infinite linear;
+      animation: sk-rotate 1.0s infinite linear;
+    }
+
+    .dot1, .dot2 {
+      width: 60%;
+      height: 60%;
+      display: inline-block;
+      position: absolute;
+      top: 0;
+      background-color: #343a40;
+      border-radius: 100%;
+      
+      -webkit-animation: sk-bounce 1.0s infinite ease-in-out;
+      animation: sk-bounce 1.0s infinite ease-in-out;
+    }
+
+    .dot2 {
+      top: auto;
+      bottom: 0;
+      -webkit-animation-delay: -0.5s;
+      animation-delay: -0.5s;
+    }
+
+    @-webkit-keyframes sk-rotate { 100% { -webkit-transform: rotate(360deg) }}
+    @keyframes sk-rotate { 100% { transform: rotate(360deg); -webkit-transform: rotate(360deg) }}
+
+    @-webkit-keyframes sk-bounce {
+      0%, 100% { -webkit-transform: scale(0.0) }
+      50% { -webkit-transform: scale(1.0) }
+    }
+
+    @keyframes sk-bounce {
+      0%, 100% { 
+        transform: scale(0.0);
+        -webkit-transform: scale(0.0);
+      } 50% { 
+        transform: scale(1.0);
+        -webkit-transform: scale(1.0);
+      }
     }
     </style>
 </head>
@@ -110,6 +167,10 @@
       <p>
         Connecting to ETA Backend...
       </p>
+      <div class="spinner">
+        <div class="dot1"></div>
+        <div class="dot2"></div>
+      </div>
     </div>
     <div class="centered" id="prompt" hidden="true">
         <h2>

@@ -4,7 +4,7 @@
   "author": "Zuzeng Lin <zuzeng@kth.se>",
   "repository": "github:timetag/ETA",
   "homepage": "http://timetag.github.io",
-  "version": "0.7.5",
+  "version": "0.7.6",
   "scripts": {
     "dev": "electron .",
     "dist": "electron-builder  --publish onTagOrDraft",
@@ -34,12 +34,12 @@
     }
   },
   "dependencies": {
-    "electron-log": "^3.0.8",
-    "electron-updater": "^4.2.5"
+    "electron-log": "^4.2.2",
+    "electron-updater": "^4.3.1"
   },
   "devDependencies": {
-    "electron": "^8.2.0",
-		"electron-builder": "^22.4.1"
+	  "electron": "^9.1.0",
+	  "electron-builder": "^22.7.0"
   },
   "resolutions": {}
 }
