@@ -119,7 +119,7 @@ class ETAResult:
                                             return_task=True,
                                             return_results=True, max_autofeed=1)
         
-        self.xdata, self.ydata = self.calculate_result(result)
+        self.xdata, *self.ydata = self.calculate_result(result)
         self.lastupdate = time.time()
         self.max_value = np.amax(self.ydata)
         self.y_max = self.max_value*1.5
@@ -143,7 +143,7 @@ class ETAResult:
                                             return_results=True, max_autofeed=1)
 
         
-        self.xdata, self.ydata = self.calculate_result(result)
+        self.xdata, *self.ydata = self.calculate_result(result)
         self.max_value = np.amax(self.ydata)
         self.y_max = self.max_value*1.5
         
@@ -161,6 +161,6 @@ class ETAResult:
         hist0 = result["h4_zero"]
         hist1[0] += hist0[0]
         xdata = np.arange(-hist2.size, hist1.size)*bin_factor
-        ydata = np.concatenate((hist2[::-1], hist1))
+        ydata1 = np.concatenate((hist2[::-1], hist1))
 
-        return xdata, ydata                        
+        return [xdata, ydata1]

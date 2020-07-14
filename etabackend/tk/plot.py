@@ -12,6 +12,7 @@ import bokeh.plotting
 import bokeh.models
 import bokeh.models.tools
 import bokeh.layouts
+import bokeh.palettes as palettes
 
 import etabackend.tk.data
 
@@ -53,14 +54,17 @@ def style_plot(fig, title=None, xlabel=None, ylabel=None, style='ETA'):
     if style == 'ETA':
         return _ETA_style_plot(fig, title, xlabel, ylabel)
 
-def plot_histogram(df, data_file, result_path, data_name="", file_label="", info=None):
+def plot_histogram(df, data_file, result_path, title=None, x_label=None, y_label=None, data_name="", file_label="", info=None):
     """ The most common plot in ETA based on bokeh
     """
     source = bokeh.models.ColumnDataSource(df)
 
     plin, plog = ETABokehPlot.bokeh_plot_histogram(source, 
                                                    line_names={'histogram events': data_name},
-                                                   x_name='time bins'
+                                                   x_name='time bins',
+                                                   title=title,
+                                                   x_label=x_label,
+                                                   y_label=y_label
                                                    )
     plot_row_lin = bokeh.layouts.row(plin, sizing_mode='stretch_both')
     plot_row_log = bokeh.layouts.row(plog, sizing_mode='stretch_both')
@@ -114,11 +118,13 @@ def download_data(data_source):
     # return custom_js
 
 class ETABokehPlot:
-    def __init__(self, eta_result, result_folder='analysis', result_label=None, update_interval=0.2):
+    def __init__(self, eta_result, result_folder='analysis', title=None, line_label=None, update_interval=0.2):
         self.eta_result = eta_result
         self.update_interval = update_interval
         self.result_folder = result_folder
-        self.result_label = result_label
+        self.title = title if title is not None else 'Histogram'
+        self.line_label = line_label if line_label is not None else 'Histogram'
+        self.x_label = "Time delay (min)" if self.title.lower()=='countrate' else None
 
         self.logger = logging.getLogger('etabackend.frontend')
         self.process_queue = queue.SimpleQueue()
@@ -127,7 +133,7 @@ class ETABokehPlot:
         self.stop_flag = None
        
     @staticmethod
-    def bokeh_plot_histogram(source, line_names={'y': 'data'}, x_name='x'):
+    def bokeh_plot_histogram(source, line_names={'y': 'data'}, x_name='x', title=None, x_label=None, y_label=None):
         """ The most common plot in ETA based on bokeh based on a ColumnDataSource
         """
         toolbox = "pan,wheel_zoom,box_zoom,reset"
@@ -146,15 +152,16 @@ class ETABokehPlot:
                     )
 
         max_y = 0
-        for key, data_name in line_names.items():
+        colors = palettes.brewer['Spectral'][min(11,max(4,len(line_names)))][0:len(line_names)]
+        for y_enum, (key, data_name) in enumerate(line_names.items()):
             max_y = max(max_y, source.data[key].max(axis=0))
 
             plin.line(x=x_name, y=key, 
-                      source=source, color='firebrick', 
+                      source=source, color=colors[y_enum%12], #we only have 11 colors
                       legend_label='{}'.format(data_name), line_width=1.5
                     )
             plog.line(x=x_name, y=key,
-                      source=source, color='firebrick', 
+                      source=source, color=colors[y_enum%12], #we only have 11 colors
                       legend_label='{}'.format(data_name), line_width=1.5
                     )
             
@@ -175,8 +182,11 @@ class ETABokehPlot:
         plog.y_range = bokeh.models.Range1d(0.9, max_y*1.1)
 
         # style plots
-        plin = style_plot(plin, data_name, "Time delay (ps)", "Histogram events")
-        plog = style_plot(plog, data_name, "Time delay (ps)", "Histogram events")
+        title = title if title is not None else "Histogram"
+        x_label = x_label if x_label is not None else "Time delay (ps)"
+        y_label = y_label if y_label is not None else "Histogram events"
+        plin = style_plot(plin, title, x_label, y_label)
+        plog = style_plot(plog, title, x_label, y_label)
      
         return plin, plog
 
@@ -188,21 +198,24 @@ class ETABokehPlot:
         ctx['doc'] = doc
         ctx['callback'] = None 
         ctx['lastupdate'] = self.eta_result.lastupdate
-
-        source = bokeh.models.ColumnDataSource({'x': self.eta_result.xdata, 
-                                                'y': self.eta_result.ydata })
+        data_dict = {'x': self.eta_result.xdata,}
+        y_dict = {f'y{i}': yd for i, yd in enumerate(self.eta_result.ydata)}
+        data_dict.update(y_dict)
+        source = bokeh.models.ColumnDataSource(data_dict)
         ctx['source'] = source
 
         plin, plog = ETABokehPlot.bokeh_plot_histogram(source, 
-                                                       line_names={'y': 'Correlation'},
-                                                       x_name='x'
+                                                       line_names={f'y{i}': f'{self.line_label} {i}' if len(self.eta_result.ydata)>1 else f'{self.line_label}' for i in range(len(self.eta_result.ydata))},
+                                                       x_name='x',
+                                                       x_label=self.x_label,
+                                                       title=self.title
                                                       )
         plot_row_lin = bokeh.layouts.row(plin, sizing_mode='stretch_both')
         plot_row_log = bokeh.layouts.row(plog, sizing_mode='stretch_both')
         
         ctx['plin'] = plin
         ctx['plog'] = plog
-
+        
         buttons = []
         button_save = bokeh.models.Button(label="Save")
         button_save.on_click(self._bokeh_button_savedata_callback)
@@ -229,7 +242,7 @@ class ETABokehPlot:
     def _bokeh_button_savedata_callback(self):
         fpath = etabackend.tk.data.save_data(self.eta_result.xdata, self.eta_result.ydata,
                                              self.eta_result.file, self.eta_result.file.parent.joinpath(self.result_folder),
-                                             self.result_label or self.eta_result.vars['expname'].capitalize(),
+                                             self.title or self.eta_result.vars['expname'].capitalize(),
                                              header=etabackend.tk.utils.info(self.eta_result.vars, 
                                                                              self.eta_result.vars['expname']))
         self.logger.info(f"Current data saved as new file at {fpath}.")
