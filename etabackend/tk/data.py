@@ -21,9 +21,8 @@ def save_data(xdata, ydata, data_file, result_path, label, header=None):
         file_index += 1
     
     file_path = result_path / f"{data_file.stem}_{label}_{file_index:0=3d}.txt"
-
     np.savetxt(file_path,
-               np.transpose([xdata, ydata]), delimiter='\t', 
+               np.transpose([xdata, *ydata]), delimiter='\t', 
                header=header)
     
     return file_path
