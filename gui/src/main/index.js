@@ -180,8 +180,8 @@ app.on('ready', () => {
       title: 'Updates Found',
       message: 'There is a new version of ETA. Do you want to update now?',
       buttons: ['Yes', 'No']
-    }, (buttonIndex) => {
-      if (buttonIndex === 0) {
+    }).then(result => {
+      if (result.response === 0) {
         autoUpdater.downloadUpdate()
       }
       else {
@@ -201,7 +201,7 @@ app.on('ready', () => {
     dialog.showMessageBox({
       title: 'Installing Update',
       message: 'ETA will now quit for updating.'
-    }, () => {
+    }).then(() => {
       setImmediate(() => autoUpdater.quitAndInstall())
     })
   })
