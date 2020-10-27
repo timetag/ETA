@@ -210,14 +210,14 @@ d3.select('#btn_connect').on('click', function () {
         }
         if (ret['op'] == "running") {
             $("#exampleModalClose").toggleClass("d-none", true);
-            $("#exampleModalLabel").html('<div class="loader d-inline-block" ></div> <div class="d-inline-block">ETA Running...</div>');
+            $("#exampleModalLabel").html('<img src="img/etalogoani_small.svg" style="vertical-align: baseline;"/> ETA Running...');
         }
         if (ret['op'] == "paused") {
-            $("#exampleModalLabel").html('<img src="favicon.ico" style="width: 1.3em;"/> ETA Running');
+            $("#exampleModalLabel").html('<img src="img/etalogostat_small.svg" style="vertical-align: baseline;"/> ETA Running');
         }
         if (ret['op'] == "finished") {
             $("#exampleModalClose").toggleClass("d-none", false);
-            $("#exampleModalLabel").html('<img src="favicon.ico" style="width: 1.3em;"/> ETA Results');
+            $("#exampleModalLabel").html('<img src="img/etalogostat_small.svg" style="vertical-align: baseline;"/> ETA Results');
         }
         if (ret['op'] == "clear") {
             $("#remoteLOG").html("");// clear log
