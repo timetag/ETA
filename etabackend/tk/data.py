@@ -7,7 +7,6 @@ import numpy as np
 
 import etabackend.tk.utils
 
-
 def save_data(xdata, ydata, data_file, result_path, label, header=None):
     """ Stores the data in a local result folder.
     """
@@ -93,7 +92,6 @@ class ETAResult:
         
         self.growth_rate = (file_size_new - file_size_old) / \
             self.cut.BytesofRecords  # Bytes per record
-        self.records_per_cut = int(self.growth_rate * self.timeout)
 
     def set_accumulation_mode(self):
         self.mode = 'accumulation'
@@ -111,12 +109,14 @@ class ETAResult:
         """ Calculates all available data.
             Calls calculate_result that needs to be implemented by the result class.
         """
-        self.cut = self.eta.clip_file(self.file, modify_clip=None,
-                                      read_events=self.existing_records, wait_timeout=0.5)  # Start always from begining of file
-
-        result, self.context = self.eta.run({"timetagger1": self.cut}, resume_task=None, group=self.group,
+        #  We reuse self.cut set by _inspect_file to be have the cut also as reference afterwards.
+        # We want to analyse from the first event, but not wait for the future.        
+        clip_generator = self.eta.clips(self.file, modify_clip=self.cut, 
+                                        read_events=self.records_per_cut or 1024*1024*10,
+                                        seek_event=0, wait_timeout=0)
+        result, self.context = self.eta.run({"timetagger1": clip_generator}, resume_task=None, group=self.group,
                                             return_task=True,
-                                            return_results=True, max_autofeed=1)
+                                            return_results=True, max_autofeed=0)
         
         self.xdata, *self.ydata = self.calculate_result(result)
         self.lastupdate = time.time()
@@ -128,7 +128,8 @@ class ETAResult:
             Calls calculate_result that needs to be implemented by the result class.
         """
         check_ret = self.eta.clip_file(self.file, modify_clip=self.cut,
-                                       read_events=self.records_per_cut, wait_timeout=self.timeout)
+                                       read_events=self.records_per_cut or int(self.timeout * self.growth_rate), 
+                                       wait_timeout=self.timeout)
         if not check_ret:
             # No new data available
             return
