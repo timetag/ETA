@@ -126,13 +126,14 @@ class ETAResult:
     def _update_eta_evaluation(self):
         """ Calculates the next step of data.
             Calls calculate_result that needs to be implemented by the result class.
+            Returns True if new data was evaluated.
         """
         check_ret = self.eta.clip_file(self.file, modify_clip=self.cut,
                                        read_events=self.records_per_cut or int(self.timeout * self.growth_rate), 
                                        wait_timeout=self.timeout)
         if not check_ret:
             # No new data available
-            return
+            return False
         
         self.logger.info('New data available for a calculating a new block.')
 
@@ -148,6 +149,7 @@ class ETAResult:
         self.y_max = self.max_value*1.5
         
         self.lastupdate = time.time()
+        return True
 
     def calculate_result(self, result):
         """ Gets the ETA result dict and returns x and y data as array.
