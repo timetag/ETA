@@ -382,6 +382,9 @@ class HISTOGRAM():
             else:
                 self.record_simple(tirggers, histogram, clock_name)
 
+    def histogram_clear(self, trigger, histogram):
+        histogram = self.assert_sym_type(histogram, "histogram")
+        self.EMIT_LINE(trigger, "{sym}.fill(0)".format(sym=histogram))
 
 class CLOCK():
     def clock_init(self, sym, type):
