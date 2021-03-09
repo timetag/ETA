@@ -59,8 +59,11 @@ class ETAResult:
         if run_immediately: self.run()
 
     def run(self):
-        return self._run_eta_evaluation()
-    
+        if not self._simulate_growth:
+            return self._run_eta_evaluation()
+        else:
+            return self.update()
+
     def update(self):
         return self._update_eta_evaluation()
 
@@ -68,6 +71,7 @@ class ETAResult:
         # First cut to detect file properties and rate estimation
         self.cut = self.eta.clip_file(
             self.file, modify_clip=None, read_events=1, format=-1, wait_timeout=0)
+        self.cut.seek(0) # Reset clip to begining of file
 
         if self.records_per_cut is None:
             self._estimate_growth()

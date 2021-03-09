@@ -107,6 +107,11 @@ class Clip():
     def get_pos(self):
         return (self.fseekpoint-self.headeroffset)//self.BytesofRecords+self.next_RecID_in_batch
 
+    def seek(self, offset, whence=0):
+        if whence == 0:
+            self.fseekpoint = self.headeroffset + self.BytesofRecords * offset
+        else:
+            raise NotImplementedError()
 
 class ETA_CUT():
     __version__ = etabackend.__version__ 
@@ -209,6 +214,7 @@ class ETA_CUT():
 
         # wait for data
         waited_for = 0.0
+        last_wait_log = -1.01
         while not fileactualsize >= filedesiredsize:
             waited_for += 0.01
             if waited_for > wait_timeout:
@@ -216,9 +222,13 @@ class ETA_CUT():
                     "ETA.clip_file: Timeout when waiting for data, overriding read_events to the current file boundry.")
                 filedesiredsize = fileactualsize
                 break
-            self.logfrontend.info("ETA.clip_file: Waiting for file {} to grow from {} to {} bytes.".format(filename,
+
+            if waited_for - last_wait_log > 1:
+                self.logfrontend.info("ETA.clip_file: Waiting for file {} to grow from {} to {} bytes.".format(filename,
                                                                                                            fileactualsize,
                                                                                                            filedesiredsize))
+                last_wait_log = waited_for
+
             # hard-coded checking period is probably not good.
             time.sleep(0.01)
 
