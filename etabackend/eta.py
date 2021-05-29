@@ -275,19 +275,20 @@ class ETA(ETA_CUT, Util):
                 result[rfile_name] = used_clip_result.validate(
                     check_buffer=False)
             # emit other stuff
+            for each in ctxs.keys():
+                if each.startswith("scalar_"):
+                    result[len("scalar_"):] = ctxs[each][0]
+                else:
+                    result[each] = ctxs[each]
+            # workaround to remove internal symbols
             kwlist = ["_now_", "_last_", "POOL_", "_start_", "_stop_", "VCHN",
                       "READER", "VFILES", "_vfile", 'AbsTime_ps', 'fileid', 'chn', 'chn_next', "INTERRUPT"]
-            for each in ctxs.keys():
-                skip = False
+            for each in list(result.keys()):
                 for kw in kwlist:
                     if each.find(kw) >= 0 or each in required_rfiles:
-                        skip = True
+                        del result[each]
                         continue
-                if not skip:
-                    if each.find("scalar_") >= 0:
-                        result[each.replace("scalar_", "")] = ctxs[each][0]
-                    else:
-                        result[each] = ctxs[each]
+
             # update global timing
             if include_timing:
                 result["eta_total_time"] = eta_total_time
