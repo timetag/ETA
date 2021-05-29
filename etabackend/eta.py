@@ -281,7 +281,7 @@ class ETA(ETA_CUT, Util):
                 else:
                     result[each] = ctxs[each]
             # workaround to remove internal symbols
-            kwlist = ["_now_", "_last_", "POOL_", "_start_", "_stop_", "VCHN",
+            kwlist = ["now_", "last_", "POOL_", "_start", "_stop", "VCHN",
                       "READER", "VFILES", "_vfile", 'AbsTime_ps', 'fileid', 'chn', 'chn_next', "INTERRUPT"]
             for each in list(result.keys()):
                 for kw in kwlist:
