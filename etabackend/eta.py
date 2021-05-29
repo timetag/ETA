@@ -287,7 +287,7 @@ class ETA(ETA_CUT, Util):
                 for kw in kwlist:
                     if each.find(kw) >= 0 or each in required_rfiles:
                         del result[each]
-                        continue
+                        break
 
             # update global timing
             if include_timing:
