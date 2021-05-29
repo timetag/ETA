@@ -277,7 +277,7 @@ class ETA(ETA_CUT, Util):
             # emit other stuff
             for each in ctxs.keys():
                 if each.startswith("scalar_"):
-                    result[len("scalar_"):] = ctxs[each][0]
+                    result[each[len("scalar_"):]] = ctxs[each][0]
                 else:
                     result[each] = ctxs[each]
             # workaround to remove internal symbols
