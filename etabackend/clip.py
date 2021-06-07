@@ -1,6 +1,7 @@
 import logging
 import os
 import time
+import mmap
 
 import etabackend
 from etabackend.etalang.jit_linker import PARSE_TimeTagFileHeader_wrapper, np
@@ -113,9 +114,10 @@ class Clip():
         else:
             raise NotImplementedError()
 
+
 class ETA_CUT():
-    __version__ = etabackend.__version__ 
-    
+    __version__ = etabackend.__version__
+
     def __init__(self):
         self.logger = logging.getLogger(__name__)
         self.logfrontend = logging.getLogger("etabackend.frontend")
@@ -179,7 +181,7 @@ class ETA_CUT():
 
     # low-level API
 
-    def clip_file(self, filename, modify_clip=None, read_events=0, seek_event=-1, format=-1, wait_timeout=0):
+    def clip_file(self, filename, modify_clip=None, read_events=0, seek_event=-1, format=-1, wait_timeout=0, mmap_read=True):
         filename = str(filename)  # supporting pathlib
         if modify_clip == None:
             temp_clip = Clip()
@@ -225,8 +227,8 @@ class ETA_CUT():
 
             if waited_for - last_wait_log > 1:
                 self.logfrontend.info("ETA.clip_file: Waiting for file {} to grow from {} to {} bytes.".format(filename,
-                                                                                                           fileactualsize,
-                                                                                                           filedesiredsize))
+                                                                                                               fileactualsize,
+                                                                                                               filedesiredsize))
                 last_wait_log = waited_for
 
             # hard-coded checking period is probably not good.
@@ -237,15 +239,29 @@ class ETA_CUT():
             self.logfrontend.info(
                 "ETA.clip_file: Can not seek to {} in the file '{}' for the Clip, None is returned. ".format(temp_clip.fseekpoint, filename))
             return None
-        if (temp_clip.buffer == None or len(temp_clip.buffer) != filedesiredsize-temp_clip.fseekpoint):
-            # reuser buffer as much as possible
-            temp_clip.buffer = bytearray(
-                filedesiredsize-temp_clip.fseekpoint)
-        # load data
-        with open(filename, "rb") as f:
-            f.seek(temp_clip.fseekpoint)
-            temp_clip.batch_actualread_length = f.readinto(temp_clip.buffer)
-        # fail when zero size
+        if mmap_read:
+            with open(filename, "rb") as f:
+                temp_clip.batch_actualread_length = filedesiredsize-temp_clip.fseekpoint
+                offset = (temp_clip.fseekpoint //
+                          mmap.ALLOCATIONGRANULARITY) * mmap.ALLOCATIONGRANULARITY
+                length = filedesiredsize-offset
+                fm = mmap.mmap(f.fileno(), length,
+                               access=mmap.ACCESS_READ, offset=offset)
+
+                temp_clip.buffer = memoryview(
+                    fm)[temp_clip.fseekpoint-offset:filedesiredsize-offset]
+        else:
+            if (temp_clip.buffer == None or len(temp_clip.buffer) != filedesiredsize-temp_clip.fseekpoint):
+                # reuser buffer as much as possible
+                temp_clip.buffer = bytearray(
+                    filedesiredsize-temp_clip.fseekpoint)
+
+            # load data
+            with open(filename, "rb") as f:
+                f.seek(temp_clip.fseekpoint)
+                temp_clip.batch_actualread_length = f.readinto(
+                    temp_clip.buffer)
+            # fail when zero size
         if temp_clip.batch_actualread_length == 0:
             self.logfrontend.info(
                 "ETA.clip_file: The file '{}' is not long enough for the Clip, None is returned. ".format(filename))
