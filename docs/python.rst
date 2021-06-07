@@ -154,9 +154,6 @@ The analysis will block the execution of Python script until the **results are r
     It limits the number of Clips that ``eta.run`` would fetch from the generator.
     
     Set this value to 1 if you want to get each result for every single Clip from the generator, rather than get final result after the full generator is consumed.
-    
-- ``group``
-    The group of instruments that you want to run analysis on.
 
 - ``return_results``
     Specifies if a dictionary of results should be returned. 
@@ -179,14 +176,16 @@ The analysis will block the execution of Python script until the **results are r
         The context parameter is renamed to task descriptor to reduce confusion since version 0.6.6.
         
         Task descriptor works like a memory snapshot of a current running or finished analysis, everything is preserved so that you can resume any kind of analysis without worrying about different behaviors of different Tools.
-        
-- ``resume_task``
-    Specifies an old task descriptor to resume the analysis. 
     
-    The analysis will be resumed from the point where it ended, with all contexts set correctly, and then feeded with the new Clip. 
-    
-    You can iteratively call ``eta.run`` using the returned task from a previous ``eta.run`` call. This is particularly useful when you want to perform real-time or streamming analysis. 
+- ``group``
+    The group name of instruments that you want to run analysis on. This parameter is provided so that ``eta.run`` can automatically call ``eta.create_task`` using the provided group name when ``resume_task`` is not provided.
 
+- ``resume_task``
+    Specifies an existing task descriptor to resume the analysis. 
+    
+    A new task descriptor can be created with ``eta.create_task``. You can also iteratively call ``eta.run`` using the returned task from a previous ``eta.run`` call.  In second case, the analysis will be resumed from the point where it ended, with all contexts set correctly, and then feeded with the new Clip.  This is particularly useful when you want to perform real-time or streamming analysis. 
+
+    
     .. note::
         After the analysis is resumed, the old task descriptor becomes invalid, however, a new task descriptor can be returned by setting ``return_task=True``.
     
@@ -197,6 +196,16 @@ The analysis will block the execution of Python script until the **results are r
 - ``stop_with_source``
     Stop the analysis when any of the sources reaches its end. Set it to False if you want to run simulation without any source.
 
+
+
+eta.create_task(group):
+......
+``eta.create_task`` will create a new analysis task using the group of instruments. The returned task can be used in ``eta.run(resume_task=task)`` The instruments within the same group are visible to each other in this task.
+
+- ``group``
+    The group name of instruments that you want to run analysis on. 
+
+    
 eta.aggregrate(list_of_tasks, sum_results=True, include_timing=False):
 ......
 ``eta.aggregrate`` will gather data form previous multi-threading anlaysis tasks started with ``return_results=False`` and put them together as the final results. If all previously anlaysis tasks haven't finished, ETA will block until all of them are finished. 
