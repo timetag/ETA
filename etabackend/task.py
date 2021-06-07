@@ -46,3 +46,6 @@ class Task():
 
     def loads(self, data: bytes):
         self.setstate(pickle.loads(data))
+
+    def iscompiled(self):
+        return (self.initializer is not None and self.mainloop is not None and self.rfiles is not None and self.group is not None)

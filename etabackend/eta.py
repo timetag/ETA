@@ -89,10 +89,24 @@ class ETA(ETA_CUT, Util):
     def create_task(self, group: str = "main", resume_task: Task = None):
         if group is None and resume_task is None:
             raise ValueError(
-                "ETA.create_task: A group name or an existing task has to be provided. .")
+                "ETA.create_task: A group name or an existing task has to be provided.")
+
+        if resume_task is not None:
+            task = resume_task
+            if task.group != group:
+                raise ValueError(
+                    "Conflicting group name when eta.create_task. resume_task.group='{}', but group='{}'".format(task.group, group))
+            if task.iscompiled():
+                self.logfrontend.info(
+                    "ETA.create_task: Resuming analysis with compiled Instrument group '{}'.".format(task.group))
+                return task
+        else:
+            task = Task()
+            self.logfrontend.info(
+                "ETA.create_task: Starting new analysis with Instrument group '{}'.".format(group))
         if not (group in self.compilecache_nfunc):
             raise ETANonExistingGroupException(
-                "ETA.create_task: Group '{}' not found.".format(group))
+                "ETA.create_task: Group '{}' is not found.".format(group))
             # self.logfrontend.warning("Can not eta.run() on a non-existing group {}.".format(group)) FIXME
         if not (group in self.compilecache_mainloop):
             self.logfrontend.info(
@@ -104,19 +118,7 @@ class ETA(ETA_CUT, Util):
         else:
             self.logfrontend.info(
                 "ETA.create_task: Using cached Instrument group '{}'.".format(group))
-
-        # building task object
-        if resume_task is not None:
-            task = resume_task
-            self.logfrontend.info(
-                "ETA.create_task: Resuming analysis using Instrument group '{}'.".format(task.group))
-            if task.group != group:
-                raise ValueError(
-                    "Conflicting group name when eta.create_task. resume_task.group='{}', but group='{}'".format(task.group, group))
-        else:
-            task = Task()
-            self.logfrontend.info(
-                "ETA.create_task: Starting new analysis using Instrument group '{}'.".format(group))
+        # filling the task object
         task.group = group
         task.initializer = self.compilecache_initializer[group]
         task.mainloop = self.compilecache_mainloop[group]
@@ -124,7 +126,7 @@ class ETA(ETA_CUT, Util):
 
         return task
 
-    def run(self, *vargs, resume_task: Task = None, group: str = "main", return_task=False, return_results=True, **kwargs):
+    def run(self, *vargs, resume_task: Task = None, group: str = "main", return_task=False, return_results=True, background=None, **kwargs):
         task = self.create_task(group=group, resume_task=resume_task)
         self.notify_callback('running')
         if task.thread:
@@ -139,7 +141,10 @@ class ETA(ETA_CUT, Util):
             self.logger.debug("Initializing context.")
             task.initialize()
 
-        if return_results:
+        if background is None:
+            # setting default background
+            background = not return_results
+        if not background:
             # execute on MainThread
             self.ctx_loop(*vargs, ctxs=task.context,  mainloop=task.mainloop,
                           required_rfiles=task.rfiles, ts=task.timing, **kwargs)
