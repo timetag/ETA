@@ -14,6 +14,7 @@ from etabackend.clip import ETA_CUT, Clip
 from etabackend.util import Util
 from etabackend.etalang import jit_linker, recipe_compiler
 from etabackend.recipe import Recipe
+from etabackend.task import Task
 
 
 class ETAException(Exception):
@@ -85,7 +86,7 @@ class ETA(ETA_CUT, Util):
             self.logfrontend.warning("Load recipe failed.", exc_info=True)
             raise ETACompilationException from e
 
-    def link_group(self, group="main"):
+    def create_task(self, group="main"):
         if not (group in self.compilecache_nfunc):
             raise ETANonExistingGroupException(
                 "Can not eta.run() on a non-existing group {}.".format(group))
@@ -100,46 +101,54 @@ class ETA(ETA_CUT, Util):
         else:
             self.logfrontend.info(
                 "ETA.run: Using cached instrument group {}.".format(group))
-        return self.compilecache_initializer[group], self.compilecache_mainloop[group]
+        # building task object
+        task = Task()
+        task.group = group
+        task.initializer = self.compilecache_initializer[group]
+        task.mainloop = self.compilecache_mainloop[group]
+        task.rfiles = self.compilecache_rfiles[group]
 
-    def run(self, *vargs, resume_task=None, group="main", return_task=False, return_results=True, **kwargs):
-        # linking
-        initializer, mainloop = self.link_group(group=group)
-        # getting rfiles
-        rfiles = self.compilecache_rfiles[group]
-        # resuming task
+        return task
+
+    def run(self, *vargs, resume_task: Task = None, group="main", return_task=False, return_results=True, **kwargs):
+        if group is None and resume_task is None:
+            raise ValueError("A group has to be provided to eta.run so that it can call eta.create_task.\
+             Alternatively you can provide an existing task using resume_task.")
+
         if resume_task is None:
             self.logfrontend.info(
                 "ETA.run: Starting new analysis using Instrument group {}.".format(group))
-            (thread1, ts, ctxs, _) = (None, None, None, None)
+            task = self.create_task(group=group)
         else:
+            task = resume_task
             self.logfrontend.info(
-                "ETA.run: Resuming analysis using Instrument group {}.".format(group))
-            (thread1, ts, ctxs, _) = resume_task
+                "ETA.run: Resuming analysis using Instrument group {}.".format(task.group))
+            if task.group != group:
+                raise ValueError(
+                    "Conflicting grop name found. resume_task.group='{}', but group='{}'".format(task.group, group))
+
         self.notify_callback('running')
-        if thread1:
+        if task.thread:
             # join the previous thread
             self.logger.info(
                 "Waiting for the task for resumtion to complete...")
-            self.logger.debug(thread1.result())
+            self.logger.debug(task.thread.result())
             self.logger.info("Task for resumtion has completed.")
-        if ts is None:
-            ts = [time.time(), 0]  # start timing
-        if ctxs is None:
+        if task.timing is None:
+            task.timing = [time.time(), 0]  # start timing
+        if task.context is None:
             self.logger.debug("Initializing context.")
-            ctxs = initializer()
+            task.context = task.initializer()
 
         if return_results:
             # execute on MainThread
-            self.ctx_loop(*vargs, ctxs=ctxs,  mainloop=mainloop,
-                          required_rfiles=rfiles, ts=ts, **kwargs)
-            thread1 = None
+            self.ctx_loop(*vargs, ctxs=task.context,  mainloop=task.mainloop,
+                          required_rfiles=task.rfiles, ts=task.timing, **kwargs)
+            task.thread = None
         else:
             # execute on ThreadPool
-            thread1 = self.executor.submit(
-                self.ctx_loop, *vargs, ctxs=ctxs, mainloop=mainloop, required_rfiles=rfiles, ts=ts, **kwargs)
-
-        task = (thread1, ts,  ctxs, rfiles)
+            task.thread = self.executor.submit(
+                self.ctx_loop, *vargs, ctxs=task.context, mainloop=task.mainloop, required_rfiles=task.rfiles, ts=task.timing, **kwargs)
 
         if return_results and return_task:
             return self.aggregrate([task]), task
@@ -148,7 +157,8 @@ class ETA(ETA_CUT, Util):
         elif return_results:
             return self.aggregrate([task])
         else:
-            raise ValueError("You must return at least one thing!")
+            raise ValueError(
+                "eta.run must return the task, the results, or both.")
 
     def fetch_clip(self, sources_user, required_rfile, max_autofeed):
         # feeding from clip
@@ -253,14 +263,13 @@ class ETA(ETA_CUT, Util):
         max_eta_compute_time = 0
         threads = []
         for task in list_of_tasks:
-            (thread1, _, _, _,) = task
-            if thread1:
-                threads.append(thread1)
+            if task.thread:
+                threads.append(task.thread)
         # join threads
         if threads:
             futures.wait(threads, timeout=None)
         for task in list_of_tasks:
-            (_, ts, ctxs, required_rfiles) = task
+            (ts, ctxs, required_rfiles) = task.timing, task.context, task.rfiles
             # update timing
             eta_total_time, eta_compute_time = ts
             eta_total_time = time.time() - eta_total_time
