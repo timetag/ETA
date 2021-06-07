@@ -49,3 +49,11 @@ class Task():
 
     def iscompiled(self):
         return (self.initializer is not None and self.mainloop is not None and self.rfiles is not None and self.group is not None)
+
+    def set(self, toolname: str, value: int):
+        if self.context is None:
+            self.initialize()
+        if "scalar_"+toolname in self.context:
+            self.context["scalar_"+toolname][0] = value
+        else:
+            raise KeyError("Tool '{}' does not exist.".format(toolname))
