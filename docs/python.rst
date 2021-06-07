@@ -134,7 +134,7 @@ eta.split_file(filename,  modify_clip=None, cuts=1, format=-1, wait_timeout=0, r
 Executing Analysis
 -----
 
-eta.run(sources, resume_task=None, group="main", return_task=False, return_results=True, max_autofeed=0, stop_with_source=True)
+eta.run(sources, resume_task=None, group="main", return_task=False, return_results=True, background=None, max_autofeed=0, stop_with_source=True)
 ......
 
 ``eta.run()`` starts an analysis, where you actually feed all sources into RFILES in Virtual Instruments and obtain results. 
@@ -155,28 +155,34 @@ The analysis will block the execution of Python script until the **results are r
     
     Set this value to 1 if you want to get each result for every single Clip from the generator, rather than get final result after the full generator is consumed.
 
+- ``background``
+    Run the analysis in the background. Set it to True will start a new therad in the thread pool. By default ``background=not return_results``
+    
+    In this case, you must turn on ``return_task`` so that the task descriptor will be returned immediately, and the analysis will continue running in the background. You can start many threads in the background and gather a list of task descriptors, with which you can aggregate the results from these threads later. 
+    
 - ``return_results``
     Specifies if a dictionary of results should be returned. 
     
     This is the switch for multi-threading analysis. No new thread will be created and the analysis will be performed in MainThread if this option is set to True.
     
-    Set it to False will start a new therad in the thread pool. In this case, you must turn on ``return_task`` so that the task descriptor will be returned immediately, and the analysis will continue running in the background. You can start many threads in the background and gather a list of task descriptors, with which you can aggregate the results from these threads later. 
-    
+
     .. note::
         The parameter for enabling multi-thread mode is removed since version 0.6.6, when we switch to the Map-Reduce style of multi-threading. The new way of doing multi-threading is easier and more flexibile. ``eta.run`` works like Map, and ``eta.aggregrate`` works like Reduce. 
         
         You can schedule your analysis from Script Panel in any way you want. As long as you keep the task descriptor, you will be able to retrieve the result in the end. 
         
 - ``return_task``
-    Specifies if the task descriptor should returned. You must set it to True if ``return_results`` is set to False. 
+    Specifies if the modified task descriptor should returned. 
     
-    If both of them are set to Ture, you can get both of them with ``result, task = eta.run(..., return_task=True, return_results=True)``, and later you can resume an analysis with the task descriptor using ``resume_task``.
+    You must set it to True if ``return_results`` is set to False. If both of them are set to Ture, you can get both of them with ``result, task = eta.run(..., return_task=True, return_results=True)``, and later you can resume an analysis with the task descriptor using ``resume_task``.
     
     .. note::
         The context parameter is renamed to task descriptor to reduce confusion since version 0.6.6.
         
-        Task descriptor works like a memory snapshot of a current running or finished analysis, everything is preserved so that you can resume any kind of analysis without worrying about different behaviors of different Tools.
-    
+        Task descriptor works like a complete memory snapshot of a current running or finished analysis. Everything except for the sources (Clips) is preserved. 
+        If you want to reprod can resume the analysis later without worrying about underlying details of the anlaysis.
+
+
 - ``group``
     The group name of instruments that you want to run analysis on. This parameter is provided so that ``eta.run`` can automatically call ``eta.create_task`` using the provided group name when ``resume_task`` is not provided.
 
@@ -198,13 +204,15 @@ The analysis will block the execution of Python script until the **results are r
 
 
 
-eta.create_task(group):
+eta.create_task(group, resume_task=None):
 ......
 ``eta.create_task`` will create a new analysis task using the group of instruments. The returned task can be used in ``eta.run(resume_task=task)`` The instruments within the same group are visible to each other in this task.
 
 - ``group``
     The group name of instruments that you want to run analysis on. 
 
+- ``resume_task``
+    Same as in ``eta.run()``.
     
 eta.aggregrate(list_of_tasks, sum_results=True, include_timing=False):
 ......
