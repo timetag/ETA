@@ -34,7 +34,7 @@ function python_not_found() {
         }
     } else {
         //skipped
-        dialog.showErrorBox('Skipped', "Please install Python mannually.")
+        dialog.showErrorBox('Skipped', "Please install Python manually.")
         show_help();
         return false;
     }
@@ -70,7 +70,7 @@ function install_backend(slient_mode) {
             return true;
         }
     } else {
-        dialog.showErrorBox('Skipped', "Please run `pip install etabackend` mannually.")
+        dialog.showErrorBox('Skipped', "Please run `pip install etabackend` manually.")
         show_help();
         return false;
     }

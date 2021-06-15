@@ -64,8 +64,6 @@ function ask_for_restarting_backend() {
   })
 }
 
-
-
 // GUI related part
 function createMainWindow() {
   let { width, height } = electron.screen.getPrimaryDisplay().workAreaSize;
@@ -82,9 +80,11 @@ function createMainWindow() {
   window.once('ready-to-show', () => {
     window.show()
   })
+  
   window.on('closed', () => {
     mainWindow = null
   })
+
   // general callback
   const onWindowOpen = (event, url, frameName) => {
     event.preventDefault()
@@ -104,12 +104,13 @@ function createMainWindow() {
     win.webContents.on('new-window', onWindowOpen)
     win.webContents.on('did-fail-load', (event, code, desc, url, isMainFrame) => {
       win.close()
-      dialog.showErrorBox('Lost connection', "ETA GUI can not load resources from the backend. Try restarting the backend.")
-      ask_for_restarting_backend()
+      dialog.showErrorBox('Lost connection', "ETA GUI can not load its resources.")
     })
     event.newGuest = win
   }
+
   function load_mainpage(){
+    window.webContents.session.clearCache()
     window.loadURL(formatUrl({
       pathname: path.join(__dirname, '/../renderer/index.html'),
       protocol: 'file',
@@ -117,7 +118,7 @@ function createMainWindow() {
     }))
   }
   window.webContents.on('did-fail-load', (event, code, desc, url, isMainFrame) => {
-    dialog.showErrorBox('Lost connection', "ETA GUI can not load resources from the backend. Try restarting the backend.")
+    dialog.showErrorBox('Lost connection', "ETA GUI can not load its resources.")
     load_mainpage()
    })
   window.webContents.on('new-window', onWindowOpen);

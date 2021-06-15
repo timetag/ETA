@@ -1,28 +1,32 @@
 {
   "name": "ETA",
   "license": "MIT",
-  "author": "Zuzeng Lin <zuzeng@kth.se>",
+  "author": "Zuzeng Lin",
   "repository": "github:timetag/ETA",
   "homepage": "http://timetag.github.io",
   "version": "0.8.2",
+  "description": "ETA is a graphical event-driven programming language for time-tag processing.",
   "scripts": {
     "dev": "electron .",
-    "dist": "electron-builder  --publish onTagOrDraft",
-    "dist:dir": "yarn dist --dir -c.compression=store -c.mac.identity=null"
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder --publish onTagOrDraft",
+    "dist:dir": "yarn dist --dir -c.compression=store -c.mac.identity=null",
+    "postinstall": "electron-builder install-app-deps"
   },
   "main": "src/main/index.js",
   "build": {
     "appId": "com.eta.client",
     "productName": "ETA",
-    "copyright": "Copyright (C) 2020 Zuzeng Lin",
+    "copyright": "Copyright (C) 2021 Zuzeng Lin",
     "mac": {
-      "category": "your.app.category.type",
+      "category": "public.app-category.utilities",
       "publish": [
         "github"
       ]
     },
     "win": {
       "extraFiles": [
+        "conda_ETA_env.yml",
         "backend.ico",
         "python-webinstall.exe",
         "*.whl",
@@ -34,12 +38,12 @@
     }
   },
   "dependencies": {
-    "electron-log": "^4.2.2",
-    "electron-updater": "^4.3.5"
+    "electron-log": "^4.3.5",
+    "electron-updater": "^4.3.9"
   },
   "devDependencies": {
-	  "electron": "^9.1.0",
-	  "electron-builder": "^22.7.0"
+	  "electron": "^13.1.0",
+	  "electron-builder": "^22.11.0"
   },
   "resolutions": {}
 }
