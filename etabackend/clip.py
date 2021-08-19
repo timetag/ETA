@@ -181,7 +181,7 @@ class ETA_CUT():
 
     # low-level API
 
-    def clip_file(self, filename, modify_clip=None, read_events=0, seek_event=-1, format=-1, wait_timeout=0, mmap_read=True):
+    def clip_file(self, filename, modify_clip=None, read_events=0, seek_event=-1, format=-1, wait_timeout=0, mmap_read=False):
         filename = str(filename)  # supporting pathlib
         if modify_clip == None:
             temp_clip = Clip()
