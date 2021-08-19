@@ -143,6 +143,7 @@ class ETA_CUT():
         last_clip = modify_clip
         currentclip = True
         counter = 0
+        last_progress_message = 0
         TTF_filesize = os.path.getsize(str(filename))
 
         while currentclip:
@@ -170,8 +171,12 @@ class ETA_CUT():
             currentclip = self.clip_file(
                 filename, modify_clip=currentclip, read_events=read_events, seek_event=seek_event1, **kwargs)
             if currentclip:
-                self.logfrontend.info("Analysis progress: {:.2f}% ({:.2f}MB/{:.2f}MB, {:.2f}MB desired)".format(
-                    (currentclip.fseekpoint/TTF_filesize)*100.0, currentclip.fseekpoint/(1024.0*1024.0), (read_events*currentclip.BytesofRecords)/(1024.0*1024.0), TTF_filesize/(1024.0*1024.0)))
+                progress = (currentclip.fseekpoint/TTF_filesize)*100.0
+                if progress - last_progress_message > 5:
+                    last_progress_message = progress
+                    self.logfrontend.info("Analysis progress: {:.2f}% ({:.2f}MB/{:.2f}MB, {:.2f}MB desired)".format(
+                        progress, currentclip.fseekpoint/(1024.0*1024.0), (read_events*currentclip.BytesofRecords)/(1024.0*1024.0), TTF_filesize/(1024.0*1024.0)))
+                
                 yield currentclip
                 counter += 1
                 last_clip = currentclip
@@ -236,7 +241,7 @@ class ETA_CUT():
 
         # make buffer
         if temp_clip.fseekpoint > fileactualsize:
-            self.logfrontend.info(
+            self.logger.info(
                 "ETA.clip_file: Can not seek to {} in the file '{}' for the Clip, None is returned. ".format(temp_clip.fseekpoint, filename))
             return None
         if mmap_read:
@@ -263,11 +268,11 @@ class ETA_CUT():
                     temp_clip.buffer)
             # fail when zero size
         if temp_clip.batch_actualread_length == 0:
-            self.logfrontend.info(
+            self.logger.info(
                 "ETA.clip_file: The file '{}' is not long enough for the Clip, None is returned. ".format(filename))
             return None
         else:
-            self.logfrontend.info("ETA.clip_file: The file '{}' section [{},{}) is loaded into the Clip. ".format(
+            self.logger.debug("ETA.clip_file: The file '{}' section [{},{}) is loaded into the Clip. ".format(
                 filename, temp_clip.fseekpoint,  temp_clip.fseekpoint+temp_clip.batch_actualread_length))
 
         return temp_clip.validate()
