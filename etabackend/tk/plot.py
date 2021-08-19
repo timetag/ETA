@@ -271,7 +271,7 @@ class ETABokehPlot:
     def _bokeh_update(self, ctx):
         if ctx['lastupdate'] < self.eta_result.lastupdate:
            ctx['lastupdate'] = self.eta_result.lastupdate
-           ctx['source'].data.update({'y': self.eta_result.ydata})
+           ctx['source'].data.update({f'y{i}': yd for i, yd in enumerate(self.eta_result.ydata)})
 
            ctx['plin'].y_range.end = np.amax(self.eta_result.ydata)*1.1
            ctx['plog'].y_range.end = np.amax(self.eta_result.ydata)*1.1
