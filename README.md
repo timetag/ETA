@@ -13,3 +13,5 @@
 
 
 <b>| What is ETA:</b> [timetag.github.io](https://timetag.github.io) <b>| Use ETA:</b> [Documentation](https://eta.readthedocs.io/en/latest/) <b>| Get ETA:</b> [Installation](https://eta.readthedocs.io/en/latest/installation.html) <b>|</b>
+
+Our newly published [article (Z. Lin et al 2021 JINST 16 T08016)](https://doi.org/10.1088/1748-0221/16/08/T08016) explains the ideas underpinning ETA.

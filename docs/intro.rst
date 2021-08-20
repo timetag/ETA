@@ -49,3 +49,12 @@ User-Friendly
    ETA provides an easy-to-understand graphical user interface (GUI),
    with a novel programming paradigm dedicated to simplifying time
    tag processing.
+
+Citing ETA
+----------------------------
+ETA is a result of our scientific research. A Zenodo entry (|Zenodo Badge|) tracks every released version and can be cited in the 
+Methods section to help readers to identify the specific software version. We discuss the concepts behind ETA in our `recent article (Z. Lin et al 2021 JINST 16 T08016)`_ 
+and would appreciate it if you cited it in your work.
+
+.. |Zenodo Badge| image:: https://zenodo.org/badge/125106142.svg
+.. _JINST (Z. Lin et al 2021 JINST 16 T08016): https://doi.org/10.1088/1748-0221/16/08/T08016
