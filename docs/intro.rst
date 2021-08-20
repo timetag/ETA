@@ -57,4 +57,4 @@ Methods section to help readers to identify the specific software version. We di
 and would appreciate it if you cited it in your work.
 
 .. |Zenodo Badge| image:: https://zenodo.org/badge/125106142.svg
-.. _JINST (Z. Lin et al 2021 JINST 16 T08016): https://doi.org/10.1088/1748-0221/16/08/T08016
+.. _recent article (Z. Lin et al 2021 JINST 16 T08016): https://doi.org/10.1088/1748-0221/16/08/T08016
