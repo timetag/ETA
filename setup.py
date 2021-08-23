@@ -4,7 +4,7 @@ with open('requirements.txt') as f:
 
 setuptools.setup(
     name="etabackend",
-    version="0.8.2",
+    version="0.9",
     author="ETA Team",
     description="Extensible Timetag Analyzer",
     include_package_data=True,
