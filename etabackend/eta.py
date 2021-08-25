@@ -287,8 +287,8 @@ class ETA(ETA_CUT, Util):
                     rfile_id, ctxs)
                 result[rfile_name] = used_clip_result.validate(
                     check_buffer=False)
-            # emit other stuff
-            for each in ctxs.keys():
+            # emit other stuff, but skip rfiles
+            for each in [item for item in ctxs.keys() if item not in required_rfiles.keys()]:
                 if each.startswith("scalar_"):
                     result[each[len("scalar_"):]] = ctxs[each][0]
                 else:
@@ -298,7 +298,7 @@ class ETA(ETA_CUT, Util):
                       "READER", "VFILES", "_vfile", 'AbsTime_ps', 'fileid', 'chn', 'chn_next', "INTERRUPT"]
             for each in list(result.keys()):
                 for kw in kwlist:
-                    if each.find(kw) >= 0 or each in required_rfiles:
+                    if each.find(kw) >= 0:
                         del result[each]
                         break
 
