@@ -69,7 +69,7 @@ eta.clip_file(filename, modify_clip=None, read_events=0, seek_event=-1, format=-
     Value in seconds specifies the maximum waiting time. ETA will wait until the file grows to desired size. If file failed to grow to the desired size, a shortened Clip to the current ending of the file will be loaded.
     
 - ``format``
-    Format specifies the time-tag file format that you want to use in the analysis. The default is set to the auto detection of PicoQuant devices. You can also use the constant ``eta.FORMAT_SI`` for Swabian Instrument binary format, ``eta.quTAG_FORMAT_BINARY`` for quTAG 10-byte Binary format,  ``eta.quTAG_FORMAT_COMPRESSED`` for compressed quTAG binary format, or ``eta.bh_spc_4bytes`` for Becker & Hickl  SPC-134/144/154/830 format.
+    Format specifies the time-tag file format that you want to use in the analysis. The default is set to the auto detection of PicoQuant devices. You can also use the constant ``eta.FORMAT_SI_16bytes`` for Swabian Instrument binary format, ``eta.FORMAT_QT_BINARY`` for qutools quTAG 10-byte Binary format,  ``eta.FORMAT_QT_COMPRESSED`` for compressed qutools quTAG binary format, or ``eta.FORMAT_BH_spc_4bytes`` for Becker & Hickl  SPC-134/144/154/830 format, or ``eta.FORMAT_ET_A033`` for Eventech ET A033 format.
     
     .. note::
         The format of time-tag you use might influence the analysis results in unexpected ways, through the nature of timing system it uses.

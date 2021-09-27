@@ -1,7 +1,7 @@
 ; ModuleID = 'INFRA_vchn.cpp'
 source_filename = "INFRA_vchn.cpp"
-target datalayout = "e-m:w-i64:64-f80:128-n8:16:32:64-S128"
-target triple = "x86_64-pc-windows-msvc19.24.28315"
+target datalayout = "e-m:w-p270:32:32-p271:32:32-p272:64:64-i64:64-f80:128-n8:16:32:64-S128"
+target triple = "x86_64-pc-windows-msvc19.26.28806"
 
 %struct.circular_buf_t = type { i64*, i64, i64, i64 }
 %struct.VCHN_t = type { i64*, i8*, i8*, %struct.circular_buf_t*, i8, i8, i8 }
@@ -40,7 +40,7 @@ $"?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA" = comdat any
 @"?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA" = linkonce_odr dso_local global i64 0, comdat, align 8
 
 ; Function Attrs: alwaysinline nounwind uwtable
-define dso_local i32 @circular_buf_reset(%struct.circular_buf_t*) #0 {
+define dso_local i32 @circular_buf_reset(%struct.circular_buf_t* %0) #0 {
   %2 = alloca %struct.circular_buf_t*, align 8
   %3 = alloca i32, align 4
   store %struct.circular_buf_t* %0, %struct.circular_buf_t** %2, align 8
@@ -49,7 +49,7 @@ define dso_local i32 @circular_buf_reset(%struct.circular_buf_t*) #0 {
   %5 = icmp ne %struct.circular_buf_t* %4, null
   br i1 %5, label %6, label %11
 
-; <label>:6:                                      ; preds = %1
+6:                                                ; preds = %1
   %7 = load %struct.circular_buf_t*, %struct.circular_buf_t** %2, align 8
   %8 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %7, i32 0, i32 1
   store i64 0, i64* %8, align 8
@@ -59,13 +59,13 @@ define dso_local i32 @circular_buf_reset(%struct.circular_buf_t*) #0 {
   store i32 0, i32* %3, align 4
   br label %11
 
-; <label>:11:                                     ; preds = %6, %1
+11:                                               ; preds = %6, %1
   %12 = load i32, i32* %3, align 4
   ret i32 %12
 }
 
 ; Function Attrs: alwaysinline nounwind uwtable
-define dso_local i32 @circular_buf_put(%struct.circular_buf_t*, i64) #0 {
+define dso_local i32 @circular_buf_put(%struct.circular_buf_t* %0, i64 %1) #0 {
   %3 = alloca i64, align 8
   %4 = alloca %struct.circular_buf_t*, align 8
   %5 = alloca i32, align 4
@@ -76,7 +76,7 @@ define dso_local i32 @circular_buf_put(%struct.circular_buf_t*, i64) #0 {
   %7 = icmp ne %struct.circular_buf_t* %6, null
   br i1 %7, label %8, label %46
 
-; <label>:8:                                      ; preds = %2
+8:                                                ; preds = %2
   %9 = load i64, i64* %3, align 8
   %10 = load %struct.circular_buf_t*, %struct.circular_buf_t** %4, align 8
   %11 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %10, i32 0, i32 0
@@ -106,7 +106,7 @@ define dso_local i32 @circular_buf_put(%struct.circular_buf_t*, i64) #0 {
   %33 = icmp eq i64 %29, %32
   br i1 %33, label %34, label %45
 
-; <label>:34:                                     ; preds = %8
+34:                                               ; preds = %8
   %35 = load %struct.circular_buf_t*, %struct.circular_buf_t** %4, align 8
   %36 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %35, i32 0, i32 2
   %37 = load i64, i64* %36, align 8
@@ -120,17 +120,17 @@ define dso_local i32 @circular_buf_put(%struct.circular_buf_t*, i64) #0 {
   store i64 %42, i64* %44, align 8
   br label %45
 
-; <label>:45:                                     ; preds = %34, %8
+45:                                               ; preds = %34, %8
   store i32 0, i32* %5, align 4
   br label %46
 
-; <label>:46:                                     ; preds = %45, %2
+46:                                               ; preds = %45, %2
   %47 = load i32, i32* %5, align 4
   ret i32 %47
 }
 
 ; Function Attrs: alwaysinline uwtable
-define dso_local i32 @circular_buf_get(%struct.circular_buf_t*, i64*, i1 zeroext) #1 {
+define dso_local i32 @circular_buf_get(%struct.circular_buf_t* %0, i64* %1, i1 zeroext %2) #1 {
   %4 = alloca i8, align 1
   %5 = alloca i64*, align 8
   %6 = alloca %struct.circular_buf_t*, align 8
@@ -145,12 +145,12 @@ define dso_local i32 @circular_buf_get(%struct.circular_buf_t*, i64*, i1 zeroext
   %11 = icmp ne %struct.circular_buf_t* %10, null
   br i1 %11, label %12, label %48
 
-; <label>:12:                                     ; preds = %3
+12:                                               ; preds = %3
   %13 = load i64*, i64** %5, align 8
   %14 = icmp ne i64* %13, null
   br i1 %14, label %15, label %48
 
-; <label>:15:                                     ; preds = %12
+15:                                               ; preds = %12
   %16 = load %struct.circular_buf_t*, %struct.circular_buf_t** %6, align 8
   %17 = bitcast %struct.circular_buf_t* %8 to i8*
   %18 = bitcast %struct.circular_buf_t* %16 to i8*
@@ -162,7 +162,7 @@ define dso_local i32 @circular_buf_get(%struct.circular_buf_t*, i64*, i1 zeroext
   %23 = icmp eq i64 %20, %22
   br i1 %23, label %48, label %24
 
-; <label>:24:                                     ; preds = %15
+24:                                               ; preds = %15
   %25 = load %struct.circular_buf_t*, %struct.circular_buf_t** %6, align 8
   %26 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %25, i32 0, i32 0
   %27 = load i64*, i64** %26, align 8
@@ -177,7 +177,7 @@ define dso_local i32 @circular_buf_get(%struct.circular_buf_t*, i64*, i1 zeroext
   %35 = trunc i8 %34 to i1
   br i1 %35, label %36, label %47
 
-; <label>:36:                                     ; preds = %24
+36:                                               ; preds = %24
   %37 = load %struct.circular_buf_t*, %struct.circular_buf_t** %6, align 8
   %38 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %37, i32 0, i32 2
   %39 = load i64, i64* %38, align 8
@@ -191,17 +191,17 @@ define dso_local i32 @circular_buf_get(%struct.circular_buf_t*, i64*, i1 zeroext
   store i64 %44, i64* %46, align 8
   br label %47
 
-; <label>:47:                                     ; preds = %36, %24
+47:                                               ; preds = %36, %24
   store i32 0, i32* %7, align 4
   br label %48
 
-; <label>:48:                                     ; preds = %47, %15, %12, %3
+48:                                               ; preds = %47, %15, %12, %3
   %49 = load i32, i32* %7, align 4
   ret i32 %49
 }
 
 ; Function Attrs: alwaysinline nounwind uwtable
-define dso_local zeroext i1 @circular_buf_empty(%struct.circular_buf_t*) #0 {
+define dso_local zeroext i1 @circular_buf_empty(%struct.circular_buf_t* %0) #0 {
   %2 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %0, i32 0, i32 1
   %3 = load i64, i64* %2, align 8
   %4 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %0, i32 0, i32 2
@@ -210,11 +210,11 @@ define dso_local zeroext i1 @circular_buf_empty(%struct.circular_buf_t*) #0 {
   ret i1 %6
 }
 
-; Function Attrs: argmemonly nounwind
-declare void @llvm.memcpy.p0i8.p0i8.i64(i8* nocapture writeonly, i8* nocapture readonly, i64, i1) #2
+; Function Attrs: argmemonly nounwind willreturn
+declare void @llvm.memcpy.p0i8.p0i8.i64(i8* noalias nocapture writeonly, i8* noalias nocapture readonly, i64, i1 immarg) #2
 
 ; Function Attrs: alwaysinline nounwind uwtable
-define dso_local zeroext i1 @circular_buf_full(%struct.circular_buf_t*) #0 {
+define dso_local zeroext i1 @circular_buf_full(%struct.circular_buf_t* %0) #0 {
   %2 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %0, i32 0, i32 1
   %3 = load i64, i64* %2, align 8
   %4 = add nsw i64 %3, 1
@@ -228,7 +228,7 @@ define dso_local zeroext i1 @circular_buf_full(%struct.circular_buf_t*) #0 {
 }
 
 ; Function Attrs: alwaysinline uwtable
-define dso_local i32 @VFILE_init(%struct.VCHN_t*, i64, i64, i8*, i64) #1 {
+define dso_local i32 @VFILE_init(%struct.VCHN_t* %0, i64 %1, i64 %2, i8* %3, i64 %4) #1 {
   %6 = alloca %struct.circular_buf_t*, align 8
   %7 = alloca i32, align 4
   %8 = alloca i32, align 4
@@ -269,19 +269,19 @@ define dso_local i32 @VFILE_init(%struct.VCHN_t*, i64, i64, i8*, i64) #1 {
   %36 = icmp eq i64* %35, null
   br i1 %36, label %37, label %40
 
-; <label>:37:                                     ; preds = %5
-  %38 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([52 x i8], [52 x i8]* @"??_C@_0DE@PKIJDBDO@?6?5?$FLERROR?$FNMemalloc?5failed?5for?5thi@", i32 0, i32 0))
+37:                                               ; preds = %5
+  %38 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([52 x i8], [52 x i8]* @"??_C@_0DE@PKIJDBDO@?6?5?$FLERROR?$FNMemalloc?5failed?5for?5thi@", i64 0, i64 0))
   %39 = sext i32 %38 to i64
   store i64 %39, i64* @controlflow_guarantee, align 8
   store i32 -1, i32* %8, align 4
   br label %67
 
-; <label>:40:                                     ; preds = %5
+40:                                               ; preds = %5
   %41 = load i64, i64* %9, align 8
   %42 = icmp eq i64 %41, 1
   br i1 %42, label %43, label %65
 
-; <label>:43:                                     ; preds = %40
+43:                                               ; preds = %40
   %44 = load i64, i64* %11, align 8
   %45 = load %struct.VCHN_t*, %struct.VCHN_t** %13, align 8
   %46 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %45, i32 0, i32 3
@@ -301,7 +301,7 @@ define dso_local i32 @VFILE_init(%struct.VCHN_t*, i64, i64, i8*, i64) #1 {
   %57 = icmp ne %struct.circular_buf_t* %56, null
   br i1 %57, label %58, label %63
 
-; <label>:58:                                     ; preds = %43
+58:                                               ; preds = %43
   %59 = load %struct.circular_buf_t*, %struct.circular_buf_t** %6, align 8
   %60 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %59, i32 0, i32 1
   store i64 0, i64* %60, align 8
@@ -311,24 +311,24 @@ define dso_local i32 @VFILE_init(%struct.VCHN_t*, i64, i64, i8*, i64) #1 {
   store i32 0, i32* %7, align 4
   br label %63
 
-; <label>:63:                                     ; preds = %43, %58
+63:                                               ; preds = %43, %58
   %64 = load i32, i32* %7, align 4
   br label %66
 
-; <label>:65:                                     ; preds = %40
+65:                                               ; preds = %40
   br label %66
 
-; <label>:66:                                     ; preds = %65, %63
+66:                                               ; preds = %65, %63
   store i32 0, i32* %8, align 4
   br label %67
 
-; <label>:67:                                     ; preds = %66, %37
+67:                                               ; preds = %66, %37
   %68 = load i32, i32* %8, align 4
   ret i32 %68
 }
 
-; Function Attrs: noinline optnone uwtable
-define linkonce_odr dso_local i32 @printf(i8*, ...) #3 comdat {
+; Function Attrs: nobuiltin noinline optnone uwtable
+define linkonce_odr dso_local i32 @printf(i8* %0, ...) #3 comdat {
   %2 = alloca i8*, align 8
   %3 = alloca i32, align 4
   %4 = alloca i8*, align 8
@@ -347,7 +347,7 @@ define linkonce_odr dso_local i32 @printf(i8*, ...) #3 comdat {
 }
 
 ; Function Attrs: alwaysinline nounwind uwtable
-define dso_local i32 @POOL_update(%struct.VCHN_t*, i64, i8, i8) #0 {
+define dso_local i32 @POOL_update(%struct.VCHN_t* %0, i64 %1, i8 %2, i8 %3) #0 {
   %5 = alloca i8, align 1
   %6 = alloca i8, align 1
   %7 = alloca i64, align 8
@@ -395,13 +395,13 @@ define dso_local i32 @POOL_update(%struct.VCHN_t*, i64, i8, i8) #0 {
   store i8 %35, i8* %41, align 1
   br label %42
 
-; <label>:42:                                     ; preds = %158, %4
+42:                                               ; preds = %158, %4
   %43 = load i8, i8* %9, align 1
   %44 = zext i8 %43 to i32
   %45 = icmp sgt i32 %44, 0
   br i1 %45, label %46, label %160
 
-; <label>:46:                                     ; preds = %42
+46:                                               ; preds = %42
   %47 = load i8, i8* %9, align 1
   %48 = zext i8 %47 to i32
   %49 = sub nsw i32 %48, 1
@@ -438,7 +438,7 @@ define dso_local i32 @POOL_update(%struct.VCHN_t*, i64, i8, i8) #0 {
   %77 = icmp slt i64 %69, %76
   br i1 %77, label %78, label %118
 
-; <label>:78:                                     ; preds = %46
+78:                                               ; preds = %46
   %79 = load %struct.VCHN_t*, %struct.VCHN_t** %8, align 8
   %80 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %79, i32 0, i32 0
   %81 = load i64*, i64** %80, align 8
@@ -483,7 +483,7 @@ define dso_local i32 @POOL_update(%struct.VCHN_t*, i64, i8, i8) #0 {
   store i8 %111, i8* %117, align 1
   br label %158
 
-; <label>:118:                                    ; preds = %46
+118:                                              ; preds = %46
   %119 = load %struct.VCHN_t*, %struct.VCHN_t** %8, align 8
   %120 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %119, i32 0, i32 0
   %121 = load i64*, i64** %120, align 8
@@ -528,17 +528,17 @@ define dso_local i32 @POOL_update(%struct.VCHN_t*, i64, i8, i8) #0 {
   store i8 %151, i8* %157, align 1
   br label %158
 
-; <label>:158:                                    ; preds = %118, %78
+158:                                              ; preds = %118, %78
   %159 = load i8, i8* %10, align 1
   store i8 %159, i8* %9, align 1
   br label %42
 
-; <label>:160:                                    ; preds = %42
+160:                                              ; preds = %42
   ret i32 0
 }
 
 ; Function Attrs: alwaysinline uwtable
-define dso_local i32 @VCHN_init(%struct.VCHN_t*, i64, i64, i64, i8*, i8*, i8*, i64, i64, i8*) #1 {
+define dso_local i32 @VCHN_init(%struct.VCHN_t* %0, i64 %1, i64 %2, i64 %3, i8* %4, i8* %5, i8* %6, i64 %7, i64 %8, i8* %9) #1 {
   %11 = alloca i32, align 4
   %12 = alloca i8*, align 8
   %13 = alloca i64, align 8
@@ -583,14 +583,14 @@ define dso_local i32 @VCHN_init(%struct.VCHN_t*, i64, i64, i64, i8*, i8*, i8*, i
   %39 = icmp eq i64* %38, null
   br i1 %39, label %40, label %43
 
-; <label>:40:                                     ; preds = %10
-  %41 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([54 x i8], [54 x i8]* @"??_C@_0DG@PPCCCNND@?6?5?$FLERROR?$FNMemalloc?5failed?5for?5POO@", i32 0, i32 0))
+40:                                               ; preds = %10
+  %41 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([54 x i8], [54 x i8]* @"??_C@_0DG@PPCCCNND@?6?5?$FLERROR?$FNMemalloc?5failed?5for?5POO@", i64 0, i64 0))
   %42 = sext i32 %41 to i64
   store i64 %42, i64* @controlflow_guarantee, align 8
   store i32 -1, i32* %11, align 4
   br label %140
 
-; <label>:43:                                     ; preds = %10
+43:                                               ; preds = %10
   %44 = load i8*, i8** %16, align 8
   %45 = load %struct.VCHN_t*, %struct.VCHN_t** %21, align 8
   %46 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %45, i32 0, i32 1
@@ -601,14 +601,14 @@ define dso_local i32 @VCHN_init(%struct.VCHN_t*, i64, i64, i64, i8*, i8*, i8*, i
   %50 = icmp eq i8* %49, null
   br i1 %50, label %51, label %54
 
-; <label>:51:                                     ; preds = %43
-  %52 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([53 x i8], [53 x i8]* @"??_C@_0DF@DJFAACFF@?6?5?$FLERROR?$FNMemalloc?5failed?5for?5POO@", i32 0, i32 0))
+51:                                               ; preds = %43
+  %52 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([53 x i8], [53 x i8]* @"??_C@_0DF@DJFAACFF@?6?5?$FLERROR?$FNMemalloc?5failed?5for?5POO@", i64 0, i64 0))
   %53 = sext i32 %52 to i64
   store i64 %53, i64* @controlflow_guarantee, align 8
   store i32 -1, i32* %11, align 4
   br label %140
 
-; <label>:54:                                     ; preds = %43
+54:                                               ; preds = %43
   %55 = load i8*, i8** %15, align 8
   %56 = load %struct.VCHN_t*, %struct.VCHN_t** %21, align 8
   %57 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %56, i32 0, i32 2
@@ -619,30 +619,30 @@ define dso_local i32 @VCHN_init(%struct.VCHN_t*, i64, i64, i64, i8*, i8*, i8*, i
   %61 = icmp eq i8* %60, null
   br i1 %61, label %62, label %65
 
-; <label>:62:                                     ; preds = %54
-  %63 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([50 x i8], [50 x i8]* @"??_C@_0DC@EMBMEONF@?6?5?$FLERROR?$FNMemalloc?5failed?5for?5POO@", i32 0, i32 0))
+62:                                               ; preds = %54
+  %63 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([50 x i8], [50 x i8]* @"??_C@_0DC@EMBMEONF@?6?5?$FLERROR?$FNMemalloc?5failed?5for?5POO@", i64 0, i64 0))
   %64 = sext i32 %63 to i64
   store i64 %64, i64* @controlflow_guarantee, align 8
   store i32 -1, i32* %11, align 4
   br label %140
 
-; <label>:65:                                     ; preds = %54
+65:                                               ; preds = %54
   %66 = load i64, i64* %14, align 8
   %67 = icmp eq i64 %66, 255
   br i1 %67, label %68, label %122
 
-; <label>:68:                                     ; preds = %65
+68:                                               ; preds = %65
   store i32 0, i32* %22, align 4
   br label %69
 
-; <label>:69:                                     ; preds = %93, %68
+69:                                               ; preds = %93, %68
   %70 = load i32, i32* %22, align 4
   %71 = sext i32 %70 to i64
   %72 = load i64, i64* %18, align 8
   %73 = icmp slt i64 %71, %72
   br i1 %73, label %74, label %96
 
-; <label>:74:                                     ; preds = %69
+74:                                               ; preds = %69
   %75 = load %struct.VCHN_t*, %struct.VCHN_t** %21, align 8
   %76 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %75, i32 0, i32 0
   %77 = load i64*, i64** %76, align 8
@@ -666,17 +666,17 @@ define dso_local i32 @VCHN_init(%struct.VCHN_t*, i64, i64, i64, i8*, i8*, i8*, i
   store i8 -1, i8* %92, align 1
   br label %93
 
-; <label>:93:                                     ; preds = %74
+93:                                               ; preds = %74
   %94 = load i32, i32* %22, align 4
   %95 = add nsw i32 %94, 1
   store i32 %95, i32* %22, align 4
   br label %69
 
-; <label>:96:                                     ; preds = %69
+96:                                               ; preds = %69
   store i32 0, i32* %23, align 4
   br label %97
 
-; <label>:97:                                     ; preds = %118, %96
+97:                                               ; preds = %118, %96
   %98 = load i32, i32* %23, align 4
   %99 = load %struct.VCHN_t*, %struct.VCHN_t** %21, align 8
   %100 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %99, i32 0, i32 5
@@ -685,7 +685,7 @@ define dso_local i32 @VCHN_init(%struct.VCHN_t*, i64, i64, i64, i8*, i8*, i8*, i
   %103 = icmp slt i32 %98, %102
   br i1 %103, label %104, label %121
 
-; <label>:104:                                    ; preds = %97
+104:                                              ; preds = %97
   %105 = load i32, i32* %23, align 4
   %106 = trunc i32 %105 to i8
   %107 = load %struct.VCHN_t*, %struct.VCHN_t** %21, align 8
@@ -702,19 +702,19 @@ define dso_local i32 @VCHN_init(%struct.VCHN_t*, i64, i64, i64, i8*, i8*, i8*, i
   store i8 %106, i8* %117, align 1
   br label %118
 
-; <label>:118:                                    ; preds = %104
+118:                                              ; preds = %104
   %119 = load i32, i32* %23, align 4
   %120 = add nsw i32 %119, 1
   store i32 %120, i32* %23, align 4
   br label %97
 
-; <label>:121:                                    ; preds = %97
+121:                                              ; preds = %97
   br label %123
 
-; <label>:122:                                    ; preds = %65
+122:                                              ; preds = %65
   br label %123
 
-; <label>:123:                                    ; preds = %122, %121
+123:                                              ; preds = %122, %121
   %124 = load i64, i64* %13, align 8
   %125 = trunc i64 %124 to i8
   %126 = load %struct.VCHN_t*, %struct.VCHN_t** %21, align 8
@@ -731,24 +731,24 @@ define dso_local i32 @VCHN_init(%struct.VCHN_t*, i64, i64, i64, i8*, i8*, i8*, i
   %135 = icmp eq %struct.circular_buf_t* %134, null
   br i1 %135, label %136, label %139
 
-; <label>:136:                                    ; preds = %123
-  %137 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([54 x i8], [54 x i8]* @"??_C@_0DG@CKGFOHGH@?6?5?$FLERROR?$FNMemalloc?5failed?5for?5VFI@", i32 0, i32 0))
+136:                                              ; preds = %123
+  %137 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([54 x i8], [54 x i8]* @"??_C@_0DG@CKGFOHGH@?6?5?$FLERROR?$FNMemalloc?5failed?5for?5VFI@", i64 0, i64 0))
   %138 = sext i32 %137 to i64
   store i64 %138, i64* @controlflow_guarantee, align 8
   store i32 -1, i32* %11, align 4
   br label %140
 
-; <label>:139:                                    ; preds = %123
+139:                                              ; preds = %123
   store i32 0, i32* %11, align 4
   br label %140
 
-; <label>:140:                                    ; preds = %139, %136, %62, %51, %40
+140:                                              ; preds = %139, %136, %62, %51, %40
   %141 = load i32, i32* %11, align 4
   ret i32 %141
 }
 
 ; Function Attrs: alwaysinline uwtable
-define dso_local i32 @VCHN_put(%struct.VCHN_t*, i64, i8) #1 {
+define dso_local i32 @VCHN_put(%struct.VCHN_t* %0, i64 %1, i8 %2) #1 {
   %4 = alloca i8, align 1
   %5 = alloca i8, align 1
   %6 = alloca i64, align 8
@@ -802,7 +802,7 @@ define dso_local i32 @VCHN_put(%struct.VCHN_t*, i64, i8) #1 {
   %49 = icmp eq i64 %48, 9223372036854775807
   br i1 %49, label %50, label %219
 
-; <label>:50:                                     ; preds = %3
+50:                                               ; preds = %3
   %51 = load i8, i8* %26, align 1
   %52 = load i32, i32* %30, align 4
   %53 = trunc i32 %52 to i8
@@ -847,13 +847,13 @@ define dso_local i32 @VCHN_put(%struct.VCHN_t*, i64, i8) #1 {
   store i8 %78, i8* %84, align 1
   br label %85
 
-; <label>:85:                                     ; preds = %201, %50
+85:                                               ; preds = %201, %50
   %86 = load i8, i8* %21, align 1
   %87 = zext i8 %86 to i32
   %88 = icmp sgt i32 %87, 0
   br i1 %88, label %89, label %203
 
-; <label>:89:                                     ; preds = %85
+89:                                               ; preds = %85
   %90 = load i8, i8* %21, align 1
   %91 = zext i8 %90 to i32
   %92 = sub nsw i32 %91, 1
@@ -890,7 +890,7 @@ define dso_local i32 @VCHN_put(%struct.VCHN_t*, i64, i8) #1 {
   %120 = icmp slt i64 %112, %119
   br i1 %120, label %121, label %161
 
-; <label>:121:                                    ; preds = %89
+121:                                              ; preds = %89
   %122 = load %struct.VCHN_t*, %struct.VCHN_t** %20, align 8
   %123 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %122, i32 0, i32 0
   %124 = load i64*, i64** %123, align 8
@@ -935,7 +935,7 @@ define dso_local i32 @VCHN_put(%struct.VCHN_t*, i64, i8) #1 {
   store i8 %154, i8* %160, align 1
   br label %201
 
-; <label>:161:                                    ; preds = %89
+161:                                              ; preds = %89
   %162 = load %struct.VCHN_t*, %struct.VCHN_t** %20, align 8
   %163 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %162, i32 0, i32 0
   %164 = load i64*, i64** %163, align 8
@@ -980,12 +980,12 @@ define dso_local i32 @VCHN_put(%struct.VCHN_t*, i64, i8) #1 {
   store i8 %194, i8* %200, align 1
   br label %201
 
-; <label>:201:                                    ; preds = %161, %121
+201:                                              ; preds = %161, %121
   %202 = load i8, i8* %22, align 1
   store i8 %202, i8* %21, align 1
   br label %85
 
-; <label>:203:                                    ; preds = %85
+203:                                              ; preds = %85
   %204 = load %struct.VCHN_t*, %struct.VCHN_t** %28, align 8
   %205 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %204, i32 0, i32 3
   %206 = load %struct.circular_buf_t*, %struct.circular_buf_t** %205, align 8
@@ -998,7 +998,7 @@ define dso_local i32 @VCHN_put(%struct.VCHN_t*, i64, i8) #1 {
   %211 = icmp ne %struct.circular_buf_t* %210, null
   br i1 %211, label %212, label %217
 
-; <label>:212:                                    ; preds = %203
+212:                                              ; preds = %203
   %213 = load %struct.circular_buf_t*, %struct.circular_buf_t** %12, align 8
   %214 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %213, i32 0, i32 1
   store i64 0, i64* %214, align 8
@@ -1008,12 +1008,12 @@ define dso_local i32 @VCHN_put(%struct.VCHN_t*, i64, i8) #1 {
   store i32 0, i32* %13, align 4
   br label %217
 
-; <label>:217:                                    ; preds = %203, %212
+217:                                              ; preds = %203, %212
   %218 = load i32, i32* %13, align 4
   store i32 -1, i32* %25, align 4
   br label %474
 
-; <label>:219:                                    ; preds = %3
+219:                                              ; preds = %3
   %220 = load %struct.VCHN_t*, %struct.VCHN_t** %28, align 8
   %221 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %220, i32 0, i32 5
   %222 = load i8, i8* %221, align 1
@@ -1032,7 +1032,7 @@ define dso_local i32 @VCHN_put(%struct.VCHN_t*, i64, i8) #1 {
   %234 = icmp eq i64 %233, 9223372036854775807
   br i1 %234, label %235, label %390
 
-; <label>:235:                                    ; preds = %219
+235:                                              ; preds = %219
   %236 = load i8, i8* %26, align 1
   %237 = load i32, i32* %30, align 4
   %238 = trunc i32 %237 to i8
@@ -1077,13 +1077,13 @@ define dso_local i32 @VCHN_put(%struct.VCHN_t*, i64, i8) #1 {
   store i8 %263, i8* %269, align 1
   br label %270
 
-; <label>:270:                                    ; preds = %386, %235
+270:                                              ; preds = %386, %235
   %271 = load i8, i8* %8, align 1
   %272 = zext i8 %271 to i32
   %273 = icmp sgt i32 %272, 0
   br i1 %273, label %274, label %388
 
-; <label>:274:                                    ; preds = %270
+274:                                              ; preds = %270
   %275 = load i8, i8* %8, align 1
   %276 = zext i8 %275 to i32
   %277 = sub nsw i32 %276, 1
@@ -1120,7 +1120,7 @@ define dso_local i32 @VCHN_put(%struct.VCHN_t*, i64, i8) #1 {
   %305 = icmp slt i64 %297, %304
   br i1 %305, label %306, label %346
 
-; <label>:306:                                    ; preds = %274
+306:                                              ; preds = %274
   %307 = load %struct.VCHN_t*, %struct.VCHN_t** %7, align 8
   %308 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %307, i32 0, i32 0
   %309 = load i64*, i64** %308, align 8
@@ -1165,7 +1165,7 @@ define dso_local i32 @VCHN_put(%struct.VCHN_t*, i64, i8) #1 {
   store i8 %339, i8* %345, align 1
   br label %386
 
-; <label>:346:                                    ; preds = %274
+346:                                              ; preds = %274
   %347 = load %struct.VCHN_t*, %struct.VCHN_t** %7, align 8
   %348 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %347, i32 0, i32 0
   %349 = load i64*, i64** %348, align 8
@@ -1210,18 +1210,18 @@ define dso_local i32 @VCHN_put(%struct.VCHN_t*, i64, i8) #1 {
   store i8 %379, i8* %385, align 1
   br label %386
 
-; <label>:386:                                    ; preds = %346, %306
+386:                                              ; preds = %346, %306
   %387 = load i8, i8* %9, align 1
   store i8 %387, i8* %8, align 1
   br label %270
 
-; <label>:388:                                    ; preds = %270
+388:                                              ; preds = %270
   store i32 0, i32* %32, align 4
   %389 = load i32, i32* %32, align 4
   store i32 %389, i32* %25, align 4
   br label %474
 
-; <label>:390:                                    ; preds = %219
+390:                                              ; preds = %219
   %391 = load %struct.VCHN_t*, %struct.VCHN_t** %28, align 8
   %392 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %391, i32 0, i32 3
   %393 = load %struct.circular_buf_t*, %struct.circular_buf_t** %392, align 8
@@ -1242,7 +1242,7 @@ define dso_local i32 @VCHN_put(%struct.VCHN_t*, i64, i8) #1 {
   %407 = icmp eq i64 %404, %406
   br i1 %407, label %408, label %423
 
-; <label>:408:                                    ; preds = %390
+408:                                              ; preds = %390
   %409 = load %struct.VCHN_t*, %struct.VCHN_t** %28, align 8
   %410 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %409, i32 0, i32 3
   %411 = load %struct.circular_buf_t*, %struct.circular_buf_t** %410, align 8
@@ -1252,18 +1252,18 @@ define dso_local i32 @VCHN_put(%struct.VCHN_t*, i64, i8) #1 {
   %415 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %414, i32 0, i32 0
   %416 = load i64*, i64** %415, align 8
   %417 = ptrtoint i64* %416 to i64
-  %418 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([34 x i8], [34 x i8]* @"??_C@_0CC@MNCKPPJP@?6?5?$FLFATAL?$FNBuffer?5overflow?$CB?5at?5?$CFll@", i32 0, i32 0), i64 %417)
+  %418 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([34 x i8], [34 x i8]* @"??_C@_0CC@MNCKPPJP@?6?5?$FLFATAL?$FNBuffer?5overflow?$CB?5at?5?$CFll@", i64 0, i64 0), i64 %417)
   %419 = sext i32 %418 to i64
   store i64 %419, i64* @controlflow_guarantee, align 8
   br label %420
 
-; <label>:420:                                    ; preds = %408, %420
+420:                                              ; preds = %408, %420
   %421 = load i64, i64* @controlflow_guarantee, align 8
   %422 = add nsw i64 %421, 1
   store i64 %422, i64* @controlflow_guarantee, align 8
   br label %420
 
-; <label>:423:                                    ; preds = %390
+423:                                              ; preds = %390
   %424 = load i64, i64* %27, align 8
   %425 = load %struct.VCHN_t*, %struct.VCHN_t** %28, align 8
   %426 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %425, i32 0, i32 3
@@ -1278,7 +1278,7 @@ define dso_local i32 @VCHN_put(%struct.VCHN_t*, i64, i8) #1 {
   %432 = icmp ne %struct.circular_buf_t* %431, null
   br i1 %432, label %433, label %471
 
-; <label>:433:                                    ; preds = %423
+433:                                              ; preds = %423
   %434 = load i64, i64* %14, align 8
   %435 = load %struct.circular_buf_t*, %struct.circular_buf_t** %15, align 8
   %436 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %435, i32 0, i32 0
@@ -1308,7 +1308,7 @@ define dso_local i32 @VCHN_put(%struct.VCHN_t*, i64, i8) #1 {
   %458 = icmp eq i64 %454, %457
   br i1 %458, label %459, label %470
 
-; <label>:459:                                    ; preds = %433
+459:                                              ; preds = %433
   %460 = load %struct.circular_buf_t*, %struct.circular_buf_t** %15, align 8
   %461 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %460, i32 0, i32 2
   %462 = load i64, i64* %461, align 8
@@ -1322,24 +1322,24 @@ define dso_local i32 @VCHN_put(%struct.VCHN_t*, i64, i8) #1 {
   store i64 %467, i64* %469, align 8
   br label %470
 
-; <label>:470:                                    ; preds = %459, %433
+470:                                              ; preds = %459, %433
   store i32 0, i32* %16, align 4
   br label %471
 
-; <label>:471:                                    ; preds = %423, %470
+471:                                              ; preds = %423, %470
   %472 = load i32, i32* %16, align 4
   store i32 %472, i32* %34, align 4
   %473 = load i32, i32* %34, align 4
   store i32 %473, i32* %25, align 4
   br label %474
 
-; <label>:474:                                    ; preds = %471, %388, %217
+474:                                              ; preds = %471, %388, %217
   %475 = load i32, i32* %25, align 4
   ret i32 %475
 }
 
 ; Function Attrs: alwaysinline uwtable
-define dso_local i64 @VCHN_next(%struct.VCHN_t*, i8*, i8*) #1 {
+define dso_local i64 @VCHN_next(%struct.VCHN_t* %0, i8* %1, i8* %2) #1 {
   %4 = alloca i8, align 1
   %5 = alloca i8, align 1
   %6 = alloca i64, align 8
@@ -1395,7 +1395,7 @@ define dso_local i64 @VCHN_next(%struct.VCHN_t*, i8*, i8*) #1 {
   %50 = icmp slt i64 %49, 9223372036854775807
   br i1 %50, label %51, label %428
 
-; <label>:51:                                     ; preds = %3
+51:                                               ; preds = %3
   %52 = load i8, i8* %29, align 1
   %53 = zext i8 %52 to i32
   %54 = load %struct.VCHN_t*, %struct.VCHN_t** %27, align 8
@@ -1408,7 +1408,7 @@ define dso_local i64 @VCHN_next(%struct.VCHN_t*, i8*, i8*) #1 {
   %60 = icmp sge i32 %59, 0
   br i1 %60, label %61, label %427
 
-; <label>:61:                                     ; preds = %51
+61:                                               ; preds = %51
   %62 = load %struct.VCHN_t*, %struct.VCHN_t** %27, align 8
   %63 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %62, i32 0, i32 3
   %64 = load %struct.circular_buf_t*, %struct.circular_buf_t** %63, align 8
@@ -1425,7 +1425,7 @@ define dso_local i64 @VCHN_next(%struct.VCHN_t*, i8*, i8*) #1 {
   %74 = icmp eq i64 %71, %73
   br i1 %74, label %75, label %227
 
-; <label>:75:                                     ; preds = %61
+75:                                               ; preds = %61
   %76 = load i8, i8* %30, align 1
   %77 = load i8, i8* %29, align 1
   %78 = load %struct.VCHN_t*, %struct.VCHN_t** %27, align 8
@@ -1468,13 +1468,13 @@ define dso_local i64 @VCHN_next(%struct.VCHN_t*, i8*, i8*) #1 {
   store i8 %101, i8* %107, align 1
   br label %108
 
-; <label>:108:                                    ; preds = %224, %75
+108:                                              ; preds = %224, %75
   %109 = load i8, i8* %8, align 1
   %110 = zext i8 %109 to i32
   %111 = icmp sgt i32 %110, 0
   br i1 %111, label %112, label %226
 
-; <label>:112:                                    ; preds = %108
+112:                                              ; preds = %108
   %113 = load i8, i8* %8, align 1
   %114 = zext i8 %113 to i32
   %115 = sub nsw i32 %114, 1
@@ -1511,7 +1511,7 @@ define dso_local i64 @VCHN_next(%struct.VCHN_t*, i8*, i8*) #1 {
   %143 = icmp slt i64 %135, %142
   br i1 %143, label %144, label %184
 
-; <label>:144:                                    ; preds = %112
+144:                                              ; preds = %112
   %145 = load %struct.VCHN_t*, %struct.VCHN_t** %7, align 8
   %146 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %145, i32 0, i32 0
   %147 = load i64*, i64** %146, align 8
@@ -1556,7 +1556,7 @@ define dso_local i64 @VCHN_next(%struct.VCHN_t*, i8*, i8*) #1 {
   store i8 %177, i8* %183, align 1
   br label %224
 
-; <label>:184:                                    ; preds = %112
+184:                                              ; preds = %112
   %185 = load %struct.VCHN_t*, %struct.VCHN_t** %7, align 8
   %186 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %185, i32 0, i32 0
   %187 = load i64*, i64** %186, align 8
@@ -1601,15 +1601,15 @@ define dso_local i64 @VCHN_next(%struct.VCHN_t*, i8*, i8*) #1 {
   store i8 %217, i8* %223, align 1
   br label %224
 
-; <label>:224:                                    ; preds = %184, %144
+224:                                              ; preds = %184, %144
   %225 = load i8, i8* %9, align 1
   store i8 %225, i8* %8, align 1
   br label %108
 
-; <label>:226:                                    ; preds = %108
+226:                                              ; preds = %108
   br label %426
 
-; <label>:227:                                    ; preds = %61
+227:                                              ; preds = %61
   %228 = load %struct.VCHN_t*, %struct.VCHN_t** %27, align 8
   %229 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %228, i32 0, i32 3
   %230 = load %struct.circular_buf_t*, %struct.circular_buf_t** %229, align 8
@@ -1624,12 +1624,12 @@ define dso_local i64 @VCHN_next(%struct.VCHN_t*, i8*, i8*) #1 {
   %235 = icmp ne %struct.circular_buf_t* %234, null
   br i1 %235, label %236, label %272
 
-; <label>:236:                                    ; preds = %227
+236:                                              ; preds = %227
   %237 = load i64*, i64** %13, align 8
   %238 = icmp ne i64* %237, null
   br i1 %238, label %239, label %272
 
-; <label>:239:                                    ; preds = %236
+239:                                              ; preds = %236
   %240 = load %struct.circular_buf_t*, %struct.circular_buf_t** %14, align 8
   %241 = bitcast %struct.circular_buf_t* %16 to i8*
   %242 = bitcast %struct.circular_buf_t* %240 to i8*
@@ -1641,7 +1641,7 @@ define dso_local i64 @VCHN_next(%struct.VCHN_t*, i8*, i8*) #1 {
   %247 = icmp eq i64 %244, %246
   br i1 %247, label %272, label %248
 
-; <label>:248:                                    ; preds = %239
+248:                                              ; preds = %239
   %249 = load %struct.circular_buf_t*, %struct.circular_buf_t** %14, align 8
   %250 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %249, i32 0, i32 0
   %251 = load i64*, i64** %250, align 8
@@ -1656,7 +1656,7 @@ define dso_local i64 @VCHN_next(%struct.VCHN_t*, i8*, i8*) #1 {
   %259 = trunc i8 %258 to i1
   br i1 %259, label %260, label %271
 
-; <label>:260:                                    ; preds = %248
+260:                                              ; preds = %248
   %261 = load %struct.circular_buf_t*, %struct.circular_buf_t** %14, align 8
   %262 = getelementptr inbounds %struct.circular_buf_t, %struct.circular_buf_t* %261, i32 0, i32 2
   %263 = load i64, i64* %262, align 8
@@ -1670,11 +1670,11 @@ define dso_local i64 @VCHN_next(%struct.VCHN_t*, i8*, i8*) #1 {
   store i64 %268, i64* %270, align 8
   br label %271
 
-; <label>:271:                                    ; preds = %260, %248
+271:                                              ; preds = %260, %248
   store i32 0, i32* %15, align 4
   br label %272
 
-; <label>:272:                                    ; preds = %227, %236, %239, %271
+272:                                              ; preds = %227, %236, %239, %271
   %273 = load i32, i32* %15, align 4
   %274 = load i8, i8* %30, align 1
   %275 = load i8, i8* %29, align 1
@@ -1719,13 +1719,13 @@ define dso_local i64 @VCHN_next(%struct.VCHN_t*, i8*, i8*) #1 {
   store i8 %300, i8* %306, align 1
   br label %307
 
-; <label>:307:                                    ; preds = %423, %272
+307:                                              ; preds = %423, %272
   %308 = load i8, i8* %21, align 1
   %309 = zext i8 %308 to i32
   %310 = icmp sgt i32 %309, 0
   br i1 %310, label %311, label %425
 
-; <label>:311:                                    ; preds = %307
+311:                                              ; preds = %307
   %312 = load i8, i8* %21, align 1
   %313 = zext i8 %312 to i32
   %314 = sub nsw i32 %313, 1
@@ -1762,7 +1762,7 @@ define dso_local i64 @VCHN_next(%struct.VCHN_t*, i8*, i8*) #1 {
   %342 = icmp slt i64 %334, %341
   br i1 %342, label %343, label %383
 
-; <label>:343:                                    ; preds = %311
+343:                                              ; preds = %311
   %344 = load %struct.VCHN_t*, %struct.VCHN_t** %20, align 8
   %345 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %344, i32 0, i32 0
   %346 = load i64*, i64** %345, align 8
@@ -1807,7 +1807,7 @@ define dso_local i64 @VCHN_next(%struct.VCHN_t*, i8*, i8*) #1 {
   store i8 %376, i8* %382, align 1
   br label %423
 
-; <label>:383:                                    ; preds = %311
+383:                                              ; preds = %311
   %384 = load %struct.VCHN_t*, %struct.VCHN_t** %20, align 8
   %385 = getelementptr inbounds %struct.VCHN_t, %struct.VCHN_t* %384, i32 0, i32 0
   %386 = load i64*, i64** %385, align 8
@@ -1852,21 +1852,21 @@ define dso_local i64 @VCHN_next(%struct.VCHN_t*, i8*, i8*) #1 {
   store i8 %416, i8* %422, align 1
   br label %423
 
-; <label>:423:                                    ; preds = %383, %343
+423:                                              ; preds = %383, %343
   %424 = load i8, i8* %22, align 1
   store i8 %424, i8* %21, align 1
   br label %307
 
-; <label>:425:                                    ; preds = %307
+425:                                              ; preds = %307
   br label %426
 
-; <label>:426:                                    ; preds = %425, %226
+426:                                              ; preds = %425, %226
   br label %427
 
-; <label>:427:                                    ; preds = %426, %51
+427:                                              ; preds = %426, %51
   br label %428
 
-; <label>:428:                                    ; preds = %427, %3
+428:                                              ; preds = %427, %3
   %429 = load i8, i8* %30, align 1
   %430 = load i8*, i8** %25, align 8
   store i8 %429, i8* %430, align 1
@@ -1881,7 +1881,7 @@ define dso_local i64 @VCHN_next(%struct.VCHN_t*, i8*, i8*) #1 {
 declare void @llvm.va_start(i8*) #4
 
 ; Function Attrs: noinline optnone uwtable
-define linkonce_odr dso_local i32 @_vfprintf_l(%struct._iobuf*, i8*, %struct.__crt_locale_pointers*, i8*) #3 comdat {
+define linkonce_odr dso_local i32 @_vfprintf_l(%struct._iobuf* %0, i8* %1, %struct.__crt_locale_pointers* %2, i8* %3) #5 comdat {
   %5 = alloca i8*, align 8
   %6 = alloca %struct.__crt_locale_pointers*, align 8
   %7 = alloca i8*, align 8
@@ -1900,25 +1900,26 @@ define linkonce_odr dso_local i32 @_vfprintf_l(%struct._iobuf*, i8*, %struct.__c
   ret i32 %15
 }
 
-declare dso_local %struct._iobuf* @__acrt_iob_func(i32) #5
+declare dso_local %struct._iobuf* @__acrt_iob_func(i32) #6
 
 ; Function Attrs: nounwind
 declare void @llvm.va_end(i8*) #4
 
-declare dso_local i32 @__stdio_common_vfprintf(i64, %struct._iobuf*, i8*, %struct.__crt_locale_pointers*, i8*) #5
+declare dso_local i32 @__stdio_common_vfprintf(i64, %struct._iobuf*, i8*, %struct.__crt_locale_pointers*, i8*) #6
 
 ; Function Attrs: noinline nounwind optnone uwtable
-define linkonce_odr dso_local i64* @__local_stdio_printf_options() #6 comdat {
+define linkonce_odr dso_local i64* @__local_stdio_printf_options() #7 comdat {
   ret i64* @"?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA"
 }
 
-attributes #0 = { alwaysinline nounwind uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "min-legal-vector-width"="0" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
-attributes #1 = { alwaysinline uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "min-legal-vector-width"="0" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
-attributes #2 = { argmemonly nounwind }
-attributes #3 = { noinline optnone uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "min-legal-vector-width"="0" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #0 = { alwaysinline nounwind uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "frame-pointer"="none" "less-precise-fpmad"="false" "min-legal-vector-width"="0" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+cx8,+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #1 = { alwaysinline uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "frame-pointer"="none" "less-precise-fpmad"="false" "min-legal-vector-width"="0" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+cx8,+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #2 = { argmemonly nounwind willreturn }
+attributes #3 = { nobuiltin noinline optnone uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "frame-pointer"="none" "less-precise-fpmad"="false" "min-legal-vector-width"="0" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+cx8,+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
 attributes #4 = { nounwind }
-attributes #5 = { "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
-attributes #6 = { noinline nounwind optnone uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "less-precise-fpmad"="false" "min-legal-vector-width"="0" "no-frame-pointer-elim"="false" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #5 = { noinline optnone uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "frame-pointer"="none" "less-precise-fpmad"="false" "min-legal-vector-width"="0" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+cx8,+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #6 = { "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "frame-pointer"="none" "less-precise-fpmad"="false" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+cx8,+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #7 = { noinline nounwind optnone uwtable "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "frame-pointer"="none" "less-precise-fpmad"="false" "min-legal-vector-width"="0" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+cx8,+fxsr,+mmx,+sse,+sse2,+x87" "unsafe-fp-math"="false" "use-soft-float"="false" }
 
 !llvm.linker.options = !{!0}
 !llvm.module.flags = !{!1, !2}
@@ -1927,4 +1928,4 @@ attributes #6 = { noinline nounwind optnone uwtable "correctly-rounded-divide-sq
 !0 = !{!"/FAILIFMISMATCH:\22_CRT_STDIO_ISO_WIDE_SPECIFIERS=0\22"}
 !1 = !{i32 1, !"wchar_size", i32 2}
 !2 = !{i32 7, !"PIC Level", i32 2}
-!3 = !{!"clang version 8.0.1 (tags/RELEASE_801/final)"}
+!3 = !{!"clang version 10.0.0 "}

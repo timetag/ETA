@@ -33,7 +33,7 @@ class ETAResult:
     """
     def __init__(self, file, group, records_per_cut=None, 
                  kernel=None, timeout=0.2, 
-                 simulate_growth=False, run_immediately=True):
+                 simulate_growth=False, run_immediately=True, format=-1):
         """ Create analysis using the ETA backend.
             file: str or Path of file currently investigated
             group: str The group in the ETA evaluation recipe.
@@ -48,6 +48,7 @@ class ETAResult:
         self.group = group
         self.records_per_cut = records_per_cut
         self.timeout = timeout
+        self.format = format
 
         self.eta = kernel
         self.vars = self.eta.compilecache_vars[group]
@@ -70,7 +71,7 @@ class ETAResult:
     def _inspect_file(self):
         # First cut to detect file properties and rate estimation
         self.cut = self.eta.clip_file(
-            self.file, modify_clip=None, read_events=1, format=-1, wait_timeout=0)
+            self.file, modify_clip=None, read_events=1, format=self.format, wait_timeout=0)
         self.cut.seek(0) # Reset clip to begining of file
 
         if self.records_per_cut is None:
@@ -117,7 +118,7 @@ class ETAResult:
         # We want to analyse from the first event, but not wait for the future.        
         clip_generator = self.eta.clips(self.file, modify_clip=self.cut, 
                                         read_events=self.records_per_cut or 1024*1024*10,
-                                        seek_event=0, wait_timeout=0)
+                                        seek_event=0, wait_timeout=0, format=self.format)
         result, self.context = self.eta.run({"timetagger1": clip_generator}, resume_task=None, group=self.group,
                                             return_task=True,
                                             return_results=True, max_autofeed=0)
@@ -134,7 +135,7 @@ class ETAResult:
         """
         check_ret = self.eta.clip_file(self.file, modify_clip=self.cut,
                                        read_events=self.records_per_cut or int(self.timeout * self.growth_rate), 
-                                       wait_timeout=self.timeout)
+                                       wait_timeout=self.timeout, format=self.format)
         if not check_ret:
             # No new data available
             return False

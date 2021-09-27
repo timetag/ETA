@@ -41,11 +41,20 @@ class ETA(ETA_CUT, Util):
                           "finished": [],
                           "update-recipe": [],
                           }
-        # timetag formats
-        self.quTAG_FORMAT_BINARY = 0
+        # historical timetag formats
         self.FORMAT_SI = 1
         self.quTAG_FORMAT_COMPRESSED = 2
-        self.bh_spc_4bytes = 3
+        self.quTAG_FORMAT_BINARY = 3
+        self.bh_spc_4bytes = 5
+        
+        # timetag formats
+        self.FORMAT_PQ = 0
+        self.FORMAT_SI_16bytes = 1
+        self.FORMAT_QT_COMPRESSED = 2
+        self.FORMAT_QT_RAW = 3
+        self.FORMAT_QT_BINARY = 4
+        self.FORMAT_BH_spc_4bytes = 5
+        self.FORMAT_ET_A033 = 6
         self.flush_cache()
 
     def flush_cache(self):

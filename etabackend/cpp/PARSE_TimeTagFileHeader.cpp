@@ -23,25 +23,54 @@ Zuzeng Lin, KTH, Nov 2017
 #include "string.h"
 #include "time.h"
 typedef wchar_t WCHAR;
-#define PERROR(...) {order_gurantee3=printf( "\n [ERROR]"  __VA_ARGS__ );}
+#define PERROR(...)                                         \
+	{                                                       \
+		order_gurantee3 = printf("\n [ERROR]" __VA_ARGS__); \
+	}
 #ifdef __debugging__
-#define PINFO(...)  {order_gurantee3=printf(__VA_ARGS__);}
+#define PINFO(...)                             \
+	{                                          \
+		order_gurantee3 = printf(__VA_ARGS__); \
+	}
 #else
-#define PINFO(...)  {}
+#define PINFO(...) \
+	{              \
+	}
+
 #endif
 long long order_gurantee3 = 0;
+
+// PARSER->RecordTypes
+
+#define rtPicoHarpT3 0x00010303		// (SubID = $00 ,RecFmt: $01) (V1), T-Mode: $03 (T3), HW: $03 (PicoHarp)
+#define rtPicoHarpT2 0x00010203		// (SubID = $00 ,RecFmt: $01) (V1), T-Mode: $02 (T2), HW: $03 (PicoHarp)
+#define rtHydraHarpT3 0x00010304	// (SubID = $00 ,RecFmt: $01) (V1), T-Mode: $03 (T3), HW: $04 (HydraHarp)
+#define rtHydraHarpT2 0x00010204	// (SubID = $00 ,RecFmt: $01) (V1), T-Mode: $02 (T2), HW: $04 (HydraHarp)
+#define rtHydraHarp2T3 0x01010304	// (SubID = $01 ,RecFmt: $01) (V2), T-Mode: $03 (T3), HW: $04 (HydraHarp)
+#define rtHydraHarp2T2 0x01010204	// (SubID = $01 ,RecFmt: $01) (V2), T-Mode: $02 (T2), HW: $04 (HydraHarp)
+#define rtTimeHarp260NT3 0x00010305 // (SubID = $00 ,RecFmt: $01) (V2), T-Mode: $03 (T3), HW: $05 (TimeHarp260N)
+#define rtTimeHarp260NT2 0x00010205 // (SubID = $00 ,RecFmt: $01) (V2), T-Mode: $02 (T2), HW: $05 (TimeHarp260N)
+#define rtTimeHarp260PT3 0x00010306 // (SubID = $00 ,RecFmt: $01) (V1), T-Mode: $02 (T3), HW: $06 (TimeHarp260P)
+#define rtTimeHarp260PT2 0x00010206 // (SubID = $00 ,RecFmt: $01) (V1), T-Mode: $02 (T2), HW: $06 (TimeHarp260P)
+#define FORMAT_PQ 0
+#define FORMAT_SI_16bytes 1
+#define FORMAT_QT_COMPRESSED 2
+#define FORMAT_QT_RAW 3
+#define FORMAT_QT_BINARY 4
+#define FORMAT_BH_spc_4bytes 5
+#define FORMAT_ET_A033 6
 
 typedef struct
 {
 	// CLIP info
-	long long fseekpoint;   //0
+	long long fseekpoint;	//0
 	long long headeroffset; //1
 
-	long long TTRes_pspr;	 //2
-	long long DTRes_pspr;	 //3
+	long long TTRes_pspr;	  //2
+	long long DTRes_pspr;	  //3
 	long long SYNCRate_pspr;  //4
 	long long BytesofRecords; //5
-	long long RecordType;	 //6
+	long long RecordType;	  //6
 } header_info;
 
 size_t MKS_inline bread(header_info *PARSER, void *buffer, size_t size, size_t count, char *stream)
@@ -51,95 +80,7 @@ size_t MKS_inline bread(header_info *PARSER, void *buffer, size_t size, size_t c
 	return size * count;
 }
 
-int MKS_inline bh_4bytes_header_parser(header_info *PARSER, char Magic[4])
-{
-	PINFO("Becker & Hickl SPC-134/144/154/830 timetag file has no header.");
-	PARSER->SYNCRate_pspr = ((unsigned short *)Magic)[0];
-	PARSER->DTRes_pspr = 1;
-	PARSER->TTRes_pspr = 0;
-	PARSER->RecordType = 3;
-	PINFO("PARSER->RecordType: bh_spc_4bytes");
-	PARSER->BytesofRecords = 4;
-	PARSER->headeroffset = 4;
-	return 0;
-}
-
-int MKS_inline Swebian_header_parser(header_info *PARSER)
-{
-	PINFO("Swebian Instrument timetag file has no header.");
-	PARSER->SYNCRate_pspr = 0;
-	PARSER->TTRes_pspr = 1;
-	PARSER->DTRes_pspr = 1;
-	PARSER->RecordType = 1;
-	PINFO("PARSER->RecordType: SwebianInstrument 16-bytes");
-	PARSER->BytesofRecords = 16;
-	PARSER->headeroffset = 0;
-	return 0;
-}
-
-int MKS_inline quTAU_FORMAT_BINARY_header_parser(header_info *PARSER, char *fpin)
-{
-
-	// read the rest 32 bytes of the header
-	char Header[32];
-	if (bread(PARSER, &Header, 1, sizeof(Header), fpin) != sizeof(Header))
-	{
-		PERROR("Error when reading header, aborted.");
-		return -1;
-	}
-	PINFO("quTAU_FORMAT_BINARY file header is read, but ignored.");
-	PARSER->RecordType = 0;
-	PARSER->BytesofRecords = 10;
-	PINFO("PARSER->RecordType: quTAU_FORMAT_BINARY 10-bytes");
-
-	//set resolutions
-	PARSER->TTRes_pspr = 1;
-	PARSER->DTRes_pspr = PARSER->TTRes_pspr;
-	PARSER->SYNCRate_pspr = 1.249554 * 1000;
-
-	// find size
-	//PARSER->headeroffset = ftell(fpin);
-
-	return 0;
-}
-int MKS_inline quTAU_FORMAT_COMPRESSED_header_parser(header_info *PARSER, char *fpin)
-{
-
-	// read the rest 32 bytes of the header
-	char Header[32];
-	if (bread(PARSER, &Header, 1, sizeof(Header), fpin) != sizeof(Header))
-	{
-		PERROR("Error when reading header, aborted.");
-		return -1;
-	}
-	PINFO("quTAU_FORMAT_COMPRESSED file header is read, but ignored.");
-	PARSER->RecordType = 0;
-	PARSER->BytesofRecords = 5;
-	PINFO("PARSER->RecordType: quTAU_FORMAT_COMPRESSED 5-bytes");
-
-	//set resolutions
-	PARSER->TTRes_pspr = 1;
-	PARSER->DTRes_pspr = PARSER->TTRes_pspr;
-	PARSER->SYNCRate_pspr = 1.249554 * 1000;
-
-	// find size
-	//PARSER->headeroffset = ftell(fpin);
-
-	return 0;
-}
-
 //#pragma pack(8) //structure alignment to 8 byte boundaries
-// PARSER->RecordTypes
-#define rtPicoHarpT3 0x00010303		// (SubID = $00 ,RecFmt: $01) (V1), T-Mode: $03 (T3), HW: $03 (PicoHarp)
-#define rtPicoHarpT2 0x00010203		// (SubID = $00 ,RecFmt: $01) (V1), T-Mode: $02 (T2), HW: $03 (PicoHarp)
-#define rtHydraHarpT3 0x00010304	// (SubID = $00 ,RecFmt: $01) (V1), T-Mode: $03 (T3), HW: $04 (HydraHarp)
-#define rtHydraHarpT2 0x00010204	// (SubID = $00 ,RecFmt: $01) (V1), T-Mode: $02 (T2), HW: $04 (HydraHarp)
-#define rtHydraHarp2T3 0x01010304   // (SubID = $01 ,RecFmt: $01) (V2), T-Mode: $03 (T3), HW: $04 (HydraHarp)
-#define rtHydraHarp2T2 0x01010204   // (SubID = $01 ,RecFmt: $01) (V2), T-Mode: $02 (T2), HW: $04 (HydraHarp)
-#define rtTimeHarp260NT3 0x00010305 // (SubID = $00 ,RecFmt: $01) (V2), T-Mode: $03 (T3), HW: $05 (TimeHarp260N)
-#define rtTimeHarp260NT2 0x00010205 // (SubID = $00 ,RecFmt: $01) (V2), T-Mode: $02 (T2), HW: $05 (TimeHarp260N)
-#define rtTimeHarp260PT3 0x00010306 // (SubID = $00 ,RecFmt: $01) (V1), T-Mode: $02 (T3), HW: $06 (TimeHarp260P)
-#define rtTimeHarp260PT2 0x00010206 // (SubID = $00 ,RecFmt: $01) (V1), T-Mode: $02 (T2), HW: $06 (TimeHarp260P)
 
 time_t TDateTime_TimeT(double Convertee)
 {
@@ -155,7 +96,7 @@ time_t TDateTime_TimeT(double Convertee)
 #define TTTRTagTTTRRecType "TTResultFormat_TTTRRecType"
 #define TTTRTagNumRecords "TTResult_NumberOfRecords" // Number of TTTR Records in the File;
 #define TTTRTagRes "MeasDesc_Resolution"			 // Resolution for the Dtime (T3 Only)
-#define TTTRTagGlobRes "MeasDesc_GlobalResolution"   // Global Resolution of TimeTag(T2) /NSync (T3)
+#define TTTRTagGlobRes "MeasDesc_GlobalResolution"	 // Global Resolution of TimeTag(T2) /NSync (T3)
 #define FileTagEnd "Header_End"						 // Always appended as last tag (BLOCKEND)
 // TagTypes  (TTagHead.Typ)
 #define tyEmpty8 0xFFFF0008
@@ -178,7 +119,7 @@ int MKS_inline PicoQuant_header_parser(header_info *PARSER, char *fpin)
 	{
 		char Ident[32];		// Identifier of the tag
 		int Idx;			// Index for multiple tags or -1
-		unsigned int Typ;   // Type of tag ty..... see const section
+		unsigned int Typ;	// Type of tag ty..... see const section
 		long long TagValue; // Value of tag.
 	} TagHead;
 
@@ -374,6 +315,89 @@ ex:
 	return -2;
 }
 
+int MKS_inline FORMAT_QT_BINARY_header_parser(header_info *PARSER, char *fpin)
+{
+	// read the rest 32 bytes of the header
+	char Header[32];
+	if (bread(PARSER, &Header, 1, sizeof(Header), fpin) != sizeof(Header))
+	{
+		PERROR("Error when reading header, aborted.");
+		return -1;
+	}
+	PINFO("qutools 10-bytes BINARY file header is read, but ignored.");
+	PARSER->RecordType = FORMAT_QT_BINARY;
+	PARSER->BytesofRecords = 10;
+	PINFO("PARSER->RecordType: FORMAT_QT_BINARY");
+	PARSER->TTRes_pspr = 1;
+	PARSER->DTRes_pspr = 1;
+	PARSER->SYNCRate_pspr = 0;
+	return 0;
+}
+
+int MKS_inline FORMAT_SI_16bytes_header_parser(header_info *PARSER)
+{
+	PINFO("Swebian Instrument timetag file has no header.");
+	PARSER->SYNCRate_pspr = 0;
+	PARSER->TTRes_pspr = 1;
+	PARSER->DTRes_pspr = 1;
+	PARSER->RecordType = FORMAT_SI_16bytes;
+	PINFO("PARSER->RecordType: FORMAT_SI_16bytes");
+	PARSER->BytesofRecords = 16;
+	PARSER->headeroffset = 0;
+	return 0;
+}
+
+int MKS_inline FORMAT_QT_COMPRESSED_header_parser(header_info *PARSER, char *fpin)
+{
+
+	// read the rest 32 bytes of the header
+	char Header[32];
+	if (bread(PARSER, &Header, 1, sizeof(Header), fpin) != sizeof(Header))
+	{
+		PERROR("Error when reading header, aborted.");
+		return -1;
+	}
+	PINFO("qutools 5-bytes COMPRESSED file header is read, but ignored.");
+	PARSER->RecordType = FORMAT_QT_COMPRESSED;
+	PARSER->BytesofRecords = 5;
+	PINFO("PARSER->RecordType: FORMAT_QT_COMPRESSED ");
+
+	//set resolutions
+	PARSER->TTRes_pspr = 1;
+	PARSER->DTRes_pspr = 1;
+	PARSER->SYNCRate_pspr = 0;
+
+	// find size
+	//PARSER->headeroffset = ftell(fpin);
+
+	return 0;
+}
+
+int MKS_inline FORMAT_BH_spc_4bytes_header_parser(header_info *PARSER, char Magic[4])
+{
+	PINFO("Becker & Hickl SPC-134/144/154/830 timetag file header is read as SYNC rate.");
+	PARSER->SYNCRate_pspr = ((unsigned short *)Magic)[0];
+	PARSER->DTRes_pspr = 1;
+	PARSER->TTRes_pspr = 0;
+	PARSER->RecordType = FORMAT_BH_spc_4bytes;
+	PINFO("PARSER->RecordType: FORMAT_BH_spc_4bytes");
+	PARSER->BytesofRecords = 4;
+	PARSER->headeroffset = 4;
+	return 0;
+}
+int MKS_inline FORMAT_ET_A033_header_parser(header_info *PARSER)
+{
+	PINFO("Eventech ET A033 timetag file has no header.");
+	PARSER->SYNCRate_pspr = 0;
+	PARSER->TTRes_pspr = 1;
+	PARSER->DTRes_pspr = 1;
+	PARSER->RecordType = FORMAT_ET_A033;
+	PINFO("PARSER->RecordType: FORMAT_ET_A033");
+	PARSER->BytesofRecords = 4;
+	PARSER->headeroffset = 0;
+	return 0;
+}
+
 /////////////////////////////////////////////
 //////////////////////////////////////////////
 
@@ -389,40 +413,33 @@ extern "C" int MKS_inline PARSE_TimeTagFileHeader(header_info *PARSER, char *fpi
 		return -2;
 	}
 	//automatically find headers
-	bool isendlessfile = true;
 	if (PARSER->RecordType == -1)
 	{
 		//auto determine record type using magic
 		if (strncmp(Magic, "PQTTTR", 6) == 0)
-			PARSER->RecordType = 4;
+			PARSER->RecordType = FORMAT_PQ;
 		if (strncmp(Magic, "\x87\xB3\x91\xFA", 4) == 0)
-			PARSER->RecordType = 0;
+			PARSER->RecordType = FORMAT_QT_BINARY;
 	}
-
 	switch (PARSER->RecordType)
 	{
-	case 0:
-		PINFO("Header Parser: quTAU_FORMAT_BINARY \n");
-		ret = quTAU_FORMAT_BINARY_header_parser(PARSER, fpin);
-		break;
-	case 1:
-		PINFO("Header Parser: Swebian Instrument \n");
-		ret = Swebian_header_parser(PARSER);
-		break;
-	case 2:
-		//quTAU_FORMAT_COMPRESSED magic is shit
-		PINFO("Header Parser: quTAU_FORMAT_COMPRESSED \n");
-		ret = quTAU_FORMAT_COMPRESSED_header_parser(PARSER, fpin);
-		break;
-	case 3:
-		//bh_spc_4bytes magic is shit
-		PINFO("Header Parser: bh_spc_4bytes \n");
-		ret = bh_4bytes_header_parser(PARSER, Magic);
-		break;
-	case 4:
-		PINFO("Header Parser: PicoQuant \n");
+	case FORMAT_PQ:
 		ret = PicoQuant_header_parser(PARSER, fpin);
-		isendlessfile = false;
+		break;
+	case FORMAT_SI_16bytes:
+		ret = FORMAT_SI_16bytes_header_parser(PARSER);
+		break;
+	case FORMAT_QT_COMPRESSED:
+		ret = FORMAT_QT_COMPRESSED_header_parser(PARSER, fpin);
+		break;
+	case FORMAT_BH_spc_4bytes:
+		ret = FORMAT_BH_spc_4bytes_header_parser(PARSER, Magic);
+		break;
+	case FORMAT_QT_BINARY:
+		ret = FORMAT_QT_BINARY_header_parser(PARSER, fpin);
+		break;
+	case FORMAT_ET_A033:
+		ret = FORMAT_ET_A033_header_parser(PARSER);
 		break;
 	case -1:
 		PERROR("Unidentified time-tag format. Specify one the with eta.run(...format=x). Aborted. \n");
