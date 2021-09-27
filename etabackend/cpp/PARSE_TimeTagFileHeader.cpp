@@ -315,6 +315,18 @@ ex:
 	return -2;
 }
 
+int MKS_inline FORMAT_QT_RAW_header_parser(header_info *PARSER)
+{
+	PINFO("qutools 10-bytes RAW file has no header.");
+	PARSER->RecordType = FORMAT_QT_BINARY;
+	PARSER->BytesofRecords = 10;
+	PINFO("PARSER->RecordType: FORMAT_QT_BINARY");
+	PARSER->TTRes_pspr = 1;
+	PARSER->DTRes_pspr = 1;
+	PARSER->SYNCRate_pspr = 0;
+	return 0;
+}
+
 int MKS_inline FORMAT_QT_BINARY_header_parser(header_info *PARSER, char *fpin)
 {
 	// read the rest 32 bytes of the header
@@ -437,6 +449,9 @@ extern "C" int MKS_inline PARSE_TimeTagFileHeader(header_info *PARSER, char *fpi
 		break;
 	case FORMAT_QT_BINARY:
 		ret = FORMAT_QT_BINARY_header_parser(PARSER, fpin);
+		break;
+	case FORMAT_QT_RAW:
+		ret = FORMAT_QT_RAW_header_parser(PARSER);
 		break;
 	case FORMAT_ET_A033:
 		ret = FORMAT_ET_A033_header_parser(PARSER);
