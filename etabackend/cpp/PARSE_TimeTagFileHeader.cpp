@@ -393,7 +393,7 @@ int MKS_inline FORMAT_ET_A033_header_parser(header_info *PARSER)
 	PARSER->DTRes_pspr = 1;
 	PARSER->RecordType = FORMAT_ET_A033;
 	PINFO("PARSER->RecordType: FORMAT_ET_A033");
-	PARSER->BytesofRecords = 4;
+	PARSER->BytesofRecords = 8;
 	PARSER->headeroffset = 0;
 	return 0;
 }

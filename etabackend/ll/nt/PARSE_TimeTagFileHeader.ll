@@ -907,7 +907,7 @@ define dso_local i32 @"?FORMAT_ET_A033_header_parser@@YAHPEAUheader_info@@@Z"(%s
   store i64 6, i64* %10, align 8
   %11 = load %struct.header_info*, %struct.header_info** %2, align 8
   %12 = getelementptr inbounds %struct.header_info, %struct.header_info* %11, i32 0, i32 5
-  store i64 4, i64* %12, align 8
+  store i64 8, i64* %12, align 8
   %13 = load %struct.header_info*, %struct.header_info** %2, align 8
   %14 = getelementptr inbounds %struct.header_info, %struct.header_info* %13, i32 0, i32 1
   store i64 0, i64* %14, align 8
@@ -1729,7 +1729,7 @@ define dso_local i32 @PARSE_TimeTagFileHeader(%struct.header_info* %0, i8* %1) #
   store i64 6, i64* %507, align 8
   %508 = load %struct.header_info*, %struct.header_info** %3, align 8
   %509 = getelementptr inbounds %struct.header_info, %struct.header_info* %508, i32 0, i32 5
-  store i64 4, i64* %509, align 8
+  store i64 8, i64* %509, align 8
   %510 = load %struct.header_info*, %struct.header_info** %3, align 8
   %511 = getelementptr inbounds %struct.header_info, %struct.header_info* %510, i32 0, i32 1
   store i64 0, i64* %511, align 8

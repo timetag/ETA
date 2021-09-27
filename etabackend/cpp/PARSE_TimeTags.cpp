@@ -515,8 +515,9 @@ extern "C"
 				{
 					if ((*ETA033RecordPtr).data0 < 0)
 					{
+						const int data0 = -((*ETA033RecordPtr).data0);
 						Channel = READER->CHANNEL_OFFSET + 0; // input A is chn 0
-						AbsTime_ps = 327680000 * (unsigned long long)(-(*ETA033RecordPtr).data0) + (unsigned long long)((*ETA033RecordPtr).data1);
+						AbsTime_ps = 327680000 * (unsigned long long)(data0) + (unsigned long long)((*ETA033RecordPtr).data1);
 					}
 					else
 					{
