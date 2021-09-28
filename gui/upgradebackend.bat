@@ -1,1 +1,2 @@
-python -m pip --disable-pip-version-check install --find-links=. etabackend --upgrade
+python -m pip --disable-pip-version-check install --find-links=./etabackend  etabackend --upgrade
+pause

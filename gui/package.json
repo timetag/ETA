@@ -29,7 +29,11 @@
         "conda_ETA_env.yml",
         "backend.ico",
         "python-webinstall.exe",
-        "*.whl",
+        {
+          "from": "./",
+          "to": "etabackend/",
+          "filter": ["*.whl"]
+        },
         "*.bat"
       ],
       "publish": [
