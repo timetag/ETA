@@ -46,8 +46,8 @@
     "electron-updater": "^4.3.9"
   },
   "devDependencies": {
-	  "electron": "^13.1.0",
-	  "electron-builder": "^22.11.0"
+	  "electron": "^15.2.0",
+	  "electron-builder": "^22.13.0"
   },
   "resolutions": {}
 }
