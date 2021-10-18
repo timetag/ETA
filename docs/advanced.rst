@@ -31,6 +31,7 @@ Build a Clip without any file
 Here is an example to avoid ``eta.clip_file`` or other higher-level APIs that reads a file on disk, by creating the Clip directly from the memory buffer. 
 
 .. code-block:: python
+
     import etabackend.clip as clip
     clip_from_remote_pc = clip.Clip()
     clip_from_remote_pc.TTRes_pspr = ...
@@ -55,9 +56,10 @@ Applying global time shift
 You may also want to modify the Clip returned by ``eta.clip_file`` or other higher-level APIs to apply a global time shift to all channels within a certain timetag file. This is handy if you use multiple timetag as sources (RFILES) in one experiment. Refer to ``clock.infer_start_from_stop`` for more ideas.
 
 .. code-block:: python
+
     ret_clip = eta.clip_file(filename)
     ret_clip.GlobalTimeShift = -1,000,000 # picoseconds
-    new_clip = eta.clip_file(filename, seek_event=0, ) # use seek_event=0 resume to header
+    new_clip = eta.clip_file(filename, seek_event=0, modify_clip=ret_clip) # use seek_event=0 resume to header
     eta.rum(new_clip)
 
 Run ETA as a Python Library

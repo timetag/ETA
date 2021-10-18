@@ -42,14 +42,14 @@ eta.clip_file(filename, modify_clip=None, read_events=0, seek_event=-1, format=-
     The path to the time tag file. Please note that if you run ETA Backend on a remote computer, you need to specify the path to file on that computer.
     
 - ``modify_clip``
-    If this parameter is None, ETA will read the file header and try to construct an Clip object.  If provided, ETA will modifed this previous Clip instead of creating a new Clip object from scratch by reading the header again, for better performance.
+    If this parameter is None, ETA will read the file header and try to construct a new Clip object.  If provided, ETA will modifed this previous Clip instead of creating a new Clip object from scratch by reading the header again, for better performance.
     
     .. note::
         When used together with ``seek_event=-1``, ETA will slide the a window with length ``read_events`` in the time-tag file, starting from the ending position of the prevoius Clip.  By iteratively feeding the returned Clip as ``modify_clip``, one can fetch newly generated events from the file. It is useful for implementing real-time analysis, and there is a higher-level API, ``eta.clips``, which does this automatically for you.
         
         After calling this function, the ``modify_clip`` will be updated with timetag events from a new window in the timetag file. If you would like to keep the old Clip, please make a deep copy of the Clip object before calling this function.
         
-        If you would like to read a header-less file of a supported format, you could mannualy construct an empy Clip object with required format information, and feed that as modify_clip. This would cause ETA to completely 
+        If you would like to read a header-less file of a supported format, you could mannualy construct an empy Clip object with required format information, and feed that as modify_clip. Refer to Advanced Usage for more ideas.
 
 - ``read_events``
     The number of desired events to be loaded into the returned Clip. Setting it to 0 will make ETA read the entire file.
@@ -116,7 +116,7 @@ Unlike ``eta.split_file``, which makes one single generator that splits the file
 eta.split_file(filename,  modify_clip=None, cuts=1, format=-1, wait_timeout=0, reuse_clips=True, keep_indexes=None)
 ......
 
- **DEPRECATED** ``eta.split_file``  is simple wrapper on top of `eta.clips()`, that makes a generator yields Clips, that will split the file into a desired amount of equal size sections. It inherts most of the parameters from `eta.clips()`.
+ **DEPRECATED** ``eta.split_file``  is simple wrapper on top of `eta.clips()`, that makes a generator that splits the file into a desired amount of equal size Clips. It inherts most of the parameters from `eta.clips()`.
 
 - ``cuts``
     The number of Clips that you want to generate. Default value is set to 1, thus the full time-tag will be returned in one cut descriptor. 
