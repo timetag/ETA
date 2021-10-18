@@ -42,12 +42,14 @@ eta.clip_file(filename, modify_clip=None, read_events=0, seek_event=-1, format=-
     The path to the time tag file. Please note that if you run ETA Backend on a remote computer, you need to specify the path to file on that computer.
     
 - ``modify_clip``
-    If provided, ETA will modifed this previous Clip instead of creating a new Clip object, for performance consideration. The ``modify_clip`` will contain timetag events from a new window in the timetag file after calling this function. 
+    If this parameter is None, ETA will read the file header and try to construct an Clip object.  If provided, ETA will modifed this previous Clip instead of creating a new Clip object from scratch by reading the header again, for better performance.
     
     .. note::
-        When used together with ``seek_event=-1``, ETA will slide the a window with length ``read_events`` in the time-tag file, starting from the ending position of the prevoius Clip. It is useful for implementing real-time analysis by iteratively feeding the returned Clip to fetch newly generated events.
+        When used together with ``seek_event=-1``, ETA will slide the a window with length ``read_events`` in the time-tag file, starting from the ending position of the prevoius Clip.  By iteratively feeding the returned Clip as ``modify_clip``, one can fetch newly generated events from the file. It is useful for implementing real-time analysis, and there is a higher-level API, ``eta.clips``, which does this automatically for you.
         
-        If you would like to keep the old Clip, please make a deep copy of the Clip object before calling this function.
+        After calling this function, the ``modify_clip`` will be updated with timetag events from a new window in the timetag file. If you would like to keep the old Clip, please make a deep copy of the Clip object before calling this function.
+        
+        If you would like to read a header-less file of a supported format, you could mannualy construct an empy Clip object with required format information, and feed that as modify_clip. This would cause ETA to completely 
 
 - ``read_events``
     The number of desired events to be loaded into the returned Clip. Setting it to 0 will make ETA read the entire file.
@@ -59,7 +61,7 @@ eta.clip_file(filename, modify_clip=None, read_events=0, seek_event=-1, format=-
     .. note::
         You can also set a negative value, then the number of records in this Clip will be calculated as the number of records between the ending of the last Clip to the current end of file minus the absolute value of this negative number. 
 
-        The time tag file that serves as the FIFO when you perform a real-time analysis might have pre-initialized-but-not-yet-written areas, and the negative value here can help you get rid of that.
+        The time tag file that serves as the FIFO when you perform a real-time analysis might have pre-allocated-but-not-yet-written areas, and the negative value here can help you get rid of that.
 
 
 - ``seek_event``

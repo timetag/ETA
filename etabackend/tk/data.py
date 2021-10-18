@@ -33,7 +33,7 @@ class ETAResult:
     """
     def __init__(self, file, group, records_per_cut=None, 
                  kernel=None, timeout=0.2, 
-                 simulate_growth=False, run_immediately=True, format=-1):
+                 simulate_growth=False, run_immediately=True, modify_clip=None, format=-1):
         """ Create analysis using the ETA backend.
             file: str or Path of file currently investigated
             group: str The group in the ETA evaluation recipe.
@@ -41,6 +41,8 @@ class ETAResult:
             timeout: How long to wait for enough data until this evaluation round is skipped.
             simulate_growth: boolean Behave as if we have a growing file with records_per_cut added each evaluation run.
             run_immediately: boolean Immediately call run to evaluate all available data.
+            modify_clip: Clip If provided, ETA will modifed this previous Clip instead of creating a new Clip object.
+            format: int The format of the timetag file.
         """
         self.logger = logging.getLogger('etabackend.frontend')
 
@@ -48,6 +50,7 @@ class ETAResult:
         self.group = group
         self.records_per_cut = records_per_cut
         self.timeout = timeout
+        self.modify_clip = modify_clip
         self.format = format
 
         self.eta = kernel
@@ -71,7 +74,7 @@ class ETAResult:
     def _inspect_file(self):
         # First cut to detect file properties and rate estimation
         self.cut = self.eta.clip_file(
-            self.file, modify_clip=None, read_events=1, format=self.format, wait_timeout=0)
+            self.file, modify_clip=self.modify_clip, read_events=1, format=self.format, wait_timeout=0)
         self.cut.seek(0) # Reset clip to begining of file
 
         if self.records_per_cut is None:
