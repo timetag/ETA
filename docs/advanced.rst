@@ -59,8 +59,10 @@ You may also want to modify the Clip returned by ``eta.clip_file`` or other high
 
     ret_clip = eta.clip_file(filename)
     ret_clip.GlobalTimeShift = -1,000,000 # picoseconds
-    new_clip = eta.clip_file(filename, seek_event=0, modify_clip=ret_clip) # use seek_event=0 resume to header
-    eta.rum(new_clip)
+    new_clip = eta.clips(filename, seek_event=0, modify_clip=ret_clip, reuse_clips=True)
+    # use seek_event=0 to resume to the first event after the header 
+    # make sure reuse_clips=True, so that your modification will be preserved when the generator is sliding windows 
+    eta.run(... new_clip ...)
 
 Run ETA as a Python Library
 -------------------------------------
