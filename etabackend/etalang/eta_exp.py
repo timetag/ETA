@@ -301,17 +301,37 @@ class HISTOGRAM():
                 preact = preact.replace("time", diff)
             else:
                 preact = diff
-            
-            hister = """
-                                  {buffer_name}_ssms = ({preact})  // {bin_step}
-                                  if ({buffer_name}_ssms >= {bin_num}):
+
+            if clock_fulltype[1] > 1:
+                hister = """
+                                  {buffer_name}_msss = ({preact})  // {bin_step}
+                                  if ({buffer_name}_msss >= {bin_num}):
                                       break
-                                  if ({buffer_name}_ssms >= 0):
+                                  if ({buffer_name}_msss >= 0):
+                                      {histogram}[{buffer_name}_msss] += 1
+                          """.format(histogram=histogram, buffer_name=buffer_name,
+                                     preact=preact, bin_step=bin_step,
+                                     bin_num=bin_num)
+                code = """
+                          if {buffer_name}_tail<{buffer_name}_head:
+                              for {buffer_name}_i in range({buffer_name}_head-1,{buffer_name}_tail-1,-1):
+                  {hister}
+                          elif {buffer_name}_tail>{buffer_name}_head:
+                              for {buffer_name}_i in range({buffer_name}_head-1,0,-1):
+                  {hister}
+                              for {buffer_name}_i in range({buffer_name}_size-1,{buffer_name}_tail-1,-1):
+                  {hister}
+                          """.format(buffer_name=buffer_name, hister=hister)
+            elif clock_fulltype[2] > 1:
+                hister = """
+                                  {buffer_name}_ssms = ({preact})  // {bin_step}
+                                  if ({buffer_name}_ssms < 0):
+                                      break
+                                  if ({buffer_name}_ssms < {bin_num}):
                                       {histogram}[{buffer_name}_ssms] += 1
                           """.format(histogram=histogram, buffer_name=buffer_name,
                                      preact=preact, bin_step=bin_step,
                                      bin_num=bin_num)
-            if clock_fulltype[1] > 1:
                 code = """
                           if {buffer_name}_tail<{buffer_name}_head:
                               for {buffer_name}_i in range({buffer_name}_head-1,{buffer_name}_tail-1,-1):
@@ -323,8 +343,8 @@ class HISTOGRAM():
                   {hister}
                           """.format(buffer_name=buffer_name, hister=hister)
             else:
-                raise ValueError(self.error_prefix +
-                                 "single start mutiple stop is not currently supported.")
+                raise ValueError(
+               "record_all() is not required on single-start-single-stop clock, use record() instead")
             self.EMIT_LINE(triggers, code)
 
     def record_simple(self, triggers, histogram, *therest):
