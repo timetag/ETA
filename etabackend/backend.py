@@ -189,7 +189,7 @@ class Backend():
 
         if not self.not_displaying.is_set():
             self.logfrontend.info(
-                "ETA.display: Script Panel is serving at http://{}:{}.".format(self.hostip, self.hostdashport))
+                "ETA.display: Script Panel is serving at {}.".format(self.display_url))
             self.logfrontend.warning(
                 "The current script is not executed, because a previously executed script is still serving the results.")
             await self.send({"op": "dash",
@@ -236,7 +236,6 @@ class Backend():
         """
         import tornado.ioloop
         from bokeh.server.server import Server
-
         self.logfrontend.info("show_bokeh: Show bokeh object in main thread")
         try:
             self.app['bokserver'] = Server(
@@ -288,12 +287,12 @@ class Backend():
         os.kill(os.getpid(), signal.SIGINT)  # FIXME if there is a better way.
         return web.Response(text="ETA backend is shutdown.")
 
-    def display(self, app=None, type='dash'):
+    def display(self, app=None, type='bokeh'):
         if app is None:
             self.logfrontend.warning(
                 "No display dashboard created. Use 'app = dash.Dash()' to create a Dash graph.")
         else:
-            self.logfrontend.info("ETA.DISPLAY: Starting Script Panel.")
+            self.logfrontend.info("ETA.display: Starting a {} display for the Script Panel.".format(type))
             try:
                 import threading
                 if type == "dash":
