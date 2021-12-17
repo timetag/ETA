@@ -81,9 +81,13 @@ class Backend():
 
         self.logger.info(
             "ETA URL: http://{}:{}".format(self.hostip, self.hostport))
-        self.loop = asyncio.get_event_loop()
 
         self.app.on_shutdown.append(self.on_shutdown)
+
+        async def set_loop(app):
+            self.loop = asyncio.get_event_loop()        
+        self.app.on_startup.append(set_loop)
+  
 
         if run_forever:
             web.run_app(self.app, host=self.hostip, port=self.hostport,
