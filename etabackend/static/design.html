@@ -263,11 +263,12 @@
                         <div class="invalid-feedback">
                             Please provide a valid name.
                         </div>
-                        <label for="coincidence2">Coincidence Slots</label>
+                        <label for="coincidence2">Number of Coincidence Slots</label>
                         <input type="number" class="form-control" id="coincidence2" required>
                         <label for="coincidence3">Emit to this channel# when fulfilled</label>
                         <input type="number" class="form-control" id="coincidence3" required>
-                       
+                        <label for="coincidence4">Maximum time interval allowed for a coincidence</label>
+                        <input type="number" class="form-control" id="coincidence4" required>
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-outline-dark" id="clock_create">Create</button>
@@ -329,7 +330,7 @@
                                 <img class="card-img-top" src="img/coincidence.png">
                                 <div class="card-body">
                                     <h5 class="card-title"><a href="#" id="btn_create_coincidence">COINCIDENCE</a></h5>
-                                    <p class="card-text">Coincidence is a tool that emits a signal when all of its slots are fulfilled.</p>
+                                    <p class="card-text">Coincidence is a tool that emits a signal when the coincidence condition is fulfilled.</p>
                                 </div>
                             </div>
                         </div>

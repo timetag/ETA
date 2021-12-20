@@ -255,7 +255,7 @@
           form.classList.remove('was-validated');
           switch (name) {
             case "COINCIDENCE":
-                codegen=`COINCIDENCE(${$('#coincidence1').val()},${$('#coincidence2').val()},${$('#coincidence3').val()}) #COINCIDENCE(name,slots,chn)\n`+aceeditor.getValue();
+                codegen=`COINCIDENCE(${$('#coincidence1').val()},${$('#coincidence2').val()},${$('#coincidence3').val()},${$('#coincidence4').val()}) #COINCIDENCE(name,num_slots,emit_chn,time_interval_threshold)\n`+aceeditor.getValue();
                 break;
             case "RFILE":
                 codegen=`RFILE(${$('#rfile1').val()},${$('#rfile2').val()},${$('#rfile3').val()}) #RFILE(name,[vchns],[rchns])\n`+aceeditor.getValue();

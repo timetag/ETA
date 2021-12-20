@@ -187,30 +187,40 @@ Performing a correlation:
 
 COINCIDENCE
 ------------------------------
-``COINCIDENCE(name, length_of_array, emission_channel)``
+``COINCIDENCE(name, num_of_slots, emit_channel, time_interval_threshold)``
 
-Coincidence is a Tool that emits a signal when all of its slots are fulfilled.
+Coincidence is a Tool that keeps track of a coincidence. 
+It has multiple Coincidence Slots which can be filled with timetags individually. 
+The coincidence condition is fulfilled, when all of the slots are filled and the time interval between the current time and each of slots is less or equal to ``time_interval_threshold``. 
+A signal will be emitted to the specified ``emit_channel`` at the exact moment when the coincidence condition is fulfilled.
+
 
 Parameters
 ......
 
-- ``Coincidence Slots`` (required)
-    The number of coincidence slots on this Coincidence counter.
+- ``num_of_slots`` (required)
+    The number of coincidence slots in this coincidence tool.
 
-- ``Emit to this channel# when fulfilled`` (required)
-    Emit to this channel# when all of the coincidence slots are fulfilled.
+- ``emit_channel`` (required)
+    Emit to this channel# when all of the coincidence condition is fulfilled.
 
+- ``time_interval_threshold`` (default: INF)
+    Time interval between the current time and each of slots should be less or equal to ``time_interval_threshold`` to fulfill a coincidence.
 
 Actions
 ......
 
 
 - ``coincidence.fill(slotid)``
-    Mark the coincidence slot `slotid` with the current time. Then, a signal will then be emitted at the current time, if all of the slots are fulfilled. 
+    Fill (or overwrite) the coincidence slot `slotid` with the current time. Then it checks immediately if the coincidence condition is fulfilled. If this is true, a signal should be emitted, also at the current time, to the specified ``emit_channel``.
 
-- ``coincidence.clear()``
+    Usually, you would like to fill different slots at the events from different input channels, and use the emitted singals in other VIs for further analysis, like counting the number of coincidences.
+
+- ``coincidence.clear(slotid)``
+    Clear the coincidence slots `slotid`.
+
+- ``coincidence.reset()``
     Clear all coincidence slots.
-
 
 INTEGER
 ------------------------------
@@ -277,7 +287,7 @@ Actions
         
         Discard ``result`` if you are performing time-based cutting, and use the histograms in the ``result`` to decide if you would need to perform ``clip.get_pos()`` if you are doing ROI cutting. You may also need to keep the ``task`` discriptor, if you want to resume this paused analysis to find the second cutting point. Then you can either truncate the original timetag files into many small ones, or save this absolute position list for later use with ``eta.clip_file(...,read_records=your_pos2-your_pos1,seek_record=your_pos1)``
     
-        Please note that ROI cutting and time-based cutting should be viewed as advanced alternative to ``eta.split_file()`` and ``eta.clips``. In most of the cases, you can built a event router with conditional ``emit()``,  which can be easily integerated into existing analsys and run in realtime.
+        Please note that ROI cutting and time-based cutting should be viewed as advanced alternative to ``eta.split_file()`` and ``eta.clips``. In most of the cases, you can built a event router with conditional ``emit()``,  which can be easily integerated into existing analysis and run in realtime.
 
 - ``abort()``
     Abort the analysis and return to Python code in the Script Panel, leaving the results at their current states. Unlike ``interrupt()``, the analysis task can neither be resumed by auto-feed nor by manual resumption.  

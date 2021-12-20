@@ -432,31 +432,63 @@ class COINCIDENCE():
     def coincidence_init(self, sym, type):
         sym = self.assert_sym_type(sym, "coincidence")
 
-    def COINCIDENCE(self, triggers, name, num, chn):
-        self.INTEGER("uettp_initial", name, initvalue=0)
-        num = int(ast.literal_eval(num))
-        chn = int(ast.literal_eval(chn))
-        if num <= 1:
+    def COINCIDENCE(self, triggers, name, num_slots, emit_chn, time_interval_threshold="-1"):
+        self.TABLE(triggers, name, [num_slots])
+
+        num_slots = int(ast.literal_eval(num_slots))
+        emit_chn = int(ast.literal_eval(emit_chn))
+        time_interval_threshold = int(ast.literal_eval(time_interval_threshold))
+        if num_slots <= 0:
             raise ValueError(self.error_prefix +
-                             "Coincidence number shoud be something larger than 1.")
-        self.VFILE(triggers, chn)
-        return self.define_syms(name, ["coincidence", num, chn])
+                             "Coincidence number shoud be something larger than 0.")
+        if time_interval_threshold < 0:
+            # FIXME: hack for no threshold
+            time_interval_threshold = 2147483647 
+        self.VFILE(triggers, emit_chn)
+        defined_sym = self.define_syms(name, ["coincidence", num_slots, emit_chn, time_interval_threshold])
+        self.coincidence_reset(triggers, name)
+        return defined_sym
 
-    def coincidence_clear(self, trigger, sym):
+    def coincidence_reset(self, triggers, sym):
         sym = self.assert_sym_type(sym, "coincidence")
-        self.EMIT_LINE(trigger, "{sym}=nb.int64(0)".format(sym=sym))
-
-    def coincidence_fill(self, trigger, sym, thisnum):
         fulltype = self.get_type_of_syms(sym, fulltype=True)
-        fullint = (1 << fulltype[1]) - 1
-        chn = fulltype[2]
-        thisnum = int(ast.literal_eval(thisnum))
+        num_slots,emit_chn, time_interval_threshold = fulltype[1],fulltype[2],fulltype[3]
         code = """
-        {sym}|=nb.int64(1<<{thisnum})
-        if {sym}== {fullint}:
-            eta_ret+=VCHN_put(ptr_VCHN,nb.int64(AbsTime_ps),nb.uint8({chn}))
-        """.format(sym=sym, thisnum=thisnum, fullint=fullint, chn=chn)
-        self.EMIT_LINE(trigger, code)
+        coinc_clear_time = nb.int64(AbsTime_ps) - nb.int64({time_interval_threshold}) - nb.int64(1)
+        for coinc_i in range(0,{num_slots}):
+            {sym}[coinc_i] = coinc_clear_time
+        """.format(num_slots=num_slots,sym=sym,time_interval_threshold=time_interval_threshold)
+        self.EMIT_LINE(triggers, code)
+
+    def coincidence_clear(self, triggers, sym, current_slot):
+        sym = self.assert_sym_type(sym, "coincidence")
+        fulltype = self.get_type_of_syms(sym, fulltype=True)
+        num_slots,emit_chn, time_interval_threshold = fulltype[1],fulltype[2],fulltype[3]
+        current_slot = int(ast.literal_eval(current_slot))
+        if current_slot<0 or current_slot>=num_slots :
+            raise ValueError(self.error_prefix +"Filling the {}th slot of a coincidence tool with only {} slots is impossible.".format(current_slot, num_slots))
+        code = """
+        {sym}[{current_slot}] = nb.int64(AbsTime_ps) - nb.int64({time_interval_threshold}) - nb.int64(1)
+        """.format(num_slots=num_slots,sym=sym,time_interval_threshold=time_interval_threshold,current_slot=current_slot)
+        self.EMIT_LINE(triggers, code)
+
+    def coincidence_fill(self, triggers, sym, current_slot):
+        sym = self.assert_sym_type(sym, "coincidence")
+        fulltype = self.get_type_of_syms(sym, fulltype=True)
+        num_slots,emit_chn, time_interval_threshold = fulltype[1],fulltype[2],fulltype[3]
+        current_slot = int(ast.literal_eval(current_slot))
+        if current_slot<0 or current_slot>=num_slots :
+            raise ValueError(self.error_prefix +"Filling the {}th slot of a coincidence tool with only {} slots is impossible.".format(current_slot, num_slots))
+        # FIXME: sort to speed up
+        code = """
+        {sym}[{current_slot}]=nb.int64(AbsTime_ps)
+        coinc_flag = True
+        for coinc_i in range(0,{num_slots}):
+            coinc_flag = coinc_flag and (nb.int64(AbsTime_ps)-{sym}[coinc_i] <= nb.int64({time_interval_threshold}))
+        if coinc_flag:
+            eta_ret+=VCHN_put(ptr_VCHN,nb.int64(AbsTime_ps),nb.uint8({emit_chn}))
+        """.format(sym=sym, current_slot=current_slot, num_slots=num_slots, emit_chn=emit_chn,time_interval_threshold=time_interval_threshold)
+        self.EMIT_LINE(triggers, code)
 
 
 class Graph(INTEGER, TABLE, RFILE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENCE):
@@ -833,17 +865,24 @@ class Graph(INTEGER, TABLE, RFILE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENC
             func = getattr(self, type + "_stop", None)
             func(triggers, clock_name, obj)
 
-    def fill(self, triggers, clock_names, obj):
+    def fill(self, triggers, clock_names, *obj):
         for clock_name in self.parse_multi_object(clock_names):
             type = self.get_type_of_syms(clock_name, fulltype=False)
             func = getattr(self, type + "_fill", None)
-            func(triggers, clock_names, obj)
+            func(triggers, clock_names, *obj)
 
-    def clear(self, triggers, clock_names):
+    def clear(self, triggers, clock_names, *obj):
         for clock_name in self.parse_multi_object(clock_names):
             type = self.get_type_of_syms(clock_name, fulltype=False)
             func = getattr(self, type + "_clear", None)
-            func(triggers, clock_name)
+            func(triggers, clock_name, *obj)
+
+    def reset(self, triggers, clock_names, *obj):
+        for clock_name in self.parse_multi_object(clock_names):
+            type = self.get_type_of_syms(clock_name, fulltype=False)
+            func = getattr(self, type + "_reset", None)
+            func(triggers, clock_name, *obj)
+
 
     def infer_start_from_stop(self, triggers, clock_names_orig, ref):
         clock_names = self.parse_multi_object(clock_names_orig)
