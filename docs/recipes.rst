@@ -67,7 +67,7 @@ You can either accumulate a histogram or only show the latest update e.g. for al
 
 Usage
 ......
-As explained in the start-stop and correlation recipes, you can adjust a delay if the feature you are interested in is at the edge or outside the histogram area. You can do this by opening the “Instrument Designer” for the delay lines ``DL0-2`` and ``DL1-3``. The delay lines copy the events on channel 0 (or 1 in case of ``DL1-3``) to a new channel (first argument of the emit function) with a delay specified in the second argument of the ``emit`` function: ``emit(new channel number, delay in ps)``.
+As explained in the start-stop and correlation recipes, you can adjust a delay if the feature you are interested in is at the edge or outside the histogram area. You can do this by opening the “Instrument Designer” for the delay lines ``DL0-2`` and ``DL1-3``. The delay lines copy the events on channel 0 (or 1 in case of ``DL1-3``) to a new channel (first argument of the emit function) with a delay specified in the second argument of the ``emit`` function: ``emit(new channel number, delay in picoseconds)``.
 You can adjust the width of the histogram. This is done with a combination of the ``bins`` and ``binsize`` variables in the start screen. 
 The y-axis will automatically rescale to accomodate the growing histogram.
 An important adjustment is the speed at which the file is processed. This is done by selecting how many events one chunk should have before the program bothers to analyse this chunk. Use the variable ``records_per_cut`` on the home screen to adjust this.

@@ -187,12 +187,12 @@ Performing a correlation:
 
 COINCIDENCE
 ------------------------------
-``COINCIDENCE(name, num_of_slots, emit_channel, time_interval_threshold)``
+``COINCIDENCE(name, num_of_slots, coincidence_flag, time_interval_threshold)``
 
 Coincidence is a Tool that keeps track of a coincidence. 
 It has multiple Coincidence Slots which can be filled with timetags individually. 
 The coincidence condition is fulfilled, when all of the slots are filled and the time interval between the current time and each of slots is less or equal to ``time_interval_threshold``. 
-A signal will be emitted to the specified ``emit_channel`` at the exact moment when the coincidence condition is fulfilled.
+This tool will create an INTEGER with ``coincidence_flag`` to indicate if the coincidence condition is fulfilled.
 
 
 Parameters
@@ -201,20 +201,31 @@ Parameters
 - ``num_of_slots`` (required)
     The number of coincidence slots in this coincidence tool.
 
-- ``emit_channel`` (required)
-    Emit to this channel# when all of the coincidence condition is fulfilled.
+- ``coincidence_flag`` (required)
+    An INTEGER to indicate if the coincidence condition is fulfilled.
 
 - ``time_interval_threshold`` (default: INF)
-    Time interval between the current time and each of slots should be less or equal to ``time_interval_threshold`` to fulfill a coincidence.
+    Time interval in picoseconds between the current time and each of slots should be less or equal to ``time_interval_threshold`` to fulfill a coincidence. 
 
 Actions
 ......
 
 
 - ``coincidence.fill(slotid)``
-    Fill (or overwrite) the coincidence slot `slotid` with the current time. Then it checks immediately if the coincidence condition is fulfilled. If this is true, a signal should be emitted, also at the current time, to the specified ``emit_channel``.
-
-    Usually, you would like to fill different slots at the events from different input channels, and use the emitted singals in other VIs for further analysis, like counting the number of coincidences.
+    Fill (or overwrite) the coincidence slot `slotid` with the current time. Then it checks immediately if the coincidence condition is fulfilled, and changes the INETGER ``coincidence_flag`` to either 0 or 1 as an indication. 
+    
+    Usually, you would like to fill different slots at the events from different input channels. 
+    You may also want to do a conditional emittion when the coincidence condition is fulfilled, to generate singals for further analysis like counting the number of coincidences in other VIs. 
+    .. code-block:: python    
+        COINCIDENCE(co1, 2, co1_flag) 
+        a--6-->a: #trigger on signal form chn6
+            co1.fill(0)
+            emit(12,0,0, co1_flag) # emit on chn12 only when coincidence condition is fulfilled(co1_flag==1).
+            co1.reset()
+        a--7-->a: #trigger on signal form chn7
+            co1.fill(1)
+            emit(12,0,0, co1_flag) # the same conditional emission.
+            co1.reset()
 
 - ``coincidence.clear(slotid)``
     Clear the coincidence slots `slotid`.
@@ -243,7 +254,6 @@ Actions
 
 SELF
 ------------------------------
-``emit(channel, delay_in_ps=0, period=0, repeat_#_of_times=1)``
 
 The instrument itself is also a Tool. When using its actions, the instrument doesn't need to be referred by its name.
 
@@ -252,18 +262,16 @@ Actions
 
 
 - ``emit(chn, waittime=0, period=0, repeat=1)``
-    Emit a signal to ``chn`` after ``waittime``, both are either integer values or the name of an INTEGER Tool. It can also emit some repeated signals with a `period` in ps if  ``repeat`` is set to larger than one. 
-    
-    If reapeat is set to 0, no event will be emitted, which might be used as a conditional emittion.
-    
+    Emit a signal to ``chn`` after ``waittime``, both are either integer values or the name of an INTEGER Tool. It can also emit some repeated signals with a `period` in picoseconds if  ``repeat`` is set to larger than one. 
+        
     The maximum limit of channel number ``chn`` is 255, and the minimum limit of ``chn`` is larger than the largest channel number assigned for the ``RFILE``.
  
     .. note::
-        It is not allowed to emit to any channel that is used in ``RFILE``, since it is usually read from a timetag file (timetagger channels or markers). The emitted signal will never be written to the timetag file to prevent corrputing the original data. 
+        It is not allowed to emit to any channel in a ``RFILE``, since it is read from a timetag file (timetagger channels or markers). The emitted signal will never be written to ``RFILE`` to prevent corrputing the read-only timetag data. 
 
-        If you need to merge signals from two channels into one channel, simply emit them into a new unused channel.
+        You can use a INTEGER as a flag to do a conditional emittion. ``emit(8, 0, 0, co1_flag)`` will only emit on channel 8 when ``co1_flag == 1``. When ``co1_flag==0`` no event will be emitted.
 
-        Channels can also be used as routers. For examples, you can route events to different Virtual Instruments based on some status that is controlled by the markers.
+        If you need to merge signals from two channels into one channel, simply emit them into a new unused virtual channel. Channels can also be used as routers. For examples, you can route events to different Virtual Instruments based on some status that is controlled by the markers.
         
 
 - ``cancel_emit(chn)``
