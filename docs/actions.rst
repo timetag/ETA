@@ -176,7 +176,8 @@ Examples
 
 Performing a correlation:
 
-.. code-block:: python    
+.. code-block:: python
+    
     HISTOGRAM(t1,(100,16))
     CLOCK(c1,100,1)
     started:
@@ -227,7 +228,8 @@ Usually, you would like to fill different slots at the events from different inp
    
 You may also want to do a conditional emittion when the coincidence condition is fulfilled, to generate singals for further analysis like counting the number of coincidences in other VIs. 
 
-.. code-block:: python    
+.. code-block:: python
+
     COINCIDENCE(co1, 2, co1_flag) 
     a--6-->a: #trigger on signal form chn6
         co1.fill(0) # fill the slot 0 of the coincidence tool, co1_flag may flip automatically according to the coincidence condition
