@@ -213,25 +213,30 @@ Actions
 
 - ``coincidence.fill(slotid)``
     Fill (or overwrite) the coincidence slot `slotid` with the current time. Then it checks immediately if the coincidence condition is fulfilled, and changes the INETGER ``coincidence_flag`` to either 0 or 1 as an indication. 
-    
-    Usually, you would like to fill different slots at the events from different input channels. 
-    You may also want to do a conditional emittion when the coincidence condition is fulfilled, to generate singals for further analysis like counting the number of coincidences in other VIs. 
-    .. code-block:: python    
-        COINCIDENCE(co1, 2, co1_flag) 
-        a--6-->a: #trigger on signal form chn6
-            co1.fill(0)
-            emit(12,0,0, co1_flag) # emit on chn12 only when coincidence condition is fulfilled(co1_flag==1).
-            co1.reset()
-        a--7-->a: #trigger on signal form chn7
-            co1.fill(1)
-            emit(12,0,0, co1_flag) # the same conditional emission.
-            co1.reset()
 
 - ``coincidence.clear(slotid)``
     Clear the coincidence slots `slotid`.
 
 - ``coincidence.reset()``
     Clear all coincidence slots.
+
+Examples
+......
+
+Usually, you would like to fill different slots at the events from different input channels. 
+   
+You may also want to do a conditional emittion when the coincidence condition is fulfilled, to generate singals for further analysis like counting the number of coincidences in other VIs. 
+
+.. code-block:: python    
+    COINCIDENCE(co1, 2, co1_flag) 
+    a--6-->a: #trigger on signal form chn6
+        co1.fill(0) # fill the slot 0 of the coincidence tool, co1_flag may flip automatically according to the coincidence condition
+        emit(12,0,0, co1_flag) # emit on chn12 only when co1_flag==1
+        co1.reset() # clear all the coincidence slots
+    a--7-->a: #trigger on signal form chn7
+        co1.fill(1) # fill the slot 1 of the coincidence tool, co1_flag may flip automatically 
+        emit(12,0,0, co1_flag) # the same conditional emission.
+        co1.reset() 
 
 INTEGER
 ------------------------------
