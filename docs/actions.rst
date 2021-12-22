@@ -14,25 +14,35 @@ In the following documentation, we list the built-in Tools and their Actions in 
 
 RFILE
 ------------------------------
-``RFILE(name, [signal channels], [marker channels])``
+``RFILE(name, [signal_channels], [marker_channels])``
 
-RFILE is a read-only source of timetags. It works like a placeholder, for the physical timetagger device in the real-world, in the Virtual Instruments. The availble channels in the physical device will be mapped to the assigned channel number, which can be used by all the Virtual Instruments.
+RFILE is a read-only source of timetags. 
 
-Each RFILE should be later connected with a Clip generator in ``eta.run``, see `Customizing Script Panel` for more details. 
+It works like a placeholder of thee real-world physical timetagger in a Virtual Instrument. 
+Each RFILE should be connected with a Clip generator in ``eta.run``, see `Customizing Script Panel` for more details. 
+
+All the available channels on a physical timetagger, no matter if they are plugged or not, will be mapped to the assigned channel numbers.
 
 Parameters
 ......
 
-- ``signal channels`` (default:[0,1,2,3])
-    This parameter specifies the signal channels mapped from the timetag source. ``[0,1,...]`` reads as ``[first real channel, second real channel, ...]``. You should always put *ALL* availble channels on the timetagger device in the list, even if some of the channels wasn't plugged-in. 
+- ``[signal_channels]`` (default:[0,1,2,3])
+    This parameter specifies the signal channels mapped from the timetag source. ``[0,1,...]`` reads as ``[first real channel, second real channel, ...]``. 
+
+    You must always put *ALL* availble channels on the timetagger device in the list, even if some of the channels are not plugged-in.  
     
-- ``marker channels`` (default:[])
+    It's recommended to more channel numbers than what the device really have. Although these extra channels will simply be empty (without any signal), doing so will make you recipe future-proof, and prevent trouble when switching to a timetagger with more channels. 
+    
+- ``[marker_channels]`` (default:[])
     Simialr to ``signal channels``, but this parameter specifies the marker channels. This parameter is only for HydraHarp devices.
 
 .. note::
-    The RFILE Tool can be defined on any Virtual Instrument graph. You just need to define it once, and it works as if the the signals are emitted the signal from that Virtual Instrument. 
+    The RFILE Tool can be defined on any Virtual Instrument graph. 
+    You just need to define it once, and it works as if the the signals are emitted from that Virtual Instrument, and can be used by all Virtual Instruments with in the same group.
     
-    Channel numbers in RFILE should be continously ascending, like ``[1,2,3]`` or ``[2,3,4]``, and any of them should be smaller than any virtual channel number.  There should be a clear boundary between virtual channel numbers and real channel (signal and markers channel) numbers.
+    Channel numbers in RFILE should be continously ascending. Real channel (signal and markers channel) numbers MUST be smaller than all virtual channel numbers.
+    
+    For example, if the first HydraHarp uses  ``[0,1,2,3]``, then the second HydraHarp should use ``[4,5,6,7]``, and the virtual channel number should be ``8,9,10...``
 
 
 CLOCK
