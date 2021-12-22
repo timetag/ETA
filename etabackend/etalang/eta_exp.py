@@ -1,8 +1,8 @@
 import textwrap
 import ast
+import sys
 from . import tensor
 from .. import clip
-
 ### premitive types ###
 
 
@@ -27,21 +27,25 @@ class INTEGER():
     def INTEGER(self, triggers, name, initvalue=0, type="int64", const=False, with_ptr=False):
         return self.define_syms(name, ["integer", "sum", initvalue, type, const, with_ptr], public=True)
 
-    def get_INTEGER_or_literal(self, sym, getter_function=""):
+    def get_INTEGER_or_literal(self, sym, parameter_name="", caller_name=None, tool=True):
+        if caller_name is None:
+            caller_name = sys._getframe(1).f_code.co_name
         if isinstance(sym, int):
             return sym
         if isinstance(sym, float):
             return int(sym)
-        elif sym.isdigit():
+        elif sym.lstrip("-").isdigit():
             return int(sym)
-        else:
+        elif tool:
             try:
                 self.assert_sym_type(sym, "integer", public=True)
                 return sym
             except Exception as e:
                 raise ValueError(
-                    self.error_prefix+"The parameter in Action {} must be either the name of an INTEGER Tool or a integer value.".format(getter_function))
-
+                    self.error_prefix+"The parameter \"{}\" of \"{}\" must be either the name of an INTEGER Tool or an integer value, but got \"{}\" instead.".format(parameter_name, caller_name, sym))
+        else:
+            raise ValueError(
+                    self.error_prefix+"The parameter \"{}\" of \"{}\" must be an integer value, but got \"{}\" instead.".format(parameter_name, caller_name, sym))
 
 class TABLE():
     def table_init(self, sym, type):
@@ -80,7 +84,7 @@ class VFILE():
 
     def VFILE(self, triggers, chn, size="2097152"):
         chn = int(chn)
-        size = int(ast.literal_eval(size))
+        size = self.get_INTEGER_or_literal(size,"size",tool=False)
         name = "vchn"+str(chn)
         # VFILE can not be assigned to RFILES
         if chn in self.source_chn_all:
@@ -159,7 +163,7 @@ class RECORDER():
             recorder=sym, buflen=type[1]))
 
     def RECORDER(self, triggers, name, size="0"):
-        size = int(ast.literal_eval(size))
+        size = self.get_INTEGER_or_literal(size,"size",tool=False)
         if size > 1:
             self.TABLE(triggers, name + "_tab", [size])
         elif size == 1:
@@ -411,8 +415,8 @@ class CLOCK():
         pass
 
     def CLOCK(self, triggers, name, starttimes="1", stoptimes="1"):
-        starttimes = int(ast.literal_eval(starttimes))
-        stoptimes = int(ast.literal_eval(stoptimes))
+        starttimes = self.get_INTEGER_or_literal(starttimes,"starttimes",tool=False)
+        stoptimes = self.get_INTEGER_or_literal(stoptimes,"stoptimes",tool=False)
         self.RECORDER(triggers, name + "_start", str(starttimes))
         self.RECORDER(triggers, name + "_stop", str(stoptimes))
         return self.define_syms(name, ["clock", starttimes, stoptimes])
@@ -436,8 +440,8 @@ class COINCIDENCE():
         self.TABLE(triggers, name, [num_slots])
         self.INTEGER(triggers, flag_name)
 
-        num_slots = int(ast.literal_eval(num_slots))
-        time_interval_threshold = int(ast.literal_eval(time_interval_threshold))
+        num_slots = self.get_INTEGER_or_literal(num_slots,"num_slots",tool=False)
+        time_interval_threshold = self.get_INTEGER_or_literal(time_interval_threshold,"time_interval_threshold",tool=False)
         if num_slots <= 0:
             raise ValueError(self.error_prefix +
                              "Coincidence number shoud be something larger than 0.")
@@ -464,7 +468,7 @@ class COINCIDENCE():
         sym = self.assert_sym_type(sym, "coincidence")
         fulltype = self.get_type_of_syms(sym, fulltype=True)
         num_slots, flag_name, time_interval_threshold = fulltype[1],fulltype[2],fulltype[3]
-        current_slot = int(ast.literal_eval(current_slot))
+        current_slot = self.get_INTEGER_or_literal(current_slot,"current_slot")
         if current_slot<0 or current_slot>=num_slots :
             raise ValueError(self.error_prefix +"Filling the {}th slot of a coincidence tool with only {} slots is impossible.".format(current_slot, num_slots))
         code = """
@@ -477,7 +481,7 @@ class COINCIDENCE():
         sym = self.assert_sym_type(sym, "coincidence")
         fulltype = self.get_type_of_syms(sym, fulltype=True)
         num_slots,flag_name, time_interval_threshold = fulltype[1],fulltype[2],fulltype[3]
-        current_slot = int(ast.literal_eval(current_slot))
+        current_slot = self.get_INTEGER_or_literal(current_slot,"current_slot")
         if current_slot<0 or current_slot>=num_slots :
             raise ValueError(self.error_prefix +"Filling the {}th slot of a coincidence tool with only {} slots is impossible.".format(current_slot, num_slots))
         # FIXME: sort to speed up
@@ -608,10 +612,16 @@ class Graph(INTEGER, TABLE, RFILE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENC
         else:
             outblob = trigger[0]
             if outblob:
-                outblob = self.states_to_id[outblob]
+                if outblob in self.states_to_id:
+                    outblob = self.states_to_id[outblob]
+                else:
+                    raise ValueError(self.error_prefix + "Undefiend state \"{}\", draw it on the diagram.".format(outblob))
             inblob = trigger[2]
             if inblob:
-                inblob = self.states_to_id[inblob]
+                if inblob in self.states_to_id:
+                    inblob = self.states_to_id[inblob]
+                else:
+                    raise ValueError(self.error_prefix + "Undefiend state \"{}\", draw it on the diagram.".format(outblob))
             condition = trigger[1]
             if condition is None:
                 condition = [maxchn - 1]  # arbitrary condition
@@ -661,6 +671,8 @@ class Graph(INTEGER, TABLE, RFILE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENC
         else:
             sds = self.internalobj_symbols
         symbol_name = self.get_symbol_without_indexes(symbol)
+        if not symbol_name.isidentifier():
+            raise ValueError(self.error_prefix+"Illegal name for symbol \"{}\".".format(symbol_name))
         if symbol_name in sds:
             if sds[symbol_name] == type_desired:
                 return symbol
@@ -681,7 +693,7 @@ class Graph(INTEGER, TABLE, RFILE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENC
                     return symbol
                 else:
                     raise ValueError("Type mismatch for symbol {}, you want {}, but it was already defined using {}.".format(
-            symbolname, type_desired, basetype))
+            symbol_name, type_desired, basetype))
             else:
                 raise ValueError(self.error_prefix +
                                  "Unexpected type {}".format(type_desired))
@@ -800,11 +812,10 @@ class Graph(INTEGER, TABLE, RFILE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENC
     ######### Polymorphism ########
 
     def emit(self, triggers, chn, waittime=0, period=0, repeat=1):
-        chn = self.get_INTEGER_or_literal(chn, "emit(chn=x,...)")
+        chn = self.get_INTEGER_or_literal(chn, "chn")
         if isinstance(chn, int):
             self.VFILE(triggers, chn)
-        waittime = self.get_INTEGER_or_literal(
-            waittime, "emit(...,waittime=x,...)")
+        waittime = self.get_INTEGER_or_literal( waittime, "waittime")
         if isinstance(waittime, int) and (waittime < 0):
             # Absolut timing should not be allowed
             raise ValueError(
@@ -818,8 +829,8 @@ class Graph(INTEGER, TABLE, RFILE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENC
         else:
             self.emit_consistent_delay_length[chn] = waittime
         phase = "(AbsTime_ps+{waittime})".format(waittime=waittime)
-        repeat = self.get_INTEGER_or_literal(repeat)
-        period = self.get_INTEGER_or_literal(period)
+        repeat = self.get_INTEGER_or_literal(repeat,"repeat")
+        period = self.get_INTEGER_or_literal(period,"period")
         if isinstance(repeat, str) or (isinstance(repeat, int) and repeat > 1):
             code = """
                 for emit_times in range(0,{repeat}):
@@ -832,7 +843,7 @@ class Graph(INTEGER, TABLE, RFILE, VFILE, RECORDER, CLOCK, HISTOGRAM, COINCIDENC
         self.EMIT_LINE(triggers, code)
 
     def cancel_emit(self, triggers, chn):
-        chn = self.get_INTEGER_or_literal(chn)
+        chn = self.get_INTEGER_or_literal(chn,"chn")
         self.EMIT_LINE(
             triggers, """eta_ret+=VCHN_put(ptr_VCHN,nb.int64(9223372036854775807),nb.uint8({chn}))""".format(chn=chn))
     

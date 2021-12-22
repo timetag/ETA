@@ -234,11 +234,11 @@ You may also want to do a conditional emittion when the coincidence condition is
     a--6-->a: #trigger on signal form chn6
         co1.fill(0) # fill the slot 0 of the coincidence tool, co1_flag may flip automatically according to the coincidence condition
         emit(12,0,0, co1_flag) # emit on chn12 only when co1_flag==1
-        co1.reset() # clear all the coincidence slots
     a--7-->a: #trigger on signal form chn7
         co1.fill(1) # fill the slot 1 of the coincidence tool, co1_flag may flip automatically 
         emit(12,0,0, co1_flag) # the same conditional emission.
-        co1.reset() 
+    a--12-->a: # trigger on signal from chn12
+        co1.reset() # clear all the coincidence slots
 
 INTEGER
 ------------------------------
