@@ -292,56 +292,63 @@ class Backend():
         return web.Response(text="ETA backend is shutdown.")
 
     def display(self, app=None, type='bokeh'):
-        if app is None:
-            self.logfrontend.warning(
-                "No display dashboard created. Use 'app = dash.Dash()' to create a Dash graph.")
-        else:
-            self.logfrontend.info("ETA.display: Starting a {} display for the Script Panel.".format(type))
-            try:
-                import threading
-                if type == "dash":
-                    from flask import request
-
-                    @app.server.route('/shutdown', methods=['GET'])
-                    def shutdown():
-                        func = request.environ.get('werkzeug.server.shutdown')
-                        if func is None:
-                            raise RuntimeError(
-                                'Not running with the Werkzeug Server')
-                        func()
-                        self.not_displaying.set()
-                        self.logfrontend.info("Dashboard shutting down.")
-                        self.schedule_send_text("", "discard")
-                        response = app.server.make_response('Hello, World')
-                        response.headers.add(
-                            'Access-Control-Allow-Origin', '*')
-                        return response
-                    thread2 = threading.Thread(
-                        target=app.server.run, kwargs={'host': self.hostip, "port": int(self.hostdashport)})
-                    thread2.daemon = True
-                    thread2.start()
-
-                    self.display_url = f"http://{self.hostip}:{self.hostdashport}"
-                    self.display_shutdown_url = f"http://{self.hostip}:{self.hostdashport}/shutdown"
-                    self.logfrontend.info(
-                        f"ETA.display: Script Panel is serving at {self.display_url}.")
-                    self.schedule_send({"op": "dash",
-                                        "url-dash": self.display_url,
-                                        "url-shutdown": self.display_shutdown_url})
-                elif type == "bokeh":
-                    asyncio.run_coroutine_threadsafe(
-                        self.show_bokeh(app), self.loop)
-                else:
+        self.logfrontend.info("ETA.display: Starting a {} display for the Script Panel.".format(type))
+        try:
+            if type == "dash":
+                if app is None:
                     self.logfrontend.warning(
-                        "eta.display: unknown type {} for display".format(str(type(app))))
+                        "ETA.display: No dashboard for showing results provided. Use 'app = dash.Dash()' to create a Dash graph and provide to display function.")
                     return None
 
-                self.not_displaying.clear()
-                return self.not_displaying
-            except Exception as e:
-                self.logfrontend.error("bokeh failed to start", exc_info=True)
-                self.not_displaying.set()
-                self.logger.error(str(e), exc_info=True)
+                import threading
+                from flask import request
+
+                @app.server.route('/shutdown', methods=['GET'])
+                def shutdown():
+                    func = request.environ.get('werkzeug.server.shutdown')
+                    if func is None:
+                        raise RuntimeError(
+                            'Not running with the Werkzeug Server')
+                    func()
+                    self.not_displaying.set()
+                    self.logfrontend.info("Dashboard shutting down.")
+                    self.schedule_send_text("", "discard")
+                    response = app.server.make_response('Hello, World')
+                    response.headers.add(
+                        'Access-Control-Allow-Origin', '*')
+                    return response
+                thread2 = threading.Thread(
+                    target=app.server.run, kwargs={'host': self.hostip, "port": int(self.hostdashport)})
+                thread2.daemon = True
+                thread2.start()
+
+                self.display_url = f"http://{self.hostip}:{self.hostdashport}"
+                self.display_shutdown_url = f"http://{self.hostip}:{self.hostdashport}/shutdown"
+                self.logfrontend.info(
+                    f"ETA.display: Script Panel is serving at {self.display_url}.")
+                self.schedule_send({"op": "dash",
+                                    "url-dash": self.display_url,
+                                    "url-shutdown": self.display_shutdown_url})
+
+            elif type == "bokeh":
+                if app is None:
+                    self.logfrontend.warning(
+                        "ETA.display: No dashboard for showing results provided. You need to provide a function to create a Bokeh Server document or Bokeh Application.")
+                    return None
+                
+                asyncio.run_coroutine_threadsafe(
+                    self.show_bokeh(app), self.loop)
+            else:
+                self.logfrontend.warning(
+                    "ETA.display: unknown type {} for display".format(str(type(app))))
+                return None
+
+            self.not_displaying.clear()
+            return self.not_displaying
+        except Exception as e:
+            self.logfrontend.error("Dashboard failed to start", exc_info=True)
+            self.not_displaying.set()
+            self.logger.error(str(e), exc_info=True)
 
 
 class FrontendFormatter(logging.Formatter):
