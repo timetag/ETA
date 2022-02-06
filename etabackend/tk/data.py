@@ -33,7 +33,8 @@ class ETAResult:
     """
     def __init__(self, file, group, records_per_cut=None, 
                  kernel=None, timeout=0.2, 
-                 simulate_growth=False, run_immediately=True, modify_clip=None, format=-1):
+                 simulate_growth=False, run_immediately=True, modify_clip=None, format=-1,
+                 timetagger_name="timetagger1"):
         """ Create analysis using the ETA backend.
             file: str or Path of file currently investigated
             group: str The group in the ETA evaluation recipe.
@@ -43,6 +44,7 @@ class ETAResult:
             run_immediately: boolean Immediately call run to evaluate all available data.
             modify_clip: Clip If provided, ETA will modifed this previous Clip instead of creating a new Clip object.
             format: int The format of the timetag file.
+            timetagger_name: str of the timetagger name used in the instrument
         """
         self.logger = logging.getLogger('etabackend.frontend')
 
@@ -52,6 +54,7 @@ class ETAResult:
         self.timeout = timeout
         self.modify_clip = modify_clip
         self.format = format
+        self.timetagger_name = timetagger_name
 
         self.eta = kernel
         self.vars = self.eta.compilecache_vars[group]
@@ -122,7 +125,7 @@ class ETAResult:
         clip_generator = self.eta.clips(self.file, modify_clip=self.cut, 
                                         read_events=self.records_per_cut or 1024*1024*10,
                                         seek_event=0, wait_timeout=0, format=self.format)
-        result, self.context = self.eta.run({"timetagger1": clip_generator}, resume_task=None, group=self.group,
+        result, self.context = self.eta.run({self.timetagger_name: clip_generator}, resume_task=None, group=self.group,
                                             return_task=True,
                                             return_results=True, max_autofeed=0)
         
@@ -147,7 +150,7 @@ class ETAResult:
 
         self.cut = check_ret  # save the ret to cut
         context = self.context if self.mode == 'accumulation' else None
-        result, self.context = self.eta.run({"timetagger1": self.cut}, resume_task=context, group=self.group,
+        result, self.context = self.eta.run({self.timetagger_name: self.cut}, resume_task=context, group=self.group,
                                             return_task=True,
                                             return_results=True, max_autofeed=1)
 
