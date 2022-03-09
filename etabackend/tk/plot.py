@@ -278,16 +278,18 @@ class ETABokehPlot:
 
     def run(self, stop_flag):
         logger_silenced = False
+        initial_update = True
         self.stop_flag = stop_flag
 
         while not self.stop_flag.is_set():
-            if self.callback is not None: # Only update if there is a callback active
+            if (self.callback is not None) or initial_update: # Only update if there is a callback active
                 if not logger_silenced:
                     logger_silenced = True
                     self.logger.info('While life updating the log is disabled.')
                     self.logger.setLevel(logging.WARNING)
 
-                self.eta_result.update()
+                file_boundary = self.eta_result.update()
+                initial_update = file_boundary # once we hit the file boundary once, it is no longer the initial update.
             else:
                 if logger_silenced: # We want logs when there is no life updating recipe.
                     self.logger.setLevel(logging.INFO)

@@ -55,6 +55,7 @@ class ETAResult:
         self.modify_clip = modify_clip
         self.format = format
         self.timetagger_name = timetagger_name
+        self.lastupdate = 0
 
         self.eta = kernel
         self.vars = self.eta.compilecache_vars[group]
