@@ -14,7 +14,7 @@ dependencies:
   - numba
   - matplotlib
   - bokeh
-  - lmfit
   - pandas  
   - pip:
     - etabackend
+    - lmfit
