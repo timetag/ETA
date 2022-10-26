@@ -15,7 +15,7 @@ jobs:
     - name: Download python-webinstall.exe
       uses: wei/wget@v1
       with:
-        args: -O python-webinstall.exe https://www.python.org/ftp/python/3.8.10/python-3.8.10-amd64-webinstall.exe
+        args: -O python-webinstall.exe https://www.python.org/ftp/python/3.9.13/python-3.9.13-amd64.exe
     - name: Upload artifact
       uses: actions/upload-artifact@v1
       with:
@@ -28,13 +28,13 @@ jobs:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     strategy:
       matrix:
-        node-version: [14.x]
+        node-version: [18.x]
     steps:
     - uses: actions/checkout@v2
     - name: Download artifact
       uses: actions/download-artifact@v1
       with:
-          name: wheels-3.8
+          name: wheels-3.9
           path: gui
     - name: Download artifact
       uses: actions/download-artifact@v1
@@ -65,7 +65,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.8]
+        python-version: [3.9]
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
@@ -102,7 +102,7 @@ jobs:
         PYPI_USERNAME: ${{secrets.PYPI_USERNAME}}
     strategy:
       matrix:
-        python-version: [3.8]
+        python-version: [3.9]
     steps:
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v1
@@ -114,7 +114,7 @@ jobs:
     - name: Download artifact
       uses: actions/download-artifact@v1
       with:
-          name: wheels-3.8
+          name: wheels-3.9
           path: dist
     - name: Twine upload
       run: |
@@ -126,7 +126,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        python-version: [3.8,3.9]
+        python-version: [3.9,3.10]
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
@@ -136,7 +136,7 @@ jobs:
     - name: Download artifact
       uses: actions/download-artifact@v1
       with:
-          name: wheels-3.8
+          name: wheels-3.9
           path: dist
     - name: Test with pytest
       run: |
