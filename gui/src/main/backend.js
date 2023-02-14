@@ -8,10 +8,9 @@ function show_help() {
     shell.openExternal('https://eta.readthedocs.io/en/latest/installation.html')
 }
 function check_python() {
-    let notfound = false;
     let ls = spawnSync('python', ['--version'], { detached: false });
 
-    if (ls.error) return python_not_found(); else return true;
+    if (ls.error || ls.stdout.toString().length<10) return python_not_found(); else return true;
 }
 function python_not_found() {
     let buttonIndex = dialog.showMessageBoxSync({
