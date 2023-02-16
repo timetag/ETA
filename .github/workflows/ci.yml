@@ -15,7 +15,7 @@ jobs:
     - name: Download python-webinstall.exe
       uses: wei/wget@v1
       with:
-        args: -O python-webinstall.exe https://www.python.org/ftp/python/3.9.13/python-3.9.13-amd64.exe
+        args: -O python-webinstall.exe https://www.python.org/ftp/python/3.10.10/python-3.10.10-amd64.exe
     - name: Upload artifact
       uses: actions/upload-artifact@v1
       with:
@@ -75,8 +75,8 @@ jobs:
     - name: Install dependencies and build
       run: |
          sudo apt-get update 
-         sudo apt-get install -y llvm-8
-         sudo apt-get install -y clang-8
+         sudo apt-get install -y llvm-12
+         sudo apt-get install -y clang-12
          pip3 install virtualenv
          virtualenv venv
          source venv/bin/activate
