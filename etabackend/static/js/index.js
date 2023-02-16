@@ -229,7 +229,8 @@ d3.select('#btn_connect').on('click', function () {
             $("#btn_viewresult").click(function (d) {
                 window.open(ret['url-dash']);
             });
-
+            // open the result window automatically
+            //window.open(ret['url-dash']);
             $("#btn_discardresult").toggleClass("d-none", false);
             $("#btn_discardresult").unbind("click");
             $("#btn_discardresult").click(function (d) {

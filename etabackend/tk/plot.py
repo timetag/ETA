@@ -228,7 +228,7 @@ class ETABokehPlot:
         button_linlog.on_click(lambda nv: _bokeh_button_linlog_callback(figure_column, plot_row_lin, plot_row_log, nv))
         buttons.append(button_linlog)
         
-        button_alignment = bokeh.models.RadioButtonGroup(labels=["Static", "Accumulation", "Alignment"], active=0)
+        button_alignment = bokeh.models.RadioButtonGroup(labels=["Paused", "Accumulation", "Alignment"], active=0)
         button_alignment.on_click(lambda new_value: self._bokeh_button_alignment_callback(ctx, new_value))
         buttons.append(button_alignment)
 

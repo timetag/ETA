@@ -7,51 +7,17 @@ logger.transports.file.level = "info"
 function show_help() {
     shell.openExternal('https://eta.readthedocs.io/en/latest/installation.html')
 }
-function check_python() {
-    let ls = spawnSync('python', ['--version'], { detached: false });
-
-    if (ls.error || ls.stdout.toString().length<10) return python_not_found(); else return true;
-}
-function python_not_found() {
-    let buttonIndex = dialog.showMessageBoxSync({
-        type: 'info',
-        title: 'Install Python',
-        message: 'Python is not installed on this computer. Do you want to download and install now?\nNOTE: Please select the `add Python to PATH` option during installation.',
-        buttons: ['Yes', 'No']
-    });
-    if (buttonIndex === 0) {
-        let ls = spawnSync('python-webinstall.exe', [], { detached: false });
-        if (ls.error) {
-            dialog.showErrorBox('Install Failed', "python-webinstall.exe is not found in the ETA install folder.")
-            show_help();
-            return false;
-        } else {
-            //focre success
-            if (ls.stderr) logger.error(ls.stderr.toString())
-            if (ls.stdout) logger.info(ls.stdout.toString())
-            return true;
-        }
-    } else {
-        //skipped
-        dialog.showErrorBox('Skipped', "Please install Python manually.")
-        show_help();
-        return false;
-    }
-}
 function install_backend(slient_mode) {
     let buttonIndex = 0
-    if (!slient_mode) {
+    if (true) {
         buttonIndex = dialog.showMessageBoxSync({
             type: 'info',
             title: 'ETA Backend Setup',
-            message: 'Do you want to install ETA Backend with its dependencies?',
+            message: 'Do you want to install ETA Backend with its dependencies? \nNOTE: Please select the `add Python to PATH` option during Python installation.',
             buttons: ['Yes', 'No']
         });
     }
     if (buttonIndex == 0) {
-        if (!check_python()) {
-            return false;
-        }
         //execute with shell
         let ls = spawnSync('cmd.exe', ['/c', 'upgradebackend.bat'], { detached: true, shell: true });
         if (ls.error) {
@@ -75,9 +41,6 @@ function install_backend(slient_mode) {
     }
 }
 function check_etabackend() {
-    if (!check_python()) {
-        return false;
-    }
     let ls = spawnSync('python', ['-m', 'pip', 'show', 'etabackend'], { detached: false });
     if (ls.error) {
         dialog.showErrorBox('Install Failed', "Can not execute python via system shell.")
@@ -90,16 +53,13 @@ function check_etabackend() {
             }
         }
         //success
-        if (ls.stdout) logger.info(ls.stdout.toString())
+        if (ls.stdout.toString().length>1) logger.info(ls.stdout.toString()); else return false;
         return true;
     }
 }
 function backend_run(install_mode) {
-    if (install_mode) {
+    if (install_mode || (!check_etabackend())) {
         if (install_backend(install_mode) == false) return false;
-    }
-    if (!check_etabackend()) {
-        return false;
     }
     const subprocess = spawn('cmd.exe', ['/c', 'startbackend.bat'], { detached: true, shell: true });
     subprocess.unref();
