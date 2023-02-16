@@ -4,7 +4,7 @@
   "author": "Zuzeng Lin",
   "repository": "github:timetag/ETA",
   "homepage": "http://timetag.github.io",
-  "version": "0.9.4",
+  "version": "0.9.5",
   "description": "ETA is a graphical event-driven programming language for time-tag processing.",
   "scripts": {
     "dev": "electron .",
