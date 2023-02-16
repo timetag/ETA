@@ -75,15 +75,15 @@ jobs:
     - name: Install dependencies and build
       run: |
          sudo apt-get update 
-         sudo apt-get install -y llvm-12
-         sudo apt-get install -y clang-12
+         sudo apt-get install -y llvm-9
+         sudo apt-get install -y llvm-9
          pip3 install virtualenv
          virtualenv venv
          source venv/bin/activate
          ls
-         clang-12 etabackend/cpp/PARSE_TimeTagFileHeader.cpp -S -emit-llvm 
-         clang-12 etabackend/cpp/PARSE_TimeTags.cpp  -S -emit-llvm 
-         clang-12 etabackend/cpp/INFRA_vchn.cpp  -S -emit-llvm
+         clang-9 etabackend/cpp/PARSE_TimeTagFileHeader.cpp -S -emit-llvm 
+         clang-9 etabackend/cpp/PARSE_TimeTags.cpp  -S -emit-llvm 
+         clang-9 etabackend/cpp/INFRA_vchn.cpp  -S -emit-llvm
          mv *.ll etabackend/ll/posix
          python3 setup.py bdist_wheel
     - name: Upload artifact
