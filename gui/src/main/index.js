@@ -34,7 +34,7 @@ process.argv.forEach((val, index) => {
 });
 
 // single instance lock
-if (backend_mode == false ) {
+if (backend_mode == false) {
   const gotTheLock = app.requestSingleInstanceLock()
   if (!gotTheLock) {
     app.quit();
@@ -57,18 +57,17 @@ function backend_run() {
 }
 
 function ask_for_restarting_backend() {
-  dialog.showMessageBox({
+
+  let buttonIndex = dialog.showMessageBoxSync({
     type: 'info',
     title: 'Launch ETA Backend',
     message: 'Do you want to run ETA Backend on this computer?',
     buttons: ['Yes', 'No']
-  }, (buttonIndex) => {
-    if (buttonIndex == 0) {
-      backend_run();
-    }
-    else {
-    }
   })
+
+  if (buttonIndex == 0) {
+    backend_run();
+  }
 }
 
 // GUI related part
@@ -87,7 +86,7 @@ function createMainWindow() {
   window.once('ready-to-show', () => {
     window.show()
   })
-  
+
   window.on('closed', () => {
     mainWindow = null
   })
@@ -116,7 +115,7 @@ function createMainWindow() {
     event.newGuest = win
   }
 
-  function load_mainpage(){
+  function load_mainpage() {
     window.webContents.session.clearCache()
     window.loadURL(formatUrl({
       pathname: path.join(__dirname, '/../renderer/index.html'),
@@ -127,7 +126,7 @@ function createMainWindow() {
   window.webContents.on('did-fail-load', (event, code, desc, url, isMainFrame) => {
     dialog.showErrorBox('Lost connection', "ETA GUI can not load its resources.")
     load_mainpage()
-   })
+  })
   window.webContents.on('new-window', onWindowOpen);
   /*
   window.webContents.on('devtools-opened', () => {
@@ -168,7 +167,7 @@ app.on('activate', () => {
 app.on('ready', () => {
   if (backend_mode) {
     // Backend 
-    while (backend_run()) { };
+    backend_run();
     app.quit();
     return;
   } else {
