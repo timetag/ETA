@@ -1,6 +1,7 @@
 'use strict'
 
 const electron = require('electron')
+const logger = require("electron-log")
 const app = electron.app
 const BrowserWindow = electron.BrowserWindow
 const url = require('url')
@@ -8,22 +9,16 @@ const formatUrl = url.format
 const path = require('path')
 const process = require('process')
 
-const { spawn } = require('child_process');
 const { dialog } = require('electron')
 //const { ipcMain } = require('electron')
 const { autoUpdater } = require('electron-updater')
+const { spawn } = require('child_process');
+
+logger.transports.file.level = "info"
+
 autoUpdater.logger = require("electron-log")
 autoUpdater.logger.transports.file.level = "info"
 
-logger = require("electron-log")
-logger.transports.file.level = "info"
-
-
-function backend_run() {
-    const subprocess = spawn('cmd.exe', ['/c', 'startbackend.bat'], { detached: true, shell: true });
-    subprocess.unref();
-    return false;
-}
 
 
 // global reference to mainWindow (necessary to prevent window from being garbage collected)
@@ -53,6 +48,12 @@ if (backend_mode == false ) {
       }
     })
   }
+}
+
+function backend_run() {
+  const subprocess = spawn('cmd.exe', ['/c', 'startbackend.bat'], { detached: true, shell: true });
+  subprocess.unref();
+  return false;
 }
 
 function ask_for_restarting_backend() {

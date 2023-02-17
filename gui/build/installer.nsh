@@ -1,6 +1,6 @@
 !macro customInstall
    CreateShortcut "$desktop\ETABackend.lnk" "$instdir\ETA.exe" "backend" "$instdir\backend.ico"
-   Exec '"$instdir\ETA.exe" install_backend'
+   Exec '"$instdir\ETA.exe" '
 !macroend
 
 !macro customUnInstall
