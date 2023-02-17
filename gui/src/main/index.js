@@ -8,14 +8,22 @@ const formatUrl = url.format
 const path = require('path')
 const process = require('process')
 
+const { spawn } = require('child_process');
 const { dialog } = require('electron')
-const { ipcMain } = require('electron')
+//const { ipcMain } = require('electron')
 const { autoUpdater } = require('electron-updater')
-
-const backend_run = require('./backend.js')
-
 autoUpdater.logger = require("electron-log")
 autoUpdater.logger.transports.file.level = "info"
+
+logger = require("electron-log")
+logger.transports.file.level = "info"
+
+
+function backend_run() {
+    const subprocess = spawn('cmd.exe', ['/c', 'startbackend.bat'], { detached: true, shell: true });
+    subprocess.unref();
+    return false;
+}
 
 
 // global reference to mainWindow (necessary to prevent window from being garbage collected)
@@ -24,16 +32,14 @@ let mainWindow
 
 // run via command line
 let backend_mode = false
-let install_mode = false
+
 process.argv.forEach((val, index) => {
   if (val.indexOf("backend") >= 0)
     backend_mode = true;
-  if (val.indexOf("install") >= 0)
-    install_mode = true;
 });
 
 // single instance lock
-if (backend_mode == false && install_mode == false) {
+if (backend_mode == false ) {
   const gotTheLock = app.requestSingleInstanceLock()
   if (!gotTheLock) {
     app.quit();
@@ -57,7 +63,7 @@ function ask_for_restarting_backend() {
     buttons: ['Yes', 'No']
   }, (buttonIndex) => {
     if (buttonIndex == 0) {
-      backend_run(false);
+      backend_run();
     }
     else {
     }
@@ -135,10 +141,11 @@ function createMainWindow() {
   return window
 }
 
-
+/*
 ipcMain.on('launch_backend', (event, arg) => {
   ask_for_restarting_backend();
 });
+*/
 
 // quit application when all windows are closed
 app.on('window-all-closed', () => {
@@ -160,10 +167,11 @@ app.on('activate', () => {
 app.on('ready', () => {
   if (backend_mode) {
     // Backend 
-    while (backend_run(install_mode)) { };
+    while (backend_run()) { };
     app.quit();
     return;
   } else {
+    ask_for_restarting_backend();
     // create GUI
     mainWindow = createMainWindow()
   }
