@@ -156,7 +156,7 @@ In the following example dash from plotly is used to create an interactive graph
             id='example-graph',
             figure={
                 'data': [
-                    {'x': np.arange(histogram.size), 'y': histogram, 'type': 'bar', 'name': 'SF'},
+                    {'x': np.arange(histogram.size,dtype=np.float32), 'y': histogram, 'type': 'bar', 'name': 'SF'},
                 ],
                 'layout': {
                     'title': expname
