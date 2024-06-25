@@ -2,139 +2,178 @@ name: CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
   release:
-    types: [ published ]
+    types: [published]
 
 jobs:
- 
-          
   build_windows_gui:
     needs: [build]
     runs-on: windows-latest
     env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     strategy:
       matrix:
         node-version: [18.x]
     steps:
-    - uses: actions/checkout@v2
-    - name: Download artifact
-      uses: actions/download-artifact@v1
-      with:
+      - uses: actions/checkout@v2
+      - name: Download artifact
+        uses: actions/download-artifact@v1
+        with:
           name: wheels-3.9
           path: gui
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - uses: conda-incubator/setup-miniconda@v2
-      with:
-        auto-activate-base: true
-        activate-environment: ""
-    - name: Build Electron app
-      run: |
-        cd gui
-        dir
-        conda create --name ETA python=3.11
-        conda activate ETA
-        conda install conda-forge::conda-pack
-        pip install --find-links=.\ etabackend
-        conda pack -n ETA -o bundle_eta.tar.gz
-        mkdir eta_env
-        tar -xzf bundle_eta.tar.gz -C eta_env
-        yarn
-        yarn dist
-        cd ..
-        ls .\gui\dist\
-        echo 7z a ETA_Install-win64.zip .\gui\dist\*.exe
-        mkdir artifact
-        move .\gui\dist\*.exe .\artifact
-    - name: Upload artifact
-      uses: actions/upload-artifact@v1
-      with:
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          auto-activate-base: true
+          activate-environment: ""
+      - name: Build Electron app
+        run: |
+          cd gui
+          dir
+          conda create --name ETA python=3.11
+          conda activate ETA
+          conda install conda-forge::conda-pack
+          pip install --find-links=.\ etabackend
+          conda pack -n ETA -o bundle_eta.tar.gz
+          mkdir eta_env
+          tar -xzf bundle_eta.tar.gz -C eta_env
+          yarn
+          yarn dist
+          cd ..
+          ls .\gui\dist\
+          echo 7z a ETA_Install-win64.zip .\gui\dist\*.exe
+          mkdir artifact
+          move .\gui\dist\*.exe .\artifact
+      - name: Upload artifact
+        uses: actions/upload-artifact@v1
+        with:
           name: ETA_Install-win64
           path: artifact
+  # compile-m1:
+  #   runs-on: macos-latest
+  #   strategy:
+  #     matrix:
+  #       python-version: [3.9]
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: Set up Python ${{ matrix.python-version }}
+  #       uses: actions/setup-python@v4
+  #       with:
+  #         python-version: ${{ matrix.python-version }}
+  #     - name: Install clang-12
+  #       run: |
+  #         brew install llvm@12
+  #     - name: Install dependencies and build
+  #       run: |
+  #         pip3 install virtualenv
+  #         virtualenv venv
+  #         source venv/bin/activate
+  #         ls
+  #         export PATH="/usr/local/opt/llvm@12/bin:$PATH"
+  #         export LDFLAGS="-L/opt/homebrew/opt/llvm@12/lib"
+  #         export CPPFLAGS="-I/opt/homebrew/opt/llvm@12/include"
+  #         export CXXFLAGS="-I/opt/homebrew/opt/llvm@12/include"
+  #         clang etabackend/cpp/PARSE_TimeTagFileHeader.cpp  -S -emit-llvm 
+  #         clang etabackend/cpp/PARSE_TimeTags.cpp  -S -emit-llvm 
+  #         clang etabackend/cpp/INFRA_vchn.cpp  -S -emit-llvm
+  #         mv *.ll etabackend/ll/m1/
+  #         pip install -e ./
+  #         pytest
+  #     - name: Upload artifact
+  #       uses: actions/upload-artifact@v1
+  #       with:
+  #         name: ll-m1
+  #         path: etabackend/ll/m1
   build:
+    #needs: [compile-m1]
     runs-on: ubuntu-latest
     strategy:
       matrix:
         python-version: [3.9]
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install dependencies and build
-      run: |
-         sudo apt-get update 
-         sudo apt-get install -y clang-11
-         sudo apt-get install -y llvm-11
-         pip3 install virtualenv
-         virtualenv venv
-         source venv/bin/activate
-         ls
-         clang-11 etabackend/cpp/PARSE_TimeTagFileHeader.cpp -S -emit-llvm 
-         clang-11 etabackend/cpp/PARSE_TimeTags.cpp  -S -emit-llvm 
-         clang-11  etabackend/cpp/INFRA_vchn.cpp  -S -emit-llvm
-         mv *.ll etabackend/ll/posix
-         python3 setup.py bdist_wheel
-    - name: Upload artifact
-      uses: actions/upload-artifact@v1
-      with:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies and build
+        run: |
+          sudo apt-get update 
+          sudo apt-get install -y clang-11  llvm-11 gcc-multilib
+          pip3 install virtualenv
+          virtualenv venv
+          source venv/bin/activate
+          ls
+          clang-11 etabackend/cpp/PARSE_TimeTagFileHeader.cpp -S -emit-llvm 
+          clang-11 etabackend/cpp/PARSE_TimeTags.cpp  -S -emit-llvm 
+          clang-11  etabackend/cpp/INFRA_vchn.cpp  -S -emit-llvm
+          mv *.ll etabackend/ll/posix
+          clang-11  -target aarch64-linux-gnu etabackend/cpp/PARSE_TimeTagFileHeader.cpp -S -emit-llvm 
+          clang-11  -target aarch64-linux-gnu etabackend/cpp/PARSE_TimeTags.cpp  -S -emit-llvm 
+          clang-11  -target aarch64-linux-gnu etabackend/cpp/INFRA_vchn.cpp  -S -emit-llvm
+          mv *.ll etabackend/ll/m1
+          python3 setup.py bdist_wheel
+      - name: Upload artifact
+        uses: actions/upload-artifact@v1
+        with:
           name: wheels-${{ matrix.python-version }}
           path: dist
   publish:
-    needs: [build,test]
+    needs: [build, test]
     if: ${{ github.event_name == 'release' }}
     runs-on: ubuntu-latest
     env:
-        PYPI_PASSWORD: ${{secrets.PYPI_PASSWORD}}
-        TWINE_PASSWORD: ${{secrets.PYPI_PASSWORD}}
-        TWINE_USERNAME: ${{secrets.PYPI_USERNAME}}
-        PYPI_USERNAME: ${{secrets.PYPI_USERNAME}}
+      PYPI_PASSWORD: ${{secrets.PYPI_PASSWORD}}
+      TWINE_PASSWORD: ${{secrets.PYPI_PASSWORD}}
+      TWINE_USERNAME: ${{secrets.PYPI_USERNAME}}
+      PYPI_USERNAME: ${{secrets.PYPI_USERNAME}}
     strategy:
       matrix:
         python-version: [3.9]
     steps:
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
-      run: |
-         pip3 install twine
-    - name: Download artifact
-      uses: actions/download-artifact@v1
-      with:
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          pip3 install twine
+      - name: Download artifact
+        uses: actions/download-artifact@v1
+        with:
           name: wheels-3.9
           path: dist
-    - name: Twine upload
-      run: |
-        ls
-        twine upload dist/*.whl --skip-existing
+      - name: Twine upload
+        run: |
+          ls
+          twine upload dist/*.whl --skip-existing
   test:
     needs: [build]
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest, windows-latest, macos-13, macos-latest]
         python-version: ["3.9", "3.11"]
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Download artifact
-      uses: actions/download-artifact@v1
-      with:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Download artifact
+        uses: actions/download-artifact@v1
+        with:
           name: wheels-3.9
           path: dist
-    - name: Test with pytest
-      run: |
-        python -m pip install tox tox-gh-actions 
-        tox 
+      - name: Test with pytest
+        run: |
+          python -m pip install pytest 
+          mv ./dist/*.whl ./etabackend-9.9.9-py3-none-any.whl
+          python -m pip install ./etabackend-9.9.9-py3-none-any.whl
+          pytest

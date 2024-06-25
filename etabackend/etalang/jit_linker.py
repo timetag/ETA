@@ -3,6 +3,7 @@ import cmath
 import inspect
 import math
 import os
+import platform
 import sys
 from os import listdir
 from pathlib import Path
@@ -44,7 +45,7 @@ class IRTransformer(ast.NodeTransformer):
         return self.generic_visit(node)
 
 
-def compile_library(context, asm, libname='compiled_module'):
+def compile_library(context, asm, libname="compiled_module"):
     library = context.codegen().create_library(libname)
     ll_module = ll.parse_assembly(asm)
     ll_module.verify()
@@ -79,17 +80,16 @@ def link_global(name, do_get=True, type=nb.int64):
         sig = nb.core.typing.signature(nb.int64)
 
         def codegen(context, builder, sig, args):
-            library = compile_library(
-                context, llvm_global_get.replace("test", name))
+            library = compile_library(context, llvm_global_get.replace("test", name))
             # no more weird hack to get the library linked
             context.active_code_library.add_linking_library(library)
             argtypes = [context.get_argument_type(aty) for aty in sig.args]
             restype = context.get_argument_type(sig.return_type)
             fnty = ir.FunctionType(restype, argtypes)
             fn = nb.core.cgutils.insert_pure_function(
-                builder.module, fnty, name=name + "_get")
-            retval = context.call_external_function(
-                builder, fn, sig.args, args)
+                builder.module, fnty, name=name + "_get"
+            )
+            retval = context.call_external_function(builder, fn, sig.args, args)
             # print(fn)
             return retval
 
@@ -100,17 +100,16 @@ def link_global(name, do_get=True, type=nb.int64):
 
         def codegen(context, builder, sig, args):
             code = llvm_global_set.replace("test", name)
-            library = compile_library(
-                context, code)
+            library = compile_library(context, code)
             # no more weird hack to get the library linked
             context.active_code_library.add_linking_library(library)
             argtypes = [context.get_argument_type(aty) for aty in sig.args]
             restype = context.get_argument_type(sig.return_type)
             fnty = ir.FunctionType(restype, argtypes)
             fn = nb.core.cgutils.insert_pure_function(
-                builder.module, fnty, name=name + "_set")
-            retval = context.call_external_function(
-                builder, fn, sig.args, args)
+                builder.module, fnty, name=name + "_set"
+            )
+            retval = context.call_external_function(builder, fn, sig.args, args)
             # print(fn)
             return retval
 
@@ -128,7 +127,8 @@ def link_libs(typingctx=None):
 
     def codegen(context, builder, sig, args):
         # print("===== linking =====")
-        ll_path = Path(__file__).resolve().parent.parent/"ll" / os.name
+        foldername = "m1" if platform.machine() == "arm64" else os.name
+        ll_path = Path(__file__).resolve().parent.parent / "ll" / foldername
         for f in listdir(ll_path):
             lib_path = Path(ll_path) / f
             if lib_path.is_file() and f.find(".ll") >= 0:
@@ -136,9 +136,11 @@ def link_libs(typingctx=None):
                 with open(lib_path, "r") as fio:
                     assembly = fio.read()
                     assembly = assembly.replace(
-                        """!llvm.linker.options = !{!0}""", "")  # hack: remove useless linker options for LLVM7
+                        """!llvm.linker.options = !{!0}""", ""
+                    )  # hack: remove useless linker options for LLVM7
                     library = compile_library(
-                        context, assembly, str(lib_path.resolve()))
+                        context, assembly, str(lib_path.resolve())
+                    )
                 # no more weird hack to get the library linked
                 context.active_code_library.add_linking_library(library)
 
@@ -150,14 +152,20 @@ def link_libs(typingctx=None):
 
 def link_function(func_name="", param=1, i64ret=False):
     typer = "nb.int32"
-    if (i64ret):
+    if i64ret:
         typer = "nb.int64"
     para = ",".join(["a{}".format(i) for i in range(0, param)])
 
     args = {
-        "ARB_PARAM": ast.parse("def ARB_PARAM(typingctx, {para}): pass".format(para=para)),
+        "ARB_PARAM": ast.parse(
+            "def ARB_PARAM(typingctx, {para}): pass".format(para=para)
+        ),
         "func_name": ast.parse("'{}'".format(func_name)),
-        "makesig": ast.parse("sig = nb.core.typing.signature({typer}, {para})".format(typer=typer, para=para)),
+        "makesig": ast.parse(
+            "sig = nb.core.typing.signature({typer}, {para})".format(
+                typer=typer, para=para
+            )
+        ),
     }
     sig = None
     makesig = None
@@ -168,15 +176,16 @@ def link_function(func_name="", param=1, i64ret=False):
             restype = context.get_argument_type(sig.return_type)
             fnty = ir.FunctionType(restype, argtypes)
             fn = nb.core.cgutils.insert_pure_function(
-                builder.module, fnty, name=func_name)
-            retval = context.call_external_function(
-                builder, fn, sig.args, args)
+                builder.module, fnty, name=func_name
+            )
+            retval = context.call_external_function(builder, fn, sig.args, args)
             return retval
 
         @nb.extending.intrinsic
         def ARB_PARAM():
             makesig
             return sig, codegen
+
         return ARB_PARAM
 
     ret = ast.parse(dedent(inspect.getsource(ARB_PARAM_MAKER)))
@@ -189,12 +198,15 @@ def link_function(func_name="", param=1, i64ret=False):
 
 def link_jit_code(args):
     glb = {
-        "jit": jit, "ffi": ffi, "nb": nb, "np": np, "math": math, "cmath": cmath,
+        "jit": jit,
+        "ffi": ffi,
+        "nb": nb,
+        "np": np,
+        "math": math,
+        "cmath": cmath,
         "link_libs": link_libs,
-
         "FileReader_pop_event": link_function("FileReader_pop_event", 3, i64ret=True),
         "FileReader_init": link_function("FileReader_init", 5),
-
         "VFILE_init": link_function("VFILE_init", 5),
         "POOL_update": link_function("POOL_update", 4),
         "VCHN_init": link_function("VCHN_init", 10),
@@ -204,11 +216,24 @@ def link_jit_code(args):
     loc = {}
 
     # init
-    FileReader_pop_event, POOL_update, VCHN_next = (
-        lambda *vargs: 0,)*3
-    scalar_chn_next, READER, scalar_chn, scalar_fileid = (np.zeros(0),)*4
-    uettp_initial, init_llvm, deinit, looping, beforeloop_code,  num_rslot, global_initial, table_list, ptr_VCHN, ptr_fileid, ptr_chn, ptr_READER, ptr_chn_next, INTERRUPT = (
-        0,)*14
+    FileReader_pop_event, POOL_update, VCHN_next = (lambda *vargs: 0,) * 3
+    scalar_chn_next, READER, scalar_chn, scalar_fileid = (np.zeros(0),) * 4
+    (
+        uettp_initial,
+        init_llvm,
+        deinit,
+        looping,
+        beforeloop_code,
+        num_rslot,
+        global_initial,
+        table_list,
+        ptr_VCHN,
+        ptr_fileid,
+        ptr_chn,
+        ptr_READER,
+        ptr_chn_next,
+        INTERRUPT,
+    ) = (0,) * 14
 
     @jit(nopython=True, nogil=True)  # parallel=True,
     def mainloop(tables):
@@ -232,12 +257,17 @@ def link_jit_code(args):
                 break
             if fileid < num_rslot:
                 controller_rfile_time = FileReader_pop_event(
-                    ptr_READER, nb.uint8(fileid), ptr_chn_next)
+                    ptr_READER, nb.uint8(fileid), ptr_chn_next
+                )
                 if controller_rfile_time == 9223372036854775807:  # early stop
                     break
                 else:
-                    eta_ret += POOL_update(ptr_VCHN, nb.int64(controller_rfile_time),
-                                           nb.uint8(fileid), nb.uint8(scalar_chn_next[0]))
+                    eta_ret += POOL_update(
+                        ptr_VCHN,
+                        nb.int64(controller_rfile_time),
+                        nb.uint8(fileid),
+                        nb.uint8(scalar_chn_next[0]),
+                    )
         deinit
         return eta_ret
 
@@ -258,7 +288,7 @@ def cmp_dc(a, b):
     try:
         for k, v in a.items():
             if isinstance(v, ast.AST):
-                if not(ast.dump(v) == ast.dump(b[k])):
+                if not (ast.dump(v) == ast.dump(b[k])):
                     return False
             else:
                 if v != b[k]:
@@ -266,11 +296,13 @@ def cmp_dc(a, b):
         return True
     except Exception:
         return False
-        
+
+
 PARSE_TimeTagFileHeader = link_function("PARSE_TimeTagFileHeader", 2)
+
+
 @jit(nopython=True, nogil=True)
 def PARSE_TimeTagFileHeader_wrapper(PARSER, UniBuf):
     link_libs()
-    ret1 = PARSE_TimeTagFileHeader(
-        ffi.from_buffer(PARSER), ffi.from_buffer(UniBuf))
+    ret1 = PARSE_TimeTagFileHeader(ffi.from_buffer(PARSER), ffi.from_buffer(UniBuf))
     return ret1
