@@ -84,24 +84,24 @@ extern "C"
 	typedef struct
 	{
 		// CLIP info
-		long long fseekpoint;	//0
-		long long headeroffset; //1
+		long long fseekpoint;	// 0
+		long long headeroffset; // 1
 
-		long long TTRes_pspr;	  //2
-		long long DTRes_pspr;	  //3
-		long long SYNCRate_pspr;  //4
-		long long BytesofRecords; //5
-		long long RecordType;	  //6
+		long long TTRes_pspr;	  // 2
+		long long DTRes_pspr;	  // 3
+		long long SYNCRate_pspr;  // 4
+		long long BytesofRecords; // 5
+		long long RecordType;	  // 6
 
-		long long GlobalTimeShift;		   //7
-		long long CHANNEL_OFFSET;		   //8
-		long long MARKER_OFFSET;		   //9
-										   //UniBuf info
-		long long batch_actualread_length; //10 buffer length
-		long long next_RecID_in_batch;	   //11 reader head
-		long long overflowcorrection;	   //12
-		long long buffer_status;		   //13 unused
-		char *buffer = 0;				   //14
+		long long GlobalTimeShift; // 7
+		long long CHANNEL_OFFSET;  // 8
+		long long MARKER_OFFSET;   // 9
+								 // UniBuf info
+		long long batch_actualread_length; // 10 buffer length
+		long long next_RecID_in_batch;	   // 11 reader head
+		long long overflowcorrection;	   // 12
+		long long buffer_status;		   // 13 unused
+		char *buffer = 0;				   // 14
 
 	} ttf_reader;
 
@@ -117,6 +117,8 @@ extern "C"
 #define rtTimeHarp260NT2 0x00010205 // (SubID = $00 ,RecFmt: $01) (V2), T-Mode: $02 (T2), HW: $05 (TimeHarp260N)
 #define rtTimeHarp260PT3 0x00010306 // (SubID = $00 ,RecFmt: $01) (V1), T-Mode: $02 (T3), HW: $06 (TimeHarp260P)
 #define rtTimeHarp260PT2 0x00010206 // (SubID = $00 ,RecFmt: $01) (V1), T-Mode: $02 (T2), HW: $06 (TimeHarp260P)
+#define rtGenericT3 0x00010307		// (SubID = $00 ,RecFmt: $01) (V1), T-Mode: $02 (T3), HW: $07 (MultiHarp, PicoHarp330)
+#define rtGenericT2 0x00010207		// (SubID = $00 ,RecFmt: $01) (V1), T-Mode: $02 (T2), HW: $07 (MultiHarp, PicoHarp330)
 
 #define FORMAT_SI_16bytes 1
 #define FORMAT_QT_COMPRESSED 2
@@ -125,18 +127,18 @@ extern "C"
 #define FORMAT_BH_spc_4bytes 5
 #define FORMAT_ET_A033 6
 
-//Got GotRelativeSignal
-//  DTimeTag: Arrival time of Photon after last Sync event (T3 only)
-// DTimeTag * DTRes_pspr = Real time arrival of Photon after last Sync event
-//  virtual_channel: virtual_channel the Photon arrived (0 = Sync channel for T2 measurements)
-#define GotRelativeSignal(SYNC_counts, Channel, DTimeTag)                                  \
-	{                                                                                      \
-		oAbsTime_ps = (SYNC_counts)*READER->SYNCRate_pspr + (DTimeTag)*READER->DTRes_pspr; \
-		oChannel = (Channel);                                                              \
+// Got GotRelativeSignal
+//   DTimeTag: Arrival time of Photon after last Sync event (T3 only)
+//  DTimeTag * DTRes_pspr = Real time arrival of Photon after last Sync event
+//   virtual_channel: virtual_channel the Photon arrived (0 = Sync channel for T2 measurements)
+#define GotRelativeSignal(SYNC_counts, Channel, DTimeTag)                                      \
+	{                                                                                          \
+		oAbsTime_ps = (SYNC_counts) * READER->SYNCRate_pspr + (DTimeTag) * READER->DTRes_pspr; \
+		oChannel = (Channel);                                                                  \
 	}
 
-//GotAbsoluteSignal
-//  TimeTag: Raw TimeTag from Record * TTRes_pspr = Real Time arrival of Photon
+// GotAbsoluteSignal
+//   TimeTag: Raw TimeTag from Record * TTRes_pspr = Real Time arrival of Photon
 #define GotAbsoluteSignal(TimeTag, Channel)         \
 	{                                               \
 		oAbsTime_ps = TimeTag * READER->TTRes_pspr; \
@@ -160,29 +162,29 @@ extern "C"
 		} Record;
 		unsigned int markers;
 		Record.allbits = TTTRRecord;
-		if (Record.bits.channel == 0xF) //this means we have a special record
+		if (Record.bits.channel == 0xF) // this means we have a special record
 		{
-			//in a special record the lower 4 bits of time are marker bits
+			// in a special record the lower 4 bits of time are marker bits
 			markers = Record.bits.time & 0xF;
-			if (markers == 0) //this means we have an overflow record
+			if (markers == 0) // this means we have an overflow record
 			{
 				oflcorrection += T2WRAPAROUND; // unwrap the time tag overflow
-											   //GotOverflow( 1);
+											   // GotOverflow( 1);
 			}
-			else //a marker
+			else // a marker
 			{
-				//Strictly, in case of a marker, the lower 4 bits of time are invalid
-				//because they carry the marker bits. So one could zero them out.
-				//However, the marker resolution is only a few tens of nanoseconds anyway,
-				//so we can just ignore the few picoseconds of error.
+				// Strictly, in case of a marker, the lower 4 bits of time are invalid
+				// because they carry the marker bits. So one could zero them out.
+				// However, the marker resolution is only a few tens of nanoseconds anyway,
+				// so we can just ignore the few picoseconds of error.
 				truetime = oflcorrection + Record.bits.time;
 				GotAbsoluteSignal(truetime, READER->MARKER_OFFSET + MarkerSHC_to_CHN(markers));
-				//GotMarker( truetime, markers);
+				// GotMarker( truetime, markers);
 			}
 		}
 		else
 		{
-			if ((int)Record.bits.channel > 4) //Should not occur
+			if ((int)Record.bits.channel > 4) // Should not occur
 			{
 				PFATAL(" Illegal Chan:  %1u\n", Record.bits.channel);
 			}
@@ -215,44 +217,44 @@ extern "C"
 
 		if (T2Rec.bits.special == 1)
 		{
-			if (T2Rec.bits.channel == 0x3F) //an overflow record
+			if (T2Rec.bits.channel == 0x3F) // an overflow record
 			{
 				if (HHVersion == 1)
 				{
 					oflcorrection += (uint64_t)T2WRAPAROUND_V1;
-					//GotOverflow( 1);
+					// GotOverflow( 1);
 				}
 				else
 				{
-					//number of overflows is stored in timetag
-					if (T2Rec.bits.timetag == 0) //if it is zero it is an old style single overflow
+					// number of overflows is stored in timetag
+					if (T2Rec.bits.timetag == 0) // if it is zero it is an old style single overflow
 					{
-						//GotOverflow( 1);
-						oflcorrection += (uint64_t)T2WRAPAROUND_V2; //should never happen with new Firmware!
+						// GotOverflow( 1);
+						oflcorrection += (uint64_t)T2WRAPAROUND_V2; // should never happen with new Firmware!
 					}
 					else
 					{
 						oflcorrection += (uint64_t)T2WRAPAROUND_V2 * T2Rec.bits.timetag;
-						//GotOverflow( T2Rec.bits.timetag);
+						// GotOverflow( T2Rec.bits.timetag);
 					}
 				}
 			}
 
-			if ((T2Rec.bits.channel >= 1) && (T2Rec.bits.channel <= 15)) //markers
+			if ((T2Rec.bits.channel >= 1) && (T2Rec.bits.channel <= 15)) // markers
 			{
 				truetime = oflcorrection + T2Rec.bits.timetag;
-				//Note that actual marker tagging accuracy is only some ns.
+				// Note that actual marker tagging accuracy is only some ns.
 				GotAbsoluteSignal(truetime, READER->MARKER_OFFSET + MarkerSHC_to_CHN(T2Rec.bits.channel))
-				//GotMarker(truetime, T2Rec.bits.channel);
+				// GotMarker(truetime, T2Rec.bits.channel);
 			}
 
-			if (T2Rec.bits.channel == 0) //sync
+			if (T2Rec.bits.channel == 0) // sync
 			{
 				truetime = oflcorrection + T2Rec.bits.timetag;
 				GotAbsoluteSignal(truetime, READER->CHANNEL_OFFSET + 0);
 			}
 		}
-		else //regular input channel
+		else // regular input channel
 		{
 			truetime = oflcorrection + T2Rec.bits.timetag;
 
@@ -283,25 +285,25 @@ extern "C"
 		} Record;
 
 		Record.allbits = TTTRRecord;
-		if (Record.bits.channel == 0xF) //this means we have a special record
+		if (Record.bits.channel == 0xF) // this means we have a special record
 		{
-			if (Record.special.markers == 0) //not a marker means overflow
+			if (Record.special.markers == 0) // not a marker means overflow
 			{
-				//GotOverflow(1);
+				// GotOverflow(1);
 				oflcorrection += T3WRAPAROUND; // unwrap the time tag overflow
 			}
 			else
 			{
 				truensync = oflcorrection + Record.bits.numsync;
-				//GotMarker( truensync, Record.special.markers);
+				// GotMarker( truensync, Record.special.markers);
 				GotRelativeSignal(truensync, READER->MARKER_OFFSET + MarkerSHC_to_CHN(Record.special.markers), 0);
 			}
 		}
 		else
 		{
 			if (
-				(Record.bits.channel == 0)	 //Should never occur in T3 Mode
-				|| (Record.bits.channel > 4) //Should not occur with current routers
+				(Record.bits.channel == 0)	 // Should never occur in T3 Mode
+				|| (Record.bits.channel > 4) // Should not occur with current routers
 			)
 			{
 				PFATAL("\nIllegal virtual_channel:  %1u", Record.bits.channel);
@@ -330,52 +332,52 @@ extern "C"
 		T3Rec.allbits = TTTRRecord;
 		if (T3Rec.bits.special == 1)
 		{
-			if (T3Rec.bits.channel == 0x3F) //overflow
+			if (T3Rec.bits.channel == 0x3F) // overflow
 			{
-				//number of overflows is stored in nsync
-				if ((T3Rec.bits.nsync == 0) || (HHVersion == 1)) //if it is zero or old version it is an old style single overflow
+				// number of overflows is stored in nsync
+				if ((T3Rec.bits.nsync == 0) || (HHVersion == 1)) // if it is zero or old version it is an old style single overflow
 				{
 					oflcorrection += (uint64_t)T3WRAPAROUND;
-					//GotOverflow(1);
-					//should never happen with new Firmware!
+					// GotOverflow(1);
+					// should never happen with new Firmware!
 				}
 				else
 				{
 					oflcorrection += (uint64_t)T3WRAPAROUND * T3Rec.bits.nsync;
-					//GotOverflow( T3Rec.bits.nsync);
+					// GotOverflow( T3Rec.bits.nsync);
 				}
 			}
-			if ((T3Rec.bits.channel >= 1) && (T3Rec.bits.channel <= 15)) //markers
+			if ((T3Rec.bits.channel >= 1) && (T3Rec.bits.channel <= 15)) // markers
 			{
 
-				//the time unit depends on sync period which can be obtained from the file header
+				// the time unit depends on sync period which can be obtained from the file header
 				GotRelativeSignal(oflcorrection + T3Rec.bits.nsync, READER->MARKER_OFFSET + MarkerSHC_to_CHN(T3Rec.bits.channel), 0);
-				//GotMarker(truensync, T3Rec.bits.channel);
+				// GotMarker(truensync, T3Rec.bits.channel);
 			}
 		}
-		else //regular input channel
+		else // regular input channel
 		{
 
-			//the nsync time unit depends on sync period which can be obtained from the file header
-			//the dtime unit depends on the resolution and can also be obtained from the file header
+			// the nsync time unit depends on sync period which can be obtained from the file header
+			// the dtime unit depends on the resolution and can also be obtained from the file header
 			GotRelativeSignal(oflcorrection + T3Rec.bits.nsync, READER->CHANNEL_OFFSET + T3Rec.bits.channel, T3Rec.bits.dtime);
 		}
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////
-	//external
+	// external
 	/////////////////////////////////////////////////////////////////////////////////
 
 	long long MKS_inline FileReader_pop_event(ttf_reader *READER_list, unsigned char RFILEid, unsigned char *out_Channel)
 	{
 		auto READER = &(READER_list[RFILEid]);
-		//PINFO("overflowcorrection %lld \n ", READER->overflowcorrection)
+		// PINFO("overflowcorrection %lld \n ", READER->overflowcorrection)
 		while (true)
 		{
 			long long AbsTime_ps = INT64_MAX;
 			unsigned char Channel = 255;
 
-			//boundry check
+			// boundry check
 			const auto next_relpos = READER->next_RecID_in_batch * READER->BytesofRecords;
 			const auto next_abspos = READER->fseekpoint + next_relpos;
 			const auto batch_end_abspos = READER->fseekpoint + READER->batch_actualread_length;
@@ -386,12 +388,12 @@ extern "C"
 				break;
 			}
 
-			//parse binary
+			// parse binary
 			const auto TTTRRecord = ((unsigned int *)READER->buffer)[READER->next_RecID_in_batch];
 			switch (READER->RecordType)
 			{
 
-			//picoharp_parsers
+			// picoharp_parsers
 			case rtPicoHarpT2:
 				ProcessPHT2(READER, TTTRRecord, AbsTime_ps, Channel, READER->overflowcorrection);
 				break;
@@ -407,12 +409,14 @@ extern "C"
 			case rtHydraHarp2T2:
 			case rtTimeHarp260NT2:
 			case rtTimeHarp260PT2:
+			case rtGenericT2:
 				ProcessHHT2(READER, TTTRRecord, 2, AbsTime_ps, Channel, READER->overflowcorrection);
 				break;
 
 			case rtHydraHarp2T3:
 			case rtTimeHarp260NT3:
 			case rtTimeHarp260PT3:
+			case rtGenericT3:
 				ProcessHHT3(READER, TTTRRecord, 2, AbsTime_ps, Channel, READER->overflowcorrection);
 				break;
 
@@ -536,7 +540,7 @@ extern "C"
 			}
 			READER->next_RecID_in_batch++;
 
-			//overflow, try again next time
+			// overflow, try again next time
 			if (AbsTime_ps == INT64_MAX)
 			{
 				continue;

@@ -52,6 +52,9 @@ long long order_gurantee3 = 0;
 #define rtTimeHarp260NT2 0x00010205 // (SubID = $00 ,RecFmt: $01) (V2), T-Mode: $02 (T2), HW: $05 (TimeHarp260N)
 #define rtTimeHarp260PT3 0x00010306 // (SubID = $00 ,RecFmt: $01) (V1), T-Mode: $02 (T3), HW: $06 (TimeHarp260P)
 #define rtTimeHarp260PT2 0x00010206 // (SubID = $00 ,RecFmt: $01) (V1), T-Mode: $02 (T2), HW: $06 (TimeHarp260P)
+#define rtGenericT3 0x00010307		// (SubID = $00 ,RecFmt: $01) (V1), T-Mode: $02 (T3), HW: $07 (MultiHarp, PicoHarp330)
+#define rtGenericT2 0x00010207		// (SubID = $00 ,RecFmt: $01) (V1), T-Mode: $02 (T2), HW: $07 (MultiHarp, PicoHarp330)
+
 #define FORMAT_PQ 0
 #define FORMAT_SI_16bytes 1
 #define FORMAT_QT_COMPRESSED 2
@@ -63,14 +66,14 @@ long long order_gurantee3 = 0;
 typedef struct
 {
 	// CLIP info
-	long long fseekpoint;	//0
-	long long headeroffset; //1
+	long long fseekpoint;	// 0
+	long long headeroffset; // 1
 
-	long long TTRes_pspr;	  //2
-	long long DTRes_pspr;	  //3
-	long long SYNCRate_pspr;  //4
-	long long BytesofRecords; //5
-	long long RecordType;	  //6
+	long long TTRes_pspr;	  // 2
+	long long DTRes_pspr;	  // 3
+	long long SYNCRate_pspr;  // 4
+	long long BytesofRecords; // 5
+	long long RecordType;	  // 6
 } header_info;
 
 size_t MKS_inline bread(header_info *PARSER, void *buffer, size_t size, size_t count, char *stream)
@@ -80,7 +83,7 @@ size_t MKS_inline bread(header_info *PARSER, void *buffer, size_t size, size_t c
 	return size * count;
 }
 
-//#pragma pack(8) //structure alignment to 8 byte boundaries
+// #pragma pack(8) //structure alignment to 8 byte boundaries
 
 time_t TDateTime_TimeT(double Convertee)
 {
@@ -172,8 +175,8 @@ int MKS_inline PicoQuant_header_parser(header_info *PARSER, char *fpin)
 		case tyInt8:
 			PINFO("%lld", TagHead.TagValue);
 			// get some Values we need to analyse records
-			//if (strcmp(TagHead.Ident, TTTRTagNumRecords) == 0) // Number of records
-			//NumRecords = TagHead.TagValue;
+			// if (strcmp(TagHead.Ident, TTTRTagNumRecords) == 0) // Number of records
+			// NumRecords = TagHead.TagValue;
 			if (strcmp(TagHead.Ident, TTTRTagTTTRRecType) == 0) // TTTR PARSER->RecordType
 				PARSER->RecordType = TagHead.TagValue;
 			break;
@@ -204,7 +207,7 @@ int MKS_inline PicoQuant_header_parser(header_info *PARSER, char *fpin)
 			PINFO("<Float Array with %d Entries>", TagHead.TagValue / sizeof(double));
 			// only seek the Data, if one needs the data, it can be loaded here
 			PARSER->headeroffset = (long)TagHead.TagValue;
-			//fseek(fpin, (long)TagHead.TagValue, SEEK_CUR);
+			// fseek(fpin, (long)TagHead.TagValue, SEEK_CUR);
 			break;
 		case tyTDateTime:
 			time_t CreateTime;
@@ -239,7 +242,7 @@ int MKS_inline PicoQuant_header_parser(header_info *PARSER, char *fpin)
 			PINFO("<Binary Blob contains %d Bytes>", TagHead.TagValue);
 			// only seek the Data, if one needs the data, it can be loaded here
 			PARSER->headeroffset = (long)TagHead.TagValue;
-			//fseek(fpin, (long)TagHead.TagValue, SEEK_CUR);
+			// fseek(fpin, (long)TagHead.TagValue, SEEK_CUR);
 			break;
 		default:
 			PINFO("Illegal Type identifier found! Broken file?");
@@ -291,6 +294,14 @@ int MKS_inline PicoQuant_header_parser(header_info *PARSER, char *fpin)
 		break;
 	case rtTimeHarp260PT3:
 		PINFO("TimeHarp260P T3 data\n");
+		IsT2 = false;
+		break;
+	case rtGenericT2: // Yun added
+		PINFO("MultiHarp T2 data\n");
+		IsT2 = true;
+		break;
+	case rtGenericT3:  
+		PINFO("MultiHarp T3 data\n");
 		IsT2 = false;
 		break;
 	default:
@@ -374,13 +385,13 @@ int MKS_inline FORMAT_QT_COMPRESSED_header_parser(header_info *PARSER, char *fpi
 	PARSER->BytesofRecords = 5;
 	PINFO("PARSER->RecordType: FORMAT_QT_COMPRESSED ");
 
-	//set resolutions
+	// set resolutions
 	PARSER->TTRes_pspr = 1;
 	PARSER->DTRes_pspr = 1;
 	PARSER->SYNCRate_pspr = 0;
 
 	// find size
-	//PARSER->headeroffset = ftell(fpin);
+	// PARSER->headeroffset = ftell(fpin);
 
 	return 0;
 }
@@ -416,7 +427,7 @@ int MKS_inline FORMAT_ET_A033_header_parser(header_info *PARSER)
 extern "C" int MKS_inline PARSE_TimeTagFileHeader(header_info *PARSER, char *fpin)
 {
 	int ret = -1;
-	PARSER->headeroffset = 0; //seek to head
+	PARSER->headeroffset = 0; // seek to head
 
 	char Magic[8];
 	if (bread(PARSER, &Magic, 1, sizeof(Magic), fpin) != sizeof(Magic))
@@ -424,10 +435,10 @@ extern "C" int MKS_inline PARSE_TimeTagFileHeader(header_info *PARSER, char *fpi
 		PERROR("Failed to read header, aborted.");
 		return -2;
 	}
-	//automatically find headers
+	// automatically find headers
 	if (PARSER->RecordType == -1)
 	{
-		//auto determine record type using magic
+		// auto determine record type using magic
 		if (strncmp(Magic, "PQTTTR", 6) == 0)
 			PARSER->RecordType = FORMAT_PQ;
 		if (strncmp(Magic, "\x87\xB3\x91\xFA", 4) == 0)
