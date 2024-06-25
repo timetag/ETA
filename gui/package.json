@@ -4,7 +4,7 @@
   "author": "Zuzeng Lin",
   "repository": "github:timetag/ETA",
   "homepage": "http://timetag.github.io",
-  "version": "0.9.8",
+  "version": "0.9.9",
   "description": "ETA is a graphical event-driven programming language for time-tag processing.",
   "scripts": {
     "dev": "electron .",
@@ -17,7 +17,7 @@
   "build": {
     "appId": "com.eta.client",
     "productName": "ETA",
-    "copyright": "Copyright (C) 2023 Zuzeng Lin",
+    "copyright": "Copyright (C) 2024 Zuzeng Lin",
     "mac": {
       "category": "public.app-category.utilities",
       "publish": [
