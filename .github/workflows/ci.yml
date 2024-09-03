@@ -20,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Download artifact
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v4.1.7
         with:
           name: wheels-3.9
           path: gui
@@ -145,7 +145,7 @@ jobs:
         run: |
           pip3 install twine
       - name: Download artifact
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v4.1.7
         with:
           name: wheels-3.9
           path: dist
@@ -167,7 +167,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Download artifact
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v4.1.7
         with:
           name: wheels-3.9
           path: dist
