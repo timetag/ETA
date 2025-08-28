@@ -132,7 +132,7 @@ class ETAResult:
         
         self.xdata, *self.ydata = self.calculate_result(result)
         self.lastupdate = time.time()
-        self.max_value = np.amax(self.ydata)
+        self.max_value = np.max(self.ydata)
         self.y_max = self.max_value*1.5
 
     def _update_eta_evaluation(self):

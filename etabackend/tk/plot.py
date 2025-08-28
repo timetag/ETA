@@ -69,15 +69,15 @@ def plot_histogram(df, data_file, result_path, title=None, x_label=None, y_label
     plot_row_lin = bokeh.layouts.row(plin, sizing_mode='stretch_both')
     plot_row_log = bokeh.layouts.row(plog, sizing_mode='stretch_both')
 
-    button_save = bokeh.models.Button(label="Save")
+    button_save = bokeh.models.Button(label="Save", sizing_mode='stretch_width')
     button_save.on_click(lambda: etabackend.tk.data.save_data(df['time bins'].values, df['histogram events'].values, 
                                                               data_file, result_path, file_label, header=info))
 
     #button_download = bokeh.models.Button(label="Save", button_type="success")
     #button_download.js_on_event(ButtonClick, lambda data: download_data(data_source))
 
-    button_linlog = bokeh.models.RadioButtonGroup(labels=["Linear", "Logarithmic"], active=0)
-    button_linlog.on_click(lambda nv: _bokeh_button_linlog_callback(figure_column, plot_row_lin, plot_row_log, nv))
+    button_linlog = bokeh.models.RadioButtonGroup(labels=["Linear", "Logarithmic"], active=0, sizing_mode='stretch_width')
+    button_linlog.on_change('active', lambda attr, old, new: _bokeh_button_linlog_callback(figure_column, plot_row_lin, plot_row_log, new))
     
     buttons = bokeh.layouts.row([button_linlog, button_save], sizing_mode='stretch_width')
 
@@ -139,13 +139,13 @@ class ETABokehPlot:
         toolbox = "pan,wheel_zoom,box_zoom,reset"
 
         # setup linear plot
-        plin = bokeh.plotting.figure(plot_width = 700, plot_height = 700,
+        plin = bokeh.plotting.figure(sizing_mode='stretch_both',
                     y_axis_type='linear', tools=toolbox,
                     #active_drag="box_zoom",
                     active_scroll='wheel_zoom')        
 
         # setup log plot
-        plog = bokeh.plotting.figure(plot_width = 700, plot_height = 700,
+        plog = bokeh.plotting.figure(sizing_mode='stretch_both',
                     y_axis_type='log', tools=toolbox,
                     #active_drag="box_zoom",
                     active_scroll='wheel_zoom'
@@ -217,19 +217,19 @@ class ETABokehPlot:
         ctx['plog'] = plog
         
         buttons = []
-        button_save = bokeh.models.Button(label="Save")
+        button_save = bokeh.models.Button(label="Save", sizing_mode='stretch_width')
         button_save.on_click(self._bokeh_button_savedata_callback)
         buttons.append(button_save)
 
         #button_download = bokeh.models.Button(label="Save", button_type="success")
         #button_download.js_on_event(ButtonClick, lambda data: download_data(data_source))
 
-        button_linlog = bokeh.models.RadioButtonGroup(labels=["Linear", "Logarithmic"], active=0)
-        button_linlog.on_click(lambda nv: _bokeh_button_linlog_callback(figure_column, plot_row_lin, plot_row_log, nv))
+        button_linlog = bokeh.models.RadioButtonGroup(labels=["Linear", "Logarithmic"], active=0, sizing_mode='stretch_width')
+        button_linlog.on_change('active', lambda attr, old, new: _bokeh_button_linlog_callback(figure_column, plot_row_lin, plot_row_log, new))
         buttons.append(button_linlog)
         
-        button_alignment = bokeh.models.RadioButtonGroup(labels=["Paused", "Accumulation", "Alignment"], active=0)
-        button_alignment.on_click(lambda new_value: self._bokeh_button_alignment_callback(ctx, new_value))
+        button_alignment = bokeh.models.RadioButtonGroup(labels=["Paused", "Accumulation", "Alignment"], active=0, sizing_mode='stretch_width')
+        button_alignment.on_change('active', lambda attr, old, new: self._bokeh_button_alignment_callback(ctx, new))
         buttons.append(button_alignment)
 
         buttons_row = bokeh.layouts.row(buttons, sizing_mode='stretch_width')
@@ -273,8 +273,8 @@ class ETABokehPlot:
            ctx['lastupdate'] = self.eta_result.lastupdate
            ctx['source'].data.update({f'y{i}': yd for i, yd in enumerate(self.eta_result.ydata)})
 
-           ctx['plin'].y_range.end = np.amax(self.eta_result.ydata)*1.1
-           ctx['plog'].y_range.end = np.amax(self.eta_result.ydata)*1.1
+           ctx['plin'].y_range.end = np.max(self.eta_result.ydata)*1.1
+           ctx['plog'].y_range.end = np.max(self.eta_result.ydata)*1.1
 
     def run(self, stop_flag):
         logger_silenced = False

@@ -6,17 +6,17 @@ channels:
   - conda-forge
   - default
 dependencies:
-  - python=3
+  - python >= 3.9
   - pip
   - cffi
   - llvmlite
   - aiohttp
   - astunparse
-  - numpy>=1.16.2,<2.0.0
+  - numpy>=2.0.0
   - scipy
   - numba
   - matplotlib
-  - bokeh==2.4.3
+  - bokeh
   - pandas  
   - lmfit
   - pip:

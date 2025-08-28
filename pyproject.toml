@@ -10,7 +10,7 @@ authors = [
 ]
 description = "Extensible Timetag Analyzer"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
@@ -18,15 +18,15 @@ classifiers = [
 ]
 dependencies = [
     "cffi>=1.12.3",
-    "numpy>=1.16.2,<2.0.0",
+    "numpy>=2.0.0",
     "astunparse>=1.6.2",
-    "numba>=0.50.1",
+    "numba",
     "llvmlite>=0.33.0",
-    "matplotlib>=3.0.3",
-    "bokeh==2.4.3",
+    "matplotlib",
+    "bokeh>=3.0.0",
     "lmfit",
     "scipy",
-    "pandas>=1.0.5",
+    "pandas",
     "aiohttp",
 ]
 
