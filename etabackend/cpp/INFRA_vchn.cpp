@@ -39,7 +39,7 @@ extern "C"
 	// VFILES
 	//////////////////////////////////////////////////////////////////////
 
-	typedef struct
+	typedef struct circular_buf_t
 	{
 		int64_t *buffer;
 		int64_t head;
@@ -47,7 +47,7 @@ extern "C"
 		int64_t size; //of the buffer
 	} circular_buf_t;
 
-	typedef struct
+	typedef struct VCHN_t
 	{
 
 		int64_t *POOL_timetag = 0;

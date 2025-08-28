@@ -81,7 +81,7 @@ long long order_gurantee = 0;
 extern "C"
 {
 
-	typedef struct
+	typedef struct ttf_reader
 	{
 		// CLIP info
 		long long fseekpoint;	// 0
