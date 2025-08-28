@@ -166,10 +166,12 @@ class RECORDER():
         size = self.get_INTEGER_or_literal(size,"size",tool=False)
         if size > 1:
             self.TABLE(triggers, name + "_tab", [size])
+            self.INTEGER(triggers, name + "_rec", 0)
         elif size == 1:
             self.INTEGER(triggers, name + "_rec", 0)
         elif size == 0:
             self.TABLE(triggers, name + "_tab")
+            
         self.INTEGER(triggers, name + "_head", 0)
         self.INTEGER(triggers, name + "_tail", 0)
         self.INTEGER(triggers, name + "_size", 0)
@@ -437,6 +439,9 @@ class CLOCK():
         stop_recorder = self.assert_sym_type(clock_name + "_stop", "recorder")
         self.EMIT_LINE(triggers, f"{start_recorder}_head = {start_recorder}_tail")
         self.EMIT_LINE(triggers, f"{stop_recorder}_head = {stop_recorder}_tail")
+        self.EMIT_LINE(triggers, f"{start_recorder}_rec = 0")
+        self.EMIT_LINE(triggers, f"{stop_recorder}_rec = 0")
+
 
 
 class COINCIDENCE():
