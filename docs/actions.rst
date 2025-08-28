@@ -81,7 +81,10 @@ Actions
 
 - ``clock.stop()``
     Stop the clock at the current time.
-    
+
+- ``clock.clear()``
+    Removes any start or stop events from the clock.
+
 - ``clock.start(LAST_SYNC)``
     Start the clock at the last sync. The time for the last sync is calculated from SYNCRate.
 
