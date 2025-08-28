@@ -10,7 +10,7 @@ authors = [
 ]
 description = "Extensible Timetag Analyzer"
 readme = "README.md"
-requires-python = ">=3"
+requires-python = ">=3.8"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
