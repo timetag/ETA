@@ -430,6 +430,13 @@ class CLOCK():
         clock_name = self.assert_sym_type(clock_name, "clock")
         recorder_name = self.assert_sym_type(clock_name + "_stop", "recorder")
         self.recorder_append(triggers, recorder_name, obj)
+        
+    def clock_clear(self, triggers, clock_name):
+        clock_name = self.assert_sym_type(clock_name, "clock")
+        start_recorder = self.assert_sym_type(clock_name + "_start", "recorder")
+        stop_recorder = self.assert_sym_type(clock_name + "_stop", "recorder")
+        self.EMIT_LINE(triggers, f"{start_recorder}_head = {start_recorder}_tail")
+        self.EMIT_LINE(triggers, f"{stop_recorder}_head = {stop_recorder}_tail")
 
 
 class COINCIDENCE():

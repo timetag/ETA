@@ -359,7 +359,7 @@ int MKS_inline FORMAT_QT_BINARY_header_parser(header_info *PARSER, char *fpin)
 
 int MKS_inline FORMAT_SI_16bytes_header_parser(header_info *PARSER)
 {
-	PINFO("Swebian Instrument timetag file has no header.");
+	PINFO("Swabian Instrument raw timetag file has no header.");
 	PARSER->SYNCRate_pspr = 0;
 	PARSER->TTRes_pspr = 1;
 	PARSER->DTRes_pspr = 1;
