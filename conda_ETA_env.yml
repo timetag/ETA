@@ -2,6 +2,9 @@
 # Run:
 # > conda env create --name ETA -f conda_ETA_env.yml
 name: ETA
+channels:
+  - conda-forge
+  - default
 dependencies:
   - python=3
   - pip
@@ -9,12 +12,12 @@ dependencies:
   - llvmlite
   - aiohttp
   - astunparse
-  - numpy
+  - numpy>=1.16.2,<2.0.0
   - scipy
   - numba
   - matplotlib
-  - bokeh
+  - bokeh==2.4.3
   - pandas  
+  - lmfit
   - pip:
     - etabackend
-    - lmfit

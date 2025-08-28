@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=64.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "etabackend"
+version = "0.9.9"
+authors = [
+    { name = "ETA Team" },
+]
+description = "Extensible Timetag Analyzer"
+readme = "README.md"
+requires-python = ">=3"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "cffi>=1.12.3",
+    "numpy>=1.16.2,<2.0.0",
+    "astunparse>=1.6.2",
+    "numba>=0.50.1",
+    "llvmlite>=0.33.0",
+    "matplotlib>=3.0.3",
+    "bokeh==2.4.3",
+    "lmfit",
+    "scipy",
+    "pandas>=1.0.5",
+    "aiohttp",
+]
+
+[project.urls]
+"Homepage" = "https://timetag.github.io"
+
+[project.optional-dependencies]
+plotly = ["plotly", "dash", "dash-renderer", "dash-html-components", "dash-core-components"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+
+[tool.setuptools]
+include-package-data = true
