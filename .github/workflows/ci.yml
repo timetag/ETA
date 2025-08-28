@@ -109,6 +109,7 @@ jobs:
           pip3 install virtualenv
           virtualenv venv
           source venv/bin/activate
+          pip install build
           ls
           clang-14 etabackend/cpp/PARSE_TimeTagFileHeader.cpp -S -emit-llvm 
           clang-14 etabackend/cpp/PARSE_TimeTags.cpp  -S -emit-llvm 
@@ -118,7 +119,7 @@ jobs:
           clang-14  -target aarch64-linux-gnu etabackend/cpp/PARSE_TimeTags.cpp  -S -emit-llvm 
           clang-14  -target aarch64-linux-gnu etabackend/cpp/INFRA_vchn.cpp  -S -emit-llvm
           mv *.ll etabackend/ll/m1
-          python3 setup.py bdist_wheel
+          python -m build
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
