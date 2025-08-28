@@ -2,7 +2,7 @@ import json
 
 
 def onlyascii(a):
-    b = ";:,.(){}[]+=-!@#$%^&*~`?/\| <>"
+    b = r";:,.(){}[]+=-!@#$%^&*~`?/\| <>"
     for char in b:
         a = a.replace(char, "_")
     return a
