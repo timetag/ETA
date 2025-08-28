@@ -105,18 +105,18 @@ jobs:
       - name: Install dependencies and build
         run: |
           sudo apt-get update 
-          sudo apt-get install -y clang-11  llvm-11 gcc-multilib
+          sudo apt-get install -y clang-14  llvm-14 gcc-multilib
           pip3 install virtualenv
           virtualenv venv
           source venv/bin/activate
           ls
-          clang-11 etabackend/cpp/PARSE_TimeTagFileHeader.cpp -S -emit-llvm 
-          clang-11 etabackend/cpp/PARSE_TimeTags.cpp  -S -emit-llvm 
-          clang-11  etabackend/cpp/INFRA_vchn.cpp  -S -emit-llvm
+          clang-14 etabackend/cpp/PARSE_TimeTagFileHeader.cpp -S -emit-llvm 
+          clang-14 etabackend/cpp/PARSE_TimeTags.cpp  -S -emit-llvm 
+          clang-14  etabackend/cpp/INFRA_vchn.cpp  -S -emit-llvm
           mv *.ll etabackend/ll/posix
-          clang-11  -target aarch64-linux-gnu etabackend/cpp/PARSE_TimeTagFileHeader.cpp -S -emit-llvm 
-          clang-11  -target aarch64-linux-gnu etabackend/cpp/PARSE_TimeTags.cpp  -S -emit-llvm 
-          clang-11  -target aarch64-linux-gnu etabackend/cpp/INFRA_vchn.cpp  -S -emit-llvm
+          clang-14  -target aarch64-linux-gnu etabackend/cpp/PARSE_TimeTagFileHeader.cpp -S -emit-llvm 
+          clang-14  -target aarch64-linux-gnu etabackend/cpp/PARSE_TimeTags.cpp  -S -emit-llvm 
+          clang-14  -target aarch64-linux-gnu etabackend/cpp/INFRA_vchn.cpp  -S -emit-llvm
           mv *.ll etabackend/ll/m1
           python3 setup.py bdist_wheel
       - name: Upload artifact
